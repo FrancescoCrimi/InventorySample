@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 
 using Inventory.ViewModels;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Views
 {
@@ -27,8 +28,8 @@ namespace Inventory.Views
     {
         public OrderItemsView()
         {
-            ViewModel = ServiceLocator.Current.GetService<OrderItemsViewModel>();
-            NavigationService = ServiceLocator.Current.GetService<INavigationService>();
+            ViewModel = Ioc.Default.GetService<OrderItemsViewModel>();
+            NavigationService = Ioc.Default.GetService<INavigationService>();
             InitializeComponent();
         }
 

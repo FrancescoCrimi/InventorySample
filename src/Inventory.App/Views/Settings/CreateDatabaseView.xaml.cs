@@ -19,6 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 using Inventory.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Views
 {
@@ -29,7 +30,7 @@ namespace Inventory.Views
         public CreateDatabaseView(string connectionString)
         {
             _connectionString = connectionString;
-            ViewModel = ServiceLocator.Current.GetService<CreateDatabaseViewModel>();
+            ViewModel = Ioc.Default.GetService<CreateDatabaseViewModel>();
             InitializeComponent();
             Loaded += OnLoaded;
         }

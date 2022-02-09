@@ -15,11 +15,10 @@ namespace Inventory.Views.SplashScreen
     public sealed partial class ExtendedSplash : Page
     {
         internal Rect splashImageRect; // Rect to store splash screen image coordinates.
-        private Windows.ApplicationModel.Activation.SplashScreen splashScreen; // Variable to hold the splash screen object.
+        private readonly Windows.ApplicationModel.Activation.SplashScreen splashScreen; // Variable to hold the splash screen object.
         private Frame rootFrame;
-        private IActivatedEventArgs activatedEventArgs;
 
-        public ExtendedSplash(IActivatedEventArgs e, bool loadState)
+        public ExtendedSplash(IActivatedEventArgs e)
         {
             this.InitializeComponent();
 
@@ -28,7 +27,6 @@ namespace Inventory.Views.SplashScreen
             Window.Current.SizeChanged += new WindowSizeChangedEventHandler(ExtendedSplash_OnResize);
 
             splashScreen = e.SplashScreen;
-            this.activatedEventArgs = e;
 
             if (splashScreen != null)
             {
@@ -38,34 +36,24 @@ namespace Inventory.Views.SplashScreen
 
             Resize();
             rootFrame = new Frame();
-            LoadDataAsync(this.activatedEventArgs);
+            LoadDataAsync(e);
         }
 
         private async void LoadDataAsync(IActivatedEventArgs e)
         {
-            var activationInfo = ActivationService.GetActivationInfo(e);
-
             await Startup.ConfigureAsync();
 
             var shellArgs = new ShellArgs
             {
-                ViewModel = activationInfo.EntryViewModel,
-                Parameter = activationInfo.EntryArgs,
+                ViewModel = typeof(DashboardViewModel),
+                Parameter = null,
                 UserInfo = await TryGetUserInfoAsync(e as IActivatedEventArgsWithUser)
             };
 
-#if SKIP_LOGIN
             rootFrame.Navigate(typeof(MainShellView), shellArgs);
-            var loginService = ServiceLocator.Current.GetService<ILoginService>();
-            loginService.IsAuthenticated = true;
-#else
-            rootFrame.Navigate(typeof(LoginView), shellArgs);
-#endif
 
             Window.Current.Content = rootFrame;
-
             Window.Current.Activate();
-
         }
 
         // Position the extended splash screen image in the same location as the system splash screen image.

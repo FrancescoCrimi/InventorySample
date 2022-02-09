@@ -60,10 +60,10 @@ namespace Inventory.ViewModels
             ViewModelArgs = args ?? CustomerListArgs.CreateEmpty();
             Query = ViewModelArgs.Query;
 
-            StartStatusMessage("Loading customers...");
+            //StartStatusMessage("Loading customers...");
             if (await RefreshAsync())
             {
-                EndStatusMessage("Customers loaded");
+                //EndStatusMessage("Customers loaded");
             }
         }
         public void Unload()
@@ -99,17 +99,17 @@ namespace Inventory.ViewModels
             ItemsCount = 0;
             SelectedItem = null;
 
-            try
-            {
+            //try
+            //{
                 Items = await GetItemsAsync();
-            }
-            catch (Exception ex)
-            {
-                Items = new List<CustomerModel>();
-                StatusError($"Error loading Customers: {ex.Message}");
-                LogException("Customers", "Refresh", ex);
-                isOk = false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Items = new List<CustomerModel>();
+            //    StatusError($"Error loading Customers: {ex.Message}");
+            //    LogException("Customers", "Refresh", ex);
+            //    isOk = false;
+            //}
 
             ItemsCount = Items.Count;
             if (!IsMultipleSelection)
@@ -156,10 +156,10 @@ namespace Inventory.ViewModels
 
         protected override async void OnRefresh()
         {
-            StartStatusMessage("Loading customers...");
+            //StartStatusMessage("Loading customers...");
             if (await RefreshAsync())
             {
-                EndStatusMessage("Customers loaded");
+                //EndStatusMessage("Customers loaded");
             }
         }
 
@@ -169,35 +169,35 @@ namespace Inventory.ViewModels
             if (await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected customers?", "Ok", "Cancel"))
             {
                 int count = 0;
-                try
-                {
+                //try
+                //{
                     if (SelectedIndexRanges != null)
                     {
                         count = SelectedIndexRanges.Sum(r => r.Length);
-                        StartStatusMessage($"Deleting {count} customers...");
+                        //StartStatusMessage($"Deleting {count} customers...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
-                        StartStatusMessage($"Deleting {count} customers...");
+                        //StartStatusMessage($"Deleting {count} customers...");
                         await DeleteItemsAsync(SelectedItems);
                         MessageService.Send(this, "ItemsDeleted", SelectedItems);
                     }
-                }
-                catch (Exception ex)
-                {
-                    StatusError($"Error deleting {count} Customers: {ex.Message}");
-                    LogException("Customers", "Delete", ex);
-                    count = 0;
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    StatusError($"Error deleting {count} Customers: {ex.Message}");
+                //    LogException("Customers", "Delete", ex);
+                //    count = 0;
+                //}
                 await RefreshAsync();
                 SelectedIndexRanges = null;
                 SelectedItems = null;
                 if (count > 0)
                 {
-                    EndStatusMessage($"{count} customers deleted");
+                    //EndStatusMessage($"{count} customers deleted");
                 }
             }
         }

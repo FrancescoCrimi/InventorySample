@@ -93,7 +93,7 @@ namespace Inventory.ViewModels
         public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
         virtual protected void OnStartSelection()
         {
-            StatusMessage("Start selection");
+            //StatusMessage("Start selection");
             SelectedItem = null;
             SelectedItems = new List<TModel>();
             SelectedIndexRanges = null;
@@ -117,7 +117,7 @@ namespace Inventory.ViewModels
             if (IsMultipleSelection)
             {
                 SelectedItems.AddRange(items.Cast<TModel>());
-                StatusMessage($"{SelectedItems.Count} items selected");
+                //StatusMessage($"{SelectedItems.Count} items selected");
             }
         }
 
@@ -134,7 +134,7 @@ namespace Inventory.ViewModels
                 {
                     SelectedItems.Remove(item);
                 }
-                StatusMessage($"{SelectedItems.Count} items selected");
+                //StatusMessage($"{SelectedItems.Count} items selected");
             }
         }
 
@@ -143,7 +143,7 @@ namespace Inventory.ViewModels
         {
             SelectedIndexRanges = indexRanges;
             int count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
-            StatusMessage($"{count} items selected");
+            //StatusMessage($"{count} items selected");
         }
 
         public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);

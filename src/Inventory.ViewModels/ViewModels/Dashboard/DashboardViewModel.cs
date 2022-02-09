@@ -58,11 +58,11 @@ namespace Inventory.ViewModels
 
         public async Task LoadAsync()
         {
-            StartStatusMessage("Loading dashboard...");
+            //StartStatusMessage("Loading dashboard...");
             await LoadCustomersAsync();
             await LoadOrdersAsync();
             await LoadProductsAsync();
-            EndStatusMessage("Dashboard loaded");
+            //EndStatusMessage("Dashboard loaded");
         }
         public void Unload()
         {

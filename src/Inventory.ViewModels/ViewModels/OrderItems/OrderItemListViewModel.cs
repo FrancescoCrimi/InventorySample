@@ -68,10 +68,10 @@ namespace Inventory.ViewModels
             }
             else
             {
-                StartStatusMessage("Loading order items...");
+                //StartStatusMessage("Loading order items...");
                 if (await RefreshAsync())
                 {
-                    EndStatusMessage("OrderItems loaded");
+                    //EndStatusMessage("OrderItems loaded");
                 }
             }
         }
@@ -166,10 +166,10 @@ namespace Inventory.ViewModels
 
         protected override async void OnRefresh()
         {
-            StartStatusMessage("Loading order items...");
+            //StartStatusMessage("Loading order items...");
             if (await RefreshAsync())
             {
-                EndStatusMessage("Order items loaded");
+                //EndStatusMessage("Order items loaded");
             }
         }
 
@@ -179,35 +179,35 @@ namespace Inventory.ViewModels
             if (await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected order items?", "Ok", "Cancel"))
             {
                 int count = 0;
-                try
-                {
+                //try
+                //{
                     if (SelectedIndexRanges != null)
                     {
                         count = SelectedIndexRanges.Sum(r => r.Length);
-                        StartStatusMessage($"Deleting {count} order items...");
+                        //StartStatusMessage($"Deleting {count} order items...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
-                        StartStatusMessage($"Deleting {count} order items...");
+                        //StartStatusMessage($"Deleting {count} order items...");
                         await DeleteItemsAsync(SelectedItems);
                         MessageService.Send(this, "ItemsDeleted", SelectedItems);
                     }
-                }
-                catch (Exception ex)
-                {
-                    StatusError($"Error deleting {count} order items: {ex.Message}");
-                    LogException("OrderItems", "Delete", ex);
-                    count = 0;
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    StatusError($"Error deleting {count} order items: {ex.Message}");
+                //    LogException("OrderItems", "Delete", ex);
+                //    count = 0;
+                //}
                 await RefreshAsync();
                 SelectedIndexRanges = null;
                 SelectedItems = null;
                 if (count > 0)
                 {
-                    EndStatusMessage($"{count} order items deleted");
+                    //EndStatusMessage($"{count} order items deleted");
                 }
             }
         }

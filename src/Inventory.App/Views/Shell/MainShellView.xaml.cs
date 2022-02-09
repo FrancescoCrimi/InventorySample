@@ -24,6 +24,7 @@ using Windows.ApplicationModel.Core;
 
 using Inventory.ViewModels;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Views
 {
@@ -33,7 +34,7 @@ namespace Inventory.Views
 
         public MainShellView()
         {
-            ViewModel = ServiceLocator.Current.GetService<MainShellViewModel>();
+            ViewModel = Ioc.Default.GetService<MainShellViewModel>();
             InitializeContext();
             InitializeComponent();
             InitializeNavigation();
@@ -45,13 +46,13 @@ namespace Inventory.Views
 
         private void InitializeContext()
         {
-            var context = ServiceLocator.Current.GetService<IContextService>();
+            var context = Ioc.Default.GetService<IContextService>();
             context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
         }
 
         private void InitializeNavigation()
         {
-            _navigationService = ServiceLocator.Current.GetService<INavigationService>();
+            _navigationService = Ioc.Default.GetService<INavigationService>();
             _navigationService.Initialize(frame);
             frame.Navigated += OnFrameNavigated;
         }
@@ -111,11 +112,11 @@ namespace Inventory.Views
 
         private async void OnLogoff(object sender, RoutedEventArgs e)
         {
-            var dialogService = ServiceLocator.Current.GetService<IDialogService>();
+            var dialogService = Ioc.Default.GetService<IDialogService>();
             if (await dialogService.ShowAsync("Confirm logoff", "Are you sure you want to logoff?", "Ok", "Cancel"))
             {
-                var loginService = ServiceLocator.Current.GetService<ILoginService>();
-                loginService.Logoff();
+                //var loginService = Ioc.Default.GetService<ILoginService>();
+                //loginService.Logoff();
                 if (Frame.CanGoBack)
                 {
                     Frame.GoBack();

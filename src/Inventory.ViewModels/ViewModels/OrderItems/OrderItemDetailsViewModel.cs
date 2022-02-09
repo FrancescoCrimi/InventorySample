@@ -113,40 +113,40 @@ namespace Inventory.ViewModels
 
         protected override async Task<bool> SaveItemAsync(OrderItemModel model)
         {
-            try
-            {
-                StartStatusMessage("Saving order item...");
+            //try
+            //{
+            //    StartStatusMessage("Saving order item...");
                 await Task.Delay(100);
                 await OrderItemService.UpdateOrderItemAsync(model);
-                EndStatusMessage("Order item saved");
+                //EndStatusMessage("Order item saved");
                 LogInformation("OrderItem", "Save", "Order item saved successfully", $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error saving Order item: {ex.Message}");
-                LogException("OrderItem", "Save", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error saving Order item: {ex.Message}");
+            //    LogException("OrderItem", "Save", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> DeleteItemAsync(OrderItemModel model)
         {
-            try
-            {
-                StartStatusMessage("Deleting order item...");
+            //try
+            //{
+            //    StartStatusMessage("Deleting order item...");
                 await Task.Delay(100);
                 await OrderItemService.DeleteOrderItemAsync(model);
-                EndStatusMessage("Order item deleted");
+                //EndStatusMessage("Order item deleted");
                 LogWarning("OrderItem", "Delete", "Order item deleted", $"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error deleting Order item: {ex.Message}");
-                LogException("OrderItem", "Delete", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error deleting Order item: {ex.Message}");
+            //    LogException("OrderItem", "Delete", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> ConfirmDeleteAsync()

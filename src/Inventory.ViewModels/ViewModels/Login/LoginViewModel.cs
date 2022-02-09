@@ -22,13 +22,17 @@ namespace Inventory.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {
-        public LoginViewModel(ILoginService loginService, ISettingsService settingsService, ICommonServices commonServices) : base(commonServices)
+        public LoginViewModel(
+            //ILoginService loginService,
+            ISettingsService settingsService,
+            ICommonServices commonServices)
+            : base(commonServices)
         {
-            LoginService = loginService;
+            //LoginService = loginService;
             SettingsService = settingsService;
         }
 
-        public ILoginService LoginService { get; }
+        //public ILoginService LoginService { get; }
         public ISettingsService SettingsService { get; }
 
         private ShellArgs ViewModelArgs { get; set; }
@@ -77,7 +81,7 @@ namespace Inventory.ViewModels
             ViewModelArgs = args;
 
             UserName = SettingsService.UserName ?? args.UserInfo.AccountName;
-            IsLoginWithWindowsHello = LoginService.IsWindowsHelloEnabled(UserName);
+            //IsLoginWithWindowsHello = LoginService.IsWindowsHelloEnabled(UserName);
             IsLoginWithPassword = !IsLoginWithWindowsHello;
             IsBusy = false;
 
@@ -108,16 +112,16 @@ namespace Inventory.ViewModels
             var result = ValidateInput();
             if (result.IsOk)
             {
-                if (await LoginService.SignInWithPasswordAsync(UserName, Password))
-                {
-                    if (!LoginService.IsWindowsHelloEnabled(UserName))
-                    {
-                        await LoginService.TrySetupWindowsHelloAsync(UserName);
-                    }
+                //if (await LoginService.SignInWithPasswordAsync(UserName, Password))
+                //{
+                    //if (!LoginService.IsWindowsHelloEnabled(UserName))
+                    //{
+                    //    await LoginService.TrySetupWindowsHelloAsync(UserName);
+                    //}
                     SettingsService.UserName = UserName;
                     EnterApplication();
                     return;
-                }
+                //}
             }
             await DialogService.ShowAsync(result.Message, result.Description);
             IsBusy = false;
@@ -125,15 +129,15 @@ namespace Inventory.ViewModels
 
         public async void LoginWithWindowHello()
         {
-            IsBusy = true;
-            var result = await LoginService.SignInWithWindowsHelloAsync();
-            if (result.IsOk)
-            {
+            //IsBusy = true;
+            //var result = await LoginService.SignInWithWindowsHelloAsync();
+            //if (result.IsOk)
+            //{
                 EnterApplication();
                 return;
-            }
-            await DialogService.ShowAsync(result.Message, result.Description);
-            IsBusy = false;
+            //}
+            //await DialogService.ShowAsync(result.Message, result.Description);
+            //IsBusy = false;
         }
 
         private void EnterApplication()

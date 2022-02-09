@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 using Inventory.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Views
 {
@@ -26,7 +27,7 @@ namespace Inventory.Views
     {
         public SettingsView()
         {
-            ViewModel = ServiceLocator.Current.GetService<SettingsViewModel>();
+            ViewModel = Ioc.Default.GetService<SettingsViewModel>();
             InitializeComponent();
         }
 

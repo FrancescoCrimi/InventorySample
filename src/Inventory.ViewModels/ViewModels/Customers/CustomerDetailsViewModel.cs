@@ -131,40 +131,40 @@ namespace Inventory.ViewModels
 
         protected override async Task<bool> SaveItemAsync(CustomerModel model)
         {
-            try
-            {
-                StartStatusMessage("Saving customer...");
+            //try
+            //{
+            //    StartStatusMessage("Saving customer...");
                 await Task.Delay(100);
                 await CustomerService.UpdateCustomerAsync(model);
-                EndStatusMessage("Customer saved");
+                //EndStatusMessage("Customer saved");
                 LogInformation("Customer", "Save", "Customer saved successfully", $"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error saving Customer: {ex.Message}");
-                LogException("Customer", "Save", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error saving Customer: {ex.Message}");
+            //    LogException("Customer", "Save", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> DeleteItemAsync(CustomerModel model)
         {
-            try
-            {
-                StartStatusMessage("Deleting customer...");
+            //try
+            //{
+            //    StartStatusMessage("Deleting customer...");
                 await Task.Delay(100);
                 await CustomerService.DeleteCustomerAsync(model);
-                EndStatusMessage("Customer deleted");
+                //EndStatusMessage("Customer deleted");
                 LogWarning("Customer", "Delete", "Customer deleted", $"Customer {model.CustomerID} '{model.FullName}' was deleted.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error deleting Customer: {ex.Message}");
-                LogException("Customer", "Delete", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error deleting Customer: {ex.Message}");
+            //    LogException("Customer", "Delete", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> ConfirmDeleteAsync()

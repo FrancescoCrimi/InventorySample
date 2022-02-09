@@ -131,40 +131,40 @@ namespace Inventory.ViewModels
 
         protected override async Task<bool> SaveItemAsync(ProductModel model)
         {
-            try
-            {
-                StartStatusMessage("Saving product...");
+            //try
+            //{
+            //    StartStatusMessage("Saving product...");
                 await Task.Delay(100);
                 await ProductService.UpdateProductAsync(model);
-                EndStatusMessage("Product saved");
+                //EndStatusMessage("Product saved");
                 LogInformation("Product", "Save", "Product saved successfully", $"Product {model.ProductID} '{model.Name}' was saved successfully.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error saving Product: {ex.Message}");
-                LogException("Product", "Save", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error saving Product: {ex.Message}");
+            //    LogException("Product", "Save", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> DeleteItemAsync(ProductModel model)
         {
-            try
-            {
-                StartStatusMessage("Deleting product...");
+            //try
+            //{
+            //    StartStatusMessage("Deleting product...");
                 await Task.Delay(100);
                 await ProductService.DeleteProductAsync(model);
-                EndStatusMessage("Product deleted");
+                //EndStatusMessage("Product deleted");
                 LogWarning("Product", "Delete", "Product deleted", $"Product {model.ProductID} '{model.Name}' was deleted.");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error deleting Product: {ex.Message}");
-                LogException("Product", "Delete", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error deleting Product: {ex.Message}");
+            //    LogException("Product", "Delete", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> ConfirmDeleteAsync()

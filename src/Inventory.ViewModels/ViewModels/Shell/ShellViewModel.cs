@@ -28,9 +28,12 @@ namespace Inventory.ViewModels
 
     public class ShellViewModel : ViewModelBase
     {
-        public ShellViewModel(ILoginService loginService, ICommonServices commonServices) : base(commonServices)
+        public ShellViewModel(
+            //ILoginService loginService,
+            ICommonServices commonServices)
+            : base(commonServices)
         {
-            IsLocked = !loginService.IsAuthenticated;
+            //IsLocked = !loginService.IsAuthenticated;
         }
 
         private bool _isLocked = false;
@@ -81,7 +84,7 @@ namespace Inventory.ViewModels
 
         virtual public void Subscribe()
         {
-            MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
+            //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
             MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
         }
 
@@ -90,7 +93,10 @@ namespace Inventory.ViewModels
             MessageService.Unsubscribe(this);
         }
 
-        private async void OnLoginMessage(ILoginService loginService, string message, bool isAuthenticated)
+        private async void OnLoginMessage(
+            //ILoginService loginService,
+            string message,
+            bool isAuthenticated)
         {
             if (message == "AuthenticationChanged")
             {

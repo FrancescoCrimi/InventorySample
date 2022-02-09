@@ -23,7 +23,7 @@ namespace Inventory.ViewModels
 {
     public class ViewModelBase : ObservableObject
     {
-        private Stopwatch _stopwatch = new Stopwatch();
+        //private Stopwatch _stopwatch = new Stopwatch();
 
         public ViewModelBase(ICommonServices commonServices)
         {
@@ -63,17 +63,17 @@ namespace Inventory.ViewModels
             await LogService.WriteAsync(LogType.Error, source, action, message, description);
         }
 
-        public void StartStatusMessage(string message)
-        {
-            StatusMessage(message);
-            _stopwatch.Reset();
-            _stopwatch.Start();
-        }
-        public void EndStatusMessage(string message)
-        {
-            _stopwatch.Stop();
-            StatusMessage($"{message} ({_stopwatch.Elapsed.TotalSeconds:#0.000} seconds)");            
-        }
+        //public void StartStatusMessage(string message)
+        //{
+        //    StatusMessage(message);
+        //    //_stopwatch.Reset();
+        //    //_stopwatch.Start();
+        //}
+        //public void EndStatusMessage(string message)
+        //{
+        //    //_stopwatch.Stop();
+        //    StatusMessage($"{message} ({_stopwatch.Elapsed.TotalSeconds:#0.000} seconds)");            
+        //}
 
         public void StatusReady()
         {
@@ -81,12 +81,12 @@ namespace Inventory.ViewModels
         }
         public void StatusMessage(string message)
         {
-            Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
+            //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
             MessageService.Send(this, "StatusMessage", message);
         }
         public void StatusError(string message)
         {
-            Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
+            //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
             MessageService.Send(this, "StatusError", message);
         }
 

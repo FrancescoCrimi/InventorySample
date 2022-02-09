@@ -21,14 +21,15 @@ using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using Windows.Storage;
 
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+//using Microsoft.AppCenter;
+//using Microsoft.AppCenter.Analytics;
+//using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 
 using Inventory.Views;
 using Inventory.ViewModels;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory
 {
@@ -38,8 +39,8 @@ namespace Inventory
 
         static public async Task ConfigureAsync()
         {
-            AppCenter.Start("7b48b5c7-768f-49e3-a2e4-7293abe8b0ca", typeof(Analytics), typeof(Crashes));
-            Analytics.TrackEvent("AppStarted");
+            //AppCenter.Start("7b48b5c7-768f-49e3-a2e4-7293abe8b0ca", typeof(Analytics), typeof(Crashes));
+            //Analytics.TrackEvent("AppStarted");
 
             ServiceLocator.Configure(_serviceCollection);
 
@@ -49,7 +50,7 @@ namespace Inventory
             await EnsureDatabaseAsync();
             await ConfigureLookupTables();
 
-            var logService = ServiceLocator.Current.GetService<ILogService>();
+            var logService = Ioc.Default.GetService<ILogService>();
             await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
 
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
@@ -125,7 +126,7 @@ namespace Inventory
 
         static private async Task ConfigureLookupTables()
         {
-            var lookupTables = ServiceLocator.Current.GetService<ILookupTables>();
+            var lookupTables = Ioc.Default.GetService<ILookupTables>();
             await lookupTables.InitializeAsync();
             LookupTablesProxy.Instance = lookupTables;
         }

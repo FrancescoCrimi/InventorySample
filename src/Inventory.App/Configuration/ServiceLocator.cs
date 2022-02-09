@@ -44,7 +44,7 @@ namespace Inventory
             serviceCollection.AddSingleton<ILogService, LogService>();
             serviceCollection.AddSingleton<IDialogService, DialogService>();
             serviceCollection.AddSingleton<IFilePickerService, FilePickerService>();
-            serviceCollection.AddSingleton<ILoginService, LoginService>();
+            //serviceCollection.AddSingleton<ILoginService, LoginService>();
 
             serviceCollection.AddScoped<IContextService, ContextService>();
             serviceCollection.AddScoped<INavigationService, NavigationService>();

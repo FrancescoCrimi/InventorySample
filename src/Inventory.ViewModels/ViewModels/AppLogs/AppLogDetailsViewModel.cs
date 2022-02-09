@@ -87,20 +87,20 @@ namespace Inventory.ViewModels
 
         protected override async Task<bool> DeleteItemAsync(AppLogModel model)
         {
-            try
-            {
-                StartStatusMessage("Deleting log...");
+            //try
+            //{
+            //    StartStatusMessage("Deleting log...");
                 await Task.Delay(100);
                 await LogService.DeleteLogAsync(model);
-                EndStatusMessage("Log deleted");
+                //EndStatusMessage("Log deleted");
                 return true;
-            }
-            catch (Exception ex)
-            {
-                StatusError($"Error deleting log: {ex.Message}");
-                LogException("AppLog", "Delete", ex);
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    StatusError($"Error deleting log: {ex.Message}");
+            //    LogException("AppLog", "Delete", ex);
+            //    return false;
+            //}
         }
 
         protected override async Task<bool> ConfirmDeleteAsync()
@@ -161,7 +161,7 @@ namespace Inventory.ViewModels
             {
                 CancelEdit();
                 IsEnabled = false;
-                StatusMessage("WARNING: This log has been deleted externally");
+                //StatusMessage("WARNING: This log has been deleted externally");
             });
         }
     }

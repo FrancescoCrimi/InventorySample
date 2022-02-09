@@ -22,6 +22,7 @@ using Windows.ApplicationModel.Core;
 using Inventory.ViewModels;
 using Inventory.Services;
 using Windows.UI.Xaml;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Views
 {
@@ -29,7 +30,7 @@ namespace Inventory.Views
     {
         public ShellView()
         {
-            ViewModel = ServiceLocator.Current.GetService<ShellViewModel>();
+            ViewModel = Ioc.Default.GetService<ShellViewModel>();
             InitializeContext();
             InitializeComponent();
             InitializeNavigation();
@@ -39,13 +40,13 @@ namespace Inventory.Views
 
         private void InitializeContext()
         {
-            var context = ServiceLocator.Current.GetService<IContextService>();
+            var context = Ioc.Default.GetService<IContextService>();
             context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
         }
 
         private void InitializeNavigation()
         {
-            var navigationService = ServiceLocator.Current.GetService<INavigationService>();
+            var navigationService = Ioc.Default.GetService<INavigationService>();
             navigationService.Initialize(frame);
             var appView = ApplicationView.GetForCurrentView();
             appView.Consolidated += OnViewConsolidated;
@@ -69,7 +70,7 @@ namespace Inventory.Views
 
         private async void OnUnlockClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var context = ServiceLocator.Current.GetService<IContextService>();
+            var context = Ioc.Default.GetService<IContextService>();
             await ApplicationViewSwitcher.SwitchAsync(context.MainViewID);
         }
     }

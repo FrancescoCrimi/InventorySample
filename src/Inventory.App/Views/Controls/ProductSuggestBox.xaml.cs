@@ -24,6 +24,7 @@ using Windows.ApplicationModel;
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Controls
 {
@@ -33,7 +34,7 @@ namespace Inventory.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                ProductService = ServiceLocator.Current.GetService<IProductService>();
+                ProductService = Ioc.Default.GetService<IProductService>();
             }
             InitializeComponent();
         }

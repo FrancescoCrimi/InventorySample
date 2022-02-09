@@ -31,7 +31,12 @@ namespace Inventory.ViewModels
         private readonly NavigationItem AppLogsItem = new NavigationItem(0xE7BA, "Activity Log", typeof(AppLogsViewModel));
         private readonly NavigationItem SettingsItem = new NavigationItem(0x0000, "Settings", typeof(SettingsViewModel));
 
-        public MainShellViewModel(ILoginService loginService, ICommonServices commonServices) : base(loginService, commonServices)
+        public MainShellViewModel(
+            //ILoginService loginService,
+            ICommonServices commonServices)
+            : base(
+                  //loginService,
+                  commonServices)
         {
         }
 

@@ -25,6 +25,7 @@ using Windows.ApplicationModel.Core;
 using Inventory.Animations;
 using Inventory.ViewModels;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Views
 {
@@ -32,7 +33,7 @@ namespace Inventory.Views
     {
         public LoginView()
         {
-            ViewModel = ServiceLocator.Current.GetService<LoginViewModel>();
+            ViewModel = Ioc.Default.GetService<LoginViewModel>();
             InitializeContext();
             InitializeComponent();
         }
@@ -41,7 +42,7 @@ namespace Inventory.Views
 
         private void InitializeContext()
         {
-            var context = ServiceLocator.Current.GetService<IContextService>();
+            var context = Ioc.Default.GetService<IContextService>();
             context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
         }
 
@@ -54,7 +55,7 @@ namespace Inventory.Views
 
         private void InitializeNavigation()
         {
-            var navigationService = ServiceLocator.Current.GetService<INavigationService>();
+            var navigationService = Ioc.Default.GetService<INavigationService>();
             navigationService.Initialize(Frame);
         }
 

@@ -56,10 +56,10 @@ namespace Inventory.ViewModels
             ViewModelArgs = args ?? AppLogListArgs.CreateEmpty();
             Query = ViewModelArgs.Query;
 
-            StartStatusMessage("Loading logs...");
+            //StartStatusMessage("Loading logs...");
             if (await RefreshAsync())
             {
-                EndStatusMessage("Logs loaded");
+                //EndStatusMessage("Logs loaded");
             }
         }
         public void Unload()
@@ -96,17 +96,17 @@ namespace Inventory.ViewModels
             ItemsCount = 0;
             SelectedItem = null;
 
-            try
-            {
+            //try
+            //{
                 Items = await GetItemsAsync();
-            }
-            catch (Exception ex)
-            {
-                Items = new List<AppLogModel>();
-                StatusError($"Error loading Logs: {ex.Message}");
-                LogException("AppLogs", "Refresh", ex);
-                isOk = false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Items = new List<AppLogModel>();
+            //    StatusError($"Error loading Logs: {ex.Message}");
+            //    LogException("AppLogs", "Refresh", ex);
+            //    isOk = false;
+            //}
 
             ItemsCount = Items.Count;
             if (!IsMultipleSelection)
@@ -135,10 +135,10 @@ namespace Inventory.ViewModels
 
         protected override async void OnRefresh()
         {
-            StartStatusMessage("Loading logs...");
+            //StartStatusMessage("Loading logs...");
             if (await RefreshAsync())
             {
-                EndStatusMessage("Logs loaded");
+                //EndStatusMessage("Logs loaded");
             }
         }
 
@@ -148,35 +148,35 @@ namespace Inventory.ViewModels
             if (await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
             {
                 int count = 0;
-                try
-                {
+                //try
+                //{
                     if (SelectedIndexRanges != null)
                     {
                         count = SelectedIndexRanges.Sum(r => r.Length);
-                        StartStatusMessage($"Deleting {count} logs...");
+                        //StartStatusMessage($"Deleting {count} logs...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
-                        StartStatusMessage($"Deleting {count} logs...");
+                        //StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
                         MessageService.Send(this, "ItemsDeleted", SelectedItems);
                     }
-                }
-                catch (Exception ex)
-                {
-                    StatusError($"Error deleting {count} Logs: {ex.Message}");
-                    LogException("AppLogs", "Delete", ex);
-                    count = 0;
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    StatusError($"Error deleting {count} Logs: {ex.Message}");
+                //    LogException("AppLogs", "Delete", ex);
+                //    count = 0;
+                //}
                 await RefreshAsync();
                 SelectedIndexRanges = null;
                 SelectedItems = null;
                 if (count > 0)
                 {
-                    EndStatusMessage($"{count} logs deleted");
+                    //EndStatusMessage($"{count} logs deleted");
                 }
             }
         }

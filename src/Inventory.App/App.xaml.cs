@@ -21,6 +21,9 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Inventory.Services;
 using Inventory.Views.SplashScreen;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Inventory
 {
@@ -29,53 +32,48 @@ namespace Inventory
         public App()
         {
             InitializeComponent();
+            this.Suspending += OnSuspending;
+            this.UnhandledException += OnUnhandledException;
 
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
             ApplicationView.PreferredLaunchViewSize = new Size(1280, 840);
 
-            this.Suspending += OnSuspending;
-            this.UnhandledException += OnUnhandledException;
+            Ioc.Default.ConfigureServices(ConfigureServices());
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            await ActivateAsync(e);
-        }
-
-        protected override async void OnActivated(IActivatedEventArgs e)
-        {
-            await ActivateAsync(e);
-        }
-
-        private async Task ActivateAsync(IActivatedEventArgs e)
-        {
-            var activationInfo = ActivationService.GetActivationInfo(e);
-
             var frame = Window.Current.Content as Frame;
             if (frame == null)
             {
-                bool loadState = (e.PreviousExecutionState == ApplicationExecutionState.Terminated);
-                ExtendedSplash extendedSplash = new ExtendedSplash(e, loadState);
+                ExtendedSplash extendedSplash = new ExtendedSplash(e);
                 Window.Current.Content = extendedSplash;
-                Window.Current.Activate();
             }
-            else
+
+            if (e.PrelaunchActivated == false)
             {
-                var navigationService = ServiceLocator.Current.GetService<INavigationService>();
-                await navigationService.CreateNewViewAsync(activationInfo.EntryViewModel, activationInfo.EntryArgs);
+                Window.Current.Activate();
             }
         }
 
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            var logService = ServiceLocator.Current.GetService<ILogService>();
+            var logService = Ioc.Default.GetService<ILogService>();
             await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            var logService = ServiceLocator.Current.GetService<ILogService>();
+            var logService = Ioc.Default.GetService<ILogService>();
             logService.WriteAsync(Data.LogType.Error, "App", "UnhandledException", e.Message, e.Exception.ToString());
+        }
+
+        private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+            services
+                .AddLogging();
+            return services.BuildServiceProvider();
         }
     }
 }
