@@ -54,6 +54,16 @@ namespace Inventory.Data.Services
                         .Property(property.Name)
                         .HasConversion(new DateTimeOffsetToBinaryConverter());
                 }
+
+                var properties2 = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(Decimal)
+                                                                            || p.PropertyType == typeof(Decimal?));
+                foreach (var property in properties2)
+                {
+                    modelBuilder
+                        .Entity(entityType.Name)
+                        .Property(property.Name)
+                        .HasConversion<double>();
+                }
             }
         }
 
