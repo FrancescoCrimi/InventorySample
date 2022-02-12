@@ -17,15 +17,25 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class OrderDetailsWithItemsViewModel : ViewModelBase
+    public class OrderDetailsWithItemsViewModel : ObservableRecipient
     {
-        public OrderDetailsWithItemsViewModel(IOrderService orderService, IOrderItemService orderItemService, ICommonServices commonServices) : base(commonServices)
+        private readonly ILogger<OrderDetailsWithItemsViewModel> logger;
+        private readonly IMessageService messageService;
+
+        public OrderDetailsWithItemsViewModel(ILogger<OrderDetailsWithItemsViewModel> logger,
+                                              IMessageService messageService,
+                                              OrderDetailsViewModel orderDetailsViewModel,
+                                              OrderItemListViewModel orderItemListViewModel)
         {
-            OrderDetails = new OrderDetailsViewModel(orderService, commonServices);
-            OrderItemList = new OrderItemListViewModel(orderItemService, commonServices);
+            this.logger = logger;
+            this.messageService = messageService;
+            OrderDetails = orderDetailsViewModel;
+            OrderItemList = orderItemListViewModel;
         }
 
         public OrderDetailsViewModel OrderDetails { get; set; }
@@ -54,14 +64,14 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
+            messageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
         }

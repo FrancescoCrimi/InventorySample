@@ -12,9 +12,7 @@
 // ******************************************************************
 #endregion
 
-using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -22,36 +20,109 @@ using System.Windows.Input;
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Inventory.ViewModels
 {
-    #region CustomerListArgs
-    public class CustomerListArgs
+    public class CustomerListViewModel : ObservableRecipient //GenericListViewModel<CustomerModel>
     {
-        static public CustomerListArgs CreateEmpty() => new CustomerListArgs { IsEmpty = true };
+        private readonly ILogger<CustomerListViewModel> logger;
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly IDialogService dialogService;
+        private readonly INavigationService navigationService;
+        private readonly ICustomerService customerService;
 
-        public CustomerListArgs()
+        public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
+                                     IMessageService messageService,
+                                     IContextService contextService,
+                                     IDialogService dialogService,
+                                     INavigationService navigationService,
+                                     ICustomerService customerService)
         {
-            OrderBy = r => r.FirstName;
+            this.logger = logger;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.dialogService = dialogService;
+            this.navigationService = navigationService;
+            this.customerService = customerService;
         }
 
-        public bool IsEmpty { get; set; }
+        public ICommand NewCommand => new RelayCommand(OnNew);
 
-        public string Query { get; set; }
+        public ICommand RefreshCommand => new RelayCommand(OnRefresh);
 
-        public Expression<Func<Customer, object>> OrderBy { get; set; }
-        public Expression<Func<Customer, object>> OrderByDesc { get; set; }
-    }
-    #endregion
-
-    public class CustomerListViewModel : GenericListViewModel<CustomerModel>
-    {
-        public CustomerListViewModel(ICustomerService customerService, ICommonServices commonServices) : base(commonServices)
+        public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
+        virtual protected void OnStartSelection()
         {
-            CustomerService = customerService;
+            //StatusMessage("Start selection");
+            SelectedItem = null;
+            SelectedItems = new List<CustomerModel>();
+            SelectedIndexRanges = null;
+            IsMultipleSelection = true;
         }
 
-        public ICustomerService CustomerService { get; }
+        public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
+        virtual protected void OnCancelSelection()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+
+            SelectedItems = null;
+            SelectedIndexRanges = null;
+            IsMultipleSelection = false;
+            SelectedItem = Items?.FirstOrDefault();
+        }
+
+        public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
+        virtual protected void OnSelectItems(IList<object> items)
+        {
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (IsMultipleSelection)
+            {
+                SelectedItems.AddRange(items.Cast<CustomerModel>());
+                //StatusMessage($"{SelectedItems.Count} items selected");
+            }
+        }
+
+        public ICommand DeselectItemsCommand => new RelayCommand<IList<object>>(OnDeselectItems);
+        virtual protected void OnDeselectItems(IList<object> items)
+        {
+            if (items?.Count > 0)
+            {
+                messageService.Send(this, "StatusMessage", "Ready");
+            }
+            if (IsMultipleSelection)
+            {
+                foreach (CustomerModel item in items)
+                {
+                    SelectedItems.Remove(item);
+                }
+                //StatusMessage($"{SelectedItems.Count} items selected");
+            }
+        }
+
+
+        public ICommand SelectRangesCommand => new RelayCommand<IndexRange[]>(OnSelectRanges);
+        virtual protected void OnSelectRanges(IndexRange[] indexRanges)
+        {
+            SelectedIndexRanges = indexRanges;
+            int count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
+            //StatusMessage($"{count} items selected");
+        }
+
+        public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
+
+
+
+
+
+        public string Title => String.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
+
+        public bool IsMainView => contextService.IsMainView;
 
         public CustomerListArgs ViewModelArgs { get; private set; }
 
@@ -73,12 +144,12 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
-            MessageService.Subscribe<CustomerDetailsViewModel>(this, OnMessage);
+            messageService.Subscribe<CustomerListViewModel>(this, OnMessage);
+            messageService.Subscribe<CustomerDetailsViewModel>(this, OnMessage);
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
         }
 
         public CustomerListArgs CreateArgs()
@@ -116,7 +187,7 @@ namespace Inventory.ViewModels
             {
                 SelectedItem = Items.FirstOrDefault();
             }
-            NotifyPropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(Title));
 
             return isOk;
         }
@@ -126,7 +197,7 @@ namespace Inventory.ViewModels
             if (!ViewModelArgs.IsEmpty)
             {
                 DataRequest<Customer> request = BuildDataRequest();
-                return await CustomerService.GetCustomersAsync(request);
+                return await customerService.GetCustomersAsync(request);
             }
             return new List<CustomerModel>();
         }
@@ -136,25 +207,26 @@ namespace Inventory.ViewModels
         {
             if (SelectedItem != null)
             {
-                await NavigationService.CreateNewViewAsync<CustomerDetailsViewModel>(new CustomerDetailsArgs { CustomerID = SelectedItem.CustomerID });
+                await navigationService.CreateNewViewAsync<CustomerDetailsViewModel>(new CustomerDetailsArgs { CustomerID = SelectedItem.CustomerID });
             }
         }
 
-        protected override async void OnNew()
+        protected  async void OnNew()
         {
             if (IsMainView)
             {
-                await NavigationService.CreateNewViewAsync<CustomerDetailsViewModel>(new CustomerDetailsArgs());
+                await navigationService.CreateNewViewAsync<CustomerDetailsViewModel>(new CustomerDetailsArgs());
             }
             else
             {
-                NavigationService.Navigate<CustomerDetailsViewModel>(new CustomerDetailsArgs());
+                navigationService.Navigate<CustomerDetailsViewModel>(new CustomerDetailsArgs());
             }
 
-            StatusReady();
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
         }
 
-        protected override async void OnRefresh()
+        protected  async void OnRefresh()
         {
             //StartStatusMessage("Loading customers...");
             if (await RefreshAsync())
@@ -163,10 +235,11 @@ namespace Inventory.ViewModels
             }
         }
 
-        protected override async void OnDeleteSelection()
+        protected  async void OnDeleteSelection()
         {
-            StatusReady();
-            if (await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected customers?", "Ok", "Cancel"))
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected customers?", "Ok", "Cancel"))
             {
                 int count = 0;
                 //try
@@ -176,14 +249,14 @@ namespace Inventory.ViewModels
                         count = SelectedIndexRanges.Sum(r => r.Length);
                         //StartStatusMessage($"Deleting {count} customers...");
                         await DeleteRangesAsync(SelectedIndexRanges);
-                        MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                    messageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
                         //StartStatusMessage($"Deleting {count} customers...");
                         await DeleteItemsAsync(SelectedItems);
-                        MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                    messageService.Send(this, "ItemsDeleted", SelectedItems);
                     }
                 //}
                 //catch (Exception ex)
@@ -206,7 +279,7 @@ namespace Inventory.ViewModels
         {
             foreach (var model in models)
             {
-                await CustomerService.DeleteCustomerAsync(model);
+                await customerService.DeleteCustomerAsync(model);
             }
         }
 
@@ -215,7 +288,7 @@ namespace Inventory.ViewModels
             DataRequest<Customer> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await CustomerService.DeleteCustomerRangeAsync(range.Index, range.Length, request);
+                await customerService.DeleteCustomerRangeAsync(range.Index, range.Length, request);
             }
         }
 
@@ -229,7 +302,7 @@ namespace Inventory.ViewModels
             };
         }
 
-        private async void OnMessage(ViewModelBase sender, string message, object args)
+        private async void OnMessage(ObservableRecipient sender, string message, object args)
         {
             switch (message)
             {
@@ -237,12 +310,66 @@ namespace Inventory.ViewModels
                 case "ItemDeleted":
                 case "ItemsDeleted":
                 case "ItemRangesDeleted":
-                    await ContextService.RunAsync(async () =>
+                    await contextService.RunAsync(async () =>
                     {
                         await RefreshAsync();
                     });
                     break;
             }
         }
+
+
+
+
+
+
+
+        private string _query = null;
+        public string Query
+        {
+            get => _query;
+            set => SetProperty(ref _query, value);
+        }
+
+        private IList<CustomerModel> _items = null;
+        public IList<CustomerModel> Items
+        {
+            get => _items;
+            set => SetProperty(ref _items, value);
+        }
+
+        private int _itemsCount = 0;
+        public int ItemsCount
+        {
+            get => _itemsCount;
+            set => SetProperty(ref _itemsCount, value);
+        }
+
+        private CustomerModel _selectedItem = default(CustomerModel);
+        public CustomerModel SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    if (!IsMultipleSelection)
+                    {
+                        messageService.Send(this, "ItemSelected", _selectedItem);
+                    }
+                }
+            }
+        }
+
+        private bool _isMultipleSelection = false;
+        public bool IsMultipleSelection
+        {
+            get => _isMultipleSelection;
+            set => SetProperty(ref _isMultipleSelection, value);
+        }
+
+        public IndexRange[] SelectedIndexRanges { get; protected set; }
+
+        public List<CustomerModel> SelectedItems { get; protected set; }
     }
 }

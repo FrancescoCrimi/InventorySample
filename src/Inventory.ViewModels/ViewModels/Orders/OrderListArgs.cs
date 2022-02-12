@@ -13,42 +13,28 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 
-namespace Inventory.Data
+using Inventory.Data;
+
+namespace Inventory.ViewModels
 {
-    public class AppLog
+    public class OrderListArgs
     {
-        [Key]
-        public long Id { get; set; }
+        static public OrderListArgs CreateEmpty() => new OrderListArgs { IsEmpty = true };
 
-        public bool IsRead { get; set; }
+        public OrderListArgs()
+        {
+            OrderByDesc = r => r.OrderDate;
+        }
 
-        public string Name { get; set; }
+        public bool IsEmpty { get; set; }
 
-        [Required]
-        public DateTimeOffset DateTime { get; set; }
+        public long CustomerID { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string User { get; set; }
+        public string Query { get; set; }
 
-        [Required]
-        public LogType Type { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Source { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Action { get; set; }
-
-        [Required]
-        [MaxLength(400)]
-        public string Message { get; set; }
-
-        [MaxLength(4000)]
-        public string Description { get; set; }
+        public Expression<Func<Order, object>> OrderBy { get; set; }
+        public Expression<Func<Order, object>> OrderByDesc { get; set; }
     }
 }

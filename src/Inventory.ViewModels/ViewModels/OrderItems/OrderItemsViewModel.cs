@@ -17,23 +17,37 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class OrderItemsViewModel : ViewModelBase
+    public class OrderItemsViewModel : ObservableRecipient // ViewModelBase
     {
-        public OrderItemsViewModel(IOrderItemService orderItemService, IOrderService orderService, ICommonServices commonServices) : base(commonServices)
+        private readonly ILogger<OrderItemsViewModel> logger;
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly IOrderItemService orderItemService;
+
+        public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
+                                   IMessageService messageService,
+                                   IContextService contextService,
+                                   IOrderItemService orderItemService,
+                                   OrderItemListViewModel orderItemListViewModel,
+                                   OrderItemDetailsViewModel orderItemDetailsViewModel)
         {
-            OrderItemService = orderItemService;
-
-            OrderItemList = new OrderItemListViewModel(OrderItemService, commonServices);
-            OrderItemDetails = new OrderItemDetailsViewModel(OrderItemService, commonServices);
+            this.logger = logger;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.orderItemService = orderItemService;
+            OrderItemList = orderItemListViewModel;
+            OrderItemDetails = orderItemDetailsViewModel;
         }
-
-        public IOrderItemService OrderItemService { get; }
 
         public OrderItemListViewModel OrderItemList { get; set; }
         public OrderItemDetailsViewModel OrderItemDetails { get; set; }
+
+        public bool IsMainView => contextService.IsMainView;
 
         public async Task LoadAsync(OrderItemListArgs args)
         {
@@ -47,13 +61,13 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
+            messageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
             OrderItemList.Unsubscribe();
             OrderItemDetails.Unsubscribe();
         }
@@ -62,7 +76,7 @@ namespace Inventory.ViewModels
         {
             if (viewModel == OrderItemList && message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
+                await contextService.RunAsync(() =>
                 {
                     OnItemSelected();
                 });
@@ -73,7 +87,8 @@ namespace Inventory.ViewModels
         {
             if (OrderItemDetails.IsEditMode)
             {
-                StatusReady();
+                //StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
                 OrderItemDetails.CancelEdit();
             }
             var selected = OrderItemList.SelectedItem;
@@ -91,12 +106,13 @@ namespace Inventory.ViewModels
         {
             try
             {
-                var model = await OrderItemService.GetOrderItemAsync(selected.OrderID, selected.OrderLine);
+                var model = await orderItemService.GetOrderItemAsync(selected.OrderID, selected.OrderLine);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                LogException("OrderItems", "Load Details", ex);
+                //LogException("OrderItems", "Load Details", ex);
+                logger.LogCritical(ex, "Load Details");
             }
         }
     }

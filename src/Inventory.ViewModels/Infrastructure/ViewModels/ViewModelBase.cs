@@ -29,14 +29,14 @@ namespace Inventory.ViewModels
         {
             ContextService = commonServices.ContextService;
             NavigationService = commonServices.NavigationService;
-            MessageService = commonServices.MessageService;
+            messageService = commonServices.MessageService;
             DialogService = commonServices.DialogService;
             LogService = commonServices.LogService;
         }
 
         public IContextService ContextService { get; }
         public INavigationService NavigationService { get; }
-        public IMessageService MessageService { get; }
+        public IMessageService messageService { get; }
         public IDialogService DialogService { get; }
         public ILogService LogService { get; }
 
@@ -58,6 +58,7 @@ namespace Inventory.ViewModels
         {
             LogError(source, action, exception.Message, exception.ToString());
         }
+
         public async void LogError(string source, string action, string message, string description)
         {
             await LogService.WriteAsync(LogType.Error, source, action, message, description);
@@ -77,47 +78,47 @@ namespace Inventory.ViewModels
 
         public void StatusReady()
         {
-            MessageService.Send(this, "StatusMessage", "Ready");
+            messageService.Send(this, "StatusMessage", "Ready");
         }
         public void StatusMessage(string message)
         {
             //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-            MessageService.Send(this, "StatusMessage", message);
+            messageService.Send(this, "StatusMessage", message);
         }
         public void StatusError(string message)
         {
             //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-            MessageService.Send(this, "StatusError", message);
+            messageService.Send(this, "StatusError", message);
         }
 
         public void EnableThisView(string message = null)
         {
             message = message ?? "Ready";
-            MessageService.Send(this, "EnableThisView", message);
+            messageService.Send(this, "EnableThisView", message);
         }
         public void DisableThisView(string message)
         {
-            MessageService.Send(this, "DisableThisView", message);
+            messageService.Send(this, "DisableThisView", message);
         }
 
         public void EnableOtherViews(string message = null)
         {
             message = message ?? "Ready";
-            MessageService.Send(this, "EnableOtherViews", message);
+            messageService.Send(this, "EnableOtherViews", message);
         }
         public void DisableOtherViews(string message)
         {
-            MessageService.Send(this, "DisableOtherViews", message);
+            messageService.Send(this, "DisableOtherViews", message);
         }
 
         public void EnableAllViews(string message = null)
         {
             message = message ?? "Ready";
-            MessageService.Send(this, "EnableAllViews", message);
+            messageService.Send(this, "EnableAllViews", message);
         }
         public void DisableAllViews(string message)
         {
-            MessageService.Send(this, "DisableAllViews", message);
+            messageService.Send(this, "DisableAllViews", message);
         }
     }
 }

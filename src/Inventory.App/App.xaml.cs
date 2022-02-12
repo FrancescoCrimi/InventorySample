@@ -24,6 +24,7 @@ using Inventory.Views.SplashScreen;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Inventory.ViewModels;
 
 namespace Inventory
 {
@@ -72,7 +73,74 @@ namespace Inventory
         {
             var services = new ServiceCollection();
             services
-                .AddLogging();
+                .AddLogging()
+
+            .AddSingleton<ISettingsService, SettingsService>()
+            .AddSingleton<IDataServiceFactory, DataServiceFactory>()
+            .AddSingleton<ILookupTables, LookupTables>()
+            .AddSingleton<ICustomerService, CustomerService>()
+            .AddSingleton<IOrderService, OrderService>()
+            .AddSingleton<IOrderItemService, OrderItemService>()
+            .AddSingleton<IProductService, ProductService>()
+
+            .AddSingleton<IMessageService, MessageService>()
+            .AddSingleton<ILogService, LogService>()
+            .AddSingleton<IDialogService, DialogService>()
+            .AddSingleton<IFilePickerService, FilePickerService>()
+            //.AddSingleton<ILoginService, LoginService>()
+
+            .AddScoped<IContextService, ContextService>()
+            .AddScoped<INavigationService, NavigationService>()
+            .AddScoped<ICommonServices, CommonServices>()
+
+            .AddTransient<LoginViewModel>()
+
+            .AddTransient<ShellViewModel>()
+            .AddTransient<MainShellViewModel>()
+
+            .AddTransient<DashboardViewModel>()
+
+            .AddTransient<CustomersViewModel>()
+            .AddTransient<CustomerDetailsViewModel>()
+
+            .AddTransient<OrdersViewModel>()
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderDetailsWithItemsViewModel>()
+
+            .AddTransient<OrderItemsViewModel>()
+            .AddTransient<OrderItemDetailsViewModel>()
+
+            .AddTransient<ProductsViewModel>()
+            .AddTransient<ProductDetailsViewModel>()
+
+            .AddTransient<AppLogsViewModel>()
+
+            .AddTransient<SettingsViewModel>()
+            .AddTransient<ValidateConnectionViewModel>()
+            .AddTransient<CreateDatabaseViewModel>()
+
+
+
+            .AddTransient<CustomerListViewModel>()
+            .AddTransient<CustomerDetailsViewModel>()
+            .AddTransient<OrderListViewModel>()
+
+            .AddTransient<ProductListViewModel>()
+            .AddTransient<ProductDetailsViewModel>()
+
+            .AddTransient<OrderListViewModel>()
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderItemListViewModel>()
+
+            .AddTransient<OrderItemListViewModel>()
+            .AddTransient<OrderItemDetailsViewModel>()
+
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderItemListViewModel>()
+
+            .AddTransient<AppLogListViewModel>()
+            .AddTransient<AppLogDetailsViewModel>();
+
             return services.BuildServiceProvider();
         }
     }

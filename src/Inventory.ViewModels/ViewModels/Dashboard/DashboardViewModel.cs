@@ -19,13 +19,23 @@ using System.Threading.Tasks;
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class DashboardViewModel : ViewModelBase
+    public class DashboardViewModel : ObservableRecipient
     {
-        public DashboardViewModel(ICustomerService customerService, IOrderService orderService, IProductService productService, ICommonServices commonServices) : base(commonServices)
+        public DashboardViewModel(ILogger<DashboardViewModel> logger,
+            INavigationService navigationService,
+            ICustomerService customerService,
+                                  IOrderService orderService,
+                                  IProductService productService,
+                                  ICommonServices commonServices)
+            //: base(commonServices)
         {
+            this.logger = logger;
+            this.navigationService = navigationService;
             CustomerService = customerService;
             OrderService = orderService;
             ProductService = productService;
@@ -39,21 +49,24 @@ namespace Inventory.ViewModels
         public IList<CustomerModel> Customers
         {
             get => _customers;
-            set => Set(ref _customers, value);
+            set => SetProperty(ref _customers, value);
         }
 
         private IList<ProductModel> _products = null;
         public IList<ProductModel> Products
         {
             get => _products;
-            set => Set(ref _products, value);
+            set => SetProperty(ref _products, value);
         }
 
         private IList<OrderModel> _orders = null;
+        private readonly ILogger<DashboardViewModel> logger;
+        private readonly INavigationService navigationService;
+
         public IList<OrderModel> Orders
         {
             get => _orders;
-            set => Set(ref _orders, value);
+            set => SetProperty(ref _orders, value);
         }
 
         public async Task LoadAsync()
@@ -83,7 +96,8 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                LogException("Dashboard", "Load Customers", ex);
+                //LogException("Dashboard", "Load Customers", ex);
+                logger.LogCritical(ex, "Load Customers");
             }
         }
 
@@ -99,7 +113,8 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                LogException("Dashboard", "Load Orders", ex);
+                //LogException("Dashboard", "Load Orders", ex);
+                logger.LogCritical(ex, "Load Orders");
             }
         }
 
@@ -115,7 +130,8 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                LogException("Dashboard", "Load Products", ex);
+                //LogException("Dashboard", "Load Products", ex);
+                logger.LogCritical(ex, "Load Products");
             }
         }
 
@@ -124,13 +140,13 @@ namespace Inventory.ViewModels
             switch (item)
             {
                 case "Customers":
-                    NavigationService.Navigate<CustomersViewModel>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
+                    navigationService.Navigate<CustomersViewModel>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
                     break;
                 case "Orders":
-                    NavigationService.Navigate<OrdersViewModel>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
+                    navigationService.Navigate<OrdersViewModel>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
                     break;
                 case "Products":
-                    NavigationService.Navigate<ProductsViewModel>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
+                    navigationService.Navigate<ProductsViewModel>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
                     break;
                 default:
                     break;

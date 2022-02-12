@@ -14,40 +14,117 @@
 
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
+using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Inventory.ViewModels
 {
-    #region AppLogListArgs
-    public class AppLogListArgs
+    public class AppLogListViewModel : ObservableRecipient //GenericListViewModel<AppLogModel>
     {
-        static public AppLogListArgs CreateEmpty() => new AppLogListArgs { IsEmpty = true };
+        private readonly ILogger<AppLogListViewModel> logger;
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly IDialogService dialogService;
+        private readonly INavigationService navigationService;
 
-        public AppLogListArgs()
+        public AppLogListViewModel(ILogger<AppLogListViewModel> logger,
+                                   IMessageService messageService,
+                                   IContextService contextService,
+                                   IDialogService dialogService,
+                                   INavigationService navigationService)
         {
-            OrderByDesc = r => r.DateTime;
+            this.logger = logger;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.dialogService = dialogService;
+            this.navigationService = navigationService;
         }
 
-        public bool IsEmpty { get; set; }
 
-        public string Query { get; set; }
 
-        public Expression<Func<AppLog, object>> OrderBy { get; set; }
-        public Expression<Func<AppLog, object>> OrderByDesc { get; set; }
-    }
-    #endregion
 
-    public class AppLogListViewModel : GenericListViewModel<AppLogModel>
-    {
-        public AppLogListViewModel(ICommonServices commonServices) : base(commonServices)
+
+        public ICommand RefreshCommand => new RelayCommand(OnRefresh);
+
+        public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
+        virtual protected void OnStartSelection()
         {
+            //StatusMessage("Start selection");
+            SelectedItem = null;
+            SelectedItems = new List<AppLogModel>();
+            SelectedIndexRanges = null;
+            IsMultipleSelection = true;
         }
+
+        public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
+        virtual protected void OnCancelSelection()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+
+            SelectedItems = null;
+            SelectedIndexRanges = null;
+            IsMultipleSelection = false;
+            SelectedItem = Items?.FirstOrDefault();
+        }
+
+        public ICommand DeselectItemsCommand => new RelayCommand<IList<object>>(OnDeselectItems);
+        virtual protected void OnDeselectItems(IList<object> items)
+        {
+            if (items?.Count > 0)
+            {
+                //StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
+            }
+            if (IsMultipleSelection)
+            {
+                foreach (AppLogModel item in items)
+                {
+                    SelectedItems.Remove(item);
+                }
+                //StatusMessage($"{SelectedItems.Count} items selected");
+            }
+        }
+
+        public ICommand SelectRangesCommand => new RelayCommand<IndexRange[]>(OnSelectRanges);
+        virtual protected void OnSelectRanges(IndexRange[] indexRanges)
+        {
+            SelectedIndexRanges = indexRanges;
+            int count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
+            //StatusMessage($"{count} items selected");
+        }
+
+        public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
+        virtual protected void OnSelectItems(IList<object> items)
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (IsMultipleSelection)
+            {
+                SelectedItems.AddRange(items.Cast<AppLogModel>());
+                //StatusMessage($"{SelectedItems.Count} items selected");
+            }
+        }
+
+        public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
+
+
+
+
+
+
+
+        public string Title => String.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
+
+        public bool IsMainView => contextService.IsMainView;
 
         public AppLogListArgs ViewModelArgs { get; private set; }
 
@@ -69,13 +146,13 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            MessageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
-            MessageService.Subscribe<ILogService, AppLog>(this, OnLogServiceMessage);
+            messageService.Subscribe<AppLogListViewModel>(this, OnMessage);
+            messageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
+            messageService.Subscribe<ILogService, AppLog>(this, OnLogServiceMessage);
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
         }
 
         public AppLogListArgs CreateArgs()
@@ -113,27 +190,28 @@ namespace Inventory.ViewModels
             {
                 SelectedItem = Items.FirstOrDefault();
             }
-            NotifyPropertyChanged(nameof(Title));
+            OnPropertyChanged(nameof(Title));
 
             return isOk;
         }
 
         private async Task<IList<AppLogModel>> GetItemsAsync()
         {
-            if (!ViewModelArgs.IsEmpty)
-            {
-                DataRequest<AppLog> request = BuildDataRequest();
-                return await LogService.GetLogsAsync(request);
-            }
+            //TODO: LogService
+            //if (!ViewModelArgs.IsEmpty)
+            //{
+            //    DataRequest<AppLog> request = BuildDataRequest();
+            //    return await LogService.GetLogsAsync(request);
+            //}
             return new List<AppLogModel>();
         }
 
-        protected override void OnNew()
+        protected  void OnNew()
         {
             throw new NotImplementedException();
         }
 
-        protected override async void OnRefresh()
+        protected  async void OnRefresh()
         {
             //StartStatusMessage("Loading logs...");
             if (await RefreshAsync())
@@ -142,10 +220,11 @@ namespace Inventory.ViewModels
             }
         }
 
-        protected override async void OnDeleteSelection()
+        protected  async void OnDeleteSelection()
         {
-            StatusReady();
-            if (await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
             {
                 int count = 0;
                 //try
@@ -155,14 +234,14 @@ namespace Inventory.ViewModels
                         count = SelectedIndexRanges.Sum(r => r.Length);
                         //StartStatusMessage($"Deleting {count} logs...");
                         await DeleteRangesAsync(SelectedIndexRanges);
-                        MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                    messageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
                         //StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
-                        MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                    messageService.Send(this, "ItemsDeleted", SelectedItems);
                     }
                 //}
                 //catch (Exception ex)
@@ -185,7 +264,8 @@ namespace Inventory.ViewModels
         {
             foreach (var model in models)
             {
-                await LogService.DeleteLogAsync(model);
+                //TODO: LogService
+                //await LogService.DeleteLogAsync(model);
             }
         }
 
@@ -194,7 +274,8 @@ namespace Inventory.ViewModels
             DataRequest<AppLog> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await LogService.DeleteLogRangeAsync(range.Index, range.Length, request);
+                //TODO: LogService
+                //await LogService.DeleteLogRangeAsync(range.Index, range.Length, request);
             }
         }
 
@@ -208,7 +289,7 @@ namespace Inventory.ViewModels
             };
         }
 
-        private async void OnMessage(ViewModelBase sender, string message, object args)
+        private async void OnMessage(ObservableRecipient sender, string message, object args)
         {
             switch (message)
             {
@@ -216,7 +297,7 @@ namespace Inventory.ViewModels
                 case "ItemDeleted":
                 case "ItemsDeleted":
                 case "ItemRangesDeleted":
-                    await ContextService.RunAsync(async () =>
+                    await contextService.RunAsync(async () =>
                     {
                         await RefreshAsync();
                     });
@@ -228,11 +309,65 @@ namespace Inventory.ViewModels
         {
             if (message == "LogAdded")
             {
-                await ContextService.RunAsync(async () =>
+                await contextService.RunAsync(async () =>
                 {
                     await RefreshAsync();
                 });
             }
         }
+
+
+
+
+
+
+
+        private string _query = null;
+        public string Query
+        {
+            get => _query;
+            set => SetProperty(ref _query, value);
+        }
+
+        private IList<AppLogModel> _items = null;
+        public IList<AppLogModel> Items
+        {
+            get => _items;
+            set => SetProperty(ref _items, value);
+        }
+
+        private int _itemsCount = 0;
+        public int ItemsCount
+        {
+            get => _itemsCount;
+            set => SetProperty(ref _itemsCount, value);
+        }
+
+        private AppLogModel _selectedItem = default(AppLogModel);
+        public AppLogModel SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    if (!IsMultipleSelection)
+                    {
+                        messageService.Send(this, "ItemSelected", _selectedItem);
+                    }
+                }
+            }
+        }
+
+        private bool _isMultipleSelection = false;
+        public bool IsMultipleSelection
+        {
+            get => _isMultipleSelection;
+            set => SetProperty(ref _isMultipleSelection, value);
+        }
+
+        public IndexRange[] SelectedIndexRanges { get; protected set; }
+
+        public List<AppLogModel> SelectedItems { get; protected set; }
     }
 }

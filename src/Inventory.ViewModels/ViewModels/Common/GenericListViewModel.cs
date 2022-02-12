@@ -19,6 +19,7 @@ using System.Windows.Input;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Inventory.ViewModels
 {
@@ -56,7 +57,7 @@ namespace Inventory.ViewModels
                 {
                     if (!IsMultipleSelection)
                     {
-                        MessageService.Send(this, "ItemSelected", _selectedItem);
+                        messageService.Send(this, "ItemSelected", _selectedItem);
                     }
                 }
             }
@@ -103,7 +104,9 @@ namespace Inventory.ViewModels
         public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
         virtual protected void OnCancelSelection()
         {
-            StatusReady();
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+
             SelectedItems = null;
             SelectedIndexRanges = null;
             IsMultipleSelection = false;
@@ -113,7 +116,7 @@ namespace Inventory.ViewModels
         public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
         virtual protected void OnSelectItems(IList<object> items)
         {
-            StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
             if (IsMultipleSelection)
             {
                 SelectedItems.AddRange(items.Cast<TModel>());
@@ -126,7 +129,7 @@ namespace Inventory.ViewModels
         {
             if (items?.Count > 0)
             {
-                StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
             }
             if (IsMultipleSelection)
             {

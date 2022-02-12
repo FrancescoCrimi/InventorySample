@@ -17,59 +17,58 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Inventory.ViewModels
 {
-    #region SettingsArgs
-    public class SettingsArgs
+    public class SettingsViewModel : ObservableRecipient //ViewModelBase
     {
-        static public SettingsArgs CreateDefault() => new SettingsArgs();
-    }
-    #endregion
+        private readonly ISettingsService settingsService;
+        private readonly IMessageService messageService;
 
-    public class SettingsViewModel : ViewModelBase
-    {
-        public SettingsViewModel(ISettingsService settingsService, ICommonServices commonServices) : base(commonServices)
+        public SettingsViewModel(IMessageService messageService,
+                                 ISettingsService settingsService)
         {
-            SettingsService = settingsService;
+            this.messageService = messageService;
+            this.settingsService = settingsService;
         }
 
-        public ISettingsService SettingsService { get; }
-
-        public string Version => $"v{SettingsService.Version}";
+        public string Version => $"v{settingsService.Version}";
 
         private bool _isBusy = false;
         public bool IsBusy
         {
             get => _isBusy;
-            set => Set(ref _isBusy, value);
+            set => SetProperty(ref _isBusy, value);
         }
 
         private bool _isLocalProvider;
         public bool IsLocalProvider
         {
             get { return _isLocalProvider; }
-            set { if (Set(ref _isLocalProvider, value)) UpdateProvider(); }
+            set { if (SetProperty(ref _isLocalProvider, value)) UpdateProvider(); }
         }
 
         private bool _isSqlProvider;
         public bool IsSqlProvider
         {
             get => _isSqlProvider;
-            set => Set(ref _isSqlProvider, value);
+            set => SetProperty(ref _isSqlProvider, value);
         }
 
         private string _sqlConnectionString = null;
+
         public string SqlConnectionString
         {
             get => _sqlConnectionString;
-            set => Set(ref _sqlConnectionString, value);
+            set => SetProperty(ref _sqlConnectionString, value);
         }
 
         public bool IsRandomErrorsEnabled
         {
-            get { return SettingsService.IsRandomErrorsEnabled; }
-            set { SettingsService.IsRandomErrorsEnabled = value; }
+            get { return settingsService.IsRandomErrorsEnabled; }
+            set { settingsService.IsRandomErrorsEnabled = value; }
         }
 
         public ICommand ResetLocalDataCommand => new RelayCommand(OnResetLocalData);
@@ -83,12 +82,13 @@ namespace Inventory.ViewModels
         {
             ViewModelArgs = args ?? SettingsArgs.CreateDefault();
 
-            StatusReady();
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
 
-            IsLocalProvider = SettingsService.DataProvider == DataProviderType.SQLite;
+            IsLocalProvider = settingsService.DataProvider == DataProviderType.SQLite;
 
-            SqlConnectionString = SettingsService.SQLServerConnectionString;
-            IsSqlProvider = SettingsService.DataProvider == DataProviderType.SQLServer;
+            SqlConnectionString = settingsService.SQLServerConnectionString;
+            IsSqlProvider = settingsService.DataProvider == DataProviderType.SQLServer;
 
             return Task.CompletedTask;
         }
@@ -97,23 +97,26 @@ namespace Inventory.ViewModels
         {
             if (IsLocalProvider && !IsSqlProvider)
             {
-                SettingsService.DataProvider = DataProviderType.SQLite;
+                settingsService.DataProvider = DataProviderType.SQLite;
             }
         }
 
         private async void OnResetLocalData()
         {
             IsBusy = true;
-            StatusMessage("Waiting database reset...");
-            var result = await SettingsService.ResetLocalDataProviderAsync();
+            //StatusMessage("Waiting database reset...");
+            messageService.Send(this, "StatusMessage", "Waiting database reset...");
+            var result = await settingsService.ResetLocalDataProviderAsync();
             IsBusy = false;
             if (result.IsOk)
             {
-                StatusReady();
+                //StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
             }
             else
             {
-                StatusMessage(result.Message);
+                //StatusMessage(result.Message);
+                messageService.Send(this, "StatusMessage", result.Message);
             }
         }
 
@@ -124,38 +127,53 @@ namespace Inventory.ViewModels
 
         private async Task<bool> ValidateSqlConnectionAsync()
         {
-            StatusReady();
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
             IsBusy = true;
-            StatusMessage("Validating connection string...");
-            var result = await SettingsService.ValidateConnectionAsync(SqlConnectionString);
+            //StatusMessage("Validating connection string...");
+            messageService.Send(this, "StatusMessage", "Validating connection string...");
+            var result = await settingsService.ValidateConnectionAsync(SqlConnectionString);
             IsBusy = false;
             if (result.IsOk)
             {
-                StatusMessage(result.Message);
+                //StatusMessage(result.Message);
+                messageService.Send(this, "StatusMessage", result.Message);
                 return true;
             }
             else
             {
-                StatusMessage(result.Message);
+                //StatusMessage(result.Message);
+                messageService.Send(this, "StatusMessage", result.Message);
                 return false;
             }
         }
 
         private async void OnCreateDatabase()
         {
-            StatusReady();
-            DisableAllViews("Waiting for the database to be created...");
-            var result = await SettingsService.CreateDabaseAsync(SqlConnectionString);
-            EnableOtherViews();
-            EnableThisView("");
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+
+            //DisableAllViews("Waiting for the database to be created...");
+            messageService.Send(this, "DisableThisView", "Waiting for the database to be created...");
+
+            var result = await settingsService.CreateDabaseAsync(SqlConnectionString);
+
+            //EnableOtherViews();
+            messageService.Send(this, "EnableOtherViews", "Ready");
+
+            //EnableThisView("");
+            messageService.Send(this, "EnableThisView", "");
+
             await Task.Delay(100);
             if (result.IsOk)
             {
-                StatusMessage(result.Message);
+                //StatusMessage(result.Message);
+                messageService.Send(this, "StatusMessage", result.Message);
             }
             else
             {
-                StatusError("Error creating database");
+                //StatusError("Error creating database");
+                messageService.Send(this, "StatusError", "Error creating database");
             }
         }
 
@@ -165,13 +183,13 @@ namespace Inventory.ViewModels
             {
                 if (await ValidateSqlConnectionAsync())
                 {
-                    SettingsService.SQLServerConnectionString = SqlConnectionString;
-                    SettingsService.DataProvider = DataProviderType.SQLServer;
+                    settingsService.SQLServerConnectionString = SqlConnectionString;
+                    settingsService.DataProvider = DataProviderType.SQLServer;
                 }
             }
             else
             {
-                SettingsService.DataProvider = DataProviderType.SQLite;
+                settingsService.DataProvider = DataProviderType.SQLite;
             }
         }
     }

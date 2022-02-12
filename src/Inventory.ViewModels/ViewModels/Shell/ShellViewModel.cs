@@ -12,27 +12,28 @@
 // ******************************************************************
 #endregion
 
-using System;
 using System.Threading.Tasks;
 
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class ShellArgs
-    {
-        public Type ViewModel { get; set; }
-        public object Parameter { get; set; }
-        public UserInfo UserInfo { get; set; }
-    }
 
-    public class ShellViewModel : ViewModelBase
+    public class ShellViewModel : ObservableRecipient
     {
-        public ShellViewModel(
-            //ILoginService loginService,
-            ICommonServices commonServices)
-            : base(commonServices)
+        private readonly IMessageService messageService;
+        private readonly INavigationService navigationService;
+        private readonly IContextService contextService;
+
+        public ShellViewModel(IMessageService messageService,
+                              INavigationService navigationService,
+                              //ILoginService loginService,
+                              IContextService contextService)
         {
+            this.messageService = messageService;
+            this.navigationService = navigationService;
+            this.contextService = contextService;
             //IsLocked = !loginService.IsAuthenticated;
         }
 
@@ -40,28 +41,28 @@ namespace Inventory.ViewModels
         public bool IsLocked
         {
             get => _isLocked;
-            set => Set(ref _isLocked, value);
+            set => SetProperty(ref _isLocked, value);
         }
 
         private bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
-            set => Set(ref _isEnabled, value);
+            set => SetProperty(ref _isEnabled, value);
         }
 
         private string _message = "Ready";
         public string Message
         {
             get => _message;
-            set => Set(ref _message, value);
+            set => SetProperty(ref _message, value);
         }
 
         private bool _isError = false;
         public bool IsError
         {
             get => _isError;
-            set => Set(ref _isError, value);
+            set => SetProperty(ref _isError, value);
         }
 
         public UserInfo UserInfo { get; protected set; }
@@ -74,10 +75,11 @@ namespace Inventory.ViewModels
             if (ViewModelArgs != null)
             {
                 UserInfo = ViewModelArgs.UserInfo;
-                NavigationService.Navigate(ViewModelArgs.ViewModel, ViewModelArgs.Parameter);
+                navigationService.Navigate(ViewModelArgs.ViewModel, ViewModelArgs.Parameter);
             }
             return Task.CompletedTask;
         }
+
         virtual public void Unload()
         {
         }
@@ -85,12 +87,12 @@ namespace Inventory.ViewModels
         virtual public void Subscribe()
         {
             //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
-            MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
+            messageService.Subscribe<ViewModelBase, string>(this, OnMessage);
         }
 
         virtual public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
         }
 
         private async void OnLoginMessage(
@@ -100,7 +102,7 @@ namespace Inventory.ViewModels
         {
             if (message == "AuthenticationChanged")
             {
-                await ContextService.RunAsync(() =>
+                await contextService.RunAsync(() =>
                 {
                     IsLocked = !isAuthenticated;
                 });
@@ -113,7 +115,7 @@ namespace Inventory.ViewModels
             {
                 case "StatusMessage":
                 case "StatusError":
-                    if (viewModel.ContextService.ContextID == ContextService.ContextID)
+                    if (viewModel.ContextService.ContextID == contextService.ContextID)
                     {
                         IsError = message == "StatusError";
                         SetStatus(status);
@@ -122,7 +124,7 @@ namespace Inventory.ViewModels
 
                 case "EnableThisView":
                 case "DisableThisView":
-                    if (viewModel.ContextService.ContextID == ContextService.ContextID)
+                    if (viewModel.ContextService.ContextID == contextService.ContextID)
                     {
                         IsEnabled = message == "EnableThisView";
                         SetStatus(status);
@@ -131,9 +133,9 @@ namespace Inventory.ViewModels
 
                 case "EnableOtherViews":
                 case "DisableOtherViews":
-                    if (viewModel.ContextService.ContextID != ContextService.ContextID)
+                    if (viewModel.ContextService.ContextID != contextService.ContextID)
                     {
-                        await ContextService.RunAsync(() =>
+                        await contextService.RunAsync(() =>
                         {
                             IsEnabled = message == "EnableOtherViews";
                             SetStatus(status);
@@ -143,7 +145,7 @@ namespace Inventory.ViewModels
 
                 case "EnableAllViews":
                 case "DisableAllViews":
-                    await ContextService.RunAsync(() =>
+                    await contextService.RunAsync(() =>
                     {
                         IsEnabled = message == "EnableAllViews";
                         SetStatus(status);

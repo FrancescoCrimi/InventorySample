@@ -17,23 +17,37 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class ProductsViewModel : ViewModelBase
+    public class ProductsViewModel : ObservableRecipient //ViewModelBase
     {
-        public ProductsViewModel(IProductService productService, IOrderService orderService, IFilePickerService filePickerService, ICommonServices commonServices) : base(commonServices)
+        private readonly ILogger<ProductsViewModel> logger;
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly IProductService productService;
+
+        public ProductsViewModel(ILogger<ProductsViewModel> logger,
+                                 IMessageService messageService,
+                                 IContextService contextService,
+                                 IProductService productService,
+                                 ProductListViewModel productListViewModel,
+                                 ProductDetailsViewModel productDetailsViewModel)
         {
-            ProductService = productService;
-
-            ProductList = new ProductListViewModel(ProductService, commonServices);
-            ProductDetails = new ProductDetailsViewModel(ProductService, filePickerService, commonServices);
+            this.logger = logger;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.productService = productService;
+            ProductList = productListViewModel;
+            ProductDetails = productDetailsViewModel;
         }
-
-        public IProductService ProductService { get; }
 
         public ProductListViewModel ProductList { get; set; }
         public ProductDetailsViewModel ProductDetails { get; set; }
+
+        public bool IsMainView => contextService.IsMainView;
 
         public async Task LoadAsync(ProductListArgs args)
         {
@@ -47,13 +61,13 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
+            messageService.Subscribe<ProductListViewModel>(this, OnMessage);
             ProductList.Subscribe();
             ProductDetails.Subscribe();
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
             ProductList.Unsubscribe();
             ProductDetails.Unsubscribe();
         }
@@ -62,7 +76,7 @@ namespace Inventory.ViewModels
         {
             if (viewModel == ProductList && message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
+                await contextService.RunAsync(() =>
                 {
                     OnItemSelected();
                 });
@@ -73,7 +87,8 @@ namespace Inventory.ViewModels
         {
             if (ProductDetails.IsEditMode)
             {
-                StatusReady();
+                //StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
                 ProductDetails.CancelEdit();
             }
             var selected = ProductList.SelectedItem;
@@ -91,12 +106,13 @@ namespace Inventory.ViewModels
         {
             try
             {
-                var model = await ProductService.GetProductAsync(selected.ProductID);
+                var model = await productService.GetProductAsync(selected.ProductID);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                LogException("Products", "Load Details", ex);
+                //LogException("Products", "Load Details", ex);
+                logger.LogCritical(ex, "Load Details");
             }
         }
     }

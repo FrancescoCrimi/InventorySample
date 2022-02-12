@@ -20,35 +20,173 @@ using System.Windows.Input;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.ViewModels
 {
-    #region OrderItemDetailsArgs
-    public class OrderItemDetailsArgs
+    public class OrderItemDetailsViewModel : ObservableRecipient //GenericDetailsViewModel<OrderItemModel>
     {
-        static public OrderItemDetailsArgs CreateDefault() => new OrderItemDetailsArgs();
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly INavigationService navigationService;
+        private readonly IDialogService dialogService;
+        private readonly ILogger<OrderItemDetailsViewModel> logger;
+        private readonly IOrderItemService orderItemService;
 
-        public long OrderID { get; set; }
-        public int OrderLine { get; set; }
-
-        public bool IsNew => OrderLine <= 0;
-    }
-    #endregion
-
-    public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItemModel>
-    {
-        public OrderItemDetailsViewModel(IOrderItemService orderItemService, ICommonServices commonServices) : base(commonServices)
+        public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
+                                         IOrderItemService orderItemService,
+                                         IMessageService messageService,
+                                         IContextService contextService,
+                                         INavigationService navigationService,
+                                         IDialogService dialogService)
         {
-            OrderItemService = orderItemService;
+            this.logger = logger;
+            this.orderItemService = orderItemService;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.navigationService = navigationService;
+            this.dialogService = dialogService;
         }
 
-        public IOrderItemService OrderItemService { get; }
 
-        override public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
+        public bool CanGoBack => !contextService.IsMainView && navigationService.CanGoBack;
+
+        public ICommand BackCommand => new RelayCommand(OnBack);
+        virtual protected void OnBack()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+
+
+        public ILookupTables LookupTables => LookupTablesProxy.Instance;
+
+        public ICommand EditCommand => new RelayCommand(OnEdit);
+        virtual protected void OnEdit()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            BeginEdit();
+            messageService.Send(this, "BeginEdit", Item);
+        }
+        virtual public void BeginEdit()
+        {
+            if (!IsEditMode)
+            {
+                IsEditMode = true;
+                // Create a copy for edit
+                var editableItem = new OrderItemModel();
+                editableItem.Merge(Item);
+                EditableItem = editableItem;
+            }
+        }
+
+        public ICommand DeleteCommand => new RelayCommand(OnDelete);
+        virtual protected async void OnDelete()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (await ConfirmDeleteAsync())
+            {
+                await DeleteAsync();
+            }
+        }
+        virtual public async Task DeleteAsync()
+        {
+            var model = Item;
+            if (model != null)
+            {
+                IsEnabled = false;
+                if (await DeleteItemAsync(model))
+                {
+                    messageService.Send(this, "ItemDeleted", model);
+                }
+                else
+                {
+                    IsEnabled = true;
+                }
+            }
+        }
+
+        public ICommand SaveCommand => new RelayCommand(OnSave);
+        virtual protected async void OnSave()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            var result = Validate(EditableItem);
+            if (result.IsOk)
+            {
+                await SaveAsync();
+            }
+            else
+            {
+                await dialogService.ShowAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
+            }
+        }
+        virtual public Result Validate(OrderItemModel model)
+        {
+            foreach (var constraint in GetValidationConstraints(model))
+            {
+                if (!constraint.Validate(model))
+                {
+                    return Result.Error("Validation Error", constraint.Message);
+                }
+            }
+            return Result.Ok();
+        }
+        virtual public async Task SaveAsync()
+        {
+            IsEnabled = false;
+            bool isNew = ItemIsNew;
+            if (await SaveItemAsync(EditableItem))
+            {
+                Item.Merge(EditableItem);
+                Item.NotifyChanges();
+                OnPropertyChanged(nameof(Title));
+                EditableItem = Item;
+
+                if (isNew)
+                {
+                    messageService.Send(this, "NewItemSaved", Item);
+                }
+                else
+                {
+                    messageService.Send(this, "ItemChanged", Item);
+                }
+                IsEditMode = false;
+
+                OnPropertyChanged(nameof(ItemIsNew));
+            }
+            IsEnabled = true;
+        }
+
+        public ICommand CancelCommand => new RelayCommand(OnCancel);
+        virtual protected void OnCancel()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            CancelEdit();
+            messageService.Send(this, "CancelEdit", Item);
+        }
+
+
+
+
+
+
+
+        public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
         public string TitleNew => $"New Order Item, Order #{OrderID}";
         public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderID}" ?? String.Empty;
 
-        public override bool ItemIsNew => Item?.IsNew ?? true;
+        public bool ItemIsNew => Item?.IsNew ?? true;
 
         public OrderItemDetailsArgs ViewModelArgs { get; private set; }
 
@@ -78,12 +216,13 @@ namespace Inventory.ViewModels
             {
                 try
                 {
-                    var item = await OrderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
+                    var item = await orderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
                     Item = item ?? new OrderItemModel { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    LogException("OrderItem", "Load", ex);
+                    //LogException("OrderItem", "Load", ex);
+                    logger.LogCritical(ex, "Load");
                 }
             }
         }
@@ -94,12 +233,12 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderItemDetailsViewModel, OrderItemModel>(this, OnDetailsMessage);
-            MessageService.Subscribe<OrderItemListViewModel>(this, OnListMessage);
+            messageService.Subscribe<OrderItemDetailsViewModel, OrderItemModel>(this, OnDetailsMessage);
+            messageService.Subscribe<OrderItemListViewModel>(this, OnListMessage);
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
         }
 
         public OrderItemDetailsArgs CreateArgs()
@@ -111,16 +250,19 @@ namespace Inventory.ViewModels
             };
         }
 
-        protected override async Task<bool> SaveItemAsync(OrderItemModel model)
+        protected async Task<bool> SaveItemAsync(OrderItemModel model)
         {
             //try
             //{
             //    StartStatusMessage("Saving order item...");
-                await Task.Delay(100);
-                await OrderItemService.UpdateOrderItemAsync(model);
-                //EndStatusMessage("Order item saved");
-                LogInformation("OrderItem", "Save", "Order item saved successfully", $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
-                return true;
+            await Task.Delay(100);
+            await orderItemService.UpdateOrderItemAsync(model);
+            //EndStatusMessage("Order item saved");
+            
+            //LogInformation("OrderItem", "Save", "Order item saved successfully", $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
+            logger.LogInformation("Order item saved successfully", $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
+
+            return true;
             //}
             //catch (Exception ex)
             //{
@@ -130,16 +272,19 @@ namespace Inventory.ViewModels
             //}
         }
 
-        protected override async Task<bool> DeleteItemAsync(OrderItemModel model)
+        protected async Task<bool> DeleteItemAsync(OrderItemModel model)
         {
             //try
             //{
             //    StartStatusMessage("Deleting order item...");
-                await Task.Delay(100);
-                await OrderItemService.DeleteOrderItemAsync(model);
-                //EndStatusMessage("Order item deleted");
-                LogWarning("OrderItem", "Delete", "Order item deleted", $"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
-                return true;
+            await Task.Delay(100);
+            await orderItemService.DeleteOrderItemAsync(model);
+            //EndStatusMessage("Order item deleted");
+
+            //LogWarning("OrderItem", "Delete", "Order item deleted", $"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
+            logger.LogWarning("Order item deleted", $"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
+
+            return true;
             //}
             //catch (Exception ex)
             //{
@@ -149,12 +294,12 @@ namespace Inventory.ViewModels
             //}
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async Task<bool> ConfirmDeleteAsync()
         {
-            return await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current order item?", "Ok", "Cancel");
+            return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current order item?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<OrderItemModel>> GetValidationConstraints(OrderItemModel model)
+        protected IEnumerable<IValidationConstraint<OrderItemModel>> GetValidationConstraints(OrderItemModel model)
         {
             yield return new RequiredConstraint<OrderItemModel>("Product", m => m.ProductID);
             yield return new NonZeroConstraint<OrderItemModel>("Quantity", m => m.Quantity);
@@ -177,23 +322,26 @@ namespace Inventory.ViewModels
                     switch (message)
                     {
                         case "ItemChanged":
-                            await ContextService.RunAsync(async () =>
+                            await contextService.RunAsync(async () =>
                             {
                                 try
                                 {
-                                    var item = await OrderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
+                                    var item = await orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
                                     item = item ?? new OrderItemModel { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                                     current.Merge(item);
                                     current.NotifyChanges();
-                                    NotifyPropertyChanged(nameof(Title));
+                                    OnPropertyChanged(nameof(Title));
                                     if (IsEditMode)
                                     {
-                                        StatusMessage("WARNING: This orderItem has been modified externally");
+                                        //StatusMessage("WARNING: This orderItem has been modified externally");
+                                        messageService.Send(this, "StatusMessage", "WARNING: This orderItem has been modified externally");
+
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    LogException("OrderItem", "Handle Changes", ex);
+                                    //LogException("OrderItem", "Handle Changes", ex);
+                                    logger.LogCritical(ex, "Handle Changes");
                                 }
                             });
                             break;
@@ -224,7 +372,7 @@ namespace Inventory.ViewModels
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await OrderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
+                            var model = await orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -232,7 +380,8 @@ namespace Inventory.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            LogException("OrderItem", "Handle Ranges Deleted", ex);
+                            //LogException("OrderItem", "Handle Ranges Deleted", ex);
+                            logger.LogCritical(ex, "Handle Ranges Deleted");
                         }
                         break;
                 }
@@ -241,12 +390,87 @@ namespace Inventory.ViewModels
 
         private async Task OnItemDeletedExternally()
         {
-            await ContextService.RunAsync(() =>
+            await contextService.RunAsync(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
-                StatusMessage("WARNING: This orderItem has been deleted externally");
+                //StatusMessage("WARNING: This orderItem has been deleted externally");
+                messageService.Send(this, "StatusMessage", "WARNING: This orderItem has been deleted externally");
             });
         }
+
+
+
+
+
+
+        private OrderItemModel _item = null;
+        public OrderItemModel Item
+        {
+            get => _item;
+            set
+            {
+                if (SetProperty(ref _item, value))
+                {
+                    EditableItem = _item;
+                    IsEnabled = (!_item?.IsEmpty) ?? false;
+                    OnPropertyChanged(nameof(IsDataAvailable));
+                    OnPropertyChanged(nameof(IsDataUnavailable));
+                    OnPropertyChanged(nameof(Title));
+                }
+            }
+        }
+
+        private OrderItemModel _editableItem = null;
+        public OrderItemModel EditableItem
+        {
+            get => _editableItem;
+            set => SetProperty(ref _editableItem, value);
+        }
+
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
+
+        public bool IsDataAvailable => _item != null;
+        public bool IsDataUnavailable => !IsDataAvailable;
+
+        virtual public void CancelEdit()
+        {
+            if (ItemIsNew)
+            {
+                // We were creating a new item: cancel means exit
+                if (navigationService.CanGoBack)
+                {
+                    navigationService.GoBack();
+                }
+                else
+                {
+                    navigationService.CloseViewAsync();
+                }
+                return;
+            }
+
+            // We were editing an existing item: just cancel edition
+            if (IsEditMode)
+            {
+                EditableItem = Item;
+            }
+            IsEditMode = false;
+        }
+
+        private bool _isEditMode = false;
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set => SetProperty(ref _isEditMode, value);
+        }
+
+
+
+
     }
 }

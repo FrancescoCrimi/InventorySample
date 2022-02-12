@@ -17,21 +17,45 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class CustomersViewModel : ViewModelBase
+    public class CustomersViewModel : ObservableRecipient //ViewModelBase
     {
-        public CustomersViewModel(ICustomerService customerService, IOrderService orderService, IFilePickerService filePickerService, ICommonServices commonServices) : base(commonServices)
-        {
-            CustomerService = customerService;
+        private readonly ILogger<CustomersViewModel> logger;
+        private readonly IContextService contextService;
+        private readonly IMessageService messageService;
+        private readonly ICustomerService customerService;
 
-            CustomerList = new CustomerListViewModel(CustomerService, commonServices);
-            CustomerDetails = new CustomerDetailsViewModel(CustomerService, filePickerService, commonServices);
-            CustomerOrders = new OrderListViewModel(orderService, commonServices);
+        public CustomersViewModel(ILogger<CustomersViewModel> logger,
+                                  IContextService contextService,
+                                  IMessageService messageService,
+                                  ICustomerService customerService,
+                                  CustomerListViewModel customerListViewModel,
+                                  CustomerDetailsViewModel customerDetailsViewModel,
+                                  OrderListViewModel orderListViewModel)
+        {
+            this.logger = logger;
+            this.contextService = contextService;
+            this.messageService = messageService;
+            this.customerService = customerService;
+            CustomerList = customerListViewModel;
+            CustomerDetails = customerDetailsViewModel;
+            CustomerOrders = orderListViewModel;
         }
 
-        public ICustomerService CustomerService { get; }
+
+
+
+
+
+        public bool IsMainView => contextService.IsMainView;
+
+
+
+
 
         public CustomerListViewModel CustomerList { get; set; }
         public CustomerDetailsViewModel CustomerDetails { get; set; }
@@ -49,14 +73,14 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
+            messageService.Subscribe<CustomerListViewModel>(this, OnMessage);
             CustomerList.Subscribe();
             CustomerDetails.Subscribe();
             CustomerOrders.Subscribe();
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
             CustomerList.Unsubscribe();
             CustomerDetails.Unsubscribe();
             CustomerOrders.Unsubscribe();
@@ -66,7 +90,7 @@ namespace Inventory.ViewModels
         {
             if (viewModel == CustomerList && message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
+                await contextService.RunAsync(() =>
                 {
                     OnItemSelected();
                 });
@@ -77,7 +101,8 @@ namespace Inventory.ViewModels
         {
             if (CustomerDetails.IsEditMode)
             {
-                StatusReady();
+                //StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
                 CustomerDetails.CancelEdit();
             }
             CustomerOrders.IsMultipleSelection = false;
@@ -97,12 +122,13 @@ namespace Inventory.ViewModels
         {
             try
             {
-                var model = await CustomerService.GetCustomerAsync(selected.CustomerID);
+                var model = await customerService.GetCustomerAsync(selected.CustomerID);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                LogException("Customers", "Load Details", ex);
+                //LogException("Customers", "Load Details", ex);
+                logger.LogCritical(ex, "Load Details");
             }
         }
 
@@ -117,7 +143,8 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                LogException("Customers", "Load Orders", ex);
+                //LogException("Customers", "Load Orders", ex);
+                logger.LogCritical(ex, "Load Orders");
             }
         }
     }

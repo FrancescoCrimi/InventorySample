@@ -17,21 +17,41 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class OrdersViewModel : ViewModelBase
+    public class OrdersViewModel : ObservableRecipient //ViewModelBase
     {
-        public OrdersViewModel(IOrderService orderService, IOrderItemService orderItemService, ICommonServices commonServices) : base(commonServices)
-        {
-            OrderService = orderService;
+        private readonly ILogger<OrdersViewModel> logger;
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly IOrderService orderService;
 
-            OrderList = new OrderListViewModel(OrderService, commonServices);
-            OrderDetails = new OrderDetailsViewModel(OrderService, commonServices);
-            OrderItemList = new OrderItemListViewModel(orderItemService, commonServices);
+        public OrdersViewModel(ILogger<OrdersViewModel> logger,
+                               IMessageService messageService,
+                               IContextService contextService,
+                               IOrderService orderService,
+                               OrderListViewModel orderListViewModel,
+                               OrderDetailsViewModel orderDetailsViewModel,
+                               OrderItemListViewModel orderItemListViewModel)
+        {
+            this.logger = logger;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.orderService = orderService;
+            OrderList = orderListViewModel;
+            OrderDetails = orderDetailsViewModel;
+            OrderItemList = orderItemListViewModel;
         }
 
-        public IOrderService OrderService { get; }
+        public bool IsMainView => contextService.IsMainView;
+
+
+
+
+
 
         public OrderListViewModel OrderList { get; set; }
         public OrderDetailsViewModel OrderDetails { get; set; }
@@ -49,14 +69,14 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
+            messageService.Subscribe<OrderListViewModel>(this, OnMessage);
             OrderList.Subscribe();
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
             OrderList.Unsubscribe();
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
@@ -66,7 +86,7 @@ namespace Inventory.ViewModels
         {
             if (viewModel == OrderList && message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
+                await contextService.RunAsync(() =>
                 {
                     OnItemSelected();
                 });
@@ -77,7 +97,8 @@ namespace Inventory.ViewModels
         {
             if (OrderDetails.IsEditMode)
             {
-                StatusReady();
+                //StatusReady();
+                messageService.Send(this, "StatusMessage", "Ready");
                 OrderDetails.CancelEdit();
             }
             OrderItemList.IsMultipleSelection = false;
@@ -97,12 +118,13 @@ namespace Inventory.ViewModels
         {
             try
             {
-                var model = await OrderService.GetOrderAsync(selected.OrderID);
+                var model = await orderService.GetOrderAsync(selected.OrderID);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                LogException("Orders", "Load Details", ex);
+                //LogException("Orders", "Load Details", ex);
+                logger.LogCritical(ex, "Load Details");
             }
         }
 
@@ -117,7 +139,8 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                LogException("Orders", "Load OrderItems", ex);
+                //LogException("Orders", "Load OrderItems", ex);
+                logger.LogCritical(ex, "Load OrderItems");
             }
         }
     }

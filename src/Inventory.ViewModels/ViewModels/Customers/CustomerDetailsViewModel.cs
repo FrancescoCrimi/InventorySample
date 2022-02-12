@@ -20,35 +20,210 @@ using System.Windows.Input;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    #region CustomerDetailsArgs
-    public class CustomerDetailsArgs
+    public class CustomerDetailsViewModel : ObservableRecipient  //GenericDetailsViewModel<CustomerModel>
     {
-        static public CustomerDetailsArgs CreateDefault() => new CustomerDetailsArgs();
+        private readonly ILogger<CustomerDetailsViewModel> logger;
+        private readonly IMessageService messageService;
+        private readonly IContextService contextService;
+        private readonly IDialogService dialogService;
+        private readonly INavigationService navigationService;
+        private readonly ICustomerService customerService;
+        private readonly IFilePickerService filePickerService;
 
-        public long CustomerID { get; set; }
-
-        public bool IsNew => CustomerID <= 0;
-    }
-    #endregion
-
-    public class CustomerDetailsViewModel : GenericDetailsViewModel<CustomerModel>
-    {
-        public CustomerDetailsViewModel(ICustomerService customerService, IFilePickerService filePickerService, ICommonServices commonServices) : base(commonServices)
+        public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
+                                        ICustomerService customerService,
+                                        IMessageService messageService,
+                                        IContextService contextService,
+                                        IDialogService dialogService,
+                                        IFilePickerService filePickerService,
+                                        INavigationService navigationService)
         {
-            CustomerService = customerService;
-            FilePickerService = filePickerService;
+            this.logger = logger;
+            this.customerService = customerService;
+            this.messageService = messageService;
+            this.contextService = contextService;
+            this.dialogService = dialogService;
+            this.filePickerService = filePickerService;
+            this.navigationService = navigationService;
         }
 
-        public ICustomerService CustomerService { get; }
-        public IFilePickerService FilePickerService { get; }
+        public bool CanGoBack => !contextService.IsMainView && navigationService.CanGoBack;
 
-        override public string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
+        public ICommand BackCommand => new RelayCommand(OnBack);
+        virtual protected void OnBack()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+
+
+
+
+
+        public ILookupTables LookupTables => LookupTablesProxy.Instance;
+
+        public ICommand EditCommand => new RelayCommand(OnEdit);
+        virtual protected void OnEdit()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            BeginEdit();
+            messageService.Send(this, "BeginEdit", Item);
+        }
+
+        public ICommand DeleteCommand => new RelayCommand(OnDelete);
+        virtual protected async void OnDelete()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            if (await ConfirmDeleteAsync())
+            {
+                await DeleteAsync();
+            }
+        }
+        virtual public async Task DeleteAsync()
+        {
+            var model = Item;
+            if (model != null)
+            {
+                IsEnabled = false;
+                if (await DeleteItemAsync(model))
+                {
+                    messageService.Send(this, "ItemDeleted", model);
+                }
+                else
+                {
+                    IsEnabled = true;
+                }
+            }
+        }
+
+        public ICommand SaveCommand => new RelayCommand(OnSave);
+        virtual protected async void OnSave()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            var result = Validate(EditableItem);
+            if (result.IsOk)
+            {
+                await SaveAsync();
+            }
+            else
+            {
+                await dialogService.ShowAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
+            }
+        }
+        virtual public async Task SaveAsync()
+        {
+            IsEnabled = false;
+            bool isNew = ItemIsNew;
+            if (await SaveItemAsync(EditableItem))
+            {
+                Item.Merge(EditableItem);
+                Item.NotifyChanges();
+                OnPropertyChanged(nameof(Title));
+                EditableItem = Item;
+
+                if (isNew)
+                {
+                    messageService.Send(this, "NewItemSaved", Item);
+                }
+                else
+                {
+                    messageService.Send(this, "ItemChanged", Item);
+                }
+                IsEditMode = false;
+
+                OnPropertyChanged(nameof(ItemIsNew));
+            }
+            IsEnabled = true;
+        }
+
+        public ICommand CancelCommand => new RelayCommand(OnCancel);
+        virtual protected void OnCancel()
+        {
+            //StatusReady();
+            messageService.Send(this, "StatusMessage", "Ready");
+            CancelEdit();
+            messageService.Send(this, "CancelEdit", Item);
+        }
+
+
+        virtual public Result Validate(CustomerModel model)
+        {
+            foreach (var constraint in GetValidationConstraints(model))
+            {
+                if (!constraint.Validate(model))
+                {
+                    return Result.Error("Validation Error", constraint.Message);
+                }
+            }
+            return Result.Ok();
+        }
+
+
+
+
+
+
+
+        private CustomerModel _item = null;
+        public CustomerModel Item
+        {
+            get => _item;
+            set
+            {
+                if (SetProperty(ref _item, value))
+                {
+                    EditableItem = _item;
+                    IsEnabled = (!_item?.IsEmpty) ?? false;
+                    OnPropertyChanged(nameof(IsDataAvailable));
+                    OnPropertyChanged(nameof(IsDataUnavailable));
+                    OnPropertyChanged(nameof(Title));
+                }
+            }
+        }
+
+        private CustomerModel _editableItem = null;
+        public CustomerModel EditableItem
+        {
+            get => _editableItem;
+            set => SetProperty(ref _editableItem, value);
+        }
+
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
+
+        public bool IsDataAvailable => _item != null;
+        public bool IsDataUnavailable => !IsDataAvailable;
+
+        public string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
         public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
 
-        public override bool ItemIsNew => Item?.IsNew ?? true;
+        public bool ItemIsNew => Item?.IsNew ?? true;
+
+        private bool _isEditMode = false;
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set => SetProperty(ref _isEditMode, value);
+        }
+
 
         public CustomerDetailsArgs ViewModelArgs { get; private set; }
 
@@ -65,12 +240,13 @@ namespace Inventory.ViewModels
             {
                 try
                 {
-                    var item = await CustomerService.GetCustomerAsync(ViewModelArgs.CustomerID);
+                    var item = await customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
                     Item = item ?? new CustomerModel { CustomerID = ViewModelArgs.CustomerID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    LogException("Customer", "Load", ex);
+                    //LogException("Customer", "Load", ex);
+                    logger.LogCritical(ex, "Load");
                 }
             }
         }
@@ -81,12 +257,12 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
-            MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
+            messageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
+            messageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
         }
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            messageService.Unsubscribe(this);
         }
 
         public CustomerDetailsArgs CreateArgs()
@@ -98,23 +274,31 @@ namespace Inventory.ViewModels
         }
 
         private object _newPictureSource = null;
+
         public object NewPictureSource
         {
             get => _newPictureSource;
-            set => Set(ref _newPictureSource, value);
+            set => SetProperty(ref _newPictureSource, value);
         }
 
-        public override void BeginEdit()
+        public  void BeginEdit()
         {
             NewPictureSource = null;
-            base.BeginEdit();
+            if (!IsEditMode)
+            {
+                IsEditMode = true;
+                // Create a copy for edit
+                var editableItem = new CustomerModel();
+                editableItem.Merge(Item);
+                EditableItem = editableItem;
+            }
         }
 
         public ICommand EditPictureCommand => new RelayCommand(OnEditPicture);
         private async void OnEditPicture()
         {
             NewPictureSource = null;
-            var result = await FilePickerService.OpenImagePickerAsync();
+            var result = await filePickerService.OpenImagePickerAsync();
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
@@ -129,16 +313,19 @@ namespace Inventory.ViewModels
             }
         }
 
-        protected override async Task<bool> SaveItemAsync(CustomerModel model)
+        protected async Task<bool> SaveItemAsync(CustomerModel model)
         {
             //try
             //{
             //    StartStatusMessage("Saving customer...");
                 await Task.Delay(100);
-                await CustomerService.UpdateCustomerAsync(model);
+                await customerService.UpdateCustomerAsync(model);
                 //EndStatusMessage("Customer saved");
-                LogInformation("Customer", "Save", "Customer saved successfully", $"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
-                return true;
+
+                //LogInformation("Customer", "Save", "Customer saved successfully", $"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
+            logger.LogInformation("Customer saved successfully", $"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
+
+            return true;
             //}
             //catch (Exception ex)
             //{
@@ -148,15 +335,18 @@ namespace Inventory.ViewModels
             //}
         }
 
-        protected override async Task<bool> DeleteItemAsync(CustomerModel model)
+        protected async Task<bool> DeleteItemAsync(CustomerModel model)
         {
             //try
             //{
             //    StartStatusMessage("Deleting customer...");
                 await Task.Delay(100);
-                await CustomerService.DeleteCustomerAsync(model);
+                await customerService.DeleteCustomerAsync(model);
                 //EndStatusMessage("Customer deleted");
-                LogWarning("Customer", "Delete", "Customer deleted", $"Customer {model.CustomerID} '{model.FullName}' was deleted.");
+
+                //LogWarning("Customer", "Delete", "Customer deleted", $"Customer {model.CustomerID} '{model.FullName}' was deleted.");
+            logger.LogWarning("Customer deleted", $"Customer {model.CustomerID} '{model.FullName}' was deleted.");
+
                 return true;
             //}
             //catch (Exception ex)
@@ -167,12 +357,12 @@ namespace Inventory.ViewModels
             //}
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async Task<bool> ConfirmDeleteAsync()
         {
-            return await DialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current customer?", "Ok", "Cancel");
+            return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current customer?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<CustomerModel>> GetValidationConstraints(CustomerModel model)
+         protected IEnumerable<IValidationConstraint<CustomerModel>> GetValidationConstraints(CustomerModel model)
         {
             yield return new RequiredConstraint<CustomerModel>("First Name", m => m.FirstName);
             yield return new RequiredConstraint<CustomerModel>("Last Name", m => m.LastName);
@@ -197,23 +387,25 @@ namespace Inventory.ViewModels
                     switch (message)
                     {
                         case "ItemChanged":
-                            await ContextService.RunAsync(async () =>
+                            await contextService.RunAsync(async () =>
                             {
                                 try
                                 {
-                                    var item = await CustomerService.GetCustomerAsync(current.CustomerID);
+                                    var item = await customerService.GetCustomerAsync(current.CustomerID);
                                     item = item ?? new CustomerModel { CustomerID = current.CustomerID, IsEmpty = true };
                                     current.Merge(item);
                                     current.NotifyChanges();
-                                    NotifyPropertyChanged(nameof(Title));
+                                    OnPropertyChanged(nameof(Title));
                                     if (IsEditMode)
                                     {
-                                        StatusMessage("WARNING: This customer has been modified externally");
+                                        //StatusMessage("WARNING: This customer has been modified externally")
+                                        messageService.Send(this, "StatusMessage", "WARNING: This customer has been modified externally");
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-                                    LogException("Customer", "Handle Changes", ex);
+                                    //LogException("Customer", "Handle Changes", ex);
+                                    logger.LogCritical(ex, "Handle Changes");
                                 }
                             });
                             break;
@@ -244,7 +436,7 @@ namespace Inventory.ViewModels
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await CustomerService.GetCustomerAsync(current.CustomerID);
+                            var model = await customerService.GetCustomerAsync(current.CustomerID);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -252,7 +444,8 @@ namespace Inventory.ViewModels
                         }
                         catch (Exception ex)
                         {
-                            LogException("Customer", "Handle Ranges Deleted", ex);
+                            //LogException("Customer", "Handle Ranges Deleted", ex);
+                            logger.LogCritical(ex, "Handle Ranges Deleted");
                         }
                         break;
                 }
@@ -261,12 +454,37 @@ namespace Inventory.ViewModels
 
         private async Task OnItemDeletedExternally()
         {
-            await ContextService.RunAsync(() =>
+            await contextService.RunAsync(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
-                StatusMessage("WARNING: This customer has been deleted externally");
+                //StatusMessage("WARNING: This customer has been deleted externally");
+                messageService.Send(this, "StatusMessage", "WARNING: This customer has been deleted externally");
             });
+        }
+
+        virtual public void CancelEdit()
+        {
+            if (ItemIsNew)
+            {
+                // We were creating a new item: cancel means exit
+                if (navigationService.CanGoBack)
+                {
+                    navigationService.GoBack();
+                }
+                else
+                {
+                    navigationService.CloseViewAsync();
+                }
+                return;
+            }
+
+            // We were editing an existing item: just cancel edition
+            if (IsEditMode)
+            {
+                EditableItem = Item;
+            }
+            IsEditMode = false;
         }
     }
 }
