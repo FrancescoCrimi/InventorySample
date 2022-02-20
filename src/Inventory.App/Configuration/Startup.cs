@@ -30,12 +30,14 @@ using Inventory.Views;
 using Inventory.ViewModels;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory
 {
     static public class Startup
     {
         static private readonly ServiceCollection _serviceCollection = new ServiceCollection();
+
 
         static public async Task ConfigureAsync()
         {
@@ -50,8 +52,9 @@ namespace Inventory
             await EnsureDatabaseAsync();
             await ConfigureLookupTables();
 
-            var logService = Ioc.Default.GetService<ILogService>();
-            await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
+            //var logService = Ioc.Default.GetService<ILogService>();
+            //await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
+            Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Startup).Name).LogInformation("Application started.");
 
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
         }

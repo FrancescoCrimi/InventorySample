@@ -260,7 +260,7 @@ namespace Inventory.ViewModels
             //EndStatusMessage("Order item saved");
             
             //LogInformation("OrderItem", "Save", "Order item saved successfully", $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
-            logger.LogInformation("Order item saved successfully", $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
+            logger.LogInformation( $"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
 
             return true;
             //}
@@ -282,7 +282,7 @@ namespace Inventory.ViewModels
             //EndStatusMessage("Order item deleted");
 
             //LogWarning("OrderItem", "Delete", "Order item deleted", $"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
-            logger.LogWarning("Order item deleted", $"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
+            logger.LogWarning($"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
 
             return true;
             //}

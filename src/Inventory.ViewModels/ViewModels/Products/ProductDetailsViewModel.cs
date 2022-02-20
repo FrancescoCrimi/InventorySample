@@ -273,7 +273,7 @@ namespace Inventory.ViewModels
             //EndStatusMessage("Product saved");
 
             //LogInformation("Product", "Save", "Product saved successfully", $"Product {model.ProductID} '{model.Name}' was saved successfully.");
-            logger.LogInformation("Product saved successfully", $"Product {model.ProductID} '{model.Name}' was saved successfully.");
+            logger.LogInformation($"Product {model.ProductID} '{model.Name}' was saved successfully.");
 
             return true;
             //}

@@ -104,6 +104,7 @@ namespace Inventory.ViewModels
                 //TODO: LogService
                 //var model = await LogService.GetLogAsync(selected.Id);
                 //selected.Merge(model);
+                await Task.CompletedTask;
             }
             catch (Exception ex)
             {

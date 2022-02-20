@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Inventory.Data;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.ViewModels
 {
@@ -31,18 +32,22 @@ namespace Inventory.ViewModels
         private readonly NavigationItem ProductsItem = new NavigationItem(0xE781, "Products", typeof(ProductsViewModel));
         private readonly NavigationItem AppLogsItem = new NavigationItem(0xE7BA, "Activity Log", typeof(AppLogsViewModel));
         private readonly NavigationItem SettingsItem = new NavigationItem(0x0000, "Settings", typeof(SettingsViewModel));
+        private readonly ILogger<MainShellViewModel> logger;
         private readonly IMessageService messageService;
         private readonly IContextService contextService;
         private readonly INavigationService navigationService;
         private readonly IDialogService dialogService;
 
-        public MainShellViewModel(IMessageService messageService,
+        public MainShellViewModel(ILogger<MainShellViewModel> logger,
+                                  IMessageService messageService,
                                      IContextService contextService,
                                      INavigationService navigationService,
-                                     IDialogService dialogService,
+                                     IDialogService dialogService
             //ILoginService loginService,
-            ICommonServices commonServices)
+            //ICommonServices commonServices
+            )
         {
+            this.logger = logger;
             this.messageService = messageService;
             this.contextService = contextService;
             this.navigationService = navigationService;
@@ -233,6 +238,7 @@ namespace Inventory.ViewModels
             //TODO: LogService
             //int count = await LogService.GetLogsCountAsync(new DataRequest<AppLog> { Where = r => !r.IsRead });
             //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+            await Task.CompletedTask;
         }
     }
 }

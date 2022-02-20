@@ -194,6 +194,7 @@ namespace Inventory.ViewModels
                 //TODO: LogService
                 //var item = await LogService.GetLogAsync(ViewModelArgs.AppLogID);
                 //Item = item ?? new AppLogModel { Id = 0, IsEmpty = true };
+                await Task.CompletedTask;
             }
             catch (Exception ex)
             {

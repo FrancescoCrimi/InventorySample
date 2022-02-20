@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -34,7 +35,7 @@ namespace Inventory.Data
         public string User { get; set; }
 
         [Required]
-        public LogType Type { get; set; }
+        public LogLevel Type { get; set; }
 
         [Required]
         [MaxLength(50)]

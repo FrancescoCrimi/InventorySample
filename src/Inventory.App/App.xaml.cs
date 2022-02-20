@@ -25,21 +25,33 @@ using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Inventory.ViewModels;
+using Inventory.Data.DataContexts;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Inventory.Services.Infrastructure.LogService;
+using Microsoft.Extensions.Logging.Configuration;
 
 namespace Inventory
 {
     sealed partial class App : Application
     {
+        //private readonly ILogger logger;
+
         public App()
         {
             InitializeComponent();
+
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            //ApplicationView.PreferredLaunchViewSize = new Size(1280, 840);
+
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
 
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            ApplicationView.PreferredLaunchViewSize = new Size(1280, 840);
-
             Ioc.Default.ConfigureServices(ConfigureServices());
+            //logger = Ioc.Default.GetRequiredService<ILogger<App>>();
+            //var factory = Ioc.Default.GetService<ILoggerFactory>();
+            //logger = factory.CreateLogger(typeof(App).Name);
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -57,24 +69,35 @@ namespace Inventory
             }
         }
 
-        private async void OnSuspending(object sender, SuspendingEventArgs e)
+        private  void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            var logService = Ioc.Default.GetService<ILogService>();
-            await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
+            //var logService = Ioc.Default.GetService<ILogService>();
+            //await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
+            //logger.LogInformation($"Application ended by '{AppSettings.Current.UserName}'.");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            var logService = Ioc.Default.GetService<ILogService>();
-            logService.WriteAsync(Data.LogType.Error, "App", "UnhandledException", e.Message, e.Exception.ToString());
+            //var logService = Ioc.Default.GetService<ILogService>();
+            //logService.WriteAsync(Data.LogType.Error, "App", "UnhandledException", e.Message, e.Exception.ToString());
+            //logger.LogError("UnhandledException: " + e.Message);
         }
 
         private IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
             services
-                .AddLogging()
-
+                .AddLogging(builder => {
+                    //builder.ClearProviders();
+                    //builder.AddConfiguration();
+                    builder.Services.TryAddEnumerable(
+                        ServiceDescriptor.Singleton<ILoggerProvider, DatabaseLoggerProvider>());
+                    //builder.Services.Configure()
+                })
+                .AddDbContext<AppLogDbContext>(option =>
+                {
+                    option.UseSqlite(AppSettings.Current.AppLogConnectionString);
+                })
             .AddSingleton<ISettingsService, SettingsService>()
             .AddSingleton<IDataServiceFactory, DataServiceFactory>()
             .AddSingleton<ILookupTables, LookupTables>()
@@ -84,14 +107,14 @@ namespace Inventory
             .AddSingleton<IProductService, ProductService>()
 
             .AddSingleton<IMessageService, MessageService>()
-            .AddSingleton<ILogService, LogService>()
+            //.AddSingleton<ILogService, LogService>()
             .AddSingleton<IDialogService, DialogService>()
             .AddSingleton<IFilePickerService, FilePickerService>()
             //.AddSingleton<ILoginService, LoginService>()
 
             .AddScoped<IContextService, ContextService>()
             .AddScoped<INavigationService, NavigationService>()
-            .AddScoped<ICommonServices, CommonServices>()
+            //.AddScoped<ICommonServices, CommonServices>()
 
             .AddTransient<LoginViewModel>()
 

@@ -27,8 +27,9 @@ namespace Inventory.ViewModels
         public LoginViewModel(IDialogService dialogService,
             INavigationService navigationService,
             //ILoginService loginService,
-            ISettingsService settingsService,
-            ICommonServices commonServices)
+            ISettingsService settingsService
+            //ICommonServices commonServices
+            )
             //: base(commonServices)
         {
             this.dialogService = dialogService;
@@ -135,7 +136,7 @@ namespace Inventory.ViewModels
             IsBusy = false;
         }
 
-        public async void LoginWithWindowHello()
+        public  void LoginWithWindowHello()
         {
             //IsBusy = true;
             //var result = await LoginService.SignInWithWindowsHelloAsync();

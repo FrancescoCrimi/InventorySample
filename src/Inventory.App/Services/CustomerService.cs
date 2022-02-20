@@ -20,19 +20,26 @@ using System.Threading.Tasks;
 using Inventory.Data;
 using Inventory.Data.Services;
 using Inventory.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Services
 {
     public class CustomerService : ICustomerService
     {
-        public CustomerService(IDataServiceFactory dataServiceFactory, ILogService logService)
+        private readonly ILogger<CustomerService> logger;
+
+        public CustomerService(ILogger<CustomerService> logger,
+                               IDataServiceFactory dataServiceFactory
+                               //ILogService logService
+                               )
         {
+            this.logger = logger;
             DataServiceFactory = dataServiceFactory;
-            LogService = logService;
+            //LogService = logService;
         }
 
         public IDataServiceFactory DataServiceFactory { get; }
-        public ILogService LogService { get; }
+        //public ILogService LogService { get; }
 
         public async Task<CustomerModel> GetCustomerAsync(long id)
         {
@@ -53,7 +60,7 @@ namespace Inventory.Services
 
         public async Task<IList<CustomerModel>> GetCustomersAsync(DataRequest<Customer> request)
         {
-            var collection = new CustomerCollection(this, LogService);
+            var collection = new CustomerCollection(this/*, LogService*/);
             await collection.LoadAsync(request);
             return collection;
         }

@@ -323,7 +323,7 @@ namespace Inventory.ViewModels
                 //EndStatusMessage("Customer saved");
 
                 //LogInformation("Customer", "Save", "Customer saved successfully", $"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
-            logger.LogInformation("Customer saved successfully", $"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
+                logger.LogInformation($"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
 
             return true;
             //}
@@ -345,7 +345,7 @@ namespace Inventory.ViewModels
                 //EndStatusMessage("Customer deleted");
 
                 //LogWarning("Customer", "Delete", "Customer deleted", $"Customer {model.CustomerID} '{model.FullName}' was deleted.");
-            logger.LogWarning("Customer deleted", $"Customer {model.CustomerID} '{model.FullName}' was deleted.");
+                logger.LogWarning($"Customer {model.CustomerID} '{model.FullName}' was deleted.");
 
                 return true;
             //}

@@ -14,7 +14,7 @@
 
 using System;
 using System.Diagnostics;
-
+using System.Threading.Tasks;
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
@@ -25,33 +25,33 @@ namespace Inventory.ViewModels
     {
         //private Stopwatch _stopwatch = new Stopwatch();
 
-        public ViewModelBase(ICommonServices commonServices)
+        public ViewModelBase(/*ICommonServices commonServices*/)
         {
-            ContextService = commonServices.ContextService;
-            NavigationService = commonServices.NavigationService;
-            messageService = commonServices.MessageService;
-            DialogService = commonServices.DialogService;
-            LogService = commonServices.LogService;
+            //ContextService = commonServices.ContextService;
+            //NavigationService = commonServices.NavigationService;
+            //messageService = commonServices.MessageService;
+            //DialogService = commonServices.DialogService;
+            //LogService = commonServices.LogService;
         }
 
         public IContextService ContextService { get; }
         public INavigationService NavigationService { get; }
         public IMessageService messageService { get; }
         public IDialogService DialogService { get; }
-        public ILogService LogService { get; }
+        //public ILogService LogService { get; }
 
         public bool IsMainView => ContextService.IsMainView;
 
         virtual public string Title => String.Empty;
 
-        public async void LogInformation(string source, string action, string message, string description)
+        public  void LogInformation(string source, string action, string message, string description)
         {
-            await LogService.WriteAsync(LogType.Information, source, action, message, description);
+            //await LogService.WriteAsync(LogType.Information, source, action, message, description);
         }
 
-        public async void LogWarning(string source, string action, string message, string description)
+        public  void LogWarning(string source, string action, string message, string description)
         {
-            await LogService.WriteAsync(LogType.Warning, source, action, message, description);
+            //await LogService.WriteAsync(LogType.Warning, source, action, message, description);
         }
 
         public void LogException(string source, string action, Exception exception)
@@ -61,7 +61,8 @@ namespace Inventory.ViewModels
 
         public async void LogError(string source, string action, string message, string description)
         {
-            await LogService.WriteAsync(LogType.Error, source, action, message, description);
+            //await LogService.WriteAsync(LogType.Error, source, action, message, description);
+            await Task.CompletedTask;
         }
 
         //public void StartStatusMessage(string message)

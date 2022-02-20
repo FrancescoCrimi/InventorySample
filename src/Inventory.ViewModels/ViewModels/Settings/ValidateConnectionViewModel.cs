@@ -29,8 +29,9 @@ namespace Inventory.ViewModels
     public class ValidateConnectionViewModel : ObservableRecipient
     {
         public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger,
-                                           ISettingsService settingsService,
-                                           ICommonServices commonServices)
+                                           ISettingsService settingsService
+                                           //ICommonServices commonServices
+            )
             //: base(commonServices)
         {
             this.logger = logger;

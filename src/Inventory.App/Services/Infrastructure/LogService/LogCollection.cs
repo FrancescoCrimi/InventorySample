@@ -25,7 +25,8 @@ namespace Inventory.Services
     {
         private DataRequest<AppLog> _dataRequest = null;
 
-        public LogCollection(ILogService logService) : base(logService)
+        public LogCollection(/*ILogService logService*/) 
+            : base(/*logService*/)
         {
         }
 
@@ -37,7 +38,7 @@ namespace Inventory.Services
             try
             {
                 _dataRequest = dataRequest;
-                Count = await LogService.GetLogsCountAsync(_dataRequest);
+                //Count = await LogService.GetLogsCountAsync(_dataRequest);
                 Ranges[0] = await FetchDataAsync(0, RangeSize);
             }
             catch (Exception ex)
@@ -47,11 +48,11 @@ namespace Inventory.Services
             }
         }
 
-        protected override async Task<IList<AppLogModel>> FetchDataAsync(int rangeIndex, int rangeSize)
+        protected override  Task<IList<AppLogModel>> FetchDataAsync(int rangeIndex, int rangeSize)
         {
             try
             {
-                return await LogService.GetLogsAsync(rangeIndex * rangeSize, rangeSize, _dataRequest);
+                //return await LogService.GetLogsAsync(rangeIndex * rangeSize, rangeSize, _dataRequest);
             }
             catch (Exception ex)
             {

@@ -30,8 +30,9 @@ namespace Inventory.ViewModels
             INavigationService navigationService,
             ICustomerService customerService,
                                   IOrderService orderService,
-                                  IProductService productService,
-                                  ICommonServices commonServices)
+                                  IProductService productService
+                                  //ICommonServices commonServices
+            )
             //: base(commonServices)
         {
             this.logger = logger;

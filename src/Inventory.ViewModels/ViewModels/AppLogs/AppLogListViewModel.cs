@@ -175,7 +175,7 @@ namespace Inventory.ViewModels
 
             //try
             //{
-                Items = await GetItemsAsync();
+            Items = await GetItemsAsync();
             //}
             //catch (Exception ex)
             //{
@@ -195,7 +195,7 @@ namespace Inventory.ViewModels
             return isOk;
         }
 
-        private async Task<IList<AppLogModel>> GetItemsAsync()
+        private  Task<IList<AppLogModel>> GetItemsAsync()
         {
             //TODO: LogService
             //if (!ViewModelArgs.IsEmpty)
@@ -203,15 +203,16 @@ namespace Inventory.ViewModels
             //    DataRequest<AppLog> request = BuildDataRequest();
             //    return await LogService.GetLogsAsync(request);
             //}
-            return new List<AppLogModel>();
+            return Task.Run(() => (IList<AppLogModel>)new List<AppLogModel>());
+            //return new List<AppLogModel>();
         }
 
-        protected  void OnNew()
+        protected void OnNew()
         {
             throw new NotImplementedException();
         }
 
-        protected  async void OnRefresh()
+        protected async void OnRefresh()
         {
             //StartStatusMessage("Loading logs...");
             if (await RefreshAsync())
@@ -220,7 +221,7 @@ namespace Inventory.ViewModels
             }
         }
 
-        protected  async void OnDeleteSelection()
+        protected async void OnDeleteSelection()
         {
             //StatusReady();
             messageService.Send(this, "StatusMessage", "Ready");
@@ -229,20 +230,20 @@ namespace Inventory.ViewModels
                 int count = 0;
                 //try
                 //{
-                    if (SelectedIndexRanges != null)
-                    {
-                        count = SelectedIndexRanges.Sum(r => r.Length);
-                        //StartStatusMessage($"Deleting {count} logs...");
-                        await DeleteRangesAsync(SelectedIndexRanges);
+                if (SelectedIndexRanges != null)
+                {
+                    count = SelectedIndexRanges.Sum(r => r.Length);
+                    //StartStatusMessage($"Deleting {count} logs...");
+                    await DeleteRangesAsync(SelectedIndexRanges);
                     messageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                    }
-                    else if (SelectedItems != null)
-                    {
-                        count = SelectedItems.Count();
-                        //StartStatusMessage($"Deleting {count} logs...");
-                        await DeleteItemsAsync(SelectedItems);
+                }
+                else if (SelectedItems != null)
+                {
+                    count = SelectedItems.Count();
+                    //StartStatusMessage($"Deleting {count} logs...");
+                    await DeleteItemsAsync(SelectedItems);
                     messageService.Send(this, "ItemsDeleted", SelectedItems);
-                    }
+                }
                 //}
                 //catch (Exception ex)
                 //{
@@ -266,6 +267,7 @@ namespace Inventory.ViewModels
             {
                 //TODO: LogService
                 //await LogService.DeleteLogAsync(model);
+                await Task.CompletedTask;
             }
         }
 
@@ -276,6 +278,7 @@ namespace Inventory.ViewModels
             {
                 //TODO: LogService
                 //await LogService.DeleteLogRangeAsync(range.Index, range.Length, request);
+                await Task.CompletedTask;
             }
         }
 

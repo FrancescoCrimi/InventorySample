@@ -33,10 +33,13 @@ namespace Inventory.Services
 
         private DispatcherTimer _timer = null;
         bool MustExploreDeepExceptions { get;  set; }
-        public VirtualCollection(ILogService logService, int rangeSize = 16, bool mustExploreDeepExceptions=false)
+        public VirtualCollection(
+                                 //ILogService logService,
+                                 int rangeSize = 16,
+                                 bool mustExploreDeepExceptions = false)
         {
             MustExploreDeepExceptions = mustExploreDeepExceptions;
-            LogService = logService;
+            //LogService = logService;
 
             RangeSize = rangeSize;
             Ranges = new Dictionary<int, IList<T>>();
@@ -46,7 +49,7 @@ namespace Inventory.Services
             _timer.Tick += OnTimerTick;
         }
 
-        public ILogService LogService { get; }
+        //public ILogService LogService { get; }
 
         public Dictionary<int, IList<T>> Ranges { get; }
 
@@ -145,15 +148,15 @@ namespace Inventory.Services
             }
         }
 
-        protected async void LogException(string source, string action, Exception exception)
+        protected  void LogException(string source, string action, Exception exception)
         {
             if (MustExploreDeepExceptions == false)
             {
-                await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
+                //await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
             }
             else
             {
-                await LogService.WriteAsync(LogType.Error, source, action, exception);
+                //await LogService.WriteAsync(LogType.Error, source, action, exception);
             }
         }
 

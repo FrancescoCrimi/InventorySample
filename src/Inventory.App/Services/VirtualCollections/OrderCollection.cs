@@ -25,7 +25,7 @@ namespace Inventory.Services
     {
         private DataRequest<Order> _dataRequest = null;
 
-        public OrderCollection(IOrderService orderService, ILogService logService) : base(logService)
+        public OrderCollection(IOrderService orderService/*, ILogService logService*/) : base(/*logService*/)
         {
             OrderService = orderService;
         }

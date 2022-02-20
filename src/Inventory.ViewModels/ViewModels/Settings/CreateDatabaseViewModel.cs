@@ -29,8 +29,9 @@ namespace Inventory.ViewModels
     public class CreateDatabaseViewModel : ObservableRecipient
     {
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
-                                       ISettingsService settingsService,
-                                       ICommonServices commonServices)
+                                       ISettingsService settingsService
+                                       //ICommonServices commonServices
+            )
             //: base(commonServices)
         {
             this.logger = logger;

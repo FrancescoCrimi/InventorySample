@@ -260,7 +260,7 @@ namespace Inventory.ViewModels
             //EndStatusMessage("Order saved");
 
             //LogInformation("Order", "Save", "Order saved successfully", $"Order #{model.OrderID} was saved successfully.");
-            logger.LogInformation("Save", "Order saved successfully", $"Order #{model.OrderID} was saved successfully.");
+            logger.LogInformation($"Order #{model.OrderID} was saved successfully.");
 
             OnPropertyChanged(nameof(CanEditCustomer));
             return true;
@@ -283,7 +283,7 @@ namespace Inventory.ViewModels
             //EndStatusMessage("Order deleted");
 
             //LogWarning("Order", "Delete", "Order deleted", $"Order #{model.OrderID} was deleted.");
-            logger.LogWarning("Order deleted", $"Order #{model.OrderID} was deleted.");
+            logger.LogWarning($"Order #{model.OrderID} was deleted.");
 
             return true;
             //}

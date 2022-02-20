@@ -25,14 +25,14 @@ namespace Inventory.Services
 {
     public class OrderService : IOrderService
     {
-        public OrderService(IDataServiceFactory dataServiceFactory, ILogService logService)
+        public OrderService(IDataServiceFactory dataServiceFactory/*, ILogService logService*/)
         {
             DataServiceFactory = dataServiceFactory;
-            LogService = logService;
+            //LogService = logService;
         }
 
         public IDataServiceFactory DataServiceFactory { get; }
-        public ILogService LogService { get; }
+        //public ILogService LogService { get; }
 
         public async Task<OrderModel> GetOrderAsync(long id)
         {
@@ -53,7 +53,7 @@ namespace Inventory.Services
 
         public async Task<IList<OrderModel>> GetOrdersAsync(DataRequest<Order> request)
         {
-            var collection = new OrderCollection(this, LogService);
+            var collection = new OrderCollection(this/*, LogService*/);
             await collection.LoadAsync(request);
             return collection;
         }

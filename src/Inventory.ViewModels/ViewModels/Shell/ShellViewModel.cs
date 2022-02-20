@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 
 using Inventory.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
@@ -22,15 +23,18 @@ namespace Inventory.ViewModels
 
     public class ShellViewModel : ObservableRecipient
     {
+        private readonly ILogger<ShellViewModel> logger;
         private readonly IMessageService messageService;
         private readonly INavigationService navigationService;
         private readonly IContextService contextService;
 
-        public ShellViewModel(IMessageService messageService,
+        public ShellViewModel(ILogger<ShellViewModel> logger,
+            IMessageService messageService,
                               INavigationService navigationService,
                               //ILoginService loginService,
                               IContextService contextService)
         {
+            this.logger = logger;
             this.messageService = messageService;
             this.navigationService = navigationService;
             this.contextService = contextService;

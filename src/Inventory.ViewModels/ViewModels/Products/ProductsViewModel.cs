@@ -42,6 +42,11 @@ namespace Inventory.ViewModels
             this.productService = productService;
             ProductList = productListViewModel;
             ProductDetails = productDetailsViewModel;
+
+            logger.LogInformation("Info Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
         }
 
         public ProductListViewModel ProductList { get; set; }

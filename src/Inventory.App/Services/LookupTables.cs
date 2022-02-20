@@ -24,13 +24,13 @@ namespace Inventory.Services
 {
     public class LookupTables : ILookupTables
     {
-        public LookupTables(ILogService logService, IDataServiceFactory dataServiceFactory)
+        public LookupTables(/*ILogService logService,*/ IDataServiceFactory dataServiceFactory)
         {
-            LogService = logService;
+            //LogService = logService;
             DataServiceFactory = dataServiceFactory;
         }
 
-        public ILogService LogService { get; }
+        //public ILogService LogService { get; }
         public IDataServiceFactory DataServiceFactory { get; }
 
         public IList<CategoryModel> Categories { get; private set; }
@@ -218,9 +218,9 @@ namespace Inventory.Services
             return new List<TaxTypeModel>();
         }
 
-        private async void LogException(string source, string action, Exception exception)
+        private  void LogException(string source, string action, Exception exception)
         {
-            await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
+            //await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
         }
     }
 }
