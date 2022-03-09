@@ -167,10 +167,7 @@
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\Infrastructure\LoginService.cs" />
-    <Compile Include="Services\Infrastructure\LogService\DatabaseLoggerProvider.cs" />
     <Compile Include="Services\Infrastructure\LogService\LogCollection.cs" />
-    <Compile Include="Services\Infrastructure\LogService\LogEntry.cs" />
-    <Compile Include="Services\Infrastructure\LogService\LoggerImpl.cs" />
     <Compile Include="Services\Infrastructure\LogService\LogService.cs" />
     <Compile Include="Services\Infrastructure\MessageService.cs" />
     <Compile Include="Services\Infrastructure\NavigationService.cs" />
@@ -330,9 +327,6 @@
     <Compile Include="Views\Settings\ValidateConnectionView.xaml.cs">
       <DependentUpon>ValidateConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SplashScreen\ExtendedSplash.xaml.cs">
-      <DependentUpon>ExtendedSplash.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -377,6 +371,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration">
       <Version>3.1.22</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug">
+      <Version>3.1.22</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
     </PackageReference>
@@ -385,6 +382,12 @@
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.7.14</Version>
+    </PackageReference>
+    <PackageReference Include="NLog.Extensions.Logging">
+      <Version>1.7.4</Version>
     </PackageReference>
     <PackageReference Include="Remotion.Linq">
       <Version>2.2.0</Version>
@@ -679,13 +682,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SplashScreen\ExtendedSplash.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Database\VanArsdel.1.01.db" />
     <None Include="CiccioKey.snk" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

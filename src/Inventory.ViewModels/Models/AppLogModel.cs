@@ -15,6 +15,7 @@
 using System;
 
 using Inventory.Data;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Models
 {
@@ -30,7 +31,7 @@ namespace Inventory.Models
 
         public string User { get; set; }
 
-        public LogType Type { get; set; }
+        public LogLevel Type { get; set; }
         public string Source { get; set; }
         public string Action { get; set; }
         public string Message { get; set; }

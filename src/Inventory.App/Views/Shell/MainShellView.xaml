@@ -169,7 +169,7 @@
 
             <Grid>
                 <Frame x:Name="frame">
-                    <Frame.ContentTransitions>
+                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <NavigationThemeTransition/>
                         </TransitionCollection>

@@ -15,18 +15,18 @@
 using System;
 using System.Threading.Tasks;
 
-//namespace Inventory.Services
-//{
-//    public interface ILoginService
-//    {
-//        bool IsAuthenticated { get; set; }
+namespace Inventory.Services
+{
+    public interface ILoginService
+    {
+        bool IsAuthenticated { get; set; }
 
-//        Task<bool> SignInWithPasswordAsync(string userName, string password);
+        Task<bool> SignInWithPasswordAsync(string userName, string password);
 
-//        bool IsWindowsHelloEnabled(string userName);
-//        Task TrySetupWindowsHelloAsync(string userName);
-//        Task<Result> SignInWithWindowsHelloAsync();
+        bool IsWindowsHelloEnabled(string userName);
+        Task TrySetupWindowsHelloAsync(string userName);
+        Task<Result> SignInWithWindowsHelloAsync();
 
-//        void Logoff();
-//    }
-//}
+        void Logoff();
+    }
+}

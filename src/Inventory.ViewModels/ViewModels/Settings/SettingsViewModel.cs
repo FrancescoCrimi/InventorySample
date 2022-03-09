@@ -17,20 +17,24 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Inventory.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Inventory.ViewModels
 {
-    public class SettingsViewModel : ObservableRecipient //ViewModelBase
+    #region SettingsArgs
+    public class SettingsArgs
+    {
+        static public SettingsArgs CreateDefault() => new SettingsArgs();
+    }
+    #endregion
+
+    public class SettingsViewModel : ViewModelBase
     {
         private readonly ISettingsService settingsService;
-        private readonly IMessageService messageService;
 
-        public SettingsViewModel(IMessageService messageService,
-                                 ISettingsService settingsService)
+        public SettingsViewModel(ISettingsService settingsService)
+            : base()
         {
-            this.messageService = messageService;
             this.settingsService = settingsService;
         }
 
@@ -58,7 +62,6 @@ namespace Inventory.ViewModels
         }
 
         private string _sqlConnectionString = null;
-
         public string SqlConnectionString
         {
             get => _sqlConnectionString;
@@ -82,8 +85,7 @@ namespace Inventory.ViewModels
         {
             ViewModelArgs = args ?? SettingsArgs.CreateDefault();
 
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
+            StatusReady();
 
             IsLocalProvider = settingsService.DataProvider == DataProviderType.SQLite;
 
@@ -104,19 +106,16 @@ namespace Inventory.ViewModels
         private async void OnResetLocalData()
         {
             IsBusy = true;
-            //StatusMessage("Waiting database reset...");
-            messageService.Send(this, "StatusMessage", "Waiting database reset...");
+            StatusMessage("Waiting database reset...");
             var result = await settingsService.ResetLocalDataProviderAsync();
             IsBusy = false;
             if (result.IsOk)
             {
-                //StatusReady();
-                messageService.Send(this, "StatusMessage", "Ready");
+                StatusReady();
             }
             else
             {
-                //StatusMessage(result.Message);
-                messageService.Send(this, "StatusMessage", result.Message);
+                StatusMessage(result.Message);
             }
         }
 
@@ -127,53 +126,38 @@ namespace Inventory.ViewModels
 
         private async Task<bool> ValidateSqlConnectionAsync()
         {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
+            StatusReady();
             IsBusy = true;
-            //StatusMessage("Validating connection string...");
-            messageService.Send(this, "StatusMessage", "Validating connection string...");
+            StatusMessage("Validating connection string...");
             var result = await settingsService.ValidateConnectionAsync(SqlConnectionString);
             IsBusy = false;
             if (result.IsOk)
             {
-                //StatusMessage(result.Message);
-                messageService.Send(this, "StatusMessage", result.Message);
+                StatusMessage(result.Message);
                 return true;
             }
             else
             {
-                //StatusMessage(result.Message);
-                messageService.Send(this, "StatusMessage", result.Message);
+                StatusMessage(result.Message);
                 return false;
             }
         }
 
         private async void OnCreateDatabase()
         {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-
-            //DisableAllViews("Waiting for the database to be created...");
-            messageService.Send(this, "DisableThisView", "Waiting for the database to be created...");
-
+            StatusReady();
+            DisableAllViews("Waiting for the database to be created...");
             var result = await settingsService.CreateDabaseAsync(SqlConnectionString);
-
-            //EnableOtherViews();
-            messageService.Send(this, "EnableOtherViews", "Ready");
-
-            //EnableThisView("");
-            messageService.Send(this, "EnableThisView", "");
-
+            EnableOtherViews();
+            EnableThisView("");
             await Task.Delay(100);
             if (result.IsOk)
             {
-                //StatusMessage(result.Message);
-                messageService.Send(this, "StatusMessage", result.Message);
+                StatusMessage(result.Message);
             }
             else
             {
-                //StatusError("Error creating database");
-                messageService.Send(this, "StatusError", "Error creating database");
+                StatusError("Error creating database");
             }
         }
 

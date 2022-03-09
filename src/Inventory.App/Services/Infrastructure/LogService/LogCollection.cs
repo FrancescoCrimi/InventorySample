@@ -18,27 +18,33 @@ using System.Threading.Tasks;
 
 using Inventory.Data;
 using Inventory.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Services
 {
     public class LogCollection : VirtualCollection<AppLogModel>
     {
-        private DataRequest<AppLog> _dataRequest = null;
+        private DataRequest<Log> _dataRequest = null;
+        private readonly ILogService logService;
+        private readonly ILogger<LogCollection> logger = Ioc.Default.GetService<ILogger<LogCollection>>();
 
-        public LogCollection(/*ILogService logService*/) 
-            : base(/*logService*/)
+        public LogCollection(ILogService logService)
+            : base()
         {
+            this.logService = logService;
         }
 
         private AppLogModel _defaultItem = AppLogModel.CreateEmpty();
+
         protected override AppLogModel DefaultItem => _defaultItem;
 
-        public async Task LoadAsync(DataRequest<AppLog> dataRequest)
+        public async Task LoadAsync(DataRequest<Log> dataRequest)
         {
             try
             {
                 _dataRequest = dataRequest;
-                //Count = await LogService.GetLogsCountAsync(_dataRequest);
+                Count = await logService.GetLogsCountAsync(_dataRequest);
                 Ranges[0] = await FetchDataAsync(0, RangeSize);
             }
             catch (Exception ex)
@@ -48,15 +54,15 @@ namespace Inventory.Services
             }
         }
 
-        protected override  Task<IList<AppLogModel>> FetchDataAsync(int rangeIndex, int rangeSize)
+        protected override async Task<IList<AppLogModel>> FetchDataAsync(int rangeIndex, int rangeSize)
         {
             try
             {
-                //return await LogService.GetLogsAsync(rangeIndex * rangeSize, rangeSize, _dataRequest);
+                return await logService.GetLogsAsync(rangeIndex * rangeSize, rangeSize, _dataRequest);
             }
             catch (Exception ex)
             {
-                LogException("LogCollection", "Fetch", ex);
+                logger.LogError(ex, "Fetch");
             }
             return null;
         }

@@ -36,10 +36,14 @@ namespace Inventory
         static public AppSettings Current { get; }
 
         static public readonly string AppLogPath = "AppLog";
+
         static public readonly string AppLogName = $"AppLog.1.0.db";
         static public readonly string AppLogFileName = Path.Combine(AppLogPath, AppLogName);
-
         public readonly string AppLogConnectionString = $"Data Source={AppLogFileName}";
+
+        public static readonly string LogName = $"Log.db";
+        static public readonly string LogFileName = Path.Combine(AppLogPath, LogName);
+        public readonly string LogConnectionString = $"Data Source={LogFileName}";
 
         static public readonly string DatabasePath = "Database";
         static public readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";

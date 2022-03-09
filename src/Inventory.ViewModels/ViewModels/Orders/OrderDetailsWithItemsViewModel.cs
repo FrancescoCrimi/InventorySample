@@ -17,23 +17,15 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
-using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class OrderDetailsWithItemsViewModel : ObservableRecipient
+    public class OrderDetailsWithItemsViewModel : ViewModelBase
     {
-        private readonly ILogger<OrderDetailsWithItemsViewModel> logger;
-        private readonly IMessageService messageService;
-
-        public OrderDetailsWithItemsViewModel(ILogger<OrderDetailsWithItemsViewModel> logger,
-                                              IMessageService messageService,
-                                              OrderDetailsViewModel orderDetailsViewModel,
+        public OrderDetailsWithItemsViewModel(OrderDetailsViewModel orderDetailsViewModel,
                                               OrderItemListViewModel orderItemListViewModel)
+            : base()
         {
-            this.logger = logger;
-            this.messageService = messageService;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
         }
@@ -64,14 +56,14 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            messageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
+            MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            MessageService.Unsubscribe(this);
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
         }

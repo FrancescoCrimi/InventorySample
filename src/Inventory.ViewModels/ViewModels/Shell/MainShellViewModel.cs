@@ -19,12 +19,10 @@ using System.Threading.Tasks;
 
 using Inventory.Data;
 using Inventory.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.Logging;
 
 namespace Inventory.ViewModels
 {
-    public class MainShellViewModel : ObservableRecipient //ShellViewModel
+    public class MainShellViewModel : ShellViewModel
     {
         private readonly NavigationItem DashboardItem = new NavigationItem(0xE80F, "Dashboard", typeof(DashboardViewModel));
         private readonly NavigationItem CustomersItem = new NavigationItem(0xE716, "Customers", typeof(CustomersViewModel));
@@ -32,26 +30,16 @@ namespace Inventory.ViewModels
         private readonly NavigationItem ProductsItem = new NavigationItem(0xE781, "Products", typeof(ProductsViewModel));
         private readonly NavigationItem AppLogsItem = new NavigationItem(0xE7BA, "Activity Log", typeof(AppLogsViewModel));
         private readonly NavigationItem SettingsItem = new NavigationItem(0x0000, "Settings", typeof(SettingsViewModel));
-        private readonly ILogger<MainShellViewModel> logger;
-        private readonly IMessageService messageService;
-        private readonly IContextService contextService;
         private readonly INavigationService navigationService;
-        private readonly IDialogService dialogService;
+        private readonly ILogService logService;
 
-        public MainShellViewModel(ILogger<MainShellViewModel> logger,
-                                  IMessageService messageService,
-                                     IContextService contextService,
-                                     INavigationService navigationService,
-                                     IDialogService dialogService
-            //ILoginService loginService,
-            //ICommonServices commonServices
-            )
+        public MainShellViewModel(ILoginService loginService,
+                                  INavigationService navigationService,
+                                  ILogService logService)
+            : base(loginService, navigationService)
         {
-            this.logger = logger;
-            this.messageService = messageService;
-            this.contextService = contextService;
             this.navigationService = navigationService;
-            this.dialogService = dialogService;
+            this.logService = logService;
         }
 
         private object _selectedItem;
@@ -75,110 +63,27 @@ namespace Inventory.ViewModels
             set => SetProperty(ref _items, value);
         }
 
-        public ShellArgs ViewModelArgs { get; protected set; }
-        public UserInfo UserInfo { get; protected set; }
-        public async Task LoadAsync(ShellArgs args)
+        public override async Task LoadAsync(ShellArgs args)
         {
             Items =  GetItems().ToArray();
             await UpdateAppLogBadge();
-            ViewModelArgs = args;
-            if (ViewModelArgs != null)
-            {
-                UserInfo = ViewModelArgs.UserInfo;
-                navigationService.Navigate(ViewModelArgs.ViewModel, ViewModelArgs.Parameter);
-            }
-             await Task.CompletedTask;
+            await base.LoadAsync(args);
         }
 
-        public void Subscribe()
+        override public void Subscribe()
         {
-            messageService.Subscribe<ILogService, AppLog>(this, OnLogServiceMessage);
-
-            //base.Subscribe();
-            messageService.Subscribe<ViewModelBase, string>(this, OnMessage);
+            MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
+            base.Subscribe();
         }
 
-        public void Unsubscribe()
+        override public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            base.Unsubscribe();
         }
 
-        private async void OnMessage(ViewModelBase viewModel, string message, string status)
+        public override void Unload()
         {
-            switch (message)
-            {
-                case "StatusMessage":
-                case "StatusError":
-                    if (viewModel.ContextService.ContextID == contextService.ContextID)
-                    {
-                        IsError = message == "StatusError";
-                        SetStatus(status);
-                    }
-                    break;
-
-                case "EnableThisView":
-                case "DisableThisView":
-                    if (viewModel.ContextService.ContextID == contextService.ContextID)
-                    {
-                        IsEnabled = message == "EnableThisView";
-                        SetStatus(status);
-                    }
-                    break;
-
-                case "EnableOtherViews":
-                case "DisableOtherViews":
-                    if (viewModel.ContextService.ContextID != contextService.ContextID)
-                    {
-                        await contextService.RunAsync(() =>
-                        {
-                            IsEnabled = message == "EnableOtherViews";
-                            SetStatus(status);
-                        });
-                    }
-                    break;
-
-                case "EnableAllViews":
-                case "DisableAllViews":
-                    await contextService.RunAsync(() =>
-                    {
-                        IsEnabled = message == "EnableAllViews";
-                        SetStatus(status);
-                    });
-                    break;
-            }
-        }
-
-        private void SetStatus(string message)
-        {
-            message = message ?? "";
-            message = message.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
-            Message = message;
-        }
-
-        private string _message = "Ready";
-        public string Message
-        {
-            get => _message;
-            set => SetProperty(ref _message, value);
-        }
-
-        private bool _isEnabled = true;
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
-        }
-
-        private bool _isError = false;
-        public bool IsError
-        {
-            get => _isError;
-            set => SetProperty(ref _isError, value);
-        }
-
-        public void Unload()
-        {
-            //base.Unload();
+            base.Unload();
         }
 
         public async void NavigateTo(Type viewModel)
@@ -199,10 +104,7 @@ namespace Inventory.ViewModels
                     break;
                 case "AppLogsViewModel":
                     navigationService.Navigate(viewModel, new AppLogListArgs());
-
-                    //TODO: LogService
-                    //await LogService.MarkAllAsReadAsync();
-
+                    await logService.MarkAllAsReadAsync();
                     await UpdateAppLogBadge();
                     break;
                 case "SettingsViewModel":
@@ -222,11 +124,11 @@ namespace Inventory.ViewModels
             yield return AppLogsItem;
         }
 
-        private async void OnLogServiceMessage(ILogService logService, string message, AppLog log)
+        private async void OnLogServiceMessage(ILogService logService, string message, Log log)
         {
             if (message == "LogAdded")
             {
-                await contextService.RunAsync(async () =>
+                await ContextService.RunAsync(async () =>
                 {
                     await UpdateAppLogBadge();
                 });
@@ -235,10 +137,8 @@ namespace Inventory.ViewModels
 
         private async Task UpdateAppLogBadge()
         {
-            //TODO: LogService
-            //int count = await LogService.GetLogsCountAsync(new DataRequest<AppLog> { Where = r => !r.IsRead });
-            //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
-            await Task.CompletedTask;
+            int count = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
+            AppLogsItem.Badge = count > 0 ? count.ToString() : null;
         }
     }
 }

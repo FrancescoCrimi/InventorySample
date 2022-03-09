@@ -19,13 +19,20 @@ using System.Threading.Tasks;
 
 using Inventory.Data;
 using Inventory.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Services
 {
     public class LookupTables : ILookupTables
     {
-        public LookupTables(/*ILogService logService,*/ IDataServiceFactory dataServiceFactory)
+        private readonly ILogger<LookupTables> logger;
+
+        public LookupTables(
+                            //ILogService logService,
+                            ILogger<LookupTables> logger,
+                            IDataServiceFactory dataServiceFactory)
         {
+            this.logger = logger;
             //LogService = logService;
             DataServiceFactory = dataServiceFactory;
         }
@@ -101,7 +108,7 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("LookupTables", "Load Categories", ex);
+                logger.LogError(ex, "Load Categories");
             }
             return new List<CategoryModel>();
         }
@@ -123,7 +130,7 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("LookupTables", "Load CountryCodes", ex);
+                logger.LogError(ex, "Load CountryCodes");
             }
             return new List<CountryCodeModel>();
         }
@@ -145,7 +152,7 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("LookupTables", "Load OrderStatus", ex);
+                logger.LogError(ex, "Load OrderStatus");
             }
             return new List<OrderStatusModel>();
         }
@@ -167,7 +174,7 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("LookupTables", "Load PaymentTypes", ex);
+                logger.LogError(ex, "Load PaymentTypes");
             }
             return new List<PaymentTypeModel>();
         }
@@ -190,7 +197,7 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("LookupTables", "Load Shippers", ex);
+                logger.LogError(ex, "Load Shippers");
             }
             return new List<ShipperModel>();
         }
@@ -213,14 +220,9 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("LookupTables", "Load TaxTypes", ex);
+                logger.LogError(ex, "Load TaxTypes");
             }
             return new List<TaxTypeModel>();
-        }
-
-        private  void LogException(string source, string action, Exception exception)
-        {
-            //await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
         }
     }
 }

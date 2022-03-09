@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 using Inventory.Data;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Converters
 {
@@ -32,15 +33,15 @@ namespace Inventory.Converters
         {
             if (targetType == typeof(String))
             {
-                if (value is LogType logType)
+                if (value is LogLevel logType)
                 {
                     switch (logType)
                     {
-                        case LogType.Information:
+                        case LogLevel.Information:
                             return Char.ConvertFromUtf32(0xE946).ToString();
-                        case LogType.Warning:
+                        case LogLevel.Warning:
                             return Char.ConvertFromUtf32(0xE814).ToString();
-                        case LogType.Error:
+                        case LogLevel.Error:
                             return Char.ConvertFromUtf32(0xEB90).ToString();
                     }
                 }
@@ -49,15 +50,15 @@ namespace Inventory.Converters
 
             if (targetType == typeof(Brush))
             {
-                if (value is LogType logType)
+                if (value is LogLevel logType)
                 {
                     switch (logType)
                     {
-                        case LogType.Information:
+                        case LogLevel.Information:
                             return InformationColor;
-                        case LogType.Warning:
+                        case LogLevel.Warning:
                             return WarningColor;
-                        case LogType.Error:
+                        case LogLevel.Error:
                             return ErrorColor;
                     }
                 }

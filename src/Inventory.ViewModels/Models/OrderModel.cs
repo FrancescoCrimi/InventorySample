@@ -29,28 +29,28 @@ namespace Inventory.Models
         public DateTimeOffset OrderDate
         {
             get => _orderDate;
-            set => Set(ref _orderDate, value);
+            set => SetProperty(ref _orderDate, value);
         }
 
         private DateTimeOffset? _shippedDate;
         public DateTimeOffset? ShippedDate
         {
             get => _shippedDate;
-            set => Set(ref _shippedDate, value);
+            set => SetProperty(ref _shippedDate, value);
         }
 
         private DateTimeOffset? _deliveredDate;
         public DateTimeOffset? DeliveredDate
         {
             get => _deliveredDate;
-            set => Set(ref _deliveredDate, value);
+            set => SetProperty(ref _deliveredDate, value);
         }
 
         private int _status;
         public int Status
         {
             get => _status;
-            set { if (Set(ref _status, value)) UpdateStatusDependencies(); }
+            set { if (SetProperty(ref _status, value)) UpdateStatusDependencies(); }
         }
 
         public int? PaymentType { get; set; }
@@ -96,10 +96,10 @@ namespace Inventory.Models
                     break;
             }
 
-            NotifyPropertyChanged(nameof(StatusDesc));
-            NotifyPropertyChanged(nameof(CanEditPayment));
-            NotifyPropertyChanged(nameof(CanEditShipping));
-            NotifyPropertyChanged(nameof(CanEditDelivery));
+            OnPropertyChanged(nameof(StatusDesc));
+            OnPropertyChanged(nameof(CanEditPayment));
+            OnPropertyChanged(nameof(CanEditShipping));
+            OnPropertyChanged(nameof(CanEditDelivery));
         }
 
         public override void Merge(ObservableObject source)

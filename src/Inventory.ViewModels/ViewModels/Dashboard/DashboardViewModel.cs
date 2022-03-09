@@ -12,39 +12,37 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Inventory.ViewModels
 {
-    public class DashboardViewModel : ObservableRecipient
+    public class DashboardViewModel : ViewModelBase
     {
+        private readonly ILogger<DashboardViewModel> logger;
+        private readonly INavigationService navigationService;
+        private readonly ICustomerService customerService;
+        private readonly IOrderService orderService;
+        private readonly IProductService productService;
+
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
-            INavigationService navigationService,
-            ICustomerService customerService,
+                                  INavigationService navigationService,
+                                  ICustomerService customerService,
                                   IOrderService orderService,
-                                  IProductService productService
-                                  //ICommonServices commonServices
-            )
-            //: base(commonServices)
+                                  IProductService productService)
+            : base()
         {
             this.logger = logger;
             this.navigationService = navigationService;
-            CustomerService = customerService;
-            OrderService = orderService;
-            ProductService = productService;
+            this.customerService = customerService;
+            this.orderService = orderService;
+            this.productService = productService;
         }
-
-        public ICustomerService CustomerService { get; }
-        public IOrderService OrderService { get; }
-        public IProductService ProductService { get; }
 
         private IList<CustomerModel> _customers = null;
         public IList<CustomerModel> Customers
@@ -61,9 +59,6 @@ namespace Inventory.ViewModels
         }
 
         private IList<OrderModel> _orders = null;
-        private readonly ILogger<DashboardViewModel> logger;
-        private readonly INavigationService navigationService;
-
         public IList<OrderModel> Orders
         {
             get => _orders;
@@ -72,11 +67,11 @@ namespace Inventory.ViewModels
 
         public async Task LoadAsync()
         {
-            //StartStatusMessage("Loading dashboard...");
+            StartStatusMessage("Loading dashboard...");
             await LoadCustomersAsync();
             await LoadOrdersAsync();
             await LoadProductsAsync();
-            //EndStatusMessage("Dashboard loaded");
+            EndStatusMessage("Dashboard loaded");
         }
         public void Unload()
         {
@@ -93,12 +88,11 @@ namespace Inventory.ViewModels
                 {
                     OrderByDesc = r => r.CreatedOn
                 };
-                Customers = await CustomerService.GetCustomersAsync(0, 5, request);
+                Customers = await customerService.GetCustomersAsync(0, 5, request);
             }
             catch (Exception ex)
             {
-                //LogException("Dashboard", "Load Customers", ex);
-                logger.LogCritical(ex, "Load Customers");
+                logger.LogError(ex, "Load Customers");
             }
         }
 
@@ -110,12 +104,11 @@ namespace Inventory.ViewModels
                 {
                     OrderByDesc = r => r.OrderDate
                 };
-                Orders = await OrderService.GetOrdersAsync(0, 5, request);
+                Orders = await orderService.GetOrdersAsync(0, 5, request);
             }
             catch (Exception ex)
             {
-                //LogException("Dashboard", "Load Orders", ex);
-                logger.LogCritical(ex, "Load Orders");
+                logger.LogError(ex, "Load Orders");
             }
         }
 
@@ -127,12 +120,11 @@ namespace Inventory.ViewModels
                 {
                     OrderByDesc = r => r.CreatedOn
                 };
-                Products = await ProductService.GetProductsAsync(0, 5, request);
+                Products = await productService.GetProductsAsync(0, 5, request);
             }
             catch (Exception ex)
             {
-                //LogException("Dashboard", "Load Products", ex);
-                logger.LogCritical(ex, "Load Products");
+                logger.LogError(ex, "Load Products");
             }
         }
 

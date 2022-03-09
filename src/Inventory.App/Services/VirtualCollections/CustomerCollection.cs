@@ -18,14 +18,18 @@ using System.Threading.Tasks;
 
 using Inventory.Data;
 using Inventory.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Services
 {
     public class CustomerCollection : VirtualCollection<CustomerModel>
     {
         private DataRequest<Customer> _dataRequest = null;
+        private readonly ILogger<CustomerCollection> logger = Ioc.Default.GetService<ILogger<CustomerCollection>>();
 
-        public CustomerCollection(ICustomerService customerService/*, ILogService logService*/) : base(/*logService*/)
+        public CustomerCollection(ICustomerService customerService)
+            : base()
         {
             CustomerService = customerService;
         }
@@ -58,7 +62,7 @@ namespace Inventory.Services
             }
             catch (Exception ex)
             {
-                LogException("CustomerCollection", "Fetch", ex);
+                logger.LogError(ex, "Fetch");
             }
             return null;
         }

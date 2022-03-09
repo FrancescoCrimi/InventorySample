@@ -20,12 +20,14 @@ using System.Threading.Tasks;
 using Inventory.Data;
 using Inventory.Data.Services;
 using Inventory.Models;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Services
 {
     public class OrderService : IOrderService
     {
-        public OrderService(IDataServiceFactory dataServiceFactory/*, ILogService logService*/)
+        public OrderService(IDataServiceFactory dataServiceFactory)
         {
             DataServiceFactory = dataServiceFactory;
             //LogService = logService;
@@ -53,7 +55,7 @@ namespace Inventory.Services
 
         public async Task<IList<OrderModel>> GetOrdersAsync(DataRequest<Order> request)
         {
-            var collection = new OrderCollection(this/*, LogService*/);
+            var collection = new OrderCollection(this);
             await collection.LoadAsync(request);
             return collection;
         }

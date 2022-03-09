@@ -31,6 +31,7 @@ using Inventory.ViewModels;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
 
 namespace Inventory
 {
@@ -54,7 +55,9 @@ namespace Inventory
 
             //var logService = Ioc.Default.GetService<ILogService>();
             //await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
-            Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Startup).Name).LogInformation("Application started.");
+
+            var logger = Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Startup).Name);
+            logger.LogInformation("Application started.");
 
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
         }
@@ -89,11 +92,12 @@ namespace Inventory
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var appLogFolder = await localFolder.CreateFolderAsync(AppSettings.AppLogPath, CreationCollisionOption.OpenIfExists);
-            if (await appLogFolder.TryGetItemAsync(AppSettings.AppLogName) == null)
+            if (await appLogFolder.TryGetItemAsync(AppSettings.LogName) == null)
             {
-                var sourceLogFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/AppLog/AppLog.db"));
-                var targetLogFile = await appLogFolder.CreateFileAsync(AppSettings.AppLogName, CreationCollisionOption.ReplaceExisting);
-                await sourceLogFile.CopyAndReplaceAsync(targetLogFile);
+                //var sourceLogFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/AppLog/AppLog.db"));
+                //var targetLogFile = await appLogFolder.CreateFileAsync(AppSettings.AppLogName, CreationCollisionOption.ReplaceExisting);
+                //await sourceLogFile.CopyAndReplaceAsync(targetLogFile);
+                CreateSqliteLogDb();
             }
         }
 
@@ -106,22 +110,9 @@ namespace Inventory
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
-
             if (await databaseFolder.TryGetItemAsync(AppSettings.DatabaseName) == null)
             {
-                if (await databaseFolder.TryGetItemAsync(AppSettings.DatabasePattern) == null)
-                {
-                    using (var cli = new WebClient())
-                    {
-                        var bytes = await Task.Run(() => cli.DownloadData(AppSettings.DatabaseUrl));
-                        var file = await databaseFolder.CreateFileAsync(AppSettings.DatabasePattern, CreationCollisionOption.ReplaceExisting);
-                        using (var stream = await file.OpenStreamForWriteAsync())
-                        {
-                            await stream.WriteAsync(bytes, 0, bytes.Length);
-                        }
-                    }
-                }
-                var sourceFile = await databaseFolder.GetFileAsync(AppSettings.DatabasePattern);
+                var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Database/VanArsdel.1.01.db"));
                 var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
                 await sourceFile.CopyAndReplaceAsync(targetFile);
             }
@@ -132,6 +123,34 @@ namespace Inventory
             var lookupTables = Ioc.Default.GetService<ILookupTables>();
             await lookupTables.InitializeAsync();
             LookupTablesProxy.Instance = lookupTables;
+        }
+
+        private static void CreateSqliteLogDb()
+        {
+            //string cn = configuration.GetConnectionString("SqliteLogConnection");
+            string cn = AppSettings.Current.LogConnectionString;
+            string createtablestr =
+@"CREATE TABLE Log (
+Id INTEGER PRIMARY KEY AUTOINCREMENT,
+MachineName TEXT NOT NULL,
+Logged TEXT NOT NULL,
+Level TEXT NOT NULL,
+Message TEXT NOT NULL,
+Logger TEXT NULL,
+Callsite TEXT NULL,
+Exception TEXT NULL
+);";
+            using (var conn = new SqliteConnection(cn))
+            {
+                conn.Open();
+                var cmd = new SqliteCommand("DROP TABLE IF EXISTS Log", conn);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                cmd = new SqliteCommand(createtablestr, conn);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                conn.Close();
+            }
         }
     }
 }

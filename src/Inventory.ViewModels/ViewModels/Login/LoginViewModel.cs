@@ -18,27 +18,27 @@ using System.Threading.Tasks;
 
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class LoginViewModel : ObservableRecipient
+    public class LoginViewModel : ViewModelBase
     {
-        public LoginViewModel(IDialogService dialogService,
-            INavigationService navigationService,
-            //ILoginService loginService,
-            ISettingsService settingsService
-            //ICommonServices commonServices
-            )
-            //: base(commonServices)
+        private readonly INavigationService navigationService;
+        private readonly IDialogService dialogService;
+
+        public LoginViewModel(INavigationService navigationService,
+                              //ILoginService loginService,
+                              ISettingsService settingsService,
+                              IDialogService dialogService)
+            : base()
         {
-            this.dialogService = dialogService;
             this.navigationService = navigationService;
             //LoginService = loginService;
             SettingsService = settingsService;
+            this.dialogService = dialogService;
         }
 
-        //public ILoginService LoginService { get; }
+        public ILoginService LoginService { get; }
         public ISettingsService SettingsService { get; }
 
         private ShellArgs ViewModelArgs { get; set; }
@@ -72,8 +72,6 @@ namespace Inventory.ViewModels
         }
 
         private string _password = "UserPassword";
-        private readonly IDialogService dialogService;
-        private readonly INavigationService navigationService;
 
         public string Password
         {
@@ -90,7 +88,7 @@ namespace Inventory.ViewModels
             ViewModelArgs = args;
 
             UserName = SettingsService.UserName ?? args.UserInfo.AccountName;
-            //IsLoginWithWindowsHello = LoginService.IsWindowsHelloEnabled(UserName);
+            IsLoginWithWindowsHello = LoginService.IsWindowsHelloEnabled(UserName);
             IsLoginWithPassword = !IsLoginWithWindowsHello;
             IsBusy = false;
 
@@ -121,32 +119,32 @@ namespace Inventory.ViewModels
             var result = ValidateInput();
             if (result.IsOk)
             {
-                //if (await LoginService.SignInWithPasswordAsync(UserName, Password))
-                //{
-                    //if (!LoginService.IsWindowsHelloEnabled(UserName))
-                    //{
-                    //    await LoginService.TrySetupWindowsHelloAsync(UserName);
-                    //}
+                if (await LoginService.SignInWithPasswordAsync(UserName, Password))
+                {
+                    if (!LoginService.IsWindowsHelloEnabled(UserName))
+                    {
+                        await LoginService.TrySetupWindowsHelloAsync(UserName);
+                    }
                     SettingsService.UserName = UserName;
                     EnterApplication();
                     return;
-                //}
+                }
             }
             await dialogService.ShowAsync(result.Message, result.Description);
             IsBusy = false;
         }
 
-        public  void LoginWithWindowHello()
+        public async void LoginWithWindowHello()
         {
-            //IsBusy = true;
-            //var result = await LoginService.SignInWithWindowsHelloAsync();
-            //if (result.IsOk)
-            //{
+            IsBusy = true;
+            var result = await LoginService.SignInWithWindowsHelloAsync();
+            if (result.IsOk)
+            {
                 EnterApplication();
                 return;
-            //}
-            //await DialogService.ShowAsync(result.Message, result.Description);
-            //IsBusy = false;
+            }
+            await dialogService.ShowAsync(result.Message, result.Description);
+            IsBusy = false;
         }
 
         private void EnterApplication()

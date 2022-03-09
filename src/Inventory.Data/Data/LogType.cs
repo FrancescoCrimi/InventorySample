@@ -15,10 +15,10 @@
 
 namespace Inventory.Data
 {
-    public enum LogType
-    {
-        Information,
-        Warning,
-        Error
-    }
+    //public enum LogType
+    //{
+    //    Information,
+    //    Warning,
+    //    Error
+    //}
 }

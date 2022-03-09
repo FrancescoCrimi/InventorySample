@@ -33,6 +33,7 @@ namespace Inventory.Services
 
         private DispatcherTimer _timer = null;
         bool MustExploreDeepExceptions { get;  set; }
+         
         public VirtualCollection(
                                  //ILogService logService,
                                  int rangeSize = 16,
@@ -148,17 +149,17 @@ namespace Inventory.Services
             }
         }
 
-        protected  void LogException(string source, string action, Exception exception)
-        {
-            if (MustExploreDeepExceptions == false)
-            {
-                //await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
-            }
-            else
-            {
-                //await LogService.WriteAsync(LogType.Error, source, action, exception);
-            }
-        }
+        //protected  void LogException(string source, string action, Exception exception)
+        //{
+        //    if (MustExploreDeepExceptions == false)
+        //    {
+        //        //await LogService.WriteAsync(LogType.Error, source, action, exception.Message, exception.ToString());
+        //    }
+        //    else
+        //    {
+        //        //await LogService.WriteAsync(LogType.Error, source, action, exception);
+        //    }
+        //}
 
         virtual public void Dispose() { }
 

@@ -29,21 +29,21 @@ namespace Inventory.Models
         public int Quantity
         {
             get => _quantity;
-            set { if (Set(ref _quantity, value)) UpdateTotals(); }
+            set { if (SetProperty(ref _quantity, value)) UpdateTotals(); }
         }
 
         private int _taxType;
         public int TaxType
         {
             get => _taxType;
-            set { if (Set(ref _taxType, value)) UpdateTotals(); }
+            set { if (SetProperty(ref _taxType, value)) UpdateTotals(); }
         }
 
         private decimal _discount;
         public decimal Discount
         {
             get => _discount;
-            set { if (Set(ref _discount, value)) UpdateTotals(); }
+            set { if (SetProperty(ref _discount, value)) UpdateTotals(); }
         }
 
         public decimal UnitPrice { get; set; }
@@ -58,8 +58,8 @@ namespace Inventory.Models
 
         private void UpdateTotals()
         {
-            NotifyPropertyChanged(nameof(Subtotal));
-            NotifyPropertyChanged(nameof(Total));
+            OnPropertyChanged(nameof(Subtotal));
+            OnPropertyChanged(nameof(Total));
         }
 
         public override void Merge(ObservableObject source)

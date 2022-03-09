@@ -60,7 +60,7 @@ namespace Inventory.Services
 
         public async Task<IList<CustomerModel>> GetCustomersAsync(DataRequest<Customer> request)
         {
-            var collection = new CustomerCollection(this/*, LogService*/);
+            var collection = new CustomerCollection(this);
             await collection.LoadAsync(request);
             return collection;
         }

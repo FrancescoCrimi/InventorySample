@@ -18,40 +18,28 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-    public class OrdersViewModel : ObservableRecipient //ViewModelBase
+    public class OrdersViewModel : ViewModelBase
     {
         private readonly ILogger<OrdersViewModel> logger;
-        private readonly IMessageService messageService;
-        private readonly IContextService contextService;
         private readonly IOrderService orderService;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
-                               IMessageService messageService,
-                               IContextService contextService,
                                IOrderService orderService,
                                OrderListViewModel orderListViewModel,
                                OrderDetailsViewModel orderDetailsViewModel,
                                OrderItemListViewModel orderItemListViewModel)
+            : base()
         {
             this.logger = logger;
-            this.messageService = messageService;
-            this.contextService = contextService;
             this.orderService = orderService;
+
             OrderList = orderListViewModel;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
         }
-
-        public bool IsMainView => contextService.IsMainView;
-
-
-
-
-
 
         public OrderListViewModel OrderList { get; set; }
         public OrderDetailsViewModel OrderDetails { get; set; }
@@ -69,14 +57,14 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            messageService.Subscribe<OrderListViewModel>(this, OnMessage);
+            MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
             OrderList.Subscribe();
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
         public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            MessageService.Unsubscribe(this);
             OrderList.Unsubscribe();
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
@@ -86,7 +74,7 @@ namespace Inventory.ViewModels
         {
             if (viewModel == OrderList && message == "ItemSelected")
             {
-                await contextService.RunAsync(() =>
+                await ContextService.RunAsync(() =>
                 {
                     OnItemSelected();
                 });
@@ -97,8 +85,7 @@ namespace Inventory.ViewModels
         {
             if (OrderDetails.IsEditMode)
             {
-                //StatusReady();
-                messageService.Send(this, "StatusMessage", "Ready");
+                StatusReady();
                 OrderDetails.CancelEdit();
             }
             OrderItemList.IsMultipleSelection = false;
@@ -123,8 +110,7 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                //LogException("Orders", "Load Details", ex);
-                logger.LogCritical(ex, "Load Details");
+                logger.LogError(ex, "Load Details");
             }
         }
 
@@ -139,8 +125,7 @@ namespace Inventory.ViewModels
             }
             catch (Exception ex)
             {
-                //LogException("Orders", "Load OrderItems", ex);
-                logger.LogCritical(ex, "Load OrderItems");
+                logger.LogError(ex, "Load OrderItems");
             }
         }
     }

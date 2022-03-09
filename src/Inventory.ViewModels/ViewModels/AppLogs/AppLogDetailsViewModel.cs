@@ -20,168 +20,38 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System.Windows.Input;
-using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.ViewModels
 {
-    public class AppLogDetailsViewModel : ObservableRecipient //GenericDetailsViewModel<AppLogModel>
+    #region AppLogDetailsArgs
+    public class AppLogDetailsArgs
     {
-        private readonly ILogger<AppLogDetailsViewModel> logger;
-        private readonly IMessageService messageService;
-        private readonly INavigationService navigationService;
-        private readonly IContextService contextService;
+        static public AppLogDetailsArgs CreateDefault() => new AppLogDetailsArgs();
+
+        public long AppLogID { get; set; }
+    }
+    #endregion
+
+    public class AppLogDetailsViewModel : GenericDetailsViewModel<AppLogModel>
+    {
+        private readonly ILogger logger;
+        private readonly ILogService logService;
         private readonly IDialogService dialogService;
 
-        public AppLogDetailsViewModel(ILogger<AppLogDetailsViewModel> logger,
-                                      IMessageService messageService,
-                                      INavigationService navigationService,
-                                      IContextService contextService,
+        public AppLogDetailsViewModel(ILogger<AppLogListViewModel> logger,
+                                      ILogService logService,
                                       IDialogService dialogService)
+            : base()
         {
             this.logger = logger;
-            this.messageService = messageService;
-            this.navigationService = navigationService;
-            this.contextService = contextService;
+            this.logService = logService;
             this.dialogService = dialogService;
         }
 
+        override public string Title => "Activity Logs";
 
-
-        public bool CanGoBack => !contextService.IsMainView && navigationService.CanGoBack;
-
-        public ICommand BackCommand => new RelayCommand(OnBack);
-        virtual protected void OnBack()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            if (navigationService.CanGoBack)
-            {
-                navigationService.GoBack();
-            }
-        }
-
-        public ICommand EditCommand => new RelayCommand(OnEdit);
-        virtual protected void OnEdit()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            BeginEdit();
-            messageService.Send(this, "BeginEdit", Item);
-        }
-
-        virtual public void BeginEdit()
-        {
-            if (!IsEditMode)
-            {
-                IsEditMode = true;
-                // Create a copy for edit
-                var editableItem = new AppLogModel();
-                editableItem.Merge(Item);
-                EditableItem = editableItem;
-            }
-        }
-
-        public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        virtual protected async void OnDelete()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            if (await ConfirmDeleteAsync())
-            {
-                await DeleteAsync();
-            }
-        }
-        virtual public async Task DeleteAsync()
-        {
-            var model = Item;
-            if (model != null)
-            {
-                IsEnabled = false;
-                if (await DeleteItemAsync(model))
-                {
-                    messageService.Send(this, "ItemDeleted", model);
-                }
-                else
-                {
-                    IsEnabled = true;
-                }
-            }
-        }
-
-        public ICommand SaveCommand => new RelayCommand(OnSave);
-        virtual protected async void OnSave()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            var result = Validate(EditableItem);
-            if (result.IsOk)
-            {
-                await SaveAsync();
-            }
-            else
-            {
-                await dialogService.ShowAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
-            }
-        }
-        virtual public async Task SaveAsync()
-        {
-            IsEnabled = false;
-            bool isNew = ItemIsNew;
-            if (await SaveItemAsync(EditableItem))
-            {
-                Item.Merge(EditableItem);
-                Item.NotifyChanges();
-                OnPropertyChanged(nameof(Title));
-                EditableItem = Item;
-
-                if (isNew)
-                {
-                    messageService.Send(this, "NewItemSaved", Item);
-                }
-                else
-                {
-                    messageService.Send(this, "ItemChanged", Item);
-                }
-                IsEditMode = false;
-
-                OnPropertyChanged(nameof(ItemIsNew));
-            }
-            IsEnabled = true;
-        }
-
-        virtual public Result Validate(AppLogModel model)
-        {
-            foreach (var constraint in GetValidationConstraints(model))
-            {
-                if (!constraint.Validate(model))
-                {
-                    return Result.Error("Validation Error", constraint.Message);
-                }
-            }
-            return Result.Ok();
-        }
-
-        virtual protected IEnumerable<IValidationConstraint<AppLogModel>> GetValidationConstraints(AppLogModel model) => Enumerable.Empty<IValidationConstraint<AppLogModel>>();
-
-        public ICommand CancelCommand => new RelayCommand(OnCancel);
-        virtual protected void OnCancel()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            CancelEdit();
-            messageService.Send(this, "CancelEdit", Item);
-        }
-
-
-
-
-
-
-        public string Title => "Activity Logs";
-
-        public  bool ItemIsNew => false;
+        public override bool ItemIsNew => false;
 
         public AppLogDetailsArgs ViewModelArgs { get; private set; }
 
@@ -191,18 +61,14 @@ namespace Inventory.ViewModels
 
             try
             {
-                //TODO: LogService
-                //var item = await LogService.GetLogAsync(ViewModelArgs.AppLogID);
-                //Item = item ?? new AppLogModel { Id = 0, IsEmpty = true };
-                await Task.CompletedTask;
+                var item = await logService.GetLogAsync(ViewModelArgs.AppLogID);
+                Item = item ?? new AppLogModel { Id = 0, IsEmpty = true };
             }
             catch (Exception ex)
             {
-                //LogException("AppLog", "Load", ex);
-                logger.LogCritical(ex, "Load");
+                logger.LogError(ex, "Load");
             }
         }
-
         public void Unload()
         {
             ViewModelArgs.AppLogID = Item?.Id ?? 0;
@@ -210,12 +76,12 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            messageService.Subscribe<AppLogDetailsViewModel, AppLogModel>(this, OnDetailsMessage);
-            messageService.Subscribe<AppLogListViewModel>(this, OnListMessage);
+            MessageService.Subscribe<AppLogDetailsViewModel, AppLogModel>(this, OnDetailsMessage);
+            MessageService.Subscribe<AppLogListViewModel>(this, OnListMessage);
         }
         public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            MessageService.Unsubscribe(this);
         }
 
         public AppLogDetailsArgs CreateArgs()
@@ -226,33 +92,30 @@ namespace Inventory.ViewModels
             };
         }
 
-        protected  Task<bool> SaveItemAsync(AppLogModel model)
+        protected override Task<bool> SaveItemAsync(AppLogModel model)
         {
             throw new NotImplementedException();
         }
 
-        protected  async Task<bool> DeleteItemAsync(AppLogModel model)
+        protected override async Task<bool> DeleteItemAsync(AppLogModel model)
         {
-            //try
-            //{
-            //    StartStatusMessage("Deleting log...");
+            try
+            {
+                StartStatusMessage("Deleting log...");
                 await Task.Delay(100);
-
-            //TODO: LogService
-            //await LogService.DeleteLogAsync(model);
-
-                //EndStatusMessage("Log deleted");
+                await logService.DeleteLogAsync(model);
+                EndStatusMessage("Log deleted");
                 return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    StatusError($"Error deleting log: {ex.Message}");
-            //    LogException("AppLog", "Delete", ex);
-            //    return false;
-            //}
+            }
+            catch (Exception ex)
+            {
+                StatusError($"Error deleting log: {ex.Message}");
+                logger.LogError(ex, "Delete");
+                return false;
+            }
         }
 
-        protected  async Task<bool> ConfirmDeleteAsync()
+        protected override async Task<bool> ConfirmDeleteAsync()
         {
             return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
         }
@@ -294,12 +157,11 @@ namespace Inventory.ViewModels
                         }
                         break;
                     case "ItemRangesDeleted":
-                        //TODO: LogService
-                        //var model = await LogService.GetLogAsync(current.Id);
-                        //if (model == null)
-                        //{
-                        //    await OnItemDeletedExternally();
-                        //}
+                        var model = await logService.GetLogAsync(current.Id);
+                        if (model == null)
+                        {
+                            await OnItemDeletedExternally();
+                        }
                         break;
                 }
             }
@@ -307,86 +169,12 @@ namespace Inventory.ViewModels
 
         private async Task OnItemDeletedExternally()
         {
-            await contextService.RunAsync(() =>
+            await ContextService.RunAsync(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
-                //StatusMessage("WARNING: This log has been deleted externally");
+                StatusMessage("WARNING: This log has been deleted externally");
             });
         }
-
-
-
-
-
-
-        private AppLogModel _item = null;
-        public AppLogModel Item
-        {
-            get => _item;
-            set
-            {
-                if (SetProperty(ref _item, value))
-                {
-                    EditableItem = _item;
-                    IsEnabled = (!_item?.IsEmpty) ?? false;
-                    OnPropertyChanged(nameof(IsDataAvailable));
-                    OnPropertyChanged(nameof(IsDataUnavailable));
-                    OnPropertyChanged(nameof(Title));
-                }
-            }
-        }
-
-        public bool IsDataAvailable => _item != null;
-        public bool IsDataUnavailable => !IsDataAvailable;
-
-        private AppLogModel _editableItem = null;
-        public AppLogModel EditableItem
-        {
-            get => _editableItem;
-            set => SetProperty(ref _editableItem, value);
-        }
-
-        private bool _isEnabled = true;
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
-        }
-
-        virtual public void CancelEdit()
-        {
-            if (ItemIsNew)
-            {
-                // We were creating a new item: cancel means exit
-                if (navigationService.CanGoBack)
-                {
-                    navigationService.GoBack();
-                }
-                else
-                {
-                    navigationService.CloseViewAsync();
-                }
-                return;
-            }
-
-            // We were editing an existing item: just cancel edition
-            if (IsEditMode)
-            {
-                EditableItem = Item;
-            }
-            IsEditMode = false;
-        }
-
-        private bool _isEditMode = false;
-        public bool IsEditMode
-        {
-            get => _isEditMode;
-            set => SetProperty(ref _isEditMode, value);
-        }
-
-
-
-
     }
 }

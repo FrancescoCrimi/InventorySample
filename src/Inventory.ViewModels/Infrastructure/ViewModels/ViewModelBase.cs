@@ -14,112 +14,92 @@
 
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
+
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.ViewModels
 {
-    public class ViewModelBase : ObservableObject
+    public class ViewModelBase : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient
     {
-        //private Stopwatch _stopwatch = new Stopwatch();
+        private Stopwatch _stopwatch = new Stopwatch();
 
-        public ViewModelBase(/*ICommonServices commonServices*/)
+        public ViewModelBase()
         {
-            //ContextService = commonServices.ContextService;
-            //NavigationService = commonServices.NavigationService;
-            //messageService = commonServices.MessageService;
-            //DialogService = commonServices.DialogService;
-            //LogService = commonServices.LogService;
+            ContextService = Ioc.Default.GetService<IContextService>();
+            //NavigationService = Ioc.Default.GetService<INavigationService>();
+            MessageService = Ioc.Default.GetService<IMessageService>();
+            //DialogService = Ioc.Default.GetService<IDialogService>();
+            //LogService = Ioc.Default.GetService<ILogService>();
         }
 
         public IContextService ContextService { get; }
-        public INavigationService NavigationService { get; }
-        public IMessageService messageService { get; }
-        public IDialogService DialogService { get; }
+        //public INavigationService NavigationService { get; }
+        public IMessageService MessageService { get; }
+        //public IDialogService DialogService { get; }
         //public ILogService LogService { get; }
 
         public bool IsMainView => ContextService.IsMainView;
 
         virtual public string Title => String.Empty;
 
-        public  void LogInformation(string source, string action, string message, string description)
+        public void StartStatusMessage(string message)
         {
-            //await LogService.WriteAsync(LogType.Information, source, action, message, description);
+            StatusMessage(message);
+            _stopwatch.Reset();
+            _stopwatch.Start();
         }
-
-        public  void LogWarning(string source, string action, string message, string description)
+        public void EndStatusMessage(string message)
         {
-            //await LogService.WriteAsync(LogType.Warning, source, action, message, description);
+            _stopwatch.Stop();
+            StatusMessage($"{message} ({_stopwatch.Elapsed.TotalSeconds:#0.000} seconds)");            
         }
-
-        public void LogException(string source, string action, Exception exception)
-        {
-            LogError(source, action, exception.Message, exception.ToString());
-        }
-
-        public async void LogError(string source, string action, string message, string description)
-        {
-            //await LogService.WriteAsync(LogType.Error, source, action, message, description);
-            await Task.CompletedTask;
-        }
-
-        //public void StartStatusMessage(string message)
-        //{
-        //    StatusMessage(message);
-        //    //_stopwatch.Reset();
-        //    //_stopwatch.Start();
-        //}
-        //public void EndStatusMessage(string message)
-        //{
-        //    //_stopwatch.Stop();
-        //    StatusMessage($"{message} ({_stopwatch.Elapsed.TotalSeconds:#0.000} seconds)");            
-        //}
 
         public void StatusReady()
         {
-            messageService.Send(this, "StatusMessage", "Ready");
+            MessageService.Send(this, "StatusMessage", "Ready");
         }
         public void StatusMessage(string message)
         {
             //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-            messageService.Send(this, "StatusMessage", message);
+            MessageService.Send(this, "StatusMessage", message);
         }
         public void StatusError(string message)
         {
             //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-            messageService.Send(this, "StatusError", message);
+            MessageService.Send(this, "StatusError", message);
         }
 
         public void EnableThisView(string message = null)
         {
             message = message ?? "Ready";
-            messageService.Send(this, "EnableThisView", message);
+            MessageService.Send(this, "EnableThisView", message);
         }
         public void DisableThisView(string message)
         {
-            messageService.Send(this, "DisableThisView", message);
+            MessageService.Send(this, "DisableThisView", message);
         }
 
         public void EnableOtherViews(string message = null)
         {
             message = message ?? "Ready";
-            messageService.Send(this, "EnableOtherViews", message);
+            MessageService.Send(this, "EnableOtherViews", message);
         }
         public void DisableOtherViews(string message)
         {
-            messageService.Send(this, "DisableOtherViews", message);
+            MessageService.Send(this, "DisableOtherViews", message);
         }
 
         public void EnableAllViews(string message = null)
         {
             message = message ?? "Ready";
-            messageService.Send(this, "EnableAllViews", message);
+            MessageService.Send(this, "EnableAllViews", message);
         }
         public void DisableAllViews(string message)
         {
-            messageService.Send(this, "DisableAllViews", message);
+            MessageService.Send(this, "DisableAllViews", message);
         }
     }
 }

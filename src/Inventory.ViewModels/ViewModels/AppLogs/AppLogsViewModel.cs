@@ -18,33 +18,29 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.ViewModels
 {
-    public class AppLogsViewModel : ObservableRecipient
+    public class AppLogsViewModel : ViewModelBase
     {
         private readonly ILogger<AppLogsViewModel> logger;
-        private readonly IMessageService messageService;
-        private readonly IContextService contextService;
+        private readonly ILogService logService;
 
         public AppLogsViewModel(ILogger<AppLogsViewModel> logger,
-                                IMessageService messageService,
-                                IContextService contextService,
+                                ILogService logService,
                                 AppLogListViewModel appLogListViewModel,
                                 AppLogDetailsViewModel appLogDetailsViewModel)
+            : base()
         {
             this.logger = logger;
-            this.messageService = messageService;
-            this.contextService = contextService;
+            this.logService = logService;
             AppLogList = appLogListViewModel;
             AppLogDetails = appLogDetailsViewModel;
         }
 
         public AppLogListViewModel AppLogList { get; }
         public AppLogDetailsViewModel AppLogDetails { get; }
-
-        public bool IsMainView => contextService.IsMainView;
 
         public async Task LoadAsync(AppLogListArgs args)
         {
@@ -57,13 +53,13 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            messageService.Subscribe<AppLogListViewModel>(this, OnMessage);
+            MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
             AppLogList.Subscribe();
             AppLogDetails.Subscribe();
         }
         public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            MessageService.Unsubscribe(this);
             AppLogList.Unsubscribe();
             AppLogDetails.Unsubscribe();
         }
@@ -72,7 +68,7 @@ namespace Inventory.ViewModels
         {
             if (viewModel == AppLogList && message == "ItemSelected")
             {
-                await contextService.RunAsync(() =>
+                await ContextService.RunAsync(() =>
                 {
                     OnItemSelected();
                 });
@@ -83,8 +79,7 @@ namespace Inventory.ViewModels
         {
             if (AppLogDetails.IsEditMode)
             {
-                //StatusReady();
-                messageService.Send(this, "StatusMessage", "Ready");
+                StatusReady();
             }
             var selected = AppLogList.SelectedItem;
             if (!AppLogList.IsMultipleSelection)
@@ -101,15 +96,12 @@ namespace Inventory.ViewModels
         {
             try
             {
-                //TODO: LogService
-                //var model = await LogService.GetLogAsync(selected.Id);
-                //selected.Merge(model);
-                await Task.CompletedTask;
+                var model = await logService.GetLogAsync(selected.Id);
+                selected.Merge(model);
             }
             catch (Exception ex)
             {
-                //LogException("AppLogs", "Load Details", ex);
-                logger.LogCritical(ex, "Load Details");
+                logger.LogError(ex, "Load Details");
             }
         }
     }

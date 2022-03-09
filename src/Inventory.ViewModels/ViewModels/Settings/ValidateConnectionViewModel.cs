@@ -21,25 +21,23 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 using Inventory.Services;
 using Inventory.Data.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 
 namespace Inventory.ViewModels
 {
-    public class ValidateConnectionViewModel : ObservableRecipient
+    public class ValidateConnectionViewModel : ViewModelBase
     {
+        private readonly ILogger<ValidateConnectionViewModel> logger;
+        private readonly ISettingsService settingsService;
+
         public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger,
-                                           ISettingsService settingsService
-                                           //ICommonServices commonServices
-            )
-            //: base(commonServices)
+                                           ISettingsService settingsService)
+            : base()
         {
             this.logger = logger;
-            SettingsService = settingsService;
+            this.settingsService = settingsService;
             Result = Result.Error("Operation cancelled");
         }
-
-        public ISettingsService SettingsService { get; }
 
         public Result Result { get; private set; }
 
@@ -67,8 +65,6 @@ namespace Inventory.ViewModels
         }
 
         private string _secondaryButtonText = "Cancel";
-        private readonly ILogger<ValidateConnectionViewModel> logger;
-
         public string SecondaryButtonText
         {
             get => _secondaryButtonText;
@@ -87,14 +83,14 @@ namespace Inventory.ViewModels
                         var version = db.DbVersion.FirstOrDefault();
                         if (version != null)
                         {
-                            if (version.Version == SettingsService.DbVersion)
+                            if (version.Version == settingsService.DbVersion)
                             {
                                 Message = $"Database connection succeeded and version is up to date.";
                                 Result = Result.Ok("Database connection succeeded");
                             }
                             else
                             {
-                                Message = $"Database version mismatch. Current version is {version.Version}, expected version is {SettingsService.DbVersion}. Please, recreate the database.";
+                                Message = $"Database version mismatch. Current version is {version.Version}, expected version is {settingsService.DbVersion}. Please, recreate the database.";
                                 Result = Result.Error("Database version mismatch");
                             }
                         }
@@ -115,8 +111,7 @@ namespace Inventory.ViewModels
             {
                 Result = Result.Error("Error creating database. See details in Activity Log");
                 Message = $"Error validating connection: {ex.Message}";
-                //LogException("Settings", "Validate Connection", ex);
-                logger.LogCritical(ex, "Validate Connection");
+                logger.LogError(ex, "Validate Connection");
             }
             PrimaryButtonText = "Ok";
             SecondaryButtonText = null;

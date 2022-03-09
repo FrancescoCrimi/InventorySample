@@ -20,7 +20,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Inventory.Services;
-using Inventory.Views.SplashScreen;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,8 +28,10 @@ using Inventory.Data.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Inventory.Services.Infrastructure.LogService;
 using Microsoft.Extensions.Logging.Configuration;
+using NLog.Extensions.Logging;
+using Inventory.Views;
+using Windows.System;
 
 namespace Inventory
 {
@@ -42,9 +43,6 @@ namespace Inventory
         {
             InitializeComponent();
 
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-            //ApplicationView.PreferredLaunchViewSize = new Size(1280, 840);
-
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
 
@@ -54,13 +52,25 @@ namespace Inventory
             //logger = factory.CreateLogger(typeof(App).Name);
         }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
             var frame = Window.Current.Content as Frame;
             if (frame == null)
             {
-                ExtendedSplash extendedSplash = new ExtendedSplash(e);
-                Window.Current.Content = extendedSplash;
+                Frame rootFrame = new Frame();
+                await Startup.ConfigureAsync();
+
+                var shellArgs = new ShellArgs
+                {
+                    ViewModel = typeof(DashboardViewModel),
+                    Parameter = null,
+                    UserInfo = await TryGetUserInfoAsync(e as IActivatedEventArgsWithUser)
+                };
+
+                rootFrame.Navigate(typeof(MainShellView), shellArgs);
+
+                Window.Current.Content = rootFrame;
+                //Window.Current.Activate();
             }
 
             if (e.PrelaunchActivated == false)
@@ -72,7 +82,9 @@ namespace Inventory
         private  void OnSuspending(object sender, SuspendingEventArgs e)
         {
             //var logService = Ioc.Default.GetService<ILogService>();
+            
             //await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
+            
             //logger.LogInformation($"Application ended by '{AppSettings.Current.UserName}'.");
         }
 
@@ -86,18 +98,36 @@ namespace Inventory
         private IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
+            services.AddLogging(AddLogging);
+            AddDbContexts(services);
+            AddServices(services);
+            return services.BuildServiceProvider();
+        }
+
+        private void AddLogging(ILoggingBuilder loggingBuilder)
+        {
+            //loggingBuilder.ClearProviders();
+            //loggingBuilder.AddConfiguration();
+
+            // Add visual studio viewer
+            //loggingBuilder.AddDebug();
+
+            // Add NLog
+            loggingBuilder.AddNLog(ConfigureNLog());
+        }
+
+        private void AddDbContexts(IServiceCollection services)
+        {
             services
-                .AddLogging(builder => {
-                    //builder.ClearProviders();
-                    //builder.AddConfiguration();
-                    builder.Services.TryAddEnumerable(
-                        ServiceDescriptor.Singleton<ILoggerProvider, DatabaseLoggerProvider>());
-                    //builder.Services.Configure()
-                })
-                .AddDbContext<AppLogDbContext>(option =>
-                {
-                    option.UseSqlite(AppSettings.Current.AppLogConnectionString);
-                })
+               .AddDbContext<LogDbContext>(option =>
+               {
+                   option.UseSqlite(AppSettings.Current.AppLogConnectionString);
+               });
+        }
+
+        private void AddServices(ServiceCollection services)
+        {
+            services
             .AddSingleton<ISettingsService, SettingsService>()
             .AddSingleton<IDataServiceFactory, DataServiceFactory>()
             .AddSingleton<ILookupTables, LookupTables>()
@@ -107,10 +137,10 @@ namespace Inventory
             .AddSingleton<IProductService, ProductService>()
 
             .AddSingleton<IMessageService, MessageService>()
-            //.AddSingleton<ILogService, LogService>()
+            .AddSingleton<ILogService, LogService>()
             .AddSingleton<IDialogService, DialogService>()
             .AddSingleton<IFilePickerService, FilePickerService>()
-            //.AddSingleton<ILoginService, LoginService>()
+            .AddSingleton<ILoginService, LoginService>()
 
             .AddScoped<IContextService, ContextService>()
             .AddScoped<INavigationService, NavigationService>()
@@ -163,8 +193,67 @@ namespace Inventory
 
             .AddTransient<AppLogListViewModel>()
             .AddTransient<AppLogDetailsViewModel>();
+        }
 
-            return services.BuildServiceProvider();
+        private async Task<UserInfo> TryGetUserInfoAsync(IActivatedEventArgsWithUser argsWithUser)
+        {
+            if (argsWithUser != null)
+            {
+                var user = argsWithUser.User;
+                var userInfo = new UserInfo
+                {
+                    AccountName = await user.GetPropertyAsync(KnownUserProperties.AccountName) as String,
+                    FirstName = await user.GetPropertyAsync(KnownUserProperties.FirstName) as String,
+                    LastName = await user.GetPropertyAsync(KnownUserProperties.LastName) as String
+                };
+                if (!userInfo.IsEmpty)
+                {
+                    if (String.IsNullOrEmpty(userInfo.AccountName))
+                    {
+                        userInfo.AccountName = $"{userInfo.FirstName} {userInfo.LastName}";
+                    }
+                    var pictureStream = await user.GetPictureAsync(UserPictureSize.Size64x64);
+                    if (pictureStream != null)
+                    {
+                        userInfo.PictureSource = await BitmapTools.LoadBitmapAsync(pictureStream);
+                    }
+                    return userInfo;
+                }
+            }
+            return UserInfo.Default;
+        }
+
+        private static NLog.Config.LoggingConfiguration ConfigureNLog()
+        {
+            var config = new NLog.Config.LoggingConfiguration();
+
+            ////var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+            //var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole");
+            //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
+
+            var vsDebug = new NLog.Targets.DebuggerTarget();
+            config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, vsDebug);
+
+            var db = new NLog.Targets.DatabaseTarget("database");
+            db.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
+            db.ConnectionString = AppSettings.Current.LogConnectionString;
+            db.CommandText =
+                @"insert into Log (
+                MachineName, Logged, Level, Message,
+                Logger, Callsite, Exception
+                ) values(
+                @MachineName, @Logged, @Level, @Message,
+                @Logger, @Callsite, @Exception
+                );";
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@MachineName", NLog.Layouts.Layout.FromString("${machinename}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logged", NLog.Layouts.Layout.FromString("${date}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Level", NLog.Layouts.Layout.FromString("${level}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Message", NLog.Layouts.Layout.FromString("${message}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logger", NLog.Layouts.Layout.FromString("${logger}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Callsite", NLog.Layouts.Layout.FromString("${callsite}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Exception", NLog.Layouts.Layout.FromString("${exception:tostring}")));
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, db);
+            return config;
         }
     }
 }

@@ -21,25 +21,23 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 using Inventory.Services;
 using Inventory.Data.Services;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 
 namespace Inventory.ViewModels
 {
-    public class CreateDatabaseViewModel : ObservableRecipient
+    public class CreateDatabaseViewModel : ViewModelBase
     {
+        private readonly ILogger<CreateDatabaseViewModel> logger;
+        private readonly ISettingsService settingsService;
+
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
-                                       ISettingsService settingsService
-                                       //ICommonServices commonServices
-            )
-            //: base(commonServices)
+                                       ISettingsService settingsService)
+            : base()
         {
             this.logger = logger;
-            SettingsService = settingsService;
+            this.settingsService = settingsService;
             Result = Result.Error("Operation cancelled");
         }
-
-        public ISettingsService SettingsService { get; }
 
         public Result Result { get; private set; }
 
@@ -81,8 +79,6 @@ namespace Inventory.ViewModels
         }
 
         private string _secondaryButtonText = "Cancel";
-        private readonly ILogger<CreateDatabaseViewModel> logger;
-
         public string SecondaryButtonText
         {
             get => _secondaryButtonText;
@@ -121,8 +117,7 @@ namespace Inventory.ViewModels
             {
                 Result = Result.Error("Error creating database. See details in Activity Log");
                 Message = $"Error creating database: {ex.Message}";
-                //LogException("Settings", "Create Database", ex);
-                logger.LogCritical(ex, "Create Database");
+                logger.LogError(ex, "Create Database");
             }
             PrimaryButtonText = "Ok";
             SecondaryButtonText = null;
@@ -130,7 +125,7 @@ namespace Inventory.ViewModels
 
         private async Task CopyDataTables(SQLServerDb db)
         {
-            using (var sourceDb = new SQLiteDb(SettingsService.PatternConnectionString))
+            using (var sourceDb = new SQLiteDb(settingsService.PatternConnectionString))
             {
                 ProgressStatus = "Creating table Categories...";
                 foreach (var item in sourceDb.Categories.AsNoTracking())

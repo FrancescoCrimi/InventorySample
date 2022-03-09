@@ -12,33 +12,31 @@
 // ******************************************************************
 #endregion
 
+using System;
 using System.Threading.Tasks;
 
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Inventory.ViewModels
 {
-
-    public class ShellViewModel : ObservableRecipient
+    public class ShellArgs
     {
-        private readonly ILogger<ShellViewModel> logger;
-        private readonly IMessageService messageService;
-        private readonly INavigationService navigationService;
-        private readonly IContextService contextService;
+        public Type ViewModel { get; set; }
+        public object Parameter { get; set; }
+        public UserInfo UserInfo { get; set; }
+    }
 
-        public ShellViewModel(ILogger<ShellViewModel> logger,
-            IMessageService messageService,
-                              INavigationService navigationService,
-                              //ILoginService loginService,
-                              IContextService contextService)
+    public class ShellViewModel : ViewModelBase
+    {
+        private readonly INavigationService navigationService;
+
+        public ShellViewModel(ILoginService loginService,
+                              INavigationService navigationService)
+            : base()
         {
-            this.logger = logger;
-            this.messageService = messageService;
+            IsLocked = !loginService.IsAuthenticated;
             this.navigationService = navigationService;
-            this.contextService = contextService;
-            //IsLocked = !loginService.IsAuthenticated;
         }
 
         private bool _isLocked = false;
@@ -83,30 +81,26 @@ namespace Inventory.ViewModels
             }
             return Task.CompletedTask;
         }
-
         virtual public void Unload()
         {
         }
 
         virtual public void Subscribe()
         {
-            //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
-            messageService.Subscribe<ViewModelBase, string>(this, OnMessage);
+            MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
+            MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
         }
 
         virtual public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            MessageService.Unsubscribe(this);
         }
 
-        private async void OnLoginMessage(
-            //ILoginService loginService,
-            string message,
-            bool isAuthenticated)
+        private async void OnLoginMessage(ILoginService loginService, string message, bool isAuthenticated)
         {
             if (message == "AuthenticationChanged")
             {
-                await contextService.RunAsync(() =>
+                await ContextService.RunAsync(() =>
                 {
                     IsLocked = !isAuthenticated;
                 });
@@ -119,7 +113,7 @@ namespace Inventory.ViewModels
             {
                 case "StatusMessage":
                 case "StatusError":
-                    if (viewModel.ContextService.ContextID == contextService.ContextID)
+                    if (viewModel.ContextService.ContextID == ContextService.ContextID)
                     {
                         IsError = message == "StatusError";
                         SetStatus(status);
@@ -128,7 +122,7 @@ namespace Inventory.ViewModels
 
                 case "EnableThisView":
                 case "DisableThisView":
-                    if (viewModel.ContextService.ContextID == contextService.ContextID)
+                    if (viewModel.ContextService.ContextID == ContextService.ContextID)
                     {
                         IsEnabled = message == "EnableThisView";
                         SetStatus(status);
@@ -137,9 +131,9 @@ namespace Inventory.ViewModels
 
                 case "EnableOtherViews":
                 case "DisableOtherViews":
-                    if (viewModel.ContextService.ContextID != contextService.ContextID)
+                    if (viewModel.ContextService.ContextID != ContextService.ContextID)
                     {
-                        await contextService.RunAsync(() =>
+                        await ContextService.RunAsync(() =>
                         {
                             IsEnabled = message == "EnableOtherViews";
                             SetStatus(status);
@@ -149,7 +143,7 @@ namespace Inventory.ViewModels
 
                 case "EnableAllViews":
                 case "DisableAllViews":
-                    await contextService.RunAsync(() =>
+                    await ContextService.RunAsync(() =>
                     {
                         IsEnabled = message == "EnableAllViews";
                         SetStatus(status);

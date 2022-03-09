@@ -21,39 +21,28 @@ using System.Windows.Input;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.ViewModels
 {
-    abstract public partial class GenericDetailsViewModel<TModel>
-        : ObservableRecipient where TModel : Models.ObservableObject, new()
+    abstract public partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
     {
         private readonly INavigationService navigationService;
-        private readonly IMessageService messageService;
-        private readonly IContextService contextService;
         private readonly IDialogService dialogService;
 
-        public GenericDetailsViewModel(INavigationService navigationService,
-                                       IMessageService messageService,
-                                       IContextService contextService,
-                                       IDialogService dialogService)
+        public GenericDetailsViewModel()
+            : base()
         {
-            this.navigationService = navigationService;
-            this.messageService = messageService;
-            this.contextService = contextService;
-            this.dialogService = dialogService;
+            navigationService = Ioc.Default.GetService<INavigationService>();
+            dialogService = Ioc.Default.GetService<IDialogService>();
         }
 
         public ILookupTables LookupTables => LookupTablesProxy.Instance;
 
-
-
-        virtual public string Title => String.Empty;
-
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;
 
-        public bool CanGoBack => !contextService.IsMainView && navigationService.CanGoBack;
+        public bool CanGoBack => !IsMainView && navigationService.CanGoBack;
 
         private TModel _item = null;
         public TModel Item
@@ -93,6 +82,42 @@ namespace Inventory.ViewModels
             set => SetProperty(ref _isEnabled, value);
         }
 
+        public ICommand BackCommand => new RelayCommand(OnBack);
+        virtual protected void OnBack()
+        {
+            StatusReady();
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+        public ICommand EditCommand => new RelayCommand(OnEdit);
+        virtual protected void OnEdit()
+        {
+            StatusReady();
+            BeginEdit();
+            MessageService.Send(this, "BeginEdit", Item);
+        }
+        virtual public void BeginEdit()
+        {
+            if (!IsEditMode)
+            {
+                IsEditMode = true;
+                // Create a copy for edit
+                var editableItem = new TModel();
+                editableItem.Merge(Item);
+                EditableItem = editableItem;
+            }
+        }
+
+        public ICommand CancelCommand => new RelayCommand(OnCancel);
+        virtual protected void OnCancel()
+        {
+            StatusReady();
+            CancelEdit();
+            MessageService.Send(this, "CancelEdit", Item);
+        }
         virtual public void CancelEdit()
         {
             if (ItemIsNew)
@@ -117,54 +142,10 @@ namespace Inventory.ViewModels
             IsEditMode = false;
         }
 
-
-
-        public ICommand BackCommand => new RelayCommand(OnBack);
-        virtual protected void OnBack()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            if (navigationService.CanGoBack)
-            {
-                navigationService.GoBack();
-            }
-        }
-
-        public ICommand EditCommand => new RelayCommand(OnEdit);
-        virtual protected void OnEdit()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            BeginEdit();
-            messageService.Send(this, "BeginEdit", Item);
-        }
-
-        virtual public void BeginEdit()
-        {
-            if (!IsEditMode)
-            {
-                IsEditMode = true;
-                // Create a copy for edit
-                var editableItem = new TModel();
-                editableItem.Merge(Item);
-                EditableItem = editableItem;
-            }
-        }
-
-        public ICommand CancelCommand => new RelayCommand(OnCancel);
-        virtual protected void OnCancel()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-            CancelEdit();
-            messageService.Send(this, "CancelEdit", Item);
-        }
-
         public ICommand SaveCommand => new RelayCommand(OnSave);
         virtual protected async void OnSave()
         {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
+            StatusReady();
             var result = Validate(EditableItem);
             if (result.IsOk)
             {
@@ -188,11 +169,11 @@ namespace Inventory.ViewModels
 
                 if (isNew)
                 {
-                    messageService.Send(this, "NewItemSaved", Item);
+                    MessageService.Send(this, "NewItemSaved", Item);
                 }
                 else
                 {
-                    messageService.Send(this, "ItemChanged", Item);
+                    MessageService.Send(this, "ItemChanged", Item);
                 }
                 IsEditMode = false;
 
@@ -204,8 +185,7 @@ namespace Inventory.ViewModels
         public ICommand DeleteCommand => new RelayCommand(OnDelete);
         virtual protected async void OnDelete()
         {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
+            StatusReady();
             if (await ConfirmDeleteAsync())
             {
                 await DeleteAsync();
@@ -219,7 +199,7 @@ namespace Inventory.ViewModels
                 IsEnabled = false;
                 if (await DeleteItemAsync(model))
                 {
-                    messageService.Send(this, "ItemDeleted", model);
+                    MessageService.Send(this, "ItemDeleted", model);
                 }
                 else
                 {

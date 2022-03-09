@@ -22,9 +22,8 @@ using System.Windows.Input;
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Input;
 
 namespace Inventory.ViewModels
 {
@@ -47,102 +46,24 @@ namespace Inventory.ViewModels
     }
     #endregion
 
-    public class ProductListViewModel : ObservableRecipient //GenericListViewModel<ProductModel>
+    public class ProductListViewModel : GenericListViewModel<ProductModel>
     {
         private readonly ILogger<ProductListViewModel> logger;
-        private readonly IMessageService messageService;
-        private readonly IContextService contextService;
-        private readonly IDialogService dialogService;
-        private readonly INavigationService navigationService;
         private readonly IProductService productService;
+        private readonly INavigationService navigationService;
+        private readonly IDialogService dialogService;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
-                                    IMessageService messageService,
-                                    IContextService contextService,
-                                    IDialogService dialogService,
+                                    IProductService productService,
                                     INavigationService navigationService,
-                                    IProductService productService) 
+                                    IDialogService dialogService)
+            : base()
         {
             this.logger = logger;
-            this.messageService = messageService;
-            this.contextService = contextService;
-            this.dialogService = dialogService;
-            this.navigationService = navigationService;
             this.productService = productService;
+            this.navigationService = navigationService;
+            this.dialogService = dialogService;
         }
-
-        public ICommand NewCommand => new RelayCommand(OnNew);
-
-        public ICommand RefreshCommand => new RelayCommand(OnRefresh);
-
-        public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
-        virtual protected void OnStartSelection()
-        {
-            //StatusMessage("Start selection");
-            SelectedItem = null;
-            SelectedItems = new List<ProductModel>();
-            SelectedIndexRanges = null;
-            IsMultipleSelection = true;
-        }
-
-        public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
-        virtual protected void OnCancelSelection()
-        {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
-
-            SelectedItems = null;
-            SelectedIndexRanges = null;
-            IsMultipleSelection = false;
-            SelectedItem = Items?.FirstOrDefault();
-        }
-
-        public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
-        virtual protected void OnSelectItems(IList<object> items)
-        {
-            messageService.Send(this, "StatusMessage", "Ready");
-            if (IsMultipleSelection)
-            {
-                SelectedItems.AddRange(items.Cast<ProductModel>());
-                //StatusMessage($"{SelectedItems.Count} items selected");
-            }
-        }
-
-        public ICommand DeselectItemsCommand => new RelayCommand<IList<object>>(OnDeselectItems);
-        virtual protected void OnDeselectItems(IList<object> items)
-        {
-            if (items?.Count > 0)
-            {
-                messageService.Send(this, "StatusMessage", "Ready");
-            }
-            if (IsMultipleSelection)
-            {
-                foreach (ProductModel item in items)
-                {
-                    SelectedItems.Remove(item);
-                }
-                //StatusMessage($"{SelectedItems.Count} items selected");
-            }
-        }
-        public ICommand SelectRangesCommand => new RelayCommand<IndexRange[]>(OnSelectRanges);
-        virtual protected void OnSelectRanges(IndexRange[] indexRanges)
-        {
-            SelectedIndexRanges = indexRanges;
-            int count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
-            //StatusMessage($"{count} items selected");
-        }
-
-        public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
-
-
-
-
-
-
-
-        public string Title => String.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
-
-        public bool IsMainView => contextService.IsMainView;
 
         public ProductListArgs ViewModelArgs { get; private set; }
 
@@ -157,10 +78,10 @@ namespace Inventory.ViewModels
             ViewModelArgs = args ?? ProductListArgs.CreateEmpty();
             Query = ViewModelArgs.Query;
 
-            //StartStatusMessage("Loading products...");
+            StartStatusMessage("Loading products...");
             if (await RefreshAsync())
             {
-                //EndStatusMessage("Products loaded");
+                EndStatusMessage("Products loaded");
             }
         }
         public void Unload()
@@ -170,12 +91,12 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            messageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            messageService.Subscribe<ProductDetailsViewModel>(this, OnMessage);
+            MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
+            MessageService.Subscribe<ProductDetailsViewModel>(this, OnMessage);
         }
         public void Unsubscribe()
         {
-            messageService.Unsubscribe(this);
+            MessageService.Unsubscribe(this);
         }
 
         public ProductListArgs CreateArgs()
@@ -203,11 +124,8 @@ namespace Inventory.ViewModels
             catch (Exception ex)
             {
                 Items = new List<ProductModel>();
-                //StatusError($"Error loading Products: {ex.Message}");
-                messageService.Send(this, "StatusError", $"Error loading Products: {ex.Message}");
-
-                //LogException("Products", "Refresh", ex);
-                logger.LogCritical(ex, "Refresh");
+                StatusError($"Error loading Products: {ex.Message}");
+                logger.LogError(ex, "Refresh");
                 isOk = false;
             }
 
@@ -231,7 +149,7 @@ namespace Inventory.ViewModels
             return new List<ProductModel>();
         }
 
-        protected async void OnNew()
+        protected override async void OnNew()
         {
 
             if (IsMainView)
@@ -243,55 +161,53 @@ namespace Inventory.ViewModels
                 navigationService.Navigate<ProductDetailsViewModel>(new ProductDetailsArgs());
             }
 
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
+            StatusReady();
         }
 
-        protected  async void OnRefresh()
+        protected override async void OnRefresh()
         {
-            //StartStatusMessage("Loading products...");
+            StartStatusMessage("Loading products...");
             if (await RefreshAsync())
             {
-                //EndStatusMessage("Products loaded");
+                EndStatusMessage("Products loaded");
             }
         }
 
-        protected  async void OnDeleteSelection()
+        protected override async void OnDeleteSelection()
         {
-            //StatusReady();
-            messageService.Send(this, "StatusMessage", "Ready");
+            StatusReady();
             if (await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected products?", "Ok", "Cancel"))
             {
                 int count = 0;
-                //try
-                //{
+                try
+                {
                     if (SelectedIndexRanges != null)
                     {
                         count = SelectedIndexRanges.Sum(r => r.Length);
-                        //StartStatusMessage($"Deleting {count} products...");
+                        StartStatusMessage($"Deleting {count} products...");
                         await DeleteRangesAsync(SelectedIndexRanges);
-                    messageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                        MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
-                        //StartStatusMessage($"Deleting {count} products...");
+                        StartStatusMessage($"Deleting {count} products...");
                         await DeleteItemsAsync(SelectedItems);
-                    messageService.Send(this, "ItemsDeleted", SelectedItems);
+                        MessageService.Send(this, "ItemsDeleted", SelectedItems);
                     }
-                //}
-                //catch (Exception ex)
-                //{
-                //    StatusError($"Error deleting {count} Products: {ex.Message}");
-                //    LogException("Products", "Delete", ex);
-                //    count = 0;
-                //}
+                }
+                catch (Exception ex)
+                {
+                    StatusError($"Error deleting {count} Products: {ex.Message}");
+                    logger.LogError(ex, "Delete");
+                    count = 0;
+                }
                 await RefreshAsync();
                 SelectedIndexRanges = null;
                 SelectedItems = null;
                 if (count > 0)
                 {
-                    //EndStatusMessage($"{count} products deleted");
+                    EndStatusMessage($"{count} products deleted");
                 }
             }
         }
@@ -323,7 +239,7 @@ namespace Inventory.ViewModels
             };
         }
 
-        private async void OnMessage(ObservableRecipient sender, string message, object args)
+        private async void OnMessage(ViewModelBase sender, string message, object args)
         {
             switch (message)
             {
@@ -331,71 +247,12 @@ namespace Inventory.ViewModels
                 case "ItemDeleted":
                 case "ItemsDeleted":
                 case "ItemRangesDeleted":
-                    await contextService.RunAsync(async () =>
+                    await ContextService.RunAsync(async () =>
                     {
                         await RefreshAsync();
                     });
                     break;
             }
         }
-
-
-
-
-
-
-
-        private string _query = null;
-        public string Query
-        {
-            get => _query;
-            set => SetProperty(ref _query, value);
-        }
-
-        private IList<ProductModel> _items = null;
-        public IList<ProductModel> Items
-        {
-            get => _items;
-            set => SetProperty(ref _items, value);
-        }
-
-        private ProductModel _selectedItem = default(ProductModel);
-        public ProductModel SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                if (SetProperty(ref _selectedItem, value))
-                {
-                    if (!IsMultipleSelection)
-                    {
-                        messageService.Send(this, "ItemSelected", _selectedItem);
-                    }
-                }
-            }
-        }
-
-        private bool _isMultipleSelection = false;
-        public bool IsMultipleSelection
-        {
-            get => _isMultipleSelection;
-            set => SetProperty(ref _isMultipleSelection, value);
-        }
-
-        private int _itemsCount = 0;
-        public int ItemsCount
-        {
-            get => _itemsCount;
-            set => SetProperty(ref _itemsCount, value);
-        }
-
-        public List<ProductModel> SelectedItems { get; protected set; }
-
-        public IndexRange[] SelectedIndexRanges { get; protected set; }
-
-
-
-
-
     }
 }
