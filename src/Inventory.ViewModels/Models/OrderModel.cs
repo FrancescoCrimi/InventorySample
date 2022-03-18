@@ -12,9 +12,8 @@
 // ******************************************************************
 #endregion
 
-using System;
-
 using CiccioSoft.Inventory.Services;
+using System;
 
 namespace CiccioSoft.Inventory.Models
 {

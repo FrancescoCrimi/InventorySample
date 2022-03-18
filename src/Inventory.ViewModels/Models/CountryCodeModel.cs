@@ -12,8 +12,6 @@
 // ******************************************************************
 #endregion
 
-using System;
-
 namespace CiccioSoft.Inventory.Models
 {
     public class CountryCodeModel : ObservableObject

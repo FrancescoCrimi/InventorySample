@@ -12,14 +12,9 @@
 // ******************************************************************
 #endregion
 
+using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Diagnostics;
-
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Models;
-using CiccioSoft.Inventory.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace CiccioSoft.Inventory.ViewModels
 {
@@ -29,19 +24,8 @@ namespace CiccioSoft.Inventory.ViewModels
 
         public ViewModelBase()
         {
-            //ContextService = Ioc.Default.GetService<IContextService>();
-            //NavigationService = Ioc.Default.GetService<INavigationService>();
-            //MessageService = Ioc.Default.GetService<IMessageService>();
-            //DialogService = Ioc.Default.GetService<IDialogService>();
-            //LogService = Ioc.Default.GetService<ILogService>();
             //IsMainView = false;
         }
-
-        //public IContextService ContextService { get; }
-        //public INavigationService NavigationService { get; }
-        //public IMessageService MessageService { get; }
-        //public IDialogService DialogService { get; }
-        //public ILogService LogService { get; }
 
         //public bool IsMainView => ContextService.IsMainView;
         public bool IsMainView => true;

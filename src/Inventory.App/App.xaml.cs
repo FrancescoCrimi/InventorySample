@@ -12,44 +12,27 @@
 // ******************************************************************
 #endregion
 
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.ViewManagement;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Views;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
-using Microsoft.Extensions.DependencyInjection;
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Data.DataContexts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Configuration;
-using NLog.Extensions.Logging;
-using CiccioSoft.Inventory.Views;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
 using Windows.System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory
 {
     sealed partial class App : Windows.UI.Xaml.Application
     {
-        //private readonly ILogger logger;
-
         public App()
         {
             InitializeComponent();
-
-            this.Suspending += OnSuspending;
-            this.UnhandledException += OnUnhandledException;
-
-            Ioc.Default.ConfigureServices(ConfigureServices());
-            //logger = Ioc.Default.GetRequiredService<ILogger<App>>();
-            //var factory = Ioc.Default.GetService<ILoggerFactory>();
-            //logger = factory.CreateLogger(typeof(App).Name);
+            Suspending += OnSuspending;
+            UnhandledException += OnUnhandledException;
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
@@ -58,7 +41,7 @@ namespace CiccioSoft.Inventory
             if (frame == null)
             {
                 Frame rootFrame = new Frame();
-                await Startup.ConfigureAsync();
+                await new Startup().ConfigureAsync();
 
                 var shellArgs = new ShellArgs
                 {
@@ -79,120 +62,16 @@ namespace CiccioSoft.Inventory
             }
         }
 
-        private  void OnSuspending(object sender, SuspendingEventArgs e)
+        private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            //var logService = Ioc.Default.GetService<ILogService>();
-            
-            //await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
-            
-            //logger.LogInformation($"Application ended by '{AppSettings.Current.UserName}'.");
+            var logger = Ioc.Default.GetService<ILogger<App>>();
+            logger.LogInformation($"Application ended by '{AppSettings.Current.UserName}'.");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            //var logService = Ioc.Default.GetService<ILogService>();
-            //logService.WriteAsync(Data.LogType.Error, "App", "UnhandledException", e.Message, e.Exception.ToString());
-            //logger.LogError("UnhandledException: " + e.Message);
-        }
-
-        private IServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
-            services.AddLogging(AddLogging);
-            AddDbContexts(services);
-            AddServices(services);
-            return services.BuildServiceProvider();
-        }
-
-        private void AddLogging(ILoggingBuilder loggingBuilder)
-        {
-            //loggingBuilder.ClearProviders();
-            //loggingBuilder.AddConfiguration();
-
-            // Add visual studio viewer
-            //loggingBuilder.AddDebug();
-
-            // Add NLog
-            loggingBuilder.AddNLog(ConfigureNLog());
-        }
-
-        private void AddDbContexts(IServiceCollection services)
-        {
-            services
-               .AddDbContext<LogDbContext>(option =>
-               {
-                   option.UseSqlite(AppSettings.Current.AppLogConnectionString);
-               });
-        }
-
-        private void AddServices(ServiceCollection services)
-        {
-            services
-            .AddSingleton<ISettingsService, SettingsService>()
-            .AddSingleton<IDataServiceFactory, DataServiceFactory>()
-            .AddSingleton<ILookupTables, LookupTables>()
-            .AddSingleton<ICustomerService, CustomerService>()
-            .AddSingleton<IOrderService, OrderService>()
-            .AddSingleton<IOrderItemService, OrderItemService>()
-            .AddSingleton<IProductService, ProductService>()
-
-            //.AddSingleton<IMessageService, MessageService>()
-            .AddSingleton<ILogService, LogService>()
-            .AddSingleton<IDialogService, DialogService>()
-            .AddSingleton<IFilePickerService, FilePickerService>()
-            //.AddSingleton<ILoginService, LoginService>()
-
-            //.AddScoped<IContextService, ContextService>()
-            .AddScoped<INavigationService, NavigationService>()
-            //.AddScoped<ICommonServices, CommonServices>()
-
-            .AddTransient<LoginViewModel>()
-
-            .AddTransient<ShellViewModel>()
-            .AddTransient<MainShellViewModel>()
-
-            .AddTransient<DashboardViewModel>()
-
-            .AddTransient<CustomersViewModel>()
-            .AddTransient<CustomerDetailsViewModel>()
-
-            .AddTransient<OrdersViewModel>()
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderDetailsWithItemsViewModel>()
-
-            .AddTransient<OrderItemsViewModel>()
-            .AddTransient<OrderItemDetailsViewModel>()
-
-            .AddTransient<ProductsViewModel>()
-            .AddTransient<ProductDetailsViewModel>()
-
-            .AddTransient<AppLogsViewModel>()
-
-            .AddTransient<SettingsViewModel>()
-            .AddTransient<ValidateConnectionViewModel>()
-            .AddTransient<CreateDatabaseViewModel>()
-
-
-
-            .AddTransient<CustomerListViewModel>()
-            .AddTransient<CustomerDetailsViewModel>()
-            .AddTransient<OrderListViewModel>()
-
-            .AddTransient<ProductListViewModel>()
-            .AddTransient<ProductDetailsViewModel>()
-
-            .AddTransient<OrderListViewModel>()
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderItemListViewModel>()
-
-            .AddTransient<OrderItemListViewModel>()
-            .AddTransient<OrderItemDetailsViewModel>()
-
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderItemListViewModel>()
-
-            .AddTransient<AppLogListViewModel>()
-            .AddTransient<AppLogDetailsViewModel>();
+            var logger = Ioc.Default.GetService<ILogger<App>>();
+            logger.LogError("UnhandledException: " + e.Message);
         }
 
         private async Task<UserInfo> TryGetUserInfoAsync(IActivatedEventArgsWithUser argsWithUser)
@@ -221,39 +100,6 @@ namespace CiccioSoft.Inventory
                 }
             }
             return UserInfo.Default;
-        }
-
-        private static NLog.Config.LoggingConfiguration ConfigureNLog()
-        {
-            var config = new NLog.Config.LoggingConfiguration();
-
-            ////var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
-            //var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole");
-            //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
-
-            var vsDebug = new NLog.Targets.DebuggerTarget();
-            config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, vsDebug);
-
-            var db = new NLog.Targets.DatabaseTarget("database");
-            db.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
-            db.ConnectionString = AppSettings.Current.LogConnectionString;
-            db.CommandText =
-                @"insert into Log (
-                MachineName, Logged, Level, Message,
-                Logger, Callsite, Exception
-                ) values(
-                @MachineName, @Logged, @Level, @Message,
-                @Logger, @Callsite, @Exception
-                );";
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@MachineName", NLog.Layouts.Layout.FromString("${machinename}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logged", NLog.Layouts.Layout.FromString("${date}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Level", NLog.Layouts.Layout.FromString("${level}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Message", NLog.Layouts.Layout.FromString("${message}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logger", NLog.Layouts.Layout.FromString("${logger}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Callsite", NLog.Layouts.Layout.FromString("${callsite}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Exception", NLog.Layouts.Layout.FromString("${exception:tostring}")));
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, db);
-            return config;
         }
     }
 }

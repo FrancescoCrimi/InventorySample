@@ -12,43 +12,30 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.DataContexts;
+using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Views;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using NLog.Extensions.Logging;
 using System;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
-
-using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using Windows.Storage;
-
-//using Microsoft.AppCenter;
-//using Microsoft.AppCenter.Analytics;
-//using Microsoft.AppCenter.Crashes;
-using Microsoft.Extensions.DependencyInjection;
-
-using CiccioSoft.Inventory.Views;
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Data.Sqlite;
+using Windows.UI.ViewManagement;
 
 namespace CiccioSoft.Inventory
 {
-    static public class Startup
+    public class Startup
     {
-        static private readonly ServiceCollection _serviceCollection = new ServiceCollection();
-
-
-        static public async Task ConfigureAsync()
+        public async Task ConfigureAsync()
         {
-            //AppCenter.Start("7b48b5c7-768f-49e3-a2e4-7293abe8b0ca", typeof(Analytics), typeof(Crashes));
-            //Analytics.TrackEvent("AppStarted");
-
-            //ServiceLocator.Configure(_serviceCollection);
-
+            Ioc.Default.ConfigureServices(ConfigureServices());
             ConfigureNavigation();
-
             await EnsureLogDbAsync();
             await EnsureDatabaseAsync();
             await ConfigureLookupTables();
@@ -62,7 +49,142 @@ namespace CiccioSoft.Inventory
             ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
         }
 
-        private static void ConfigureNavigation()
+        private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+            services.AddLogging(AddLogging);
+            AddDbContexts(services);
+            AddServices(services);
+            return services.BuildServiceProvider();
+        }
+
+        private void AddLogging(ILoggingBuilder loggingBuilder)
+        {
+            //loggingBuilder.ClearProviders();
+            //loggingBuilder.AddConfiguration();
+
+            // Add visual studio viewer
+            //loggingBuilder.AddDebug();
+
+            // Add NLog
+            loggingBuilder.AddNLog(ConfigureNLog());
+        }
+
+        private void AddDbContexts(IServiceCollection services)
+        {
+            services
+               .AddDbContext<LogDbContext>(option =>
+               {
+                   option.UseSqlite(AppSettings.Current.AppLogConnectionString);
+               });
+        }
+
+        private void AddServices(ServiceCollection services)
+        {
+            services
+            .AddSingleton<ISettingsService, SettingsService>()
+            .AddSingleton<IDataServiceFactory, DataServiceFactory>()
+            .AddSingleton<ILookupTables, LookupTables>()
+            .AddSingleton<ICustomerService, CustomerService>()
+            .AddSingleton<IOrderService, OrderService>()
+            .AddSingleton<IOrderItemService, OrderItemService>()
+            .AddSingleton<IProductService, ProductService>()
+
+            //.AddSingleton<IMessageService, MessageService>()
+            .AddSingleton<ILogService, LogService>()
+            .AddSingleton<IDialogService, DialogService>()
+            .AddSingleton<IFilePickerService, FilePickerService>()
+            //.AddSingleton<ILoginService, LoginService>()
+
+            //.AddScoped<IContextService, ContextService>()
+            .AddScoped<INavigationService, NavigationService>()
+            //.AddScoped<ICommonServices, CommonServices>()
+
+            .AddTransient<LoginViewModel>()
+
+            .AddTransient<ShellViewModel>()
+            .AddTransient<MainShellViewModel>()
+
+            .AddTransient<DashboardViewModel>()
+
+            .AddTransient<CustomersViewModel>()
+            .AddTransient<CustomerDetailsViewModel>()
+
+            .AddTransient<OrdersViewModel>()
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderDetailsWithItemsViewModel>()
+
+            .AddTransient<OrderItemsViewModel>()
+            .AddTransient<OrderItemDetailsViewModel>()
+
+            .AddTransient<ProductsViewModel>()
+            .AddTransient<ProductDetailsViewModel>()
+
+            .AddTransient<AppLogsViewModel>()
+
+            .AddTransient<SettingsViewModel>()
+            .AddTransient<ValidateConnectionViewModel>()
+            .AddTransient<CreateDatabaseViewModel>()
+
+
+
+            .AddTransient<CustomerListViewModel>()
+            .AddTransient<CustomerDetailsViewModel>()
+            .AddTransient<OrderListViewModel>()
+
+            .AddTransient<ProductListViewModel>()
+            .AddTransient<ProductDetailsViewModel>()
+
+            .AddTransient<OrderListViewModel>()
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderItemListViewModel>()
+
+            .AddTransient<OrderItemListViewModel>()
+            .AddTransient<OrderItemDetailsViewModel>()
+
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderItemListViewModel>()
+
+            .AddTransient<AppLogListViewModel>()
+            .AddTransient<AppLogDetailsViewModel>();
+        }
+
+        private NLog.Config.LoggingConfiguration ConfigureNLog()
+        {
+            var config = new NLog.Config.LoggingConfiguration();
+
+            ////var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
+            //var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole");
+            //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
+
+            var vsDebug = new NLog.Targets.DebuggerTarget();
+            config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, vsDebug);
+
+            var db = new NLog.Targets.DatabaseTarget("database");
+            db.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
+            db.ConnectionString = AppSettings.Current.LogConnectionString;
+            db.CommandText =
+                @"insert into Log (
+                MachineName, Logged, Level, Message,
+                Logger, Callsite, Exception
+                ) values(
+                @MachineName, @Logged, @Level, @Message,
+                @Logger, @Callsite, @Exception
+                );";
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@MachineName", NLog.Layouts.Layout.FromString("${machinename}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logged", NLog.Layouts.Layout.FromString("${date}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Level", NLog.Layouts.Layout.FromString("${level}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Message", NLog.Layouts.Layout.FromString("${message}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logger", NLog.Layouts.Layout.FromString("${logger}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Callsite", NLog.Layouts.Layout.FromString("${callsite}")));
+            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Exception", NLog.Layouts.Layout.FromString("${exception:tostring}")));
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, db);
+            return config;
+        }
+
+
+
+        private void ConfigureNavigation()
         {
             NavigationService.Register<LoginViewModel, LoginView>();
 
@@ -88,7 +210,7 @@ namespace CiccioSoft.Inventory
             NavigationService.Register<SettingsViewModel, SettingsView>();
         }
 
-        static private async Task EnsureLogDbAsync()
+        private async Task EnsureLogDbAsync()
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var appLogFolder = await localFolder.CreateFolderAsync(AppSettings.AppLogPath, CreationCollisionOption.OpenIfExists);
@@ -101,12 +223,12 @@ namespace CiccioSoft.Inventory
             }
         }
 
-        static private async Task EnsureDatabaseAsync()
+        private async Task EnsureDatabaseAsync()
         {
             await EnsureSQLiteDatabaseAsync();
         }
 
-        private static async Task EnsureSQLiteDatabaseAsync()
+        private async Task EnsureSQLiteDatabaseAsync()
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
@@ -118,14 +240,14 @@ namespace CiccioSoft.Inventory
             }
         }
 
-        static private async Task ConfigureLookupTables()
+        private async Task ConfigureLookupTables()
         {
             var lookupTables = Ioc.Default.GetService<ILookupTables>();
             await lookupTables.InitializeAsync();
             LookupTablesProxy.Instance = lookupTables;
         }
 
-        private static void CreateSqliteLogDb()
+        private void CreateSqliteLogDb()
         {
             //string cn = configuration.GetConnectionString("SqliteLogConnection");
             string cn = AppSettings.Current.LogConnectionString;

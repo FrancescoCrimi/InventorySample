@@ -12,10 +12,8 @@
 // ******************************************************************
 #endregion
 
-using System;
-
-using CiccioSoft.Inventory.Data;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace CiccioSoft.Inventory.Models
 {

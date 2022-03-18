@@ -104,7 +104,6 @@
     <Compile Include="Common\VirtualCollection\VirtualCollection.IList.cs" />
     <Compile Include="Common\VirtualCollection\VirtualCollection.Selection.cs" />
     <Compile Include="Configuration\AppSettings.cs" />
-    <Compile Include="Configuration\ServiceLocator.cs" />
     <Compile Include="Configuration\Startup.cs" />
     <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.cs" />
     <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.Properties.cs" />
@@ -161,15 +160,11 @@
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\DataServiceFactory\DataServiceFactory.cs" />
     <Compile Include="Services\DataServiceFactory\IDataServiceFactory.cs" />
-    <Compile Include="Services\Infrastructure\ActivationService.cs" />
-    <Compile Include="Services\Infrastructure\CommonServices.cs" />
-    <Compile Include="Services\Infrastructure\ContextService.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\Infrastructure\LoginService.cs" />
     <Compile Include="Services\Infrastructure\LogService\LogCollection.cs" />
     <Compile Include="Services\Infrastructure\LogService\LogService.cs" />
-    <Compile Include="Services\Infrastructure\MessageService.cs" />
     <Compile Include="Services\Infrastructure\NavigationService.cs" />
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
     <Compile Include="Services\LookupTables.cs" />
