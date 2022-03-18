@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Inventory.Data
+namespace CiccioSoft.Inventory.Data
 {
     //public class AppLog
     //{

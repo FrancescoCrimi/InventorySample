@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Inventory.Models
+namespace CiccioSoft.Inventory.Models
 {
     public class CategoryModel : ObservableObject
     {

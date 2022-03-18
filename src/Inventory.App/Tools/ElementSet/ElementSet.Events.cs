@@ -16,7 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     partial class ElementSet<T>
     {

@@ -1,5 +1,5 @@
-﻿using Inventory.Data.DataContexts;
-using Inventory.Services;
+﻿using CiccioSoft.Inventory.Data.DataContexts;
+using CiccioSoft.Inventory.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Inventory.Data
+namespace CiccioSoft.Inventory.Data
 {
     public class LogRepository : ILogRepository
     {

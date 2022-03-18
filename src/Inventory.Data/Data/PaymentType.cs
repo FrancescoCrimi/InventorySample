@@ -16,7 +16,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Inventory.Data
+namespace CiccioSoft.Inventory.Data
 {
     [Table("PaymentTypes")]
     public partial class PaymentType

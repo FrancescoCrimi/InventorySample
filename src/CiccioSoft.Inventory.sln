@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inventory.ViewModels", "Inv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.App", "Inventory.App\Inventory.App.csproj", "{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{5AC38810-8837-4093-8578-7D91C8AB922E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,10 +88,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{515A0883-D2D9-4B97-8D73-EE6FE9BC3F2B} = {5AC38810-8837-4093-8578-7D91C8AB922E}
-		{9CEE6144-0377-4F95-AC2D-FDC599B82ED9} = {5AC38810-8837-4093-8578-7D91C8AB922E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FD3F8CAA-A45D-4315-B28E-E0F80BBE61B2}

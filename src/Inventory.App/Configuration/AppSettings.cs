@@ -18,9 +18,9 @@ using System.IO;
 using Windows.Storage;
 using Windows.ApplicationModel;
 
-using Inventory.Services;
+using CiccioSoft.Inventory.Services;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     public class AppSettings
     {

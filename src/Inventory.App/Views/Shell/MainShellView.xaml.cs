@@ -22,11 +22,11 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
 
-using Inventory.ViewModels;
-using Inventory.Services;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class MainShellView : Page
     {

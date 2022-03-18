@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Inventory.Data.DataContexts
+namespace CiccioSoft.Inventory.Data.DataContexts
 {
     public class LogDbContext : DbContext
     {

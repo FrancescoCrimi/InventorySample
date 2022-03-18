@@ -15,11 +15,11 @@
 using System;
 using System.Threading.Tasks;
 
-using Inventory.Services;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     public class ShellArgs
     {

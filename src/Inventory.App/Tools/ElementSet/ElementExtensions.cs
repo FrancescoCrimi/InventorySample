@@ -17,7 +17,7 @@ using System.Linq;
 
 using Windows.UI.Xaml;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     static public class ElementExtensions
     {

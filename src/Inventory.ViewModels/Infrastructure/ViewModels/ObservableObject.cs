@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 
-namespace Inventory.Models
+namespace CiccioSoft.Inventory.Models
 {
     public class ObservableObject : /*INotifyPropertyChanged*/ Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject
     {

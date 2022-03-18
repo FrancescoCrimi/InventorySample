@@ -20,7 +20,7 @@ using Windows.Security.Credentials;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     //public class LoginService : ILoginService
     //{

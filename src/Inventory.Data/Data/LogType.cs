@@ -13,7 +13,7 @@
 #endregion
 
 
-namespace Inventory.Data
+namespace CiccioSoft.Inventory.Data
 {
     //public enum LogType
     //{

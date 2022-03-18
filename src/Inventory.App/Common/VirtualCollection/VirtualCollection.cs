@@ -21,9 +21,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-using Inventory.Data;
+using CiccioSoft.Inventory.Data;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     abstract public partial class VirtualCollection<T> : IItemsRangeInfo, INotifyCollectionChanged
     {

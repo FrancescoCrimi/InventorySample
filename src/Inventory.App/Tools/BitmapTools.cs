@@ -19,7 +19,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     static public class BitmapTools
     {

@@ -19,7 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.Storage;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class ChartPane : UserControl
     {

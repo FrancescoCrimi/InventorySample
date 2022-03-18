@@ -14,10 +14,10 @@
 
 using System;
 
-using Inventory.Data;
+using CiccioSoft.Inventory.Data;
 using Microsoft.Extensions.Logging;
 
-namespace Inventory.Models
+namespace CiccioSoft.Inventory.Models
 {
     public class AppLogModel : ObservableObject
     {

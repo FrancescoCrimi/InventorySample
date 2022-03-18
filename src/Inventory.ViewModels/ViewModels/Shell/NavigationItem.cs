@@ -14,9 +14,9 @@
 
 using System;
 
-using Inventory.Models;
+using CiccioSoft.Inventory.Models;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     public class NavigationItem : ObservableObject
     {

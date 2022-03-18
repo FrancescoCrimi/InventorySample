@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     //public interface ICommonServices
     //{

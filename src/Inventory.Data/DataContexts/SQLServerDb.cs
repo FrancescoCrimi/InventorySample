@@ -16,7 +16,7 @@ using System;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class SQLServerDb : DbContext, IDataSource
     {

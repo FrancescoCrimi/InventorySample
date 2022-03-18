@@ -18,9 +18,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.Storage;
 
-using Inventory.Views;
+using CiccioSoft.Inventory.Views;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class SettingsService : ISettingsService
     {

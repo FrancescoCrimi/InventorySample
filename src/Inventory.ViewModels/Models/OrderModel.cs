@@ -14,9 +14,9 @@
 
 using System;
 
-using Inventory.Services;
+using CiccioSoft.Inventory.Services;
 
-namespace Inventory.Models
+namespace CiccioSoft.Inventory.Models
 {
     public class OrderModel : ObservableObject
     {

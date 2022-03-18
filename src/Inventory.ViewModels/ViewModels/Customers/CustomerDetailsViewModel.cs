@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Models;
-using Inventory.Services;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -23,7 +23,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     #region CustomerDetailsArgs
     public class CustomerDetailsArgs

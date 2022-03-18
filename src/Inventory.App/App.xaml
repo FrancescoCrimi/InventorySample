@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="Inventory.App"
+    x:Class="CiccioSoft.Inventory.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:Inventory.Converters"
+    xmlns:converters="using:CiccioSoft.Inventory.Converters"
     RequestedTheme="Light">
 
     <Application.Resources>

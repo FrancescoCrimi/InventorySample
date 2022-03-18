@@ -18,10 +18,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-using Inventory.ViewModels;
+using CiccioSoft.Inventory.ViewModels;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class SettingsView : Page
     {

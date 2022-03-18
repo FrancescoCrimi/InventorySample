@@ -18,13 +18,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-using Inventory.Models;
-using Inventory.Services;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     abstract public partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
     {

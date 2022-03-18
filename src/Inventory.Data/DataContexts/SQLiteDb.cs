@@ -17,7 +17,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class SQLiteDb : DbContext, IDataSource
     {

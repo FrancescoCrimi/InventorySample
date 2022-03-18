@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Composition;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     partial class ElementSet<T>
     {

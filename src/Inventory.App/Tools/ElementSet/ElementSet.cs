@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     public partial class ElementSet : ElementSet<FrameworkElement>
     {

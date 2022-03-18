@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class FilePickerService : IFilePickerService
     {

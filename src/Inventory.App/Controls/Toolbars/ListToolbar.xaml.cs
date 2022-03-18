@@ -18,7 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.Foundation;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public sealed partial class ListToolbar : UserControl
     {

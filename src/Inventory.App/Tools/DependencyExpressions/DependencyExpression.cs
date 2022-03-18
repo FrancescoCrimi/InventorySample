@@ -16,7 +16,7 @@ using System;
 
 using Windows.UI.Xaml;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     public class DependencyExpression
     {

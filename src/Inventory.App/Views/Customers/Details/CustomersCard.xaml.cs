@@ -17,10 +17,10 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using Inventory.Models;
-using Inventory.ViewModels;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.ViewModels;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class CustomersCard : UserControl
     {

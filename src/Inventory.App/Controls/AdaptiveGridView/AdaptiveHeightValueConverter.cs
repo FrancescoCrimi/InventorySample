@@ -18,7 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     internal class AdaptiveHeightValueConverter : IValueConverter
     {

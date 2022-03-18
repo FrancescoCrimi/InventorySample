@@ -17,7 +17,7 @@ using System;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 
-namespace Inventory.Converters
+namespace CiccioSoft.Inventory.Converters
 {
     public sealed class BoolToVisibilityConverter : IValueConverter
     {

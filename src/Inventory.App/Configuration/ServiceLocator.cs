@@ -19,10 +19,10 @@ using Windows.UI.ViewManagement;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Inventory.Services;
-using Inventory.ViewModels;
+using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.ViewModels;
 
-//namespace Inventory
+//namespace CiccioSoft.Inventory
 //{
 //    public class ServiceLocator : IDisposable
 //    {

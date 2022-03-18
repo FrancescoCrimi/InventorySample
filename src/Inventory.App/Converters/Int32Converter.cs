@@ -16,7 +16,7 @@ using System;
 
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Converters
+namespace CiccioSoft.Inventory.Converters
 {
     public sealed class Int32Converter : IValueConverter
     {

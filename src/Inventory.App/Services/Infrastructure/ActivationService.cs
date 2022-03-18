@@ -16,9 +16,9 @@ using System;
 
 using Windows.ApplicationModel.Activation;
 
-using Inventory.ViewModels;
+using CiccioSoft.Inventory.ViewModels;
 
-//namespace Inventory.Services
+//namespace CiccioSoft.Inventory.Services
 //{
 //    #region ActivationInfo
 //    public class ActivationInfo

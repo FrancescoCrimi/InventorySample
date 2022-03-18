@@ -18,7 +18,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.ViewManagement;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public class WindowTitle : Control
     {

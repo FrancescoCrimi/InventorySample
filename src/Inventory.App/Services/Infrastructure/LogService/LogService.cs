@@ -17,11 +17,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Inventory.Data;
-using Inventory.Models;
-using Inventory.Data.DataContexts;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Data.DataContexts;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class LogService : ILogService
     {

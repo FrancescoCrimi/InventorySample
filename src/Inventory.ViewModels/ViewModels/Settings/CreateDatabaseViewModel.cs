@@ -19,11 +19,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-using Inventory.Services;
-using Inventory.Data.Services;
+using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Data.Services;
 using Microsoft.Extensions.Logging;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     public class CreateDatabaseViewModel : ViewModelBase
     {

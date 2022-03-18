@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class DialogService : IDialogService
     {

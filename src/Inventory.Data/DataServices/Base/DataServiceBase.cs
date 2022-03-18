@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     abstract public partial class DataServiceBase : IDataService, IDisposable
     {

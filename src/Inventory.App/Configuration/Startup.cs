@@ -26,14 +26,14 @@ using Windows.Storage;
 //using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 
-using Inventory.Views;
-using Inventory.ViewModels;
-using Inventory.Services;
+using CiccioSoft.Inventory.Views;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Data.Sqlite;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     static public class Startup
     {

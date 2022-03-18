@@ -22,12 +22,12 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
 
-using Inventory.Animations;
-using Inventory.ViewModels;
-using Inventory.Services;
+using CiccioSoft.Inventory.Animations;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class LoginView : Page
     {

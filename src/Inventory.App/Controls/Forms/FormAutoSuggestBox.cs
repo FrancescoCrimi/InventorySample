@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.Foundation;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public class FormAutoSuggestBox : Control, IFormControl
     {

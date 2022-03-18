@@ -1,8 +1,8 @@
-﻿using Inventory.Data;
+﻿using CiccioSoft.Inventory.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public interface ILogRepository
     {

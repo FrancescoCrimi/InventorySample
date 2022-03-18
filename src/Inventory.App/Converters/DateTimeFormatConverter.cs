@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Data;
 using Windows.System.UserProfile;
 using Windows.Globalization.DateTimeFormatting;
 
-namespace Inventory.Converters
+namespace CiccioSoft.Inventory.Converters
 {
     public sealed class DateTimeFormatConverter : IValueConverter
     {

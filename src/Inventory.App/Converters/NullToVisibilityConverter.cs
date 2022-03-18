@@ -17,7 +17,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Converters
+namespace CiccioSoft.Inventory.Converters
 {
     public sealed class NullToVisibilityConverter : IValueConverter
     {

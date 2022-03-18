@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public interface ILoginService
     {

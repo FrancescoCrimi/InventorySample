@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class SQLServerDataService : DataServiceBase
     {

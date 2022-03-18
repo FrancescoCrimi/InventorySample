@@ -23,13 +23,13 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
 
-using Inventory.Views;
-using Inventory.ViewModels;
+using CiccioSoft.Inventory.Views;
+using CiccioSoft.Inventory.ViewModels;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public partial class NavigationService : INavigationService
     {

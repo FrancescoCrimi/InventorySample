@@ -19,12 +19,12 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
 
-using Inventory.ViewModels;
-using Inventory.Services;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Services;
 using Windows.UI.Xaml;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class ShellView : Page
     {

@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     public enum ListToolbarMode
     {

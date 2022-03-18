@@ -16,7 +16,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     //public class MessageService : IMessageService
     //{

@@ -15,7 +15,7 @@
 using System;
 using System.Windows.Input;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     //public class RelayCommand : ICommand
     //{

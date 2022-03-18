@@ -19,7 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public class FormComboBox : ComboBox, IFormControl
     {

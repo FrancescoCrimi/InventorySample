@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public interface IDataSource : IDisposable
     {

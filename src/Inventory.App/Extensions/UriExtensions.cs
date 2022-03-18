@@ -16,7 +16,7 @@ using System;
 
 using Windows.Foundation;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     static public class UriExtensions
     {

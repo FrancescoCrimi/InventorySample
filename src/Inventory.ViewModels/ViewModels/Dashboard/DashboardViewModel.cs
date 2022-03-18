@@ -12,15 +12,15 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Data;
-using Inventory.Models;
-using Inventory.Services;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     public class DashboardViewModel : ViewModelBase
     {

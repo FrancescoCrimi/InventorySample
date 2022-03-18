@@ -21,12 +21,12 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.ApplicationModel;
 
-using Inventory.Data;
-using Inventory.Models;
-using Inventory.Services;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public sealed partial class ProductSuggestBox : UserControl
     {

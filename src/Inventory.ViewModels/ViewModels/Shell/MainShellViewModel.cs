@@ -17,10 +17,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Inventory.Data;
-using Inventory.Services;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Services;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     public class MainShellViewModel : ShellViewModel
     {

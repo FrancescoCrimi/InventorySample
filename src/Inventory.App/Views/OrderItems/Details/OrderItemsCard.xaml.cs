@@ -17,9 +17,9 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using Inventory.Models;
+using CiccioSoft.Inventory.Models;
 
-namespace Inventory.Views
+namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class OrderItemsCard : UserControl
     {

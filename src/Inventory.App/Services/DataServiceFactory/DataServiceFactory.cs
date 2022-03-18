@@ -14,9 +14,9 @@
 
 using System;
 
-using Inventory.Data.Services;
+using CiccioSoft.Inventory.Data.Services;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class DataServiceFactory : IDataServiceFactory
     {

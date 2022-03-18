@@ -16,7 +16,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     partial class VirtualCollection<T> : IList, IList<T> where T : class
     {

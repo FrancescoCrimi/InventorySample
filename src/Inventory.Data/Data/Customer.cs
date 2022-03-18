@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Inventory.Data
+namespace CiccioSoft.Inventory.Data
 {
     [Table("Customers")]
     public partial class Customer

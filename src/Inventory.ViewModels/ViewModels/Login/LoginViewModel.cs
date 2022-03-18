@@ -16,10 +16,10 @@ using System;
 using System.Windows.Input;
 using System.Threading.Tasks;
 
-using Inventory.Services;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     public class LoginViewModel : ViewModelBase
     {

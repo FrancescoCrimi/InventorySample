@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     partial class VirtualCollection<T> : ISelectionInfo
     {

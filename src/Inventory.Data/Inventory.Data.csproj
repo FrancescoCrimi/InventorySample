@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <AssemblyName>CiccioSoft.Inventory.Data</AssemblyName>
+    <RootNamespace>CiccioSoft.Inventory.Data</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

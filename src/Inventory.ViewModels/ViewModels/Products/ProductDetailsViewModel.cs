@@ -18,13 +18,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-using Inventory.Models;
-using Inventory.Services;
+using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
-namespace Inventory.ViewModels
+namespace CiccioSoft.Inventory.ViewModels
 {
     #region ProductDetailsArgs
     public class ProductDetailsArgs

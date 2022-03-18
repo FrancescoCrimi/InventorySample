@@ -17,7 +17,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public partial class WrapPanel : Panel
     {

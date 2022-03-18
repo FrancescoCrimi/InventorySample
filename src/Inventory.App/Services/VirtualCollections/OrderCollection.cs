@@ -16,12 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Inventory.Data;
-using Inventory.Models;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class OrderCollection : VirtualCollection<OrderModel>
     {

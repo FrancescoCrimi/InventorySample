@@ -7,8 +7,8 @@
     <ProjectGuid>{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Inventory</RootNamespace>
-    <AssemblyName>Inventory</AssemblyName>
+    <RootNamespace>CiccioSoft.Inventory</RootNamespace>
+    <AssemblyName>CiccioSoft.Inventory</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>

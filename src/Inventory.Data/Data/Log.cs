@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Inventory.Data
+namespace CiccioSoft.Inventory.Data
 {
     public class Log
     {

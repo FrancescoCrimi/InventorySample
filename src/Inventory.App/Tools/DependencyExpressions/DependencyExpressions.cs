@@ -17,7 +17,7 @@ using System.Linq;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
     public class DependencyExpressions
     {

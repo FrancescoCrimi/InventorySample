@@ -18,10 +18,10 @@ using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-using Inventory.Data;
+using CiccioSoft.Inventory.Data;
 using Microsoft.Extensions.Logging;
 
-namespace Inventory.Converters
+namespace CiccioSoft.Inventory.Converters
 {
     public sealed class LogTypeConverter : IValueConverter
     {

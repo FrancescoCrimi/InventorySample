@@ -16,7 +16,7 @@ using System;
 
 using Windows.UI.Xaml;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public interface IFormControl
     {

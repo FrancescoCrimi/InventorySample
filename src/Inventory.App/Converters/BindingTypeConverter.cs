@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Converters
+namespace CiccioSoft.Inventory.Converters
 {
     class BindingTypeConverter : IValueConverter
     {

@@ -21,7 +21,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public sealed partial class Details : UserControl, INotifyExpressionChanged
     {

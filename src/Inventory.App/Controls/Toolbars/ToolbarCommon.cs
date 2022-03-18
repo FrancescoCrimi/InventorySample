@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Inventory.Controls
+namespace CiccioSoft.Inventory.Controls
 {
     public enum ToolbarButton
     {

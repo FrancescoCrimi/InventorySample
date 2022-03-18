@@ -17,11 +17,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Inventory.Data;
-using Inventory.Data.Services;
-using Inventory.Models;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Models;
 
-namespace Inventory.Services
+namespace CiccioSoft.Inventory.Services
 {
     public class ProductService : IProductService
     {

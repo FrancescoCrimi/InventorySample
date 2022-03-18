@@ -19,23 +19,23 @@ using Windows.UI.ViewManagement;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
-using Inventory.Services;
+using CiccioSoft.Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using Inventory.ViewModels;
-using Inventory.Data.DataContexts;
+using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Data.DataContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using NLog.Extensions.Logging;
-using Inventory.Views;
+using CiccioSoft.Inventory.Views;
 using Windows.System;
 
-namespace Inventory
+namespace CiccioSoft.Inventory
 {
-    sealed partial class App : Application
+    sealed partial class App : Windows.UI.Xaml.Application
     {
         //private readonly ILogger logger;
 
