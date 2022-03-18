@@ -12,15 +12,14 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Inventory.ViewModels
 {
@@ -76,12 +75,17 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<AppLogDetailsViewModel, AppLogModel>(this, OnDetailsMessage);
-            MessageService.Subscribe<AppLogListViewModel>(this, OnListMessage);
+            //MessageService.Subscribe<AppLogDetailsViewModel, AppLogModel>(this, OnDetailsMessage);
+            Messenger.Register<ItemMessage<AppLogModel>>(this, OnDetailsMessage);
+            //MessageService.Subscribe<AppLogListViewModel>(this, OnListMessage);
+            Messenger.Register<ItemMessage<IList<AppLogModel>>>(this, OnListMessage);
+            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnListIndexRange);
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
         }
 
         public AppLogDetailsArgs CreateArgs()
@@ -123,14 +127,15 @@ namespace Inventory.ViewModels
         /*
          *  Handle external messages
          ****************************************************************/
-        private async void OnDetailsMessage(AppLogDetailsViewModel sender, string message, AppLogModel changed)
+
+        private async void OnDetailsMessage(object recipient, ItemMessage<AppLogModel> message)
         {
             var current = Item;
             if (current != null)
             {
-                if (changed != null && changed.Id == current?.Id)
+                if (message.Value != null && message.Value.Id == current?.Id)
                 {
-                    switch (message)
+                    switch (message.Message)
                     {
                         case "ItemDeleted":
                             await OnItemDeletedExternally();
@@ -140,15 +145,32 @@ namespace Inventory.ViewModels
             }
         }
 
-        private async void OnListMessage(AppLogListViewModel sender, string message, object args)
+        //private async void OnDetailsMessage(AppLogDetailsViewModel sender, string message, AppLogModel changed)
+        //{
+        //    var current = Item;
+        //    if (current != null)
+        //    {
+        //        if (changed != null && changed.Id == current?.Id)
+        //        {
+        //            switch (message)
+        //            {
+        //                case "ItemDeleted":
+        //                    await OnItemDeletedExternally();
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //}
+
+        private async void OnListMessage(object recipient, ItemMessage<IList<AppLogModel>> message)
         {
             var current = Item;
             if (current != null)
             {
-                switch (message)
+                switch (message.Message)
                 {
                     case "ItemsDeleted":
-                        if (args is IList<AppLogModel> deletedModels)
+                        if (message.Value is IList<AppLogModel> deletedModels)
                         {
                             if (deletedModels.Any(r => r.Id == current.Id))
                             {
@@ -156,6 +178,17 @@ namespace Inventory.ViewModels
                             }
                         }
                         break;
+                }
+            }
+        }
+
+        private async void OnListIndexRange(object recipient, ItemMessage<IList<IndexRange>> message)
+        {
+            var current = Item;
+            if (current != null)
+            {
+                switch (message.Message)
+                {
                     case "ItemRangesDeleted":
                         var model = await logService.GetLogAsync(current.Id);
                         if (model == null)
@@ -169,12 +202,15 @@ namespace Inventory.ViewModels
 
         private async Task OnItemDeletedExternally()
         {
-            await ContextService.RunAsync(() =>
+            //await ContextService.RunAsync(() =>
+            //{
+            await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This log has been deleted externally");
             });
+            //});
         }
     }
 }

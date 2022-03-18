@@ -12,14 +12,14 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Windows.Input;
-
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 
 namespace Inventory.ViewModels
 {
@@ -58,7 +58,8 @@ namespace Inventory.ViewModels
                 {
                     if (!IsMultipleSelection)
                     {
-                        MessageService.Send(this, "ItemSelected", _selectedItem);
+                        //MessageService.Send(this, "ItemSelected", _selectedItem);
+                        Messenger.Send(new ItemMessage<TModel>(_selectedItem, "ItemSelected"));
                     }
                 }
             }

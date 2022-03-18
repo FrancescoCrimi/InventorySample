@@ -12,13 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
-
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.ViewModels
 {
@@ -53,29 +52,29 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
+            //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<AppLogModel>>(this, OnMessage);
             AppLogList.Subscribe();
             AppLogDetails.Subscribe();
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
             AppLogList.Unsubscribe();
             AppLogDetails.Unsubscribe();
         }
 
-        private async void OnMessage(AppLogListViewModel viewModel, string message, object args)
+        private async void OnMessage(object recipient, ItemMessage<AppLogModel> message)
         {
-            if (viewModel == AppLogList && message == "ItemSelected")
+            if (/*recipient == AppLogList &&*/ message.Message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
-                {
-                    OnItemSelected();
-                });
+                await OnItemSelected();
             }
         }
 
-        private async void OnItemSelected()
+        private async Task OnItemSelected()
         {
             if (AppLogDetails.IsEditMode)
             {

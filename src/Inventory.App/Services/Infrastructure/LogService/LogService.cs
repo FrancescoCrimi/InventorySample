@@ -25,12 +25,12 @@ namespace Inventory.Services
 {
     public class LogService : ILogService
     {
-        public LogService(IMessageService messageService)
+        public LogService(/*IMessageService messageService*/)
         {
-            MessageService = messageService;
+            //MessageService = messageService;
         }
 
-        public IMessageService MessageService { get; }
+        //public IMessageService MessageService { get; }
 
         //public async Task WriteAsync(LogType type, string source, string action, Exception ex)
         //{

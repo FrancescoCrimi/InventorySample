@@ -33,10 +33,11 @@ namespace Inventory.ViewModels
         private readonly INavigationService navigationService;
         private readonly ILogService logService;
 
-        public MainShellViewModel(ILoginService loginService,
+        public MainShellViewModel(
+                                  //ILoginService loginService,
                                   INavigationService navigationService,
                                   ILogService logService)
-            : base(loginService, navigationService)
+            : base( navigationService)
         {
             this.navigationService = navigationService;
             this.logService = logService;
@@ -65,14 +66,15 @@ namespace Inventory.ViewModels
 
         public override async Task LoadAsync(ShellArgs args)
         {
-            Items =  GetItems().ToArray();
+            Items = GetItems().ToArray();
             await UpdateAppLogBadge();
             await base.LoadAsync(args);
         }
 
         override public void Subscribe()
         {
-            MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
+            // Todo: ILoggerService non scrive piu i log, ma vengono scritti da NLog
+            //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
             base.Subscribe();
         }
 
@@ -124,16 +126,13 @@ namespace Inventory.ViewModels
             yield return AppLogsItem;
         }
 
-        private async void OnLogServiceMessage(ILogService logService, string message, Log log)
-        {
-            if (message == "LogAdded")
-            {
-                await ContextService.RunAsync(async () =>
-                {
-                    await UpdateAppLogBadge();
-                });
-            }
-        }
+        //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
+        //{
+        //    if (message == "LogAdded")
+        //    {
+        //        await UpdateAppLogBadge();
+        //    }
+        //}
 
         private async Task UpdateAppLogBadge()
         {

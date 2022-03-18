@@ -42,8 +42,8 @@ namespace Inventory.Views
 
         private void InitializeContext()
         {
-            var context = Ioc.Default.GetService<IContextService>();
-            context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
+            //var context = Ioc.Default.GetService<IContextService>();
+            //context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

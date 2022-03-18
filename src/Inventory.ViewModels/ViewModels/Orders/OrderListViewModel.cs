@@ -12,18 +12,18 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
-using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Inventory.ViewModels
 {
@@ -94,12 +94,18 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
-            MessageService.Subscribe<OrderDetailsViewModel>(this, OnMessage);
+            //MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<IList<OrderModel>>>(this, OnOrderListMessage);
+            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
+
+            //MessageService.Subscribe<OrderDetailsViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<OrderModel>>(this, OnOrderMessage);
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
         }
 
         public OrderListArgs CreateArgs()
@@ -198,14 +204,16 @@ namespace Inventory.ViewModels
                         count = SelectedIndexRanges.Sum(r => r.Length);
                         StartStatusMessage($"Deleting {count} orders...");
                         await DeleteRangesAsync(SelectedIndexRanges);
-                        MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                        //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                        Messenger.Send(new ItemMessage<IList<IndexRange>>(SelectedIndexRanges, "ItemRangesDeleted"));
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
                         StartStatusMessage($"Deleting {count} orders...");
                         await DeleteItemsAsync(SelectedItems);
-                        MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                        //MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                        Messenger.Send(new ItemMessage<IList<OrderModel>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -256,18 +264,65 @@ namespace Inventory.ViewModels
             return request;
         }
 
-        private async void OnMessage(ViewModelBase sender, string message, object args)
+        //private async void OnMessage(ViewModelBase sender, string message, object args)
+        //{
+        //    switch (message)
+        //    {
+        //        case "NewItemSaved":
+        //        case "ItemDeleted":
+        //        case "ItemsDeleted":
+        //        case "ItemRangesDeleted":
+        //            //await ContextService.RunAsync(async () =>
+        //            //{
+        //                await RefreshAsync();
+        //            //});
+        //            break;
+        //    }
+        //}
+        private async void OnOrderMessage(object recipient, ItemMessage<OrderModel> message)
         {
-            switch (message)
+            switch (message.Message)
             {
                 case "NewItemSaved":
                 case "ItemDeleted":
-                case "ItemsDeleted":
+                //case "ItemsDeleted":
+                //case "ItemRangesDeleted":
+                    //await ContextService.RunAsync(async () =>
+                    //{
+                    await RefreshAsync();
+                    //});
+                    break;
+            }
+        }
+
+        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
+        {
+            switch (message.Message)
+            {
+                //case "NewItemSaved":
+                //case "ItemDeleted":
+                //case "ItemsDeleted":
                 case "ItemRangesDeleted":
-                    await ContextService.RunAsync(async () =>
-                    {
-                        await RefreshAsync();
-                    });
+                    //await ContextService.RunAsync(async () =>
+                    //{
+                    await RefreshAsync();
+                    //});
+                    break;
+            }
+        }
+
+        private async void OnOrderListMessage(object recipient, ItemMessage<IList<OrderModel>> message)
+        {
+            switch (message.Message)
+            {
+                //case "NewItemSaved":
+                //case "ItemDeleted":
+                case "ItemsDeleted":
+                    //case "ItemRangesDeleted":
+                    //await ContextService.RunAsync(async () =>
+                    //{
+                    await RefreshAsync();
+                    //});
                     break;
             }
         }

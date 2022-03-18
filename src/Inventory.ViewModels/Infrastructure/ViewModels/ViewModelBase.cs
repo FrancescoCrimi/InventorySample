@@ -19,6 +19,7 @@ using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -28,20 +29,22 @@ namespace Inventory.ViewModels
 
         public ViewModelBase()
         {
-            ContextService = Ioc.Default.GetService<IContextService>();
+            //ContextService = Ioc.Default.GetService<IContextService>();
             //NavigationService = Ioc.Default.GetService<INavigationService>();
-            MessageService = Ioc.Default.GetService<IMessageService>();
+            //MessageService = Ioc.Default.GetService<IMessageService>();
             //DialogService = Ioc.Default.GetService<IDialogService>();
             //LogService = Ioc.Default.GetService<ILogService>();
+            //IsMainView = false;
         }
 
-        public IContextService ContextService { get; }
+        //public IContextService ContextService { get; }
         //public INavigationService NavigationService { get; }
-        public IMessageService MessageService { get; }
+        //public IMessageService MessageService { get; }
         //public IDialogService DialogService { get; }
         //public ILogService LogService { get; }
 
-        public bool IsMainView => ContextService.IsMainView;
+        //public bool IsMainView => ContextService.IsMainView;
+        public bool IsMainView => true;
 
         virtual public string Title => String.Empty;
 
@@ -59,47 +62,54 @@ namespace Inventory.ViewModels
 
         public void StatusReady()
         {
-            MessageService.Send(this, "StatusMessage", "Ready");
+            //MessageService.Send(this, "StatusMessage", "Ready");
+            Messenger.Send(new StatusMessage("Ready", "StatusMessage"));
         }
         public void StatusMessage(string message)
         {
-            //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-            MessageService.Send(this, "StatusMessage", message);
+            //MessageService.Send(this, "StatusMessage", message);
+            Messenger.Send(new StatusMessage(message, "StatusMessage"));
         }
         public void StatusError(string message)
         {
-            //Microsoft.AppCenter.Analytics.Analytics.TrackEvent(message);
-            MessageService.Send(this, "StatusError", message);
+            //MessageService.Send(this, "StatusError", message);
+            Messenger.Send(new StatusMessage(message, "StatusError"));
         }
 
         public void EnableThisView(string message = null)
         {
             message = message ?? "Ready";
-            MessageService.Send(this, "EnableThisView", message);
+            //MessageService.Send(this, "EnableThisView", message);
+            Messenger.Send(new StatusMessage(message, "EnableThisView"));
         }
         public void DisableThisView(string message)
         {
-            MessageService.Send(this, "DisableThisView", message);
+            //MessageService.Send(this, "DisableThisView", message);
+            Messenger.Send(new StatusMessage(message, "DisableThisView"));
         }
 
         public void EnableOtherViews(string message = null)
         {
             message = message ?? "Ready";
-            MessageService.Send(this, "EnableOtherViews", message);
+            //MessageService.Send(this, "EnableOtherViews", message);
+            Messenger.Send(new StatusMessage(message, "EnableOtherViews"));
         }
         public void DisableOtherViews(string message)
         {
-            MessageService.Send(this, "DisableOtherViews", message);
+            //MessageService.Send(this, "DisableOtherViews", message);
+            Messenger.Send(new StatusMessage(message, "DisableOtherViews"));
         }
 
         public void EnableAllViews(string message = null)
         {
             message = message ?? "Ready";
-            MessageService.Send(this, "EnableAllViews", message);
+            //MessageService.Send(this, "EnableAllViews", message);
+            Messenger.Send(new StatusMessage(message, "EnableAllViews"));
         }
         public void DisableAllViews(string message)
         {
-            MessageService.Send(this, "DisableAllViews", message);
+            //MessageService.Send(this, "DisableAllViews", message);
+            Messenger.Send(new StatusMessage(message, "DisableAllViews"));
         }
     }
 }

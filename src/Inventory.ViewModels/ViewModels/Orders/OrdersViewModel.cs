@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -57,31 +58,39 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
+            //MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<OrderModel>>(this, OnOrderMessage);
             OrderList.Subscribe();
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
             OrderList.Unsubscribe();
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
         }
 
-        private async void OnMessage(OrderListViewModel viewModel, string message, object args)
+        private async void OnOrderMessage(object recipient, ItemMessage<OrderModel> message)
         {
-            if (viewModel == OrderList && message == "ItemSelected")
+        //    throw new NotImplementedException();
+        //}
+
+        //private async void OnMessage(OrderListViewModel viewModel, string message, object args)
+        //{
+            if (/*recipient == OrderList &&*/ message.Message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
-                {
-                    OnItemSelected();
-                });
+                //await ContextService.RunAsync(() =>
+                //{
+                   await OnItemSelected();
+                //});
             }
         }
 
-        private async void OnItemSelected()
+        private async Task OnItemSelected()
         {
             if (OrderDetails.IsEditMode)
             {

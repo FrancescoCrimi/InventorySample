@@ -22,6 +22,7 @@ using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -97,7 +98,8 @@ namespace Inventory.ViewModels
         {
             StatusReady();
             BeginEdit();
-            MessageService.Send(this, "BeginEdit", Item);
+            //MessageService.Send(this, "BeginEdit", Item);
+            Messenger.Send(new ItemMessage<TModel>(Item, "BeginEdit"));
         }
         virtual public void BeginEdit()
         {
@@ -116,7 +118,8 @@ namespace Inventory.ViewModels
         {
             StatusReady();
             CancelEdit();
-            MessageService.Send(this, "CancelEdit", Item);
+            //MessageService.Send(this, "CancelEdit", Item);
+            Messenger.Send(new ItemMessage<TModel>(Item, "CancelEdit"));
         }
         virtual public void CancelEdit()
         {
@@ -169,11 +172,13 @@ namespace Inventory.ViewModels
 
                 if (isNew)
                 {
-                    MessageService.Send(this, "NewItemSaved", Item);
+                    //MessageService.Send(this, "NewItemSaved", Item);
+                    Messenger.Send(new ItemMessage<TModel>(Item, "NewItemSaved"));
                 }
                 else
                 {
-                    MessageService.Send(this, "ItemChanged", Item);
+                    //MessageService.Send(this, "ItemChanged", Item);
+                    Messenger.Send(new ItemMessage<TModel>(Item, "ItemChanged"));
                 }
                 IsEditMode = false;
 
@@ -199,7 +204,8 @@ namespace Inventory.ViewModels
                 IsEnabled = false;
                 if (await DeleteItemAsync(model))
                 {
-                    MessageService.Send(this, "ItemDeleted", model);
+                    //MessageService.Send(this, "ItemDeleted", model);
+                    Messenger.Send(new ItemMessage<TModel>(model, "ItemDeleted"));
                 }
                 else
                 {

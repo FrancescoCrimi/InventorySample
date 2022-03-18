@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -31,11 +32,12 @@ namespace Inventory.ViewModels
     {
         private readonly INavigationService navigationService;
 
-        public ShellViewModel(ILoginService loginService,
+        public ShellViewModel(
+                              //ILoginService loginService,
                               INavigationService navigationService)
             : base()
         {
-            IsLocked = !loginService.IsAuthenticated;
+            //IsLocked = !loginService.IsAuthenticated;
             this.navigationService = navigationService;
         }
 
@@ -87,67 +89,59 @@ namespace Inventory.ViewModels
 
         virtual public void Subscribe()
         {
-            MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
-            MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
+            //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
+            //MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
+            Messenger.Register<StatusMessage>(this, OnStatusMessage);
         }
 
         virtual public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
         }
 
-        private async void OnLoginMessage(ILoginService loginService, string message, bool isAuthenticated)
-        {
-            if (message == "AuthenticationChanged")
-            {
-                await ContextService.RunAsync(() =>
-                {
-                    IsLocked = !isAuthenticated;
-                });
-            }
-        }
+        //private async void OnLoginMessage(ILoginService loginService, string message, bool isAuthenticated)
+        //{
+        //    if (message == "AuthenticationChanged")
+        //    {
+        //        //await ContextService.RunAsync(() =>
+        //        //{
+        //        IsLocked = !isAuthenticated;
+        //        //});
+        //    }
+        //}
 
-        private async void OnMessage(ViewModelBase viewModel, string message, string status)
+        private void OnStatusMessage(object recipient, StatusMessage message)
         {
-            switch (message)
+        //    throw new NotImplementedException();
+        //}
+
+        //private async void OnMessage(ViewModelBase viewModel, string message, string status)
+        //{
+            switch (message.Value)
             {
                 case "StatusMessage":
                 case "StatusError":
-                    if (viewModel.ContextService.ContextID == ContextService.ContextID)
-                    {
-                        IsError = message == "StatusError";
-                        SetStatus(status);
-                    }
+                    IsError = message.Value == "StatusError";
+                    SetStatus(message.Args);
                     break;
 
                 case "EnableThisView":
                 case "DisableThisView":
-                    if (viewModel.ContextService.ContextID == ContextService.ContextID)
-                    {
-                        IsEnabled = message == "EnableThisView";
-                        SetStatus(status);
-                    }
+                    IsEnabled = message.Value == "EnableThisView";
+                    SetStatus(message.Args);
                     break;
 
                 case "EnableOtherViews":
                 case "DisableOtherViews":
-                    if (viewModel.ContextService.ContextID != ContextService.ContextID)
-                    {
-                        await ContextService.RunAsync(() =>
-                        {
-                            IsEnabled = message == "EnableOtherViews";
-                            SetStatus(status);
-                        });
-                    }
+                    IsEnabled = message.Value == "EnableOtherViews";
+                    SetStatus(message.Args);
                     break;
 
                 case "EnableAllViews":
                 case "DisableAllViews":
-                    await ContextService.RunAsync(() =>
-                    {
-                        IsEnabled = message == "EnableAllViews";
-                        SetStatus(status);
-                    });
+                    IsEnabled = message.Value == "EnableAllViews";
+                    SetStatus(message.Args);
                     break;
             }
         }

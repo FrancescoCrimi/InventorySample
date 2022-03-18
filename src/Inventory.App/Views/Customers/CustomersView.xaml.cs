@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Navigation;
 using Inventory.ViewModels;
 using Inventory.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.ApplicationModel.Core;
 
 namespace Inventory.Views
 {
@@ -50,7 +51,9 @@ namespace Inventory.Views
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            await NavigationService.CreateNewViewAsync<CustomersViewModel>(ViewModel.CustomerList.CreateArgs());
+            var args = ViewModel.CustomerList.CreateArgs();
+            //args.IsMainView = false;
+            await NavigationService.CreateNewViewAsync<CustomersViewModel>(args);
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)

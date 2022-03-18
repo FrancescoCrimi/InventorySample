@@ -12,16 +12,16 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
 using Inventory.Models;
 using Inventory.Services;
-using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Inventory.ViewModels
 {
@@ -92,12 +92,18 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
-            MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
+            //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
+            Messenger.Register<ItemMessage<CustomerModel>>(this, OnCustomerMessage);
+
+            //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
+            Messenger.Register<ItemMessage<IList<CustomerModel>>>(this, OnCustomerListMessage);
+            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
         }
 
         public CustomerDetailsArgs CreateArgs()
@@ -199,35 +205,40 @@ namespace Inventory.ViewModels
         /*
          *  Handle external messages
          ****************************************************************/
-        private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
+
+        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerModel> message)
         {
+            //    throw new NotImplementedException();
+            //}
+            //private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
+            //{
             var current = Item;
             if (current != null)
             {
-                if (changed != null && changed.CustomerID == current?.CustomerID)
+                if (message.Value != null && message.Value.CustomerID == current?.CustomerID)
                 {
-                    switch (message)
+                    switch (message.Message)
                     {
                         case "ItemChanged":
-                            await ContextService.RunAsync(async () =>
+                            //await ContextService.RunAsync(async () =>
+                            //{
+                            try
                             {
-                                try
+                                var item = await customerService.GetCustomerAsync(current.CustomerID);
+                                item = item ?? new CustomerModel { CustomerID = current.CustomerID, IsEmpty = true };
+                                current.Merge(item);
+                                current.NotifyChanges();
+                                OnPropertyChanged(nameof(Title));
+                                if (IsEditMode)
                                 {
-                                    var item = await customerService.GetCustomerAsync(current.CustomerID);
-                                    item = item ?? new CustomerModel { CustomerID = current.CustomerID, IsEmpty = true };
-                                    current.Merge(item);
-                                    current.NotifyChanges();
-                                    OnPropertyChanged(nameof(Title));
-                                    if (IsEditMode)
-                                    {
-                                        StatusMessage("WARNING: This customer has been modified externally");
-                                    }
+                                    StatusMessage("WARNING: This customer has been modified externally");
                                 }
-                                catch (Exception ex)
-                                {
-                                    logger.LogError(ex, "Handle Changes");
-                                }
-                            });
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.LogError(ex, "Handle Changes");
+                            }
+                            //});
                             break;
                         case "ItemDeleted":
                             await OnItemDeletedExternally();
@@ -237,22 +248,30 @@ namespace Inventory.ViewModels
             }
         }
 
-        private async void OnListMessage(CustomerListViewModel sender, string message, object args)
+        private async void OnCustomerListMessage(object recipient, ItemMessage<IList<CustomerModel>> message)
         {
             var current = Item;
             if (current != null)
             {
-                switch (message)
+                switch (message.Message)
                 {
                     case "ItemsDeleted":
-                        if (args is IList<CustomerModel> deletedModels)
+                        if (message.Value.Any(r => r.CustomerID == current.CustomerID))
                         {
-                            if (deletedModels.Any(r => r.CustomerID == current.CustomerID))
-                            {
-                                await OnItemDeletedExternally();
-                            }
+                            await OnItemDeletedExternally();
                         }
                         break;
+                }
+            }
+        }
+
+        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
+        {
+            var current = Item;
+            if (current != null)
+            {
+                switch (message.Message)
+                {
                     case "ItemRangesDeleted":
                         try
                         {
@@ -271,14 +290,51 @@ namespace Inventory.ViewModels
             }
         }
 
+        //private async void OnListMessage(CustomerListViewModel sender, string message, object args)
+        //{
+        //    var current = Item;
+        //    if (current != null)
+        //    {
+        //        switch (message)
+        //        {
+        //            case "ItemsDeleted":
+        //                if (args is IList<CustomerModel> deletedModels)
+        //                {
+        //                    if (deletedModels.Any(r => r.CustomerID == current.CustomerID))
+        //                    {
+        //                        await OnItemDeletedExternally();
+        //                    }
+        //                }
+        //                break;
+        //            case "ItemRangesDeleted":
+        //                try
+        //                {
+        //                    var model = await customerService.GetCustomerAsync(current.CustomerID);
+        //                    if (model == null)
+        //                    {
+        //                        await OnItemDeletedExternally();
+        //                    }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    logger.LogError(ex, "Handle Ranges Deleted");
+        //                }
+        //                break;
+        //        }
+        //    }
+        //}
+
         private async Task OnItemDeletedExternally()
         {
-            await ContextService.RunAsync(() =>
+            //await ContextService.RunAsync(() =>
+            //{
+            await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This customer has been deleted externally");
             });
+            //});
         }
     }
 }

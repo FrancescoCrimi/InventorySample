@@ -17,16 +17,16 @@ using System.Threading.Tasks;
 
 namespace Inventory.Services
 {
-    public interface IContextService
-    {
-        int MainViewID { get; }
+    //public interface IContextService
+    //{
+    //    int MainViewID { get; }
 
-        int ContextID { get; }
+    //    int ContextID { get; }
 
-        bool IsMainView { get; }
+    //    bool IsMainView { get; }
 
-        void Initialize(object dispatcher, int contextID, bool isMainView);
+    //    void Initialize(object dispatcher, int contextID, bool isMainView);
 
-        Task RunAsync(Action action);
-    }
+    //    Task RunAsync(Action action);
+    //}
 }

@@ -25,6 +25,9 @@ using Windows.ApplicationModel.Core;
 
 using Inventory.Views;
 using Inventory.ViewModels;
+using Windows.UI.WindowManagement;
+using Windows.UI.Xaml.Hosting;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace Inventory.Services
 {
@@ -102,29 +105,60 @@ namespace Inventory.Services
         }
         public async Task<int> CreateNewViewAsync(Type viewModelType, object parameter = null)
         {
-            int viewId = 0;
+            //int viewId = 0;
 
-            var newView = CoreApplication.CreateNewView();
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                viewId = ApplicationView.GetForCurrentView().Id;
+            //var newView = CoreApplication.CreateNewView();
+            //await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //{
+            //    viewId = ApplicationView.GetForCurrentView().Id;
 
-                var frame = new Frame();
-                var args = new ShellArgs
-                {
-                    ViewModel = viewModelType,
-                    Parameter = parameter
-                };
-                frame.Navigate(typeof(ShellView), args);
+            //    var frame = new Frame();
+            //var args = new ShellArgs
+            //{
+            //    ViewModel = viewModelType,
+            //    Parameter = parameter
+            //};
+            //    frame.Navigate(typeof(ShellView), args);
 
-                Window.Current.Content = frame;
-                Window.Current.Activate();
-            });
+            //    Window.Current.Content = frame;
+            //    Window.Current.Activate();
+            //});
 
-            if (await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewId))
-            {
-                return viewId;
-            }
+            //if (await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewId))
+            //{
+            //    return viewId;
+            //}
+
+
+            // New Implementation in AppWindow
+            Frame appWindowFrame = new Frame();
+            // Create a new window
+            AppWindow appWindow = await AppWindow.TryCreateAsync();
+            // Make sure we release the reference to this window, and release XAML resources, when it's closed
+            appWindow.Closed += delegate { appWindow = null; appWindowFrame.Content = null; };
+            var view = GetView(viewModelType);
+            // Navigate the frame to the page we want to show in the new window
+            appWindowFrame.Navigate(view, parameter);
+            // Attach the XAML content to our window
+            ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowFrame);
+            await appWindow.TryShowAsync();
+
+
+            //// Create a new window
+            //AppWindow appWindow = await AppWindow.TryCreateAsync();
+            //// Make sure we release the reference to this window, and release XAML resources, when it's closed
+            //appWindow.Closed += delegate { appWindow = null; };
+            //var viewType = GetView(viewModelType);
+            ////var view = (UIElement)Ioc.Default.GetService(viewType);
+            //var view = (UIElement)Activator.CreateInstance(viewType);
+            //// Attach the XAML content to our window
+            //ElementCompositionPreview.SetAppWindowContent(appWindow, view);
+            //await appWindow.TryShowAsync();
+
+
+
+
+
 
             return 0;
         }

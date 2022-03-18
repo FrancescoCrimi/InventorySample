@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 using Inventory.Models;
 using Inventory.Services;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -56,23 +57,30 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
+            //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<OrderModel>>(this, OnOrderMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
         }
 
-        private async void OnMessage(OrderDetailsViewModel viewModel, string message, OrderModel order)
+
+        private async void OnOrderMessage(object recipient, ItemMessage<OrderModel> message)
         {
-            if (viewModel == OrderDetails && message == "ItemChanged")
+        //    throw new NotImplementedException();
+        //}
+        //private async void OnMessage(OrderDetailsViewModel viewModel, string message, OrderModel order)
+        //{
+            if (recipient == OrderDetails && message.Message == "ItemChanged")
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = order.OrderID });
+                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = message.Value.OrderID });
             }
         }
     }

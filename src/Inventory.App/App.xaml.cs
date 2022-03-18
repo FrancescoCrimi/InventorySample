@@ -136,13 +136,13 @@ namespace Inventory
             .AddSingleton<IOrderItemService, OrderItemService>()
             .AddSingleton<IProductService, ProductService>()
 
-            .AddSingleton<IMessageService, MessageService>()
+            //.AddSingleton<IMessageService, MessageService>()
             .AddSingleton<ILogService, LogService>()
             .AddSingleton<IDialogService, DialogService>()
             .AddSingleton<IFilePickerService, FilePickerService>()
-            .AddSingleton<ILoginService, LoginService>()
+            //.AddSingleton<ILoginService, LoginService>()
 
-            .AddScoped<IContextService, ContextService>()
+            //.AddScoped<IContextService, ContextService>()
             .AddScoped<INavigationService, NavigationService>()
             //.AddScoped<ICommonServices, CommonServices>()
 

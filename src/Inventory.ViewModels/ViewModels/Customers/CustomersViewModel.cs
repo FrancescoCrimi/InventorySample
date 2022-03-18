@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -47,6 +48,8 @@ namespace Inventory.ViewModels
         public async Task LoadAsync(CustomerListArgs args)
         {
             await CustomerList.LoadAsync(args);
+            //IsMainView = args.IsMainView;
+            //OnPropertyChanged(nameof(IsMainView));
         }
         public void Unload()
         {
@@ -56,31 +59,42 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
+            //MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<CustomerModel>>(this, OnCustomerMessage);
             CustomerList.Subscribe();
             CustomerDetails.Subscribe();
             CustomerOrders.Subscribe();
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.Unregister<ItemMessage<CustomerModel>>(this);
             CustomerList.Unsubscribe();
             CustomerDetails.Unsubscribe();
             CustomerOrders.Unsubscribe();
         }
 
-        private async void OnMessage(CustomerListViewModel viewModel, string message, object args)
+        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerModel> message)
         {
-            if (viewModel == CustomerList && message == "ItemSelected")
+            if (/*recipient == CustomerList &&*/ message.Message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
-                {
-                    OnItemSelected();
-                });
+                await OnItemSelected();
             }
         }
 
-        private async void OnItemSelected()
+        //private async void OnMessage(CustomerListViewModel viewModel, string message, object args)
+        //{
+        //    if (viewModel == CustomerList && message == "ItemSelected")
+        //    {
+        //        //await ContextService.RunAsync(() =>
+        //        //{
+        //           //await OnItemSelected();
+        //        //});
+        //    }
+        //} 
+
+        private async Task OnItemSelected()
         {
             if (CustomerDetails.IsEditMode)
             {

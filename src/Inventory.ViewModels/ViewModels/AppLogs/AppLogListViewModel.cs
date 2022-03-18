@@ -12,17 +12,16 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using Inventory.Data;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Inventory.ViewModels
 {
@@ -81,13 +80,49 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            MessageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
-            MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
+            //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
+            //MessageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<AppLogModel>>(this, OnItemMessage);
+
+            // LogService non salva piu i log
+            //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
         }
+
+        private async void OnItemMessage(object recipient, ItemMessage<AppLogModel> message)
+        {
+            switch (message.Message)
+            {
+                //case "NewItemSaved":
+                case "ItemDeleted":
+                case "ItemsDeleted":
+                    //case "ItemRangesDeleted":
+                    await RefreshAsync();
+                    break;
+            }
+        }
+
+        //private async void OnMessage(ViewModelBase sender, string message, object args)
+        //{
+        //    switch (message)
+        //    {
+        //        case "NewItemSaved":
+        //        case "ItemDeleted":
+        //        case "ItemsDeleted":
+        //        case "ItemRangesDeleted":
+        //            //await ContextService.RunAsync(async () =>
+        //            //{
+        //            await RefreshAsync();
+        //            //});
+        //            break;
+        //    }
+        //}
+
+
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
         }
 
         public AppLogListArgs CreateArgs()
@@ -167,14 +202,16 @@ namespace Inventory.ViewModels
                         count = SelectedIndexRanges.Sum(r => r.Length);
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteRangesAsync(SelectedIndexRanges);
-                        MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                        //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                        Messenger.Send(new ItemMessage<IList<IndexRange>>(SelectedIndexRanges, "ItemRangesDeleted"));
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
-                        MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                        //MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                        Messenger.Send(new ItemMessage<IList<AppLogModel>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -220,31 +257,15 @@ namespace Inventory.ViewModels
             };
         }
 
-        private async void OnMessage(ViewModelBase sender, string message, object args)
-        {
-            switch (message)
-            {
-                case "NewItemSaved":
-                case "ItemDeleted":
-                case "ItemsDeleted":
-                case "ItemRangesDeleted":
-                    await ContextService.RunAsync(async () =>
-                    {
-                        await RefreshAsync();
-                    });
-                    break;
-            }
-        }
-
-        private async void OnLogServiceMessage(ILogService logService, string message, Log log)
-        {
-            if (message == "LogAdded")
-            {
-                await ContextService.RunAsync(async () =>
-                {
-                    await RefreshAsync();
-                });
-            }
-        }
+        //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
+        //{
+        //    if (message == "LogAdded")
+        //    {
+        //        //await ContextService.RunAsync(async () =>
+        //        //{
+        //            await RefreshAsync();
+        //        //});
+        //    }
+        //}
     }
 }

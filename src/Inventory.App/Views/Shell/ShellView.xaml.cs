@@ -40,8 +40,8 @@ namespace Inventory.Views
 
         private void InitializeContext()
         {
-            var context = Ioc.Default.GetService<IContextService>();
-            context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
+            //var context = Ioc.Default.GetService<IContextService>();
+            //context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
         }
 
         private void InitializeNavigation()
@@ -68,10 +68,10 @@ namespace Inventory.Views
             //ServiceLocator.DisposeCurrent();
         }
 
-        private async void OnUnlockClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private  void OnUnlockClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var context = Ioc.Default.GetService<IContextService>();
-            await ApplicationViewSwitcher.SwitchAsync(context.MainViewID);
+            //var context = Ioc.Default.GetService<IContextService>();
+            //await ApplicationViewSwitcher.SwitchAsync(context.MainViewID);
         }
     }
 }

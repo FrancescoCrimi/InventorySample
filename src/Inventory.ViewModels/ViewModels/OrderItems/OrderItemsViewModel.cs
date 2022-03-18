@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -53,25 +54,32 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
+            //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<OrderItemModel>>(this, OnOrderItemMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
             OrderItemList.Unsubscribe();
             OrderItemDetails.Unsubscribe();
         }
 
-        private async void OnMessage(OrderItemListViewModel viewModel, string message, object args)
+        private void OnOrderItemMessage(object recipient, ItemMessage<OrderItemModel> message)
         {
-            if (viewModel == OrderItemList && message == "ItemSelected")
+        //    throw new NotImplementedException();
+        //}
+        //private async void OnMessage(OrderItemListViewModel viewModel, string message, object args)
+        //{
+            if (recipient == OrderItemList && message.Message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
-                {
+                //await ContextService.RunAsync(() =>
+                //{
                     OnItemSelected();
-                });
+                //});
             }
         }
 

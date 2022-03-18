@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Inventory.Models;
 using Inventory.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Inventory.ViewModels
 {
@@ -54,29 +55,37 @@ namespace Inventory.ViewModels
 
         public void Subscribe()
         {
-            MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
+            //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
+            Messenger.Register<ItemMessage<ProductModel>>(this, OnProductMessage);
             ProductList.Subscribe();
             ProductDetails.Subscribe();
         }
+
         public void Unsubscribe()
         {
-            MessageService.Unsubscribe(this);
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
             ProductList.Unsubscribe();
             ProductDetails.Unsubscribe();
         }
 
-        private async void OnMessage(ProductListViewModel viewModel, string message, object args)
+
+        private async void OnProductMessage(object recipient, ItemMessage<ProductModel> message)
         {
-            if (viewModel == ProductList && message == "ItemSelected")
+        //    throw new NotImplementedException();
+        //}
+        //private async void OnMessage(ProductListViewModel viewModel, string message, object args)
+        //{
+            if (/*recipient == ProductList &&*/ message.Message == "ItemSelected")
             {
-                await ContextService.RunAsync(() =>
-                {
-                    OnItemSelected();
-                });
+                //await ContextService.RunAsync(() =>
+                //{
+                    await OnItemSelected();
+                //});
             }
         }
 
-        private async void OnItemSelected()
+        private async Task OnItemSelected()
         {
             if (ProductDetails.IsEditMode)
             {
