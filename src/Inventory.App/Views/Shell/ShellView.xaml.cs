@@ -12,17 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
-
+using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.ViewManagement;
-using Windows.ApplicationModel.Core;
-
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Services;
-using Windows.UI.Xaml;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace CiccioSoft.Inventory.Views
 {

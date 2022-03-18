@@ -12,13 +12,11 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Services;
 using System;
 using System.IO;
-
-using Windows.Storage;
 using Windows.ApplicationModel;
-
-using CiccioSoft.Inventory.Services;
+using Windows.Storage;
 
 namespace CiccioSoft.Inventory
 {
