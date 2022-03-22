@@ -26,15 +26,18 @@ namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class AppLogsView : Page
     {
+        private readonly IWindowService windowService;
+
         public AppLogsView()
         {
             ViewModel = Ioc.Default.GetService<AppLogsViewModel>();
-            NavigationService = Ioc.Default.GetService<INavigationService>();
+            //NavigationService = Ioc.Default.GetService<INavigationService>();
+            windowService = Ioc.Default.GetService<IWindowService>();
             InitializeComponent();
         }
 
         public AppLogsViewModel ViewModel { get; }
-        public INavigationService NavigationService { get; }
+        //public INavigationService NavigationService { get; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -50,7 +53,7 @@ namespace CiccioSoft.Inventory.Views
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            await NavigationService.CreateNewViewAsync<AppLogsViewModel>(ViewModel.AppLogList.CreateArgs());
+            await windowService.OpenInNewWindow<AppLogsViewModel>(ViewModel.AppLogList.CreateArgs());
         }
 
         public int GetRowSpan(bool isMultipleSelection)

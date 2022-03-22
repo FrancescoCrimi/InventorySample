@@ -30,12 +30,14 @@ namespace CiccioSoft.Inventory.ViewModels
     {
         private readonly INavigationService navigationService;
         private readonly IDialogService dialogService;
+        private readonly IWindowService windowService;
 
         public GenericDetailsViewModel()
             : base()
         {
             navigationService = Ioc.Default.GetService<INavigationService>();
             dialogService = Ioc.Default.GetService<IDialogService>();
+            windowService = Ioc.Default.GetService<IWindowService>();
         }
 
         public ILookupTables LookupTables => LookupTablesProxy.Instance;
@@ -132,7 +134,7 @@ namespace CiccioSoft.Inventory.ViewModels
                 }
                 else
                 {
-                    navigationService.CloseViewAsync();
+                    windowService.CloseViewAsync();
                 }
                 return;
             }

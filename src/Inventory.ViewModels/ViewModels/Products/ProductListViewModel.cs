@@ -51,17 +51,20 @@ namespace CiccioSoft.Inventory.ViewModels
         private readonly ILogger<ProductListViewModel> logger;
         private readonly IProductService productService;
         private readonly INavigationService navigationService;
+        private readonly IWindowService windowService;
         private readonly IDialogService dialogService;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
                                     IProductService productService,
                                     INavigationService navigationService,
+                                    IWindowService windowService,
                                     IDialogService dialogService)
             : base()
         {
             this.logger = logger;
             this.productService = productService;
             this.navigationService = navigationService;
+            this.windowService = windowService;
             this.dialogService = dialogService;
         }
 
@@ -70,7 +73,7 @@ namespace CiccioSoft.Inventory.ViewModels
         public ICommand ItemInvokedCommand => new RelayCommand<ProductModel>(ItemInvoked);
         private async void ItemInvoked(ProductModel model)
         {
-            await navigationService.CreateNewViewAsync<ProductDetailsViewModel>(new ProductDetailsArgs { ProductID = model.ProductID });
+            await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs { ProductID = model.ProductID });
         }
 
         public async Task LoadAsync(ProductListArgs args)
@@ -160,7 +163,7 @@ namespace CiccioSoft.Inventory.ViewModels
 
             if (IsMainView)
             {
-                await navigationService.CreateNewViewAsync<ProductDetailsViewModel>(new ProductDetailsArgs());
+                await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs());
             }
             else
             {

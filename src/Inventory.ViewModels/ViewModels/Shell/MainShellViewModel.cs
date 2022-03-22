@@ -12,13 +12,13 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Services;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.ViewModels
 {
@@ -30,15 +30,17 @@ namespace CiccioSoft.Inventory.ViewModels
         private readonly NavigationItem ProductsItem = new NavigationItem(0xE781, "Products", typeof(ProductsViewModel));
         private readonly NavigationItem AppLogsItem = new NavigationItem(0xE7BA, "Activity Log", typeof(AppLogsViewModel));
         private readonly NavigationItem SettingsItem = new NavigationItem(0x0000, "Settings", typeof(SettingsViewModel));
+        private readonly ILogger<MainShellViewModel> logger;
         private readonly INavigationService navigationService;
         private readonly ILogService logService;
 
-        public MainShellViewModel(
+        public MainShellViewModel(ILogger<MainShellViewModel> logger,
                                   //ILoginService loginService,
                                   INavigationService navigationService,
                                   ILogService logService)
             : base( navigationService)
         {
+            this.logger = logger;
             this.navigationService = navigationService;
             this.logService = logService;
         }

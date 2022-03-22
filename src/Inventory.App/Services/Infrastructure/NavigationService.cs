@@ -12,66 +12,26 @@
 // ******************************************************************
 #endregion
 
+using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
-
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.ViewManagement;
 using Windows.ApplicationModel.Core;
-
-using CiccioSoft.Inventory.Views;
-using CiccioSoft.Inventory.ViewModels;
-using Windows.UI.WindowManagement;
-using Windows.UI.Xaml.Hosting;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Windows.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.Services
 {
     public partial class NavigationService : INavigationService
     {
-        static private readonly ConcurrentDictionary<Type, Type> _viewModelMap = new ConcurrentDictionary<Type, Type>();
+        private readonly ILogger<NavigationService> logger;
+        private readonly PageService pageService;
 
-        static NavigationService()
+        public NavigationService(ILogger<NavigationService> logger,
+                                 PageService pageService)
         {
-            MainViewId = ApplicationView.GetForCurrentView().Id;
+            this.logger = logger;
+            this.pageService = pageService;
         }
 
         static public int MainViewId { get; }
-
-        static public void Register<TViewModel, TView>() where TView : Page
-        {
-            if (!_viewModelMap.TryAdd(typeof(TViewModel), typeof(TView)))
-            {
-                throw new InvalidOperationException($"ViewModel already registered '{typeof(TViewModel).FullName}'");
-            }
-        }
-
-        static public Type GetView<TViewModel>()
-        {
-            return GetView(typeof(TViewModel));
-        }
-        static public Type GetView(Type viewModel)
-        {
-            if (_viewModelMap.TryGetValue(viewModel, out Type view))
-            {
-                return view;
-            }
-            throw new InvalidOperationException($"View not registered for ViewModel '{viewModel.FullName}'");
-        }
-
-        static public Type GetViewModel(Type view)
-        {
-            var type = _viewModelMap.Where(r => r.Value == view).Select(r => r.Key).FirstOrDefault();
-            if (type == null)
-            {
-                throw new InvalidOperationException($"View not registered for ViewModel '{view.FullName}'");
-            }
-            return type;
-        }
 
         public bool IsMainView => CoreApplication.GetCurrentView().IsMain;
 
@@ -96,77 +56,7 @@ namespace CiccioSoft.Inventory.Services
             {
                 throw new InvalidOperationException("Navigation frame not initialized.");
             }
-            return Frame.Navigate(GetView(viewModelType), parameter);
-        }
-
-        public async Task<int> CreateNewViewAsync<TViewModel>(object parameter = null)
-        {
-            return await CreateNewViewAsync(typeof(TViewModel), parameter);
-        }
-        public async Task<int> CreateNewViewAsync(Type viewModelType, object parameter = null)
-        {
-            //int viewId = 0;
-
-            //var newView = CoreApplication.CreateNewView();
-            //await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            //{
-            //    viewId = ApplicationView.GetForCurrentView().Id;
-
-            //    var frame = new Frame();
-            //var args = new ShellArgs
-            //{
-            //    ViewModel = viewModelType,
-            //    Parameter = parameter
-            //};
-            //    frame.Navigate(typeof(ShellView), args);
-
-            //    Window.Current.Content = frame;
-            //    Window.Current.Activate();
-            //});
-
-            //if (await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewId))
-            //{
-            //    return viewId;
-            //}
-
-
-            // New Implementation in AppWindow
-            Frame appWindowFrame = new Frame();
-            // Create a new window
-            AppWindow appWindow = await AppWindow.TryCreateAsync();
-            // Make sure we release the reference to this window, and release XAML resources, when it's closed
-            appWindow.Closed += delegate { appWindow = null; appWindowFrame.Content = null; };
-            var view = GetView(viewModelType);
-            // Navigate the frame to the page we want to show in the new window
-            appWindowFrame.Navigate(view, parameter);
-            // Attach the XAML content to our window
-            ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowFrame);
-            await appWindow.TryShowAsync();
-
-
-            //// Create a new window
-            //AppWindow appWindow = await AppWindow.TryCreateAsync();
-            //// Make sure we release the reference to this window, and release XAML resources, when it's closed
-            //appWindow.Closed += delegate { appWindow = null; };
-            //var viewType = GetView(viewModelType);
-            ////var view = (UIElement)Ioc.Default.GetService(viewType);
-            //var view = (UIElement)Activator.CreateInstance(viewType);
-            //// Attach the XAML content to our window
-            //ElementCompositionPreview.SetAppWindowContent(appWindow, view);
-            //await appWindow.TryShowAsync();
-
-
-
-
-
-
-            return 0;
-        }
-
-        public async Task CloseViewAsync()
-        {
-            int currentId = ApplicationView.GetForCurrentView().Id;
-            await ApplicationViewSwitcher.SwitchAsync(MainViewId, currentId, ApplicationViewSwitchingOptions.ConsolidateViews);
+            return Frame.Navigate(pageService.GetView(viewModelType), parameter);
         }
     }
 }

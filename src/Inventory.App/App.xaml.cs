@@ -41,7 +41,8 @@ namespace CiccioSoft.Inventory
             if (frame == null)
             {
                 Frame rootFrame = new Frame();
-                await new Startup().ConfigureAsync();
+                var startup = new Startup();
+                await startup.ConfigureAsync();
 
                 var shellArgs = new ShellArgs
                 {

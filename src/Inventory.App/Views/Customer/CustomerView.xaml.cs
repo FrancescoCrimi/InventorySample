@@ -30,12 +30,12 @@ namespace CiccioSoft.Inventory.Views
         public CustomerView()
         {
             ViewModel = Ioc.Default.GetService<CustomerDetailsViewModel>();
-            NavigationService = Ioc.Default.GetService<INavigationService>();
+            //NavigationService = Ioc.Default.GetService<INavigationService>();
             InitializeComponent();
         }
 
         public CustomerDetailsViewModel ViewModel { get; }
-        public INavigationService NavigationService { get; }
+        //public INavigationService NavigationService { get; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

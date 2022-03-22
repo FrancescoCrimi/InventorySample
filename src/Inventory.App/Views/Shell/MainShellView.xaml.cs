@@ -26,31 +26,21 @@ namespace CiccioSoft.Inventory.Views
     public sealed partial class MainShellView : Page
     {
         private INavigationService _navigationService = null;
+        private readonly PageService pageService;
 
         public MainShellView()
         {
             ViewModel = Ioc.Default.GetService<MainShellViewModel>();
-            InitializeContext();
             InitializeComponent();
-            InitializeNavigation();
+            _navigationService = Ioc.Default.GetService<INavigationService>();
+            _navigationService.Initialize(frame);
+            pageService = Ioc.Default.GetService<PageService>();
+            frame.Navigated += OnFrameNavigated;
         }
 
         public MainShellViewModel ViewModel { get; }
 
         private SystemNavigationManager CurrentView => SystemNavigationManager.GetForCurrentView();
-
-        private void InitializeContext()
-        {
-            //var context = Ioc.Default.GetService<IContextService>();
-            //context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
-        }
-
-        private void InitializeNavigation()
-        {
-            _navigationService = Ioc.Default.GetService<INavigationService>();
-            _navigationService.Initialize(frame);
-            frame.Navigated += OnFrameNavigated;
-        }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -87,7 +77,7 @@ namespace CiccioSoft.Inventory.Views
 
         private void OnFrameNavigated(object sender, NavigationEventArgs e)
         {
-            var targetType = NavigationService.GetViewModel(e.SourcePageType);
+            var targetType = pageService.GetViewModel(e.SourcePageType);
             switch (targetType.Name)
             {
                 case "SettingsViewModel":

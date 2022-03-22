@@ -166,7 +166,9 @@
     <Compile Include="Services\Infrastructure\LogService\LogCollection.cs" />
     <Compile Include="Services\Infrastructure\LogService\LogService.cs" />
     <Compile Include="Services\Infrastructure\NavigationService.cs" />
+    <Compile Include="Services\Infrastructure\PageService.cs" />
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
+    <Compile Include="Services\Infrastructure\WindowService.cs" />
     <Compile Include="Services\LookupTables.cs" />
     <Compile Include="Services\OrderItemService.cs" />
     <Compile Include="Services\OrderService.cs" />

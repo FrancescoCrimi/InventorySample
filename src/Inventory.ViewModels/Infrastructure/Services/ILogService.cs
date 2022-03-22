@@ -12,19 +12,15 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Services
 {
     public interface ILogService
     {
-        //Task WriteAsync(LogType type, string source, string action, string message, string description);
-        //Task WriteAsync(LogType type, string source, string action, Exception ex);
         Task<AppLogModel> GetLogAsync(long id);
         Task<IList<AppLogModel>> GetLogsAsync(DataRequest<Log> request);
         Task<IList<AppLogModel>> GetLogsAsync(int skip, int take, DataRequest<Log> request);

@@ -27,15 +27,18 @@ namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class CustomersView : Page
     {
+        private readonly IWindowService windowService;
+
         public CustomersView()
         {
             ViewModel = Ioc.Default.GetService<CustomersViewModel>();
-            NavigationService = Ioc.Default.GetService<INavigationService>();
+            //NavigationService = Ioc.Default.GetService<INavigationService>();
+            windowService = Ioc.Default.GetService<IWindowService>();
             InitializeComponent();
         }
 
         public CustomersViewModel ViewModel { get; }
-        public INavigationService NavigationService { get; }
+        //public INavigationService NavigationService { get; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -53,7 +56,7 @@ namespace CiccioSoft.Inventory.Views
         {
             var args = ViewModel.CustomerList.CreateArgs();
             //args.IsMainView = false;
-            await NavigationService.CreateNewViewAsync<CustomersViewModel>(args);
+            await windowService.OpenInNewWindow<CustomersViewModel>(args);
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
@@ -61,11 +64,11 @@ namespace CiccioSoft.Inventory.Views
             ViewModel.CustomerDetails.CancelEdit();
             if (pivot.SelectedIndex == 0)
             {
-                await NavigationService.CreateNewViewAsync<CustomerDetailsViewModel>(ViewModel.CustomerDetails.CreateArgs());
+                await windowService.OpenInNewWindow<CustomerDetailsViewModel>(ViewModel.CustomerDetails.CreateArgs());
             }
             else
             {
-                await NavigationService.CreateNewViewAsync<OrdersViewModel>(ViewModel.CustomerOrders.CreateArgs());
+                await windowService.OpenInNewWindow<OrdersViewModel>(ViewModel.CustomerOrders.CreateArgs());
             }
         }
 

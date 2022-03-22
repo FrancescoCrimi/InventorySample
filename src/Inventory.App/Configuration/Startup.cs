@@ -40,9 +40,6 @@ namespace CiccioSoft.Inventory
             await EnsureDatabaseAsync();
             await ConfigureLookupTables();
 
-            //var logService = Ioc.Default.GetService<ILogService>();
-            //await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
-
             var logger = Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(Startup).Name);
             logger.LogInformation("Application started.");
 
@@ -98,6 +95,8 @@ namespace CiccioSoft.Inventory
 
             //.AddScoped<IContextService, ContextService>()
             .AddScoped<INavigationService, NavigationService>()
+            .AddSingleton<PageService>()
+            .AddSingleton<IWindowService, WindowService>()
             //.AddScoped<ICommonServices, CommonServices>()
 
             .AddTransient<LoginViewModel>()
@@ -186,28 +185,29 @@ namespace CiccioSoft.Inventory
 
         private void ConfigureNavigation()
         {
-            NavigationService.Register<LoginViewModel, LoginView>();
+            var pageService = Ioc.Default.GetService<PageService>();
+            pageService.Register<LoginViewModel, LoginView>();
 
-            NavigationService.Register<ShellViewModel, ShellView>();
-            NavigationService.Register<MainShellViewModel, MainShellView>();
+            pageService.Register<ShellViewModel, ShellView>();
+            pageService.Register<MainShellViewModel, MainShellView>();
 
-            NavigationService.Register<DashboardViewModel, DashboardView>();
+            pageService.Register<DashboardViewModel, DashboardView>();
 
-            NavigationService.Register<CustomersViewModel, CustomersView>();
-            NavigationService.Register<CustomerDetailsViewModel, CustomerView>();
+            pageService.Register<CustomersViewModel, CustomersView>();
+            pageService.Register<CustomerDetailsViewModel, CustomerView>();
 
-            NavigationService.Register<OrdersViewModel, OrdersView>();
-            NavigationService.Register<OrderDetailsViewModel, OrderView>();
+            pageService.Register<OrdersViewModel, OrdersView>();
+            pageService.Register<OrderDetailsViewModel, OrderView>();
 
-            NavigationService.Register<OrderItemsViewModel, OrderItemsView>();
-            NavigationService.Register<OrderItemDetailsViewModel, OrderItemView>();
+            pageService.Register<OrderItemsViewModel, OrderItemsView>();
+            pageService.Register<OrderItemDetailsViewModel, OrderItemView>();
 
-            NavigationService.Register<ProductsViewModel, ProductsView>();
-            NavigationService.Register<ProductDetailsViewModel, ProductView>();
+            pageService.Register<ProductsViewModel, ProductsView>();
+            pageService.Register<ProductDetailsViewModel, ProductView>();
 
-            NavigationService.Register<AppLogsViewModel, AppLogsView>();
+            pageService.Register<AppLogsViewModel, AppLogsView>();
 
-            NavigationService.Register<SettingsViewModel, SettingsView>();
+            pageService.Register<SettingsViewModel, SettingsView>();
         }
 
         private async Task EnsureLogDbAsync()

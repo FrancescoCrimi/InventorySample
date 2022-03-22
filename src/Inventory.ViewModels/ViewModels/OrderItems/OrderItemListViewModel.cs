@@ -53,17 +53,20 @@ namespace CiccioSoft.Inventory.ViewModels
         private readonly ILogger<OrderItemListViewModel> logger;
         private readonly IOrderItemService orderItemService;
         private readonly INavigationService navigationService;
+        private readonly IWindowService windowService;
         private readonly IDialogService dialogService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
                                       IOrderItemService orderItemService,
                                       INavigationService navigationService,
+                                      IWindowService windowService,
                                       IDialogService dialogService)
             : base()
         {
             this.logger = logger;
             this.orderItemService = orderItemService;
             this.navigationService = navigationService;
+            this.windowService = windowService;
             this.dialogService = dialogService;
         }
 
@@ -164,7 +167,7 @@ namespace CiccioSoft.Inventory.ViewModels
         {
             if (SelectedItem != null)
             {
-                await navigationService.CreateNewViewAsync<OrderItemDetailsViewModel>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderID, OrderLine = SelectedItem.OrderLine });
+                await windowService.OpenInNewWindow<OrderItemDetailsViewModel>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderID, OrderLine = SelectedItem.OrderLine });
             }
         }
 
@@ -172,7 +175,7 @@ namespace CiccioSoft.Inventory.ViewModels
         {
             if (IsMainView)
             {
-                await navigationService.CreateNewViewAsync<OrderItemDetailsViewModel>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                await windowService.OpenInNewWindow<OrderItemDetailsViewModel>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
             else
             {
