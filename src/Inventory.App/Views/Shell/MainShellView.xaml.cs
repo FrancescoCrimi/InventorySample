@@ -15,8 +15,6 @@
 using CiccioSoft.Inventory.Services;
 using CiccioSoft.Inventory.ViewModels;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using System.Linq;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -25,74 +23,27 @@ namespace CiccioSoft.Inventory.Views
 {
     public sealed partial class MainShellView : Page
     {
-        private INavigationService _navigationService = null;
-        private readonly PageService pageService;
+        private readonly MainShellViewModel viewModel;
 
         public MainShellView()
         {
-            ViewModel = Ioc.Default.GetService<MainShellViewModel>();
             InitializeComponent();
-            _navigationService = Ioc.Default.GetService<INavigationService>();
-            _navigationService.Initialize(frame);
-            pageService = Ioc.Default.GetService<PageService>();
-            frame.Navigated += OnFrameNavigated;
+            viewModel = Ioc.Default.GetService<MainShellViewModel>();
+            DataContext = viewModel;
+            INavigationService navigationService = Ioc.Default.GetService<INavigationService>();
+            navigationService.Initialize(frame);
         }
-
-        public MainShellViewModel ViewModel { get; }
-
-        private SystemNavigationManager CurrentView => SystemNavigationManager.GetForCurrentView();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await ViewModel.LoadAsync(e.Parameter as ShellArgs);
-            ViewModel.Subscribe();
+            await viewModel.LoadAsync(e.Parameter as ShellArgs);
+            viewModel.Subscribe();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            ViewModel.Unload();
-            ViewModel.Unsubscribe();
-        }
-
-        private void OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            if (args.SelectedItem is NavigationItem item)
-            {
-                ViewModel.NavigateTo(item.ViewModel);
-            }
-            else if (args.IsSettingsSelected)
-            {
-                ViewModel.NavigateTo(typeof(SettingsViewModel));
-            }
-            UpdateBackButton();
-        }
-
-        private void OnNavigationViewBackButton(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            if (_navigationService.CanGoBack)
-            {
-                _navigationService.GoBack();
-            }
-        }
-
-        private void OnFrameNavigated(object sender, NavigationEventArgs e)
-        {
-            var targetType = pageService.GetViewModel(e.SourcePageType);
-            switch (targetType.Name)
-            {
-                case "SettingsViewModel":
-                    ViewModel.SelectedItem = navigationView.SettingsItem;
-                    break;
-                default:
-                    ViewModel.SelectedItem = ViewModel.Items.Where(r => r.ViewModel == targetType).FirstOrDefault();
-                    break;
-            }
-            UpdateBackButton();
-        }
-
-        private void UpdateBackButton()
-        {
-            NavigationViewBackButton.IsEnabled = _navigationService.CanGoBack;
+            viewModel.Unload();
+            viewModel.Unsubscribe();
         }
 
         private async void OnLogoff(object sender, RoutedEventArgs e)

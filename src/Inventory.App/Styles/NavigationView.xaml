@@ -7,7 +7,7 @@
     <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="#EBEBEB"/>
 
         
-    <Style x:Key="BackButtonNavigationViewStyle" TargetType="NavigationView">
+    <!--<Style x:Key="BackButtonNavigationViewStyle" TargetType="NavigationView">
         <Setter Property="PaneToggleButtonStyle" Value="{StaticResource PaneToggleButtonStyle}"/>
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="HeaderTemplate">
@@ -95,7 +95,7 @@
                               Width="48" 
                               Canvas.ZIndex="100">
                             <Grid.RowDefinitions>
-                                <!-- Moving the Hamburger button 48px down -->
+                                --><!-- Moving the Hamburger button 48px down --><!--
                                 <RowDefinition Height="48"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
@@ -166,5 +166,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
+
 </ResourceDictionary>

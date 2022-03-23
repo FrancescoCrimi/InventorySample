@@ -13,62 +13,58 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Helpers;
 using CiccioSoft.Inventory.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.ViewModels
 {
     public class MainShellViewModel : ShellViewModel
     {
-        private readonly NavigationItem DashboardItem = new NavigationItem(0xE80F, "Dashboard", typeof(DashboardViewModel));
-        private readonly NavigationItem CustomersItem = new NavigationItem(0xE716, "Customers", typeof(CustomersViewModel));
-        private readonly NavigationItem OrdersItem = new NavigationItem(0xE8A1, "Orders", typeof(OrdersViewModel));
-        private readonly NavigationItem ProductsItem = new NavigationItem(0xE781, "Products", typeof(ProductsViewModel));
-        private readonly NavigationItem AppLogsItem = new NavigationItem(0xE7BA, "Activity Log", typeof(AppLogsViewModel));
-        private readonly NavigationItem SettingsItem = new NavigationItem(0x0000, "Settings", typeof(SettingsViewModel));
         private readonly ILogger<MainShellViewModel> logger;
         private readonly INavigationService navigationService;
         private readonly ILogService logService;
 
         public MainShellViewModel(ILogger<MainShellViewModel> logger,
-                                  //ILoginService loginService,
                                   INavigationService navigationService,
                                   ILogService logService)
-            : base( navigationService)
+            : base(navigationService)
         {
             this.logger = logger;
             this.navigationService = navigationService;
             this.logService = logService;
         }
 
-        private object _selectedItem;
-        public object SelectedItem
-        {
-            get => _selectedItem;
-            set => SetProperty(ref _selectedItem, value);
-        }
+        //private object _selectedItem;
+        //public object SelectedItem
+        //{
+        //    get => _selectedItem;
+        //    set => SetProperty(ref _selectedItem, value);
+        //}
 
-        private bool _isPaneOpen = true;
-        public bool IsPaneOpen
-        {
-            get => _isPaneOpen;
-            set => SetProperty(ref _isPaneOpen, value);
-        }
+        //private bool _isPaneOpen = true;
+        //public bool IsPaneOpen
+        //{
+        //    get => _isPaneOpen;
+        //    set => SetProperty(ref _isPaneOpen, value);
+        //}
 
-        private IEnumerable<NavigationItem> _items;
-        public IEnumerable<NavigationItem> Items
-        {
-            get => _items;
-            set => SetProperty(ref _items, value);
-        }
+        //private IEnumerable<NavigationItem> _items;
+        //public IEnumerable<NavigationItem> Items
+        //{
+        //    get => _items;
+        //    set => SetProperty(ref _items, value);
+        //}
 
         public override async Task LoadAsync(ShellArgs args)
         {
-            Items = GetItems().ToArray();
+            //Items = GetItems().ToArray();
             await UpdateAppLogBadge();
             await base.LoadAsync(args);
         }
@@ -90,7 +86,7 @@ namespace CiccioSoft.Inventory.ViewModels
             base.Unload();
         }
 
-        public async void NavigateTo(Type viewModel)
+        private async void NavigateTo(Type viewModel)
         {
             switch (viewModel.Name)
             {
@@ -119,15 +115,6 @@ namespace CiccioSoft.Inventory.ViewModels
             }
         }
 
-        private IEnumerable<NavigationItem> GetItems()
-        {
-            yield return DashboardItem;
-            yield return CustomersItem;
-            yield return OrdersItem;
-            yield return ProductsItem;
-            yield return AppLogsItem;
-        }
-
         //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
         //{
         //    if (message == "LogAdded")
@@ -139,7 +126,65 @@ namespace CiccioSoft.Inventory.ViewModels
         private async Task UpdateAppLogBadge()
         {
             int count = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
-            AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+            //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+        }
+
+
+        private RelayCommand<WinUI.NavigationViewItemInvokedEventArgs> itemInvokedCommand;
+
+        public ICommand ItemInvokedCommand => itemInvokedCommand ??
+            (itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(ItemInvoked));
+
+        private void ItemInvoked(NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.IsSettingsInvoked)
+            {
+                NavigateTo(typeof(SettingsViewModel));
+            }
+            else
+            {
+                var selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
+                var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
+
+                if (pageType != null)
+                {
+                    NavigateTo(pageType);
+                }
+            }
+        }
+
+        private int logNewCount = 10;
+        public int LogNewCount
+        {
+            get => logNewCount;
+            set => SetProperty(ref logNewCount, value);
+        }
+
+        private bool isBackEnabled;
+        public bool IsBackEnabled
+        {
+            get => isBackEnabled;
+            set => SetProperty(ref isBackEnabled, value);
+        }
+
+        private RelayCommand<NavigationViewBackRequestedEventArgs> backRequestedCommand;
+        public ICommand BackRequestedCommand => backRequestedCommand ??
+            (backRequestedCommand = new RelayCommand<NavigationViewBackRequestedEventArgs>(BackRequested));
+        private void BackRequested(NavigationViewBackRequestedEventArgs obj)
+        {
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+        private RelayCommand frameNavigatedCommand;
+        public ICommand FrameNavigatedCommand => frameNavigatedCommand ??
+            (frameNavigatedCommand = new RelayCommand(FrameNavigated));
+
+        private void FrameNavigated()
+        {
+            IsBackEnabled = navigationService.CanGoBack;
         }
     }
 }

@@ -156,10 +156,38 @@
     <Compile Include="Extensions\ICommandExtensions.cs" />
     <Compile Include="Extensions\ItemIndexRangeExtensions.cs" />
     <Compile Include="Extensions\UriExtensions.cs" />
+    <Compile Include="Helpers\NavHelper.cs" />
+    <Compile Include="Infrastructure\Common\IndexRange.cs" />
+    <Compile Include="Infrastructure\Common\Result.cs" />
+    <Compile Include="Infrastructure\Common\ToolbarModes.cs" />
+    <Compile Include="Infrastructure\Common\UserInfo.cs" />
+    <Compile Include="Infrastructure\Common\ValidationConstraint.cs" />
+    <Compile Include="Infrastructure\Services\IDialogService.cs" />
+    <Compile Include="Infrastructure\Services\IFilePickerService.cs" />
+    <Compile Include="Infrastructure\Services\ILoginService.cs" />
+    <Compile Include="Infrastructure\Services\ILogService.cs" />
+    <Compile Include="Infrastructure\Services\INavigationService.cs" />
+    <Compile Include="Infrastructure\Services\ISettingsService.cs" />
+    <Compile Include="Infrastructure\Services\IWindowService.cs" />
+    <Compile Include="Infrastructure\ViewModels\ObservableObject.cs" />
+    <Compile Include="Infrastructure\ViewModels\ViewModelBase.cs" />
+    <Compile Include="Models\AppLogModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\CountryCodeModel.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\OrderItemModel.cs" />
+    <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\OrderStatusModel.cs" />
+    <Compile Include="Models\PaymentTypeModel.cs" />
+    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ShipperModel.cs" />
+    <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\DataServiceFactory\DataServiceFactory.cs" />
     <Compile Include="Services\DataServiceFactory\IDataServiceFactory.cs" />
+    <Compile Include="Services\ICustomerService.cs" />
+    <Compile Include="Services\ILookupTables.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\Infrastructure\LoginService.cs" />
@@ -169,6 +197,9 @@
     <Compile Include="Services\Infrastructure\PageService.cs" />
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
     <Compile Include="Services\Infrastructure\WindowService.cs" />
+    <Compile Include="Services\IOrderItemService.cs" />
+    <Compile Include="Services\IOrderService.cs" />
+    <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\LookupTables.cs" />
     <Compile Include="Services\OrderItemService.cs" />
     <Compile Include="Services\OrderService.cs" />
@@ -186,6 +217,32 @@
     <Compile Include="Tools\ElementSet\ElementSet.Events.cs" />
     <Compile Include="Tools\ElementSet\ElementSet.Methods.cs" />
     <Compile Include="Tools\ElementSet\ElementSet.Properties.cs" />
+    <Compile Include="ViewModels\AppLogs\AppLogDetailsViewModel.cs" />
+    <Compile Include="ViewModels\AppLogs\AppLogListViewModel.cs" />
+    <Compile Include="ViewModels\AppLogs\AppLogsViewModel.cs" />
+    <Compile Include="ViewModels\Common\GenericDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Common\GenericListViewModel.cs" />
+    <Compile Include="ViewModels\Customers\CustomerDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
+    <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
+    <Compile Include="ViewModels\Dashboard\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\Login\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Messages.cs" />
+    <Compile Include="ViewModels\OrderItems\OrderItemDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OrderItems\OrderItemListViewModel.cs" />
+    <Compile Include="ViewModels\OrderItems\OrderItemsViewModel.cs" />
+    <Compile Include="ViewModels\Orders\OrderDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Orders\OrderDetailsWithItemsViewModel.cs" />
+    <Compile Include="ViewModels\Orders\OrderListViewModel.cs" />
+    <Compile Include="ViewModels\Orders\OrdersViewModel.cs" />
+    <Compile Include="ViewModels\Products\ProductDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Products\ProductListViewModel.cs" />
+    <Compile Include="ViewModels\Products\ProductsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\CreateDatabaseViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ValidateConnectionViewModel.cs" />
+    <Compile Include="ViewModels\Shell\MainShellViewModel.cs" />
+    <Compile Include="ViewModels\Shell\ShellViewModel.cs" />
     <Compile Include="Views\AppLogs\AppLogsView.xaml.cs">
       <DependentUpon>AppLogsView.xaml</DependentUpon>
     </Compile>
@@ -377,6 +434,12 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
       <Version>7.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.1</Version>
+    </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
     </PackageReference>
@@ -397,10 +460,6 @@
     <ProjectReference Include="..\Inventory.Data\Inventory.Data.csproj">
       <Project>{515a0883-d2d9-4b97-8d73-ee6fe9bc3f2b}</Project>
       <Name>Inventory.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Inventory.ViewModels\Inventory.ViewModels.csproj">
-      <Project>{9cee6144-0377-4f95-ac2d-fdc599b82ed9}</Project>
-      <Name>Inventory.ViewModels</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
