@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Models;
+﻿using CiccioSoft.Inventory.Uwp.Models;
 using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.ViewModels
+namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     public class ItemMessage<TItem> : ValueChangedMessage<TItem>
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{88F4FCC9-4783-491E-BEF7-CA1C07DD18A8}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CiccioSoft.Inventory</RootNamespace>
-    <AssemblyName>CiccioSoft.Inventory</AssemblyName>
+    <RootNamespace>CiccioSoft.Inventory.Uwp</RootNamespace>
+    <AssemblyName>CiccioSoft.Inventory.Uwp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
@@ -457,9 +457,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Inventory.Data\Inventory.Data.csproj">
+    <ProjectReference Include="..\Inventory.Data\Inventory.Core.csproj">
       <Project>{515a0883-d2d9-4b97-8d73-ee6fe9bc3f2b}</Project>
-      <Name>Inventory.Data</Name>
+      <Name>Inventory.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public interface IDialogService
     {

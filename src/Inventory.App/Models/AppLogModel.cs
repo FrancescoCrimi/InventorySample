@@ -15,7 +15,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace CiccioSoft.Inventory.Models
+namespace CiccioSoft.Inventory.Uwp.Models
 {
     public class AppLogModel : ObservableObject
     {

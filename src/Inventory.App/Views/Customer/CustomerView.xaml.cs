@@ -12,18 +12,13 @@
 // ******************************************************************
 #endregion
 
-using System;
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System.Threading.Tasks;
-
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class CustomerView : Page
     {

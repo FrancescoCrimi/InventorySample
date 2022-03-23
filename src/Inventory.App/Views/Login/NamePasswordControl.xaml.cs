@@ -18,7 +18,7 @@ using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class NamePasswordControl : UserControl
     {

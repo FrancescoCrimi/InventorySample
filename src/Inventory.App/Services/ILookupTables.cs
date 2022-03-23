@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Uwp.Models;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public interface ILookupTables
     {

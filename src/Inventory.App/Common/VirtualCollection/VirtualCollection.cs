@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Data;
 
 using CiccioSoft.Inventory.Data;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     abstract public partial class VirtualCollection<T> : IItemsRangeInfo, INotifyCollectionChanged
     {

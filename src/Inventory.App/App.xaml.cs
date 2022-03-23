@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Views;
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
@@ -24,7 +24,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     sealed partial class App : Windows.UI.Xaml.Application
     {

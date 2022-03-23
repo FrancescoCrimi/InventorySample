@@ -12,18 +12,16 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace CiccioSoft.Inventory.Controls
+namespace CiccioSoft.Inventory.Uwp.Controls
 {
     public sealed partial class DataGrid : UserControl, INotifyExpressionChanged
     {

@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Models;
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -23,7 +23,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.ViewModels
+namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     #region AppLogListArgs
     public class AppLogListArgs

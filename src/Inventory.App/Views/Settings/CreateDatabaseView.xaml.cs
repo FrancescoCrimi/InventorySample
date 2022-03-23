@@ -12,16 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
-
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using CiccioSoft.Inventory.ViewModels;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class CreateDatabaseView : ContentDialog
     {

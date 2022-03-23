@@ -17,9 +17,9 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using CiccioSoft.Inventory.Animations;
+using CiccioSoft.Inventory.Uwp.Animations;
 
-namespace CiccioSoft.Inventory.Controls
+namespace CiccioSoft.Inventory.Uwp.Controls
 {
     public sealed class Section : ContentControl
     {

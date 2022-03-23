@@ -12,13 +12,11 @@
 // ******************************************************************
 #endregion
 
-using System;
-
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.ViewManagement;
 
-namespace CiccioSoft.Inventory.Controls
+namespace CiccioSoft.Inventory.Uwp.Controls
 {
     public class WindowTitle : Control
     {

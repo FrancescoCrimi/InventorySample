@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 using Windows.UI.Xaml.Data;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     static public partial class ItemIndexRangeExtensions
     {

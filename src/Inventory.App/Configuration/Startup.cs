@@ -13,9 +13,9 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.DataContexts;
-using CiccioSoft.Inventory.Services;
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Views;
+using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +28,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.ViewManagement;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     public class Startup
     {

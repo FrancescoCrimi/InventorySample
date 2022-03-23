@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Media;
 using CiccioSoft.Inventory.Data;
 using Microsoft.Extensions.Logging;
 
-namespace CiccioSoft.Inventory.Converters
+namespace CiccioSoft.Inventory.Uwp.Converters
 {
     public sealed class LogTypeConverter : IValueConverter
     {

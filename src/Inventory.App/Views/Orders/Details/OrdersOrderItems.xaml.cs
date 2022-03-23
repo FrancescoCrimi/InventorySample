@@ -12,14 +12,11 @@
 // ******************************************************************
 #endregion
 
-using System;
-
+using CiccioSoft.Inventory.Uwp.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using CiccioSoft.Inventory.ViewModels;
-
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class OrdersOrderItems : UserControl
     {

@@ -19,9 +19,9 @@ using System.Threading.Tasks;
 
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Uwp.Models;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public class ProductService : IProductService
     {

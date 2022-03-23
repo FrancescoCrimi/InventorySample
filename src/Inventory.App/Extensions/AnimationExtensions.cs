@@ -21,7 +21,7 @@ using Windows.UI.Composition;
 
 using Microsoft.Graphics.Canvas.Effects;
 
-namespace CiccioSoft.Inventory.Animations
+namespace CiccioSoft.Inventory.Uwp.Animations
 {
     static public class AnimationExtensions
     {

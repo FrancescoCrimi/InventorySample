@@ -13,7 +13,7 @@
 #endregion
 
 
-namespace CiccioSoft.Inventory.Models
+namespace CiccioSoft.Inventory.Uwp.Models
 {
     public class ObservableObject : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject
     {

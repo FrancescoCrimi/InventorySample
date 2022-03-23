@@ -15,11 +15,11 @@
 using System;
 using System.Threading.Tasks;
 
-using CiccioSoft.Inventory.Models;
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.Messaging;
 
-namespace CiccioSoft.Inventory.ViewModels
+namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     public class OrderDetailsWithItemsViewModel : ViewModelBase
     {

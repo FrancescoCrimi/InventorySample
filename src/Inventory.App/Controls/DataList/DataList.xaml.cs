@@ -23,7 +23,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace CiccioSoft.Inventory.Controls
+namespace CiccioSoft.Inventory.Uwp.Controls
 {
     public sealed partial class DataList : UserControl, INotifyExpressionChanged
     {

@@ -12,13 +12,13 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Services;
 using System;
 using System.IO;
 using Windows.ApplicationModel;
 using Windows.Storage;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     public class AppSettings
     {

@@ -18,12 +18,12 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.ApplicationModel.Core;
 
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class CustomersView : Page
     {

@@ -12,14 +12,14 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Services;
-using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.ViewModels;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class ShellView : Page
     {

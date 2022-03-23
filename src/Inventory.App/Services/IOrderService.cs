@@ -12,14 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Uwp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Models;
-
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public interface IOrderService
     {

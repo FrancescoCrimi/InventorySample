@@ -16,7 +16,7 @@ using System;
 
 using CiccioSoft.Inventory.Data.Services;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public class DataServiceFactory : IDataServiceFactory
     {

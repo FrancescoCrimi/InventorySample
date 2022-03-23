@@ -16,7 +16,7 @@ using System;
 
 using Windows.UI.Xaml;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     static public class GridLengths
     {

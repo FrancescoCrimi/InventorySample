@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Uwp.Models;
 using CiccioSoft.Inventory.Data.DataContexts;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public class LogService : ILogService
     {

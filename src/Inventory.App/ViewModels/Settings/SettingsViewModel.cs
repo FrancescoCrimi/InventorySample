@@ -16,10 +16,10 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 
-namespace CiccioSoft.Inventory.ViewModels
+namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     #region SettingsArgs
     public class SettingsArgs

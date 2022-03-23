@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Helpers;
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Helpers;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WinUI = Microsoft.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory.ViewModels
+namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     public class MainShellViewModel : ShellViewModel
     {

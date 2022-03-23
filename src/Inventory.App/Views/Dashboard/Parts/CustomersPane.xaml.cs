@@ -12,15 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
+using CiccioSoft.Inventory.Uwp.Models;
 using System.Collections.Generic;
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using CiccioSoft.Inventory.Models;
-
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class CustomersPane : UserControl
     {

@@ -16,7 +16,7 @@ using System;
 
 using Windows.UI.Xaml.Data;
 
-namespace CiccioSoft.Inventory.Converters
+namespace CiccioSoft.Inventory.Uwp.Converters
 {
     public sealed class Int16Converter : IValueConverter
     {

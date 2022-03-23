@@ -12,15 +12,13 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Uwp.Views;
 using System;
 using System.Threading.Tasks;
-
-using Windows.UI.Xaml.Controls;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
-using CiccioSoft.Inventory.Views;
-
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public class SettingsService : ISettingsService
     {

@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Services;
 using System;
 
-namespace CiccioSoft.Inventory.Models
+namespace CiccioSoft.Inventory.Uwp.Models
 {
     public class OrderModel : ObservableObject
     {

@@ -17,9 +17,9 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using CiccioSoft.Inventory.ViewModels;
+using CiccioSoft.Inventory.Uwp.ViewModels;
 
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class AppLogsDetails : UserControl
     {

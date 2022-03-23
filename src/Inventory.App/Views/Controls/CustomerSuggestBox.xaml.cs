@@ -12,21 +12,19 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.ApplicationModel;
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Models;
-using CiccioSoft.Inventory.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-
-namespace CiccioSoft.Inventory.Controls
+namespace CiccioSoft.Inventory.Uwp.Controls
 {
     public sealed partial class CustomerSuggestBox : UserControl
     {

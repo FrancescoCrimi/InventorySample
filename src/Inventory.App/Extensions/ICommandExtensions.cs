@@ -15,7 +15,7 @@
 using System;
 using System.Windows.Input;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     static public class ICommandExtensions
     {

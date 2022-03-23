@@ -15,7 +15,7 @@
 using System;
 using System.ComponentModel;
 
-namespace CiccioSoft.Inventory
+namespace CiccioSoft.Inventory.Uwp
 {
     public interface INotifyExpressionChanged : INotifyPropertyChanged
     {

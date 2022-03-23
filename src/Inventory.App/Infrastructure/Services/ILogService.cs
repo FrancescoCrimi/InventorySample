@@ -13,11 +13,11 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Models;
+using CiccioSoft.Inventory.Uwp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Services
+namespace CiccioSoft.Inventory.Uwp.Services
 {
     public interface ILogService
     {

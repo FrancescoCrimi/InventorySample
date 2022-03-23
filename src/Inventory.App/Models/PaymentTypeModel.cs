@@ -14,7 +14,7 @@
 
 using System;
 
-namespace CiccioSoft.Inventory.Models
+namespace CiccioSoft.Inventory.Uwp.Models
 {
     public class PaymentTypeModel : ObservableObject
     {

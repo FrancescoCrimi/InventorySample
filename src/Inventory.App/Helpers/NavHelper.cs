@@ -2,7 +2,7 @@
 using System;
 using Windows.UI.Xaml;
 
-namespace CiccioSoft.Inventory.Helpers
+namespace CiccioSoft.Inventory.Uwp.Helpers
 {
     public class NavHelper
     {

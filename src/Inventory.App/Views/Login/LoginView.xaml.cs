@@ -12,22 +12,17 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
-
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.ViewManagement;
-using Windows.ApplicationModel.Core;
-
-using CiccioSoft.Inventory.Animations;
-using CiccioSoft.Inventory.ViewModels;
-using CiccioSoft.Inventory.Services;
+using CiccioSoft.Inventory.Uwp.Animations;
+using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.ViewModels;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
-namespace CiccioSoft.Inventory.Views
+namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class LoginView : Page
     {

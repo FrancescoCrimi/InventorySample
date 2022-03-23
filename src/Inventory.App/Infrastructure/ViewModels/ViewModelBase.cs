@@ -16,7 +16,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Diagnostics;
 
-namespace CiccioSoft.Inventory.ViewModels
+namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     public class ViewModelBase : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient
     {
