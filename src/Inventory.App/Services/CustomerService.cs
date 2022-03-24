@@ -12,15 +12,13 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Uwp.Models;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {

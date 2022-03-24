@@ -41,27 +41,6 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             this.logService = logService;
         }
 
-        //private object _selectedItem;
-        //public object SelectedItem
-        //{
-        //    get => _selectedItem;
-        //    set => SetProperty(ref _selectedItem, value);
-        //}
-
-        //private bool _isPaneOpen = true;
-        //public bool IsPaneOpen
-        //{
-        //    get => _isPaneOpen;
-        //    set => SetProperty(ref _isPaneOpen, value);
-        //}
-
-        //private IEnumerable<NavigationItem> _items;
-        //public IEnumerable<NavigationItem> Items
-        //{
-        //    get => _items;
-        //    set => SetProperty(ref _items, value);
-        //}
-
         public override async Task LoadAsync(ShellArgs args)
         {
             //Items = GetItems().ToArray();
