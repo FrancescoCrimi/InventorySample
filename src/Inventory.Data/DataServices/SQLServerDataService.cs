@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.DbContexts;
 using System;
 
 namespace CiccioSoft.Inventory.Data.Services
@@ -19,7 +20,7 @@ namespace CiccioSoft.Inventory.Data.Services
     public class SQLServerDataService : DataServiceBase
     {
         public SQLServerDataService(string connectionString)
-            : base(new SQLServerDb(connectionString))
+            : base(new SQLServerAppDbContext(connectionString))
         {
         }
     }

@@ -16,13 +16,13 @@ using System;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.DbContexts
 {
-    public class SQLServerDb : DbContext, IDataSource
+    public class SQLServerAppDbContext : DbContext, IAppDbContext
     {
         private string _connectionString = null;
 
-        public SQLServerDb(string connectionString)
+        public SQLServerAppDbContext(string connectionString)
         {
             _connectionString = connectionString;
         }

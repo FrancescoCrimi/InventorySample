@@ -1,5 +1,4 @@
-﻿using CiccioSoft.Inventory.Data.DataContexts;
-using CiccioSoft.Inventory.Services;
+﻿using CiccioSoft.Inventory.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Data.DataServices
 {
-    public class LogRepository : ILogRepository
+    public class LogDataService : ILogDataService
     {
         private readonly LogDbContext logDbContext;
 
-        public LogRepository(LogDbContext logDbContext)
+        public LogDataService(LogDbContext logDbContext)
         {
             this.logDbContext = logDbContext;
         }
@@ -69,7 +68,7 @@ namespace CiccioSoft.Inventory.Data
             IQueryable<Log> items = logDbContext.Logs;
 
             // Query
-            if (!String.IsNullOrEmpty(request.Query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
                 items = items.Where(r => r.Message.Contains(request.Query.ToLower()));
             }
@@ -100,7 +99,7 @@ namespace CiccioSoft.Inventory.Data
             IQueryable<Log> items = logDbContext.Logs;
 
             // Query
-            if (!String.IsNullOrEmpty(request.Query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
                 items = items.Where(r => r.Message.Contains(request.Query.ToLower()));
             }
@@ -122,6 +121,11 @@ namespace CiccioSoft.Inventory.Data
             }
 
             return items;
+        }
+
+        public void Dispose()
+        {
+            logDbContext.Dispose();
         }
     }
 }

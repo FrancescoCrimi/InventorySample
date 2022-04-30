@@ -17,13 +17,13 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.DbContexts
 {
-    public class SQLiteDb : DbContext, IDataSource
+    public class SQLiteAppDbContext : DbContext, IAppDbContext
     {
         private string _connectionString = null;
 
-        public SQLiteDb(string connectionString)
+        public SQLiteAppDbContext(string connectionString)
         {
             _connectionString = connectionString;
         }

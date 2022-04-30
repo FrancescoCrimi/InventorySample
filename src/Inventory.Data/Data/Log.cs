@@ -24,5 +24,8 @@ namespace CiccioSoft.Inventory.Data
         public virtual string Callsite { get; set; }
 
         public virtual string Exception { get; set; }
+
+
+        //public virtual bool IsRead { get; set; }
     }
 }

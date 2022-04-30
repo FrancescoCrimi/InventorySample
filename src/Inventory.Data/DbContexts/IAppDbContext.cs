@@ -19,9 +19,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.DbContexts
 {
-    public interface IDataSource : IDisposable
+    public interface IAppDbContext : IDisposable
     {
         DbSet<DbVersion> DbVersion { get; }
 

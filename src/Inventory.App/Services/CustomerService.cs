@@ -60,6 +60,10 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             var collection = new CustomerCollection(this);
             await collection.LoadAsync(request);
+
+            //var collection = new CustomerList(this);
+            //await collection.LoadAsync(request);
+
             return collection;
         }
 

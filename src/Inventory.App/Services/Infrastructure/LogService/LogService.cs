@@ -12,21 +12,25 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Data.DataServices;
 using CiccioSoft.Inventory.Uwp.Models;
-using CiccioSoft.Inventory.Data.DataContexts;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {
     public class LogService : ILogService
     {
-        public LogService(/*IMessageService messageService*/)
+        private readonly IServiceProvider serviceProvider;
+
+        public LogService(IServiceProvider serviceProvider
+            /*IMessageService messageService*/)
         {
+            this.serviceProvider = serviceProvider;
             //MessageService = messageService;
         }
 
@@ -60,18 +64,19 @@ namespace CiccioSoft.Inventory.Uwp.Services
         //    MessageService.Send(this, "LogAdded", appLog);
         //}
 
-        private LogDbContext CreateDataSource()
-        {
-            return new LogDbContext(AppSettings.Current.LogConnectionString);
-        }
+        //private LogDbContext CreateDataSource()
+        //{
+        //    return new LogDbContext(AppSettings.Current.LogConnectionString);
+        //}
 
 
 
         public async Task<AppLogModel> GetLogAsync(long id)
         {
-            using (var dc = CreateDataSource())
+            //using (var dc = CreateDataSource())
+            using (var repo = serviceProvider.GetService<ILogDataService>())
             {
-                var repo = new LogRepository(dc);
+                //var repo = new LogRepository(dc);
                 var item = await repo.GetLogAsync(id);
                 if (item != null)
                 {
@@ -100,9 +105,11 @@ namespace CiccioSoft.Inventory.Uwp.Services
             //    }
             //    return models;
             //}
-            using (var dc = CreateDataSource())
+
+            //using (var dc = CreateDataSource())
+            using (var repo = serviceProvider.GetService<ILogDataService>())
             {
-                var repo = new LogRepository(dc);
+                //var repo = new LogRepository(dc);
                 var items = await repo.GetLogsAsync(skip, take/*, request*/);
                 foreach (var item in items)
                 {
@@ -114,9 +121,10 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> GetLogsCountAsync(DataRequest<Log> request)
         {
-            using (var dc = CreateDataSource())
+            //using (var dc = CreateDataSource())
+            using (var repo = serviceProvider.GetService<ILogDataService>())
             {
-                var repo = new LogRepository(dc);
+                //var repo = new LogRepository(dc);
                 return await repo.GetLogsCountAsync(request);
             }
         }
@@ -132,18 +140,20 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> DeleteLogAsync(AppLogModel model)
         {
             var appLog = new Log { Id = (int)model.Id };
-            using (var dc = CreateDataSource())
+            //using (var dc = CreateDataSource())
+            using (var repo = serviceProvider.GetService<ILogDataService>())
             {
-                var repo = new LogRepository(dc);
+                //var repo = new LogRepository(dc);
                 return await repo.DeleteLogsAsync(appLog);
             }
         }
 
         public async Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request)
         {
-            using (var dc = CreateDataSource())
+            //using (var dc = CreateDataSource())
+            using (var repo = serviceProvider.GetService<ILogDataService>())
             {
-                var repo = new LogRepository(dc);
+                //var repo = new LogRepository(dc);
                 var items = await repo.GetLogKeysAsync(index, length, request);
                 return await repo.DeleteLogsAsync(items.ToArray());
             }
@@ -151,9 +161,10 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task MarkAllAsReadAsync()
         {
-            using (var dc = CreateDataSource())
+            //using (var dc = CreateDataSource())
+            using (var repo = serviceProvider.GetService<ILogDataService>())
             {
-                var repo = new LogRepository(dc);
+                //var repo = new LogRepository(dc);
                 await repo.MarkAllAsReadAsync();
             }
         }

@@ -100,9 +100,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\GridLengths.cs" />
-    <Compile Include="Common\VirtualCollection\VirtualCollection.cs" />
-    <Compile Include="Common\VirtualCollection\VirtualCollection.IList.cs" />
-    <Compile Include="Common\VirtualCollection\VirtualCollection.Selection.cs" />
     <Compile Include="Configuration\AppSettings.cs" />
     <Compile Include="Configuration\Startup.cs" />
     <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.cs" />
@@ -169,12 +166,12 @@
     <Compile Include="Infrastructure\Services\INavigationService.cs" />
     <Compile Include="Infrastructure\Services\ISettingsService.cs" />
     <Compile Include="Infrastructure\Services\IWindowService.cs" />
-    <Compile Include="Infrastructure\ViewModels\ObservableObject.cs" />
     <Compile Include="Infrastructure\ViewModels\ViewModelBase.cs" />
     <Compile Include="Models\AppLogModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CountryCodeModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\ObservableObject.cs" />
     <Compile Include="Models\OrderItemModel.cs" />
     <Compile Include="Models\OrderModel.cs" />
     <Compile Include="Models\OrderStatusModel.cs" />
@@ -184,9 +181,9 @@
     <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CustomerService.cs" />
-    <Compile Include="Services\DataServiceFactory\DataServiceFactory.cs" />
-    <Compile Include="Services\DataServiceFactory\IDataServiceFactory.cs" />
+    <Compile Include="Services\DataServiceFactory.cs" />
     <Compile Include="Services\ICustomerService.cs" />
+    <Compile Include="Services\IDataServiceFactory.cs" />
     <Compile Include="Services\ILookupTables.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
@@ -197,6 +194,7 @@
     <Compile Include="Services\Infrastructure\PageService.cs" />
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
     <Compile Include="Services\Infrastructure\WindowService.cs" />
+    <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
     <Compile Include="Services\IOrderItemService.cs" />
     <Compile Include="Services\IOrderService.cs" />
     <Compile Include="Services\IProductService.cs" />
@@ -204,10 +202,6 @@
     <Compile Include="Services\OrderItemService.cs" />
     <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\ProductService.cs" />
-    <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
-    <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
-    <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
-    <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
     <Compile Include="Tools\BitmapTools.cs" />
     <Compile Include="Tools\DependencyExpressions\DependencyExpression.cs" />
     <Compile Include="Tools\DependencyExpressions\DependencyExpressions.cs" />
@@ -381,6 +375,14 @@
     <Compile Include="Views\Settings\ValidateConnectionView.xaml.cs">
       <DependentUpon>ValidateConnectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="VirtualCollections\CustomerCollection.cs" />
+    <Compile Include="VirtualCollections\CustomerList.cs" />
+    <Compile Include="VirtualCollections\OrderCollection.cs" />
+    <Compile Include="VirtualCollections\ProductCollection.cs" />
+    <Compile Include="VirtualCollections\VirtualCollection.cs" />
+    <Compile Include="VirtualCollections\VirtualCollection.IList.cs" />
+    <Compile Include="VirtualCollections\VirtualCollection.Selection.cs" />
+    <Compile Include="VirtualCollections\VirtualList.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -408,13 +410,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore">
-      <Version>3.1.22</Version>
+      <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <Version>3.1.22</Version>
+      <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer">
-      <Version>3.1.22</Version>
+      <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>3.1.22</Version>
@@ -448,6 +450,9 @@
     </PackageReference>
     <PackageReference Include="NLog.Extensions.Logging">
       <Version>1.7.4</Version>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql">
+      <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="Remotion.Linq">
       <Version>2.2.0</Version>
@@ -742,9 +747,10 @@
   <ItemGroup>
     <Content Include="Assets\Database\VanArsdel.1.01.db" />
     <None Include="CiccioKey.snk" />
-    <None Include="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="NLog.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\VirtualCollection\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

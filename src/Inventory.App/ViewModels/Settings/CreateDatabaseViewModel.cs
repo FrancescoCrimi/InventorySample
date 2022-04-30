@@ -12,16 +12,14 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Uwp.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-
-using CiccioSoft.Inventory.Uwp.Services;
-using CiccioSoft.Inventory.Data.Services;
-using Microsoft.Extensions.Logging;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
@@ -91,7 +89,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             {
                 ProgressMaximum = 14;
                 ProgressStatus = "Connecting to Database";
-                using (var db = new SQLServerDb(connectionString))
+                using (var db = new SQLServerAppDbContext(connectionString))
                 {
                     var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
                     if (!await dbCreator.ExistsAsync())
@@ -123,9 +121,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             SecondaryButtonText = null;
         }
 
-        private async Task CopyDataTables(SQLServerDb db)
+        private async Task CopyDataTables(SQLServerAppDbContext db)
         {
-            using (var sourceDb = new SQLiteDb(settingsService.PatternConnectionString))
+            using (var sourceDb = new SQLiteAppDbContext(settingsService.PatternConnectionString))
             {
                 ProgressStatus = "Creating table Categories...";
                 foreach (var item in sourceDb.Categories.AsNoTracking())

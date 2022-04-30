@@ -12,16 +12,14 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Uwp.Services;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
-
-using CiccioSoft.Inventory.Uwp.Services;
-using CiccioSoft.Inventory.Data.Services;
-using Microsoft.Extensions.Logging;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
@@ -75,7 +73,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             try
             {
-                using (var db = new SQLServerDb(connectionString))
+                using (var db = new SQLServerAppDbContext(connectionString))
                 {
                     var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
                     if (await dbCreator.ExistsAsync())

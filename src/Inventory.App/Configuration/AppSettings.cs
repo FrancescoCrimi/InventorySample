@@ -41,7 +41,10 @@ namespace CiccioSoft.Inventory.Uwp
 
         public static readonly string LogName = $"Log.db";
         static public readonly string LogFileName = Path.Combine(AppLogPath, LogName);
-        public readonly string LogConnectionString = $"Data Source={LogFileName}";
+        public readonly string LogConnectionString = $"Data Source={LogFileName};Cache=Shared";
+
+        public readonly string MsLogConnectionString = "Server=(localdb)\\mssqllocaldb;Database=ConsoleApp;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public readonly string MySqlLogConnectionString = "host=localhost;port=3306;user id=ConsoleApp;password=ConsoleApp;database=ConsoleApp;";
 
         static public readonly string DatabasePath = "Database";
         static public readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";

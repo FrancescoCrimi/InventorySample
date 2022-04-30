@@ -12,7 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.DataContexts;
+using CiccioSoft.Inventory.Data.DataServices;
+using CiccioSoft.Inventory.Data.DbContexts;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
@@ -36,7 +37,7 @@ namespace CiccioSoft.Inventory.Uwp
         {
             Ioc.Default.ConfigureServices(ConfigureServices());
             ConfigureNavigation();
-            await EnsureLogDbAsync();
+            //await EnsureLogDbAsync();
             await EnsureDatabaseAsync();
             await ConfigureLookupTables();
 
@@ -72,13 +73,16 @@ namespace CiccioSoft.Inventory.Uwp
             services
                .AddDbContext<LogDbContext>(option =>
                {
-                   option.UseSqlite(AppSettings.Current.AppLogConnectionString);
-               });
+                   //option.UseSqlite(AppSettings.Current.LogConnectionString);
+                   option.UseMySql(AppSettings.Current.MySqlLogConnectionString);
+                   //option.UseSqlServer(AppSettings.Current.MsLogConnectionString);
+               }, ServiceLifetime.Transient);
         }
 
         private void AddServices(ServiceCollection services)
         {
             services
+                .AddTransient<ILogDataService, LogDataService>()
             .AddSingleton<ISettingsService, SettingsService>()
             .AddSingleton<IDataServiceFactory, DataServiceFactory>()
             .AddSingleton<ILookupTables, LookupTables>()
@@ -160,8 +164,17 @@ namespace CiccioSoft.Inventory.Uwp
             config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, vsDebug);
 
             var db = new NLog.Targets.DatabaseTarget("database");
-            db.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
-            db.ConnectionString = AppSettings.Current.LogConnectionString;
+
+            //db.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
+            ////db.IsolationLevel = System.Data.IsolationLevel.ReadUncommitted;
+            //db.ConnectionString = AppSettings.Current.LogConnectionString;
+
+            //db.DBProvider = "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient";
+            //db.ConnectionString = AppSettings.Current.MsLogConnectionString;
+
+            db.DBProvider = "MySql.Data.MySqlClient.MySqlConnection, MySqlConnector";
+            db.ConnectionString = AppSettings.Current.MySqlLogConnectionString;
+
             db.CommandText =
                 @"insert into Log (
                 MachineName, Logged, Level, Message,
@@ -177,7 +190,10 @@ namespace CiccioSoft.Inventory.Uwp
             db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logger", NLog.Layouts.Layout.FromString("${logger}")));
             db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Callsite", NLog.Layouts.Layout.FromString("${callsite}")));
             db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Exception", NLog.Layouts.Layout.FromString("${exception:tostring}")));
+
+            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, new NLog.Targets.NullTarget(), "Microsoft.EntityFrameworkCore.*", true);
             config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, db);
+
             return config;
         }
 
@@ -260,7 +276,8 @@ Level TEXT NOT NULL,
 Message TEXT NOT NULL,
 Logger TEXT NULL,
 Callsite TEXT NULL,
-Exception TEXT NULL
+Exception TEXT NULL,
+IsRead INTEGER NOT NULL
 );";
             using (var conn = new SqliteConnection(cn))
             {

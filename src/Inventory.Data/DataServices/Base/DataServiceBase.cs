@@ -15,16 +15,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using CiccioSoft.Inventory.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
     abstract public partial class DataServiceBase : IDataService, IDisposable
     {
-        private IDataSource _dataSource = null;
+        private IAppDbContext _dataSource = null;
 
-        public DataServiceBase(IDataSource dataSource)
+        public DataServiceBase(IAppDbContext dataSource)
         {
             _dataSource = dataSource;
         }
