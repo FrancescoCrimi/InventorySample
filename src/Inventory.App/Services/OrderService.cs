@@ -53,13 +53,6 @@ namespace CiccioSoft.Inventory.Uwp.Services
             return null;
         }
 
-        public async Task<IList<OrderModel>> GetOrdersAsync(DataRequest<Order> request)
-        {
-            var collection = new OrderCollection(this);
-            await collection.LoadAsync(request);
-            return collection;
-        }
-
         public async Task<IList<OrderModel>> GetOrdersAsync(int skip, int take, DataRequest<Order> request)
         {
             var models = new List<OrderModel>();

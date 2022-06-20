@@ -151,7 +151,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             if (!ViewModelArgs.IsEmpty)
             {
                 DataRequest<Customer> request = BuildDataRequest();
-                return await customerService.GetCustomersAsync(request);
+                var collection = new CustomerCollection(customerService);
+                await collection.LoadAsync(request);
+                return collection;
             }
             return new List<CustomerModel>();
         }

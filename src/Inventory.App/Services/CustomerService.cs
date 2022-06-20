@@ -46,6 +46,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
                 return await GetCustomerAsync(dataService, id);
             }
         }
+
         static private async Task<CustomerModel> GetCustomerAsync(IDataService dataService, long id)
         {
             var item = await dataService.GetCustomerAsync(id);
@@ -54,17 +55,6 @@ namespace CiccioSoft.Inventory.Uwp.Services
                 return await CreateCustomerModelAsync(item, includeAllFields: true);
             }
             return null;
-        }
-
-        public async Task<IList<CustomerModel>> GetCustomersAsync(DataRequest<Customer> request)
-        {
-            var collection = new CustomerCollection(this);
-            await collection.LoadAsync(request);
-
-            //var collection = new CustomerList(this);
-            //await collection.LoadAsync(request);
-
-            return collection;
         }
 
         public async Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
