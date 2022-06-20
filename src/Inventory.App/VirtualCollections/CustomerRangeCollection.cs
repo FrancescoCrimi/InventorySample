@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {
-    public class CustomerList : VirtualList<CustomerModel>
+    public class CustomerRangeCollection : VirtualRangeCollection<CustomerModel>
     {
         //private readonly ILogger<CustomerList> logger;
         private readonly ICustomerService customerService;
         private DataRequest<Customer> dataRequest;
 
-        public CustomerList(
+        public CustomerRangeCollection(
             //ILogger<CustomerList> logger,
                             ICustomerService customerService)
         {
@@ -25,7 +25,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         protected override CustomerModel CreateDummyEntity()
         {
-            return new CustomerModel();
+            return new CustomerModel() { FirstName = "Suca", LastName = "Forte" };
         }
 
         protected override async Task<IList<CustomerModel>> FetchRowsAsync(int intskip, int size)

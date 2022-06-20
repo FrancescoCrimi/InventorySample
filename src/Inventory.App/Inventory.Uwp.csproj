@@ -376,13 +376,13 @@
       <DependentUpon>ValidateConnectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="VirtualCollections\CustomerCollection.cs" />
-    <Compile Include="VirtualCollections\CustomerList.cs" />
+    <Compile Include="VirtualCollections\CustomerRangeCollection.cs" />
     <Compile Include="VirtualCollections\OrderCollection.cs" />
     <Compile Include="VirtualCollections\ProductCollection.cs" />
     <Compile Include="VirtualCollections\VirtualCollection.cs" />
     <Compile Include="VirtualCollections\VirtualCollection.IList.cs" />
     <Compile Include="VirtualCollections\VirtualCollection.Selection.cs" />
-    <Compile Include="VirtualCollections\VirtualList.cs" />
+    <Compile Include="VirtualCollections\VirtualRangeCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

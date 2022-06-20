@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {
-    public abstract class VirtualList<T> : IList<T>, IList, INotifyCollectionChanged where T : class
+    public abstract class VirtualRangeCollection<T> : IList<T>, IList, INotifyCollectionChanged where T : class
     {
         //private readonly DbSet<T> dbSet;
         private readonly T dummyModel;
@@ -20,7 +20,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         private readonly object _sync = new object();
         private bool _isBusy = false;
 
-        public VirtualList(/*DbSet<T> dbSet,*/ int rangeSize = 14)
+        public VirtualRangeCollection(/*DbSet<T> dbSet,*/ int rangeSize = 14)
         {
             //this.dbSet = dbSet;
             this.rangeSize = rangeSize;
@@ -34,9 +34,23 @@ namespace CiccioSoft.Inventory.Uwp.Services
             //Count = dbSet.Count();
             //Task.Run(async () => Count = await GetCountAsync());
 
-            //App.Current.Dispatcher.InvokeAsync(() => FetchData());
-            //Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => FetchData());
             //Task.Run(async () => await FetchData());
+            //Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => FetchData());
+        }
+
+
+        private event NotifyCollectionChangedEventHandler collectionChanged;
+        event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
+        {
+            add
+            {
+                collectionChanged += value;
+            }
+
+            remove
+            {
+                collectionChanged -= value;
+            }
         }
 
         protected abstract T CreateDummyEntity();
@@ -44,8 +58,17 @@ namespace CiccioSoft.Inventory.Uwp.Services
         protected abstract Task<int> GetCountAsync();
         protected async Task LoadAsync()
         {
-            Count = await GetCountAsync();
-            await FetchData();
+            await Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher.RunAsync(
+                Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                {
+                    Count = await GetCountAsync();
+                });
+           
+            await Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher.RunAsync(
+                Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                {
+                    await FetchData();
+                });
         }
 
         private async Task FetchData()
@@ -75,7 +98,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             {
                 var newmodel = models[i];
                 items[i] = newmodel;
-                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,
+                collectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace,
                                                                                      newmodel,
                                                                                      dummyModel,
                                                                                      intskip + i));
@@ -119,8 +142,6 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public bool IsReadOnly => false;
 
         public bool IsFixedSize => false;
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public IEnumerator<T> GetEnumerator()
         {
