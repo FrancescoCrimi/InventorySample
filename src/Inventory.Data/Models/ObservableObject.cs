@@ -12,14 +12,19 @@
 // ******************************************************************
 #endregion
 
-using System;
 
-namespace CiccioSoft.Inventory.Uwp.Models
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public class TaxTypeModel : ObservableObject
+    public class ObservableObject : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject
     {
-        public int TaxTypeID { get; set; }
-        public string Name { get; set; }
-        public decimal Rate { get; set; }
+        public bool IsEmpty { get; set; }
+
+        virtual public void Merge(ObservableObject source) { }
+
+        public void NotifyChanges()
+        {
+            // Notify all properties
+            OnPropertyChanged("");
+        }
     }
 }

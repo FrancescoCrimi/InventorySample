@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
@@ -32,12 +32,12 @@ namespace CiccioSoft.Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                ProductService = Ioc.Default.GetService<IProductService>();
+                ProductService = Ioc.Default.GetService<ProductServiceUwp>();
             }
             InitializeComponent();
         }
 
-        private IProductService ProductService { get; }
+        private ProductServiceUwp ProductService { get; }
 
         #region Items
         public IList<ProductModel> Items
@@ -103,7 +103,8 @@ namespace CiccioSoft.Inventory.Uwp.Controls
                 Query = query,
                 OrderBy = r => r.Name
             };
-            return await ProductService.GetProductsAsync(0, 20, request);
+            var listProdudct = await ProductService.GetProductsAsync(0, 20, request);
+            return listProdudct;
         }
 
         private void OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

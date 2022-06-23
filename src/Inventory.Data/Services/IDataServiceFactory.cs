@@ -12,13 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
+using CiccioSoft.Inventory.Data.Services;
 
-namespace CiccioSoft.Inventory.Uwp.Models
+namespace CiccioSoft.Inventory.Data.Services
 {
-    public class PaymentTypeModel : ObservableObject
+    public interface IDataServiceFactory
     {
-        public int PaymentTypeID { get; set; }
-        public string Name { get; set; }
+        IDataService CreateDataService();
     }
 }

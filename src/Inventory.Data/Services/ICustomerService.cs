@@ -12,27 +12,24 @@
 // ******************************************************************
 #endregion
 
-using Microsoft.Extensions.Logging;
-using System;
+using CiccioSoft.Inventory.Data.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Models
+namespace CiccioSoft.Inventory.Data.Services
 {
-    public class AppLogModel : ObservableObject
+    public interface ICustomerService
     {
-        static public AppLogModel CreateEmpty() => new AppLogModel { Id = -1, IsEmpty = true };
+        Task<CustomerModel> GetCustomerAsync(long id);
 
-        public long Id { get; set; }
+        Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request);
 
-        public bool IsRead { get; set; }
+        Task<int> GetCustomersCountAsync(DataRequest<Customer> request);
 
-        public DateTimeOffset DateTime { get; set; }
+        Task<int> UpdateCustomerAsync(CustomerModel model);
 
-        public string User { get; set; }
+        Task<int> DeleteCustomerAsync(CustomerModel model);
 
-        public LogLevel Type { get; set; }
-        public string Source { get; set; }
-        public string Action { get; set; }
-        public string Message { get; set; }
-        public string Description { get; set; }
+        Task<int> DeleteCustomerRangeAsync(int index, int length, DataRequest<Customer> request);
     }
 }

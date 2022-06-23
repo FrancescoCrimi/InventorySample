@@ -12,13 +12,10 @@
 // ******************************************************************
 #endregion
 
-using System;
+using CiccioSoft.Inventory.Data.Models;
 using System.Collections.Generic;
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-using CiccioSoft.Inventory.Uwp.Models;
 
 namespace CiccioSoft.Inventory.Uwp.Views
 {

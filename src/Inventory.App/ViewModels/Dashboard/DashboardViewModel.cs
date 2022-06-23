@@ -13,7 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -26,15 +27,15 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger<DashboardViewModel> logger;
         private readonly INavigationService navigationService;
-        private readonly ICustomerService customerService;
+        private readonly CustomerServiceUwp customerService;
         private readonly IOrderService orderService;
-        private readonly IProductService productService;
+        private readonly ProductServiceUwp productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   INavigationService navigationService,
-                                  ICustomerService customerService,
+                                  CustomerServiceUwp customerService,
                                   IOrderService orderService,
-                                  IProductService productService)
+                                  ProductServiceUwp productService)
             : base()
         {
             this.logger = logger;

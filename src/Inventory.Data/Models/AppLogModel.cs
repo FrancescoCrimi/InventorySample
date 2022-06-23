@@ -12,19 +12,27 @@
 // ******************************************************************
 #endregion
 
+using Microsoft.Extensions.Logging;
 using System;
 
-namespace CiccioSoft.Inventory.Uwp.Models
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public class CategoryModel : ObservableObject
+    public class AppLogModel : ObservableObject
     {
-        public int CategoryID { get; set; }
+        static public AppLogModel CreateEmpty() => new AppLogModel { Id = -1, IsEmpty = true };
 
-        public string Name { get; set; }
+        public long Id { get; set; }
+
+        public bool IsRead { get; set; }
+
+        public DateTimeOffset DateTime { get; set; }
+
+        public string User { get; set; }
+
+        public LogLevel Type { get; set; }
+        public string Source { get; set; }
+        public string Action { get; set; }
+        public string Message { get; set; }
         public string Description { get; set; }
-
-        public byte[] Picture { get; set; }
-
-        public byte[] Thumbnail { get; set; }
     }
 }

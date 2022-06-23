@@ -1,10 +1,8 @@
 ﻿using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
-using Microsoft.Extensions.Logging;
+using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Data.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services

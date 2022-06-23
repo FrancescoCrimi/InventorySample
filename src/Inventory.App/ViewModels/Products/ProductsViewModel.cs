@@ -12,23 +12,22 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
-
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     public class ProductsViewModel : ViewModelBase
     {
         private readonly ILogger<ProductsViewModel> logger;
-        private readonly IProductService productService;
+        private readonly ProductServiceUwp productService;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
-                                 IProductService productService,
+                                 ProductServiceUwp productService,
                                  ProductListViewModel productListViewModel,
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()

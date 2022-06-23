@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
-using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Data.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;

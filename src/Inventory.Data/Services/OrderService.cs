@@ -12,43 +12,37 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.Models;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Uwp.Models;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class OrderService : IOrderService
     {
+        private readonly IDataServiceFactory dataServiceFactory;
+
         public OrderService(IDataServiceFactory dataServiceFactory)
         {
-            DataServiceFactory = dataServiceFactory;
-            //LogService = logService;
+            this.dataServiceFactory = dataServiceFactory;
         }
-
-        public IDataServiceFactory DataServiceFactory { get; }
-        //public ILogService LogService { get; }
 
         public async Task<OrderModel> GetOrderAsync(long id)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await GetOrderAsync(dataService, id);
             }
         }
+
         static private async Task<OrderModel> GetOrderAsync(IDataService dataService, long id)
         {
             var item = await dataService.GetOrderAsync(id);
             if (item != null)
             {
-                return await CreateOrderModelAsync(item, includeAllFields: true);
+                return CreateOrderModelAsync(item, includeAllFields: true);
             }
             return null;
         }
@@ -56,12 +50,12 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<IList<OrderModel>> GetOrdersAsync(int skip, int take, DataRequest<Order> request)
         {
             var models = new List<OrderModel>();
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var items = await dataService.GetOrdersAsync(skip, take, request);
                 foreach (var item in items)
                 {
-                    models.Add(await CreateOrderModelAsync(item, includeAllFields: false));
+                    models.Add(CreateOrderModelAsync(item, includeAllFields: false));
                 }
                 return models;
             }
@@ -69,7 +63,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> GetOrdersCountAsync(DataRequest<Order> request)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await dataService.GetOrdersCountAsync(request);
             }
@@ -85,7 +79,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             };
             if (customerID > 0)
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var parent = await dataService.GetCustomerAsync(customerID);
                     if (parent != null)
@@ -96,7 +90,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
                         model.ShipRegion = parent.Region;
                         model.ShipCountryCode = parent.CountryCode;
                         model.ShipPostalCode = parent.PostalCode;
-                        model.Customer = await CustomerService.CreateCustomerModelAsync(parent, includeAllFields: true);
+                        model.Customer = CustomerService.CreateCustomerModelAsync(parent, includeAllFields: true);
                     }
                 }
             }
@@ -106,7 +100,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> UpdateOrderAsync(OrderModel model)
         {
             long id = model.OrderID;
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var order = id > 0 ? await dataService.GetOrderAsync(model.OrderID) : new Order();
                 if (order != null)
@@ -122,7 +116,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> DeleteOrderAsync(OrderModel model)
         {
             var order = new Order { OrderID = model.OrderID };
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await dataService.DeleteOrdersAsync(order);
             }
@@ -130,14 +124,14 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> DeleteOrderRangeAsync(int index, int length, DataRequest<Order> request)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var items = await dataService.GetOrderKeysAsync(index, length, request);
                 return await dataService.DeleteOrdersAsync(items.ToArray());
             }
         }
 
-        static public async Task<OrderModel> CreateOrderModelAsync(Order source, bool includeAllFields)
+        static public OrderModel CreateOrderModelAsync(Order source, bool includeAllFields)
         {
             var model = new OrderModel()
             {
@@ -159,7 +153,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             };
             if (source.Customer != null)
             {
-                model.Customer = await CustomerService.CreateCustomerModelAsync(source.Customer, includeAllFields);
+                model.Customer = CustomerService.CreateCustomerModelAsync(source.Customer, includeAllFields);
             }
             return model;
         }

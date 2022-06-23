@@ -12,17 +12,16 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Windows.Input;
-
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
@@ -40,12 +39,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class ProductDetailsViewModel : GenericDetailsViewModel<ProductModel>
     {
         private readonly ILogger<ProductDetailsViewModel> logger;
-        private readonly IProductService productService;
+        private readonly ProductServiceUwp productService;
         private readonly IFilePickerService filePickerService;
         private readonly IDialogService dialogService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
-                                       IProductService productService,
+                                       ProductServiceUwp productService,
                                        IFilePickerService filePickerService,
                                        IDialogService dialogService)
             : base()

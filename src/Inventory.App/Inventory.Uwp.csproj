@@ -167,24 +167,9 @@
     <Compile Include="Infrastructure\Services\ISettingsService.cs" />
     <Compile Include="Infrastructure\Services\IWindowService.cs" />
     <Compile Include="Infrastructure\ViewModels\ViewModelBase.cs" />
-    <Compile Include="Models\AppLogModel.cs" />
-    <Compile Include="Models\CategoryModel.cs" />
-    <Compile Include="Models\CountryCodeModel.cs" />
-    <Compile Include="Models\CustomerModel.cs" />
-    <Compile Include="Models\ObservableObject.cs" />
-    <Compile Include="Models\OrderItemModel.cs" />
-    <Compile Include="Models\OrderModel.cs" />
-    <Compile Include="Models\OrderStatusModel.cs" />
-    <Compile Include="Models\PaymentTypeModel.cs" />
-    <Compile Include="Models\ProductModel.cs" />
-    <Compile Include="Models\ShipperModel.cs" />
-    <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CustomerService.cs" />
+    <Compile Include="Services\CustomerServiceUwp.cs" />
     <Compile Include="Services\DataServiceFactory.cs" />
-    <Compile Include="Services\ICustomerService.cs" />
-    <Compile Include="Services\IDataServiceFactory.cs" />
-    <Compile Include="Services\ILookupTables.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\Infrastructure\LoginService.cs" />
@@ -195,13 +180,7 @@
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
     <Compile Include="Services\Infrastructure\WindowService.cs" />
     <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
-    <Compile Include="Services\IOrderItemService.cs" />
-    <Compile Include="Services\IOrderService.cs" />
-    <Compile Include="Services\IProductService.cs" />
-    <Compile Include="Services\LookupTables.cs" />
-    <Compile Include="Services\OrderItemService.cs" />
-    <Compile Include="Services\OrderService.cs" />
-    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\ProductServiceUwp.cs" />
     <Compile Include="Tools\BitmapTools.cs" />
     <Compile Include="Tools\DependencyExpressions\DependencyExpression.cs" />
     <Compile Include="Tools\DependencyExpressions\DependencyExpressions.cs" />
@@ -401,6 +380,7 @@
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="scratch.txt" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -462,9 +442,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Inventory.Data\Inventory.Core.csproj">
+    <ProjectReference Include="..\Inventory.Data\Inventory.Data.csproj">
       <Project>{515a0883-d2d9-4b97-8d73-ee6fe9bc3f2b}</Project>
-      <Name>Inventory.Core</Name>
+      <Name>Inventory.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

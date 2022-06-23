@@ -12,25 +12,13 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public interface IProductService
+    public class OrderStatusModel : ObservableObject
     {
-        Task<ProductModel> GetProductAsync(string id);
-
-        Task<IList<ProductModel>> GetProductsAsync(int skip, int take, DataRequest<Product> request);
-
-        Task<int> GetProductsCountAsync(DataRequest<Product> request);
-
-        Task<int> UpdateProductAsync(ProductModel model);
-
-        Task<int> DeleteProductAsync(ProductModel model);
-
-        Task<int> DeleteProductRangeAsync(int index, int length, DataRequest<Product> request);
+        public int Status { get; set; }
+        public string Name { get; set; }
     }
 }

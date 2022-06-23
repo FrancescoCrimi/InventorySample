@@ -14,12 +14,12 @@
 
 using System;
 
-using CiccioSoft.Inventory.Data.Services;
-
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public interface IDataServiceFactory
+    public class TaxTypeModel : ObservableObject
     {
-        IDataService CreateDataService();
+        public int TaxTypeID { get; set; }
+        public string Name { get; set; }
+        public decimal Rate { get; set; }
     }
 }

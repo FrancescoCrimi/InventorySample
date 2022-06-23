@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Uwp.Models;
-using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Data.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;

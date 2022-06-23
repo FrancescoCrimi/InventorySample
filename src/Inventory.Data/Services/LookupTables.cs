@@ -12,33 +12,26 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.Models;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
-using Microsoft.Extensions.Logging;
-
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class LookupTables : ILookupTables
     {
         private readonly ILogger<LookupTables> logger;
+        private readonly IDataServiceFactory dataServiceFactory;
 
-        public LookupTables(
-                            //ILogService logService,
-                            ILogger<LookupTables> logger,
+        public LookupTables(ILogger<LookupTables> logger,
                             IDataServiceFactory dataServiceFactory)
         {
             this.logger = logger;
-            //LogService = logService;
-            DataServiceFactory = dataServiceFactory;
+            this.dataServiceFactory = dataServiceFactory;
         }
-
-        //public ILogService LogService { get; }
-        public IDataServiceFactory DataServiceFactory { get; }
 
         public IList<CategoryModel> Categories { get; private set; }
         public IList<CountryCodeModel> CountryCodes { get; private set; }
@@ -95,7 +88,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             try
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var items = await dataService.GetCategoriesAsync();
                     return items.Select(r => new CategoryModel
@@ -117,7 +110,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             try
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var items = await dataService.GetCountryCodesAsync();
                     return items.OrderBy(r => r.Name).Select(r => new CountryCodeModel
@@ -139,7 +132,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             try
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var items = await dataService.GetOrderStatusAsync();
                     return items.Select(r => new OrderStatusModel
@@ -161,7 +154,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             try
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var items = await dataService.GetPaymentTypesAsync();
                     return items.Select(r => new PaymentTypeModel
@@ -183,7 +176,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             try
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var items = await dataService.GetShippersAsync();
                     return items.Select(r => new ShipperModel
@@ -206,7 +199,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             try
             {
-                using (var dataService = DataServiceFactory.CreateDataService())
+                using (var dataService = dataServiceFactory.CreateDataService())
                 {
                     var items = await dataService.GetTaxTypesAsync();
                     return items.Select(r => new TaxTypeModel

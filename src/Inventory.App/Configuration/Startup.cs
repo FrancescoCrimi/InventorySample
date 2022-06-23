@@ -12,8 +12,9 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.DataServices;
+using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
@@ -81,15 +82,16 @@ namespace CiccioSoft.Inventory.Uwp
 
         private void AddServices(ServiceCollection services)
         {
-            services
-                .AddTransient<ILogDataService, LogDataService>()
-            .AddSingleton<ISettingsService, SettingsService>()
-            .AddSingleton<IDataServiceFactory, DataServiceFactory>()
-            .AddSingleton<ILookupTables, LookupTables>()
-            .AddSingleton<ICustomerService, CustomerService>()
-            .AddSingleton<IOrderService, OrderService>()
-            .AddSingleton<IOrderItemService, OrderItemService>()
-            .AddSingleton<IProductService, ProductService>()
+            services            
+                .AddSingleton<ISettingsService, SettingsService>()
+                .AddSingleton<IDataServiceFactory, DataServiceFactory>()
+
+                // Modiica Ioc
+                .AddInventoryCore()
+
+                // Test new ProductServiceUwp
+                .AddSingleton<ProductServiceUwp>()
+                .AddSingleton<CustomerServiceUwp>()
 
             //.AddSingleton<IMessageService, MessageService>()
             .AddSingleton<ILogService, LogService>()

@@ -12,60 +12,43 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class CustomerService : ICustomerService
     {
         private readonly ILogger<CustomerService> logger;
+        public readonly IDataServiceFactory dataServiceFactory;
 
         public CustomerService(ILogger<CustomerService> logger,
-                               IDataServiceFactory dataServiceFactory
-                               //ILogService logService
-                               )
+                               IDataServiceFactory dataServiceFactory)
         {
             this.logger = logger;
-            DataServiceFactory = dataServiceFactory;
-            //LogService = logService;
+            this.dataServiceFactory = dataServiceFactory;
         }
-
-        public IDataServiceFactory DataServiceFactory { get; }
-        //public ILogService LogService { get; }
 
         public async Task<CustomerModel> GetCustomerAsync(long id)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await GetCustomerAsync(dataService, id);
             }
         }
 
-        static private async Task<CustomerModel> GetCustomerAsync(IDataService dataService, long id)
-        {
-            var item = await dataService.GetCustomerAsync(id);
-            if (item != null)
-            {
-                return await CreateCustomerModelAsync(item, includeAllFields: true);
-            }
-            return null;
-        }
-
         public async Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
         {
             var models = new List<CustomerModel>();
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var items = await dataService.GetCustomersAsync(skip, take, request);
                 foreach (var item in items)
                 {
-                    models.Add(await CreateCustomerModelAsync(item, includeAllFields: false));
+                    models.Add(CreateCustomerModelAsync(item, includeAllFields: false));
                 }
                 return models;
             }
@@ -73,7 +56,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await dataService.GetCustomersCountAsync(request);
             }
@@ -82,7 +65,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> UpdateCustomerAsync(CustomerModel model)
         {
             long id = model.CustomerID;
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var customer = id > 0 ? await dataService.GetCustomerAsync(model.CustomerID) : new Customer();
                 if (customer != null)
@@ -98,7 +81,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> DeleteCustomerAsync(CustomerModel model)
         {
             var customer = new Customer { CustomerID = model.CustomerID };
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await dataService.DeleteCustomersAsync(customer);
             }
@@ -106,14 +89,25 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> DeleteCustomerRangeAsync(int index, int length, DataRequest<Customer> request)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var items = await dataService.GetCustomerKeysAsync(index, length, request);
                 return await dataService.DeleteCustomersAsync(items.ToArray());
             }
         }
 
-        static public async Task<CustomerModel> CreateCustomerModelAsync(Customer source, bool includeAllFields)
+
+        private static async Task<CustomerModel> GetCustomerAsync(IDataService dataService, long id)
+        {
+            var item = await dataService.GetCustomerAsync(id);
+            if (item != null)
+            {
+                return CreateCustomerModelAsync(item, includeAllFields: true);
+            }
+            return null;
+        }
+
+        public static CustomerModel CreateCustomerModelAsync(Customer source, bool includeAllFields)
         {
             var model = new CustomerModel()
             {
@@ -135,7 +129,6 @@ namespace CiccioSoft.Inventory.Uwp.Services
                 CreatedOn = source.CreatedOn,
                 LastModifiedOn = source.LastModifiedOn,
                 Thumbnail = source.Thumbnail,
-                ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail)
             };
             if (includeAllFields)
             {
@@ -149,7 +142,6 @@ namespace CiccioSoft.Inventory.Uwp.Services
                 model.IsHouseOwner = source.IsHouseOwner;
                 model.NumberCarsOwned = source.NumberCarsOwned;
                 model.Picture = source.Picture;
-                model.PictureSource = await BitmapTools.LoadBitmapAsync(source.Picture);
             }
             return model;
         }

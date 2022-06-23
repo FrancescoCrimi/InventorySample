@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -39,12 +39,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class CustomerDetailsViewModel : GenericDetailsViewModel<CustomerModel>
     {
         private readonly ILogger<CustomerDetailsViewModel> logger;
-        private readonly ICustomerService customerService;
+        private readonly CustomerServiceUwp customerService;
         private readonly IFilePickerService filePickerService;
         private readonly IDialogService dialogService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
-                                        ICustomerService customerService,
+                                        CustomerServiceUwp customerService,
                                         IFilePickerService filePickerService,
                                         IDialogService dialogService)
             : base()

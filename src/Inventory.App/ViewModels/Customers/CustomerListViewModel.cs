@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -53,13 +53,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class CustomerListViewModel : GenericListViewModel<CustomerModel>
     {
         private readonly ILogger<CustomerListViewModel> logger;
-        private readonly ICustomerService customerService;
+        private readonly CustomerServiceUwp customerService;
         private readonly INavigationService navigationService;
         private readonly IWindowService windowService;
         private readonly IDialogService dialogService;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
-                                     ICustomerService customerService,
+                                     CustomerServiceUwp customerService,
                                      INavigationService navigationService,
                                      IWindowService windowService,
                                      IDialogService dialogService)

@@ -12,11 +12,13 @@
 // ******************************************************************
 #endregion
 
-namespace CiccioSoft.Inventory.Uwp.Models
+using System;
+
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public class CountryCodeModel : ObservableObject
+    public class PaymentTypeModel : ObservableObject
     {
-        public string CountryCodeID { get; set; }
+        public int PaymentTypeID { get; set; }
         public string Name { get; set; }
     }
 }

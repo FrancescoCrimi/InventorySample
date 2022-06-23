@@ -12,19 +12,24 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Models
+namespace CiccioSoft.Inventory.Data.Services
 {
-    public class ObservableObject : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject
+    public interface IProductService
     {
-        public bool IsEmpty { get; set; }
+        Task<ProductModel> GetProductAsync(string id);
 
-        virtual public void Merge(ObservableObject source) { }
+        Task<IList<ProductModel>> GetProductsAsync(int skip, int take, DataRequest<Product> request);
 
-        public void NotifyChanges()
-        {
-            // Notify all properties
-            OnPropertyChanged("");
-        }
+        Task<int> GetProductsCountAsync(DataRequest<Product> request);
+
+        Task<int> UpdateProductAsync(ProductModel model);
+
+        Task<int> DeleteProductAsync(ProductModel model);
+
+        Task<int> DeleteProductRangeAsync(int index, int length, DataRequest<Product> request);
     }
 }

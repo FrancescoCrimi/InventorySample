@@ -12,25 +12,34 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
-    public interface ICustomerService
+    public interface ILookupTables
     {
-        Task<CustomerModel> GetCustomerAsync(long id);
+        Task InitializeAsync();
 
-        Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request);
+        IList<CategoryModel> Categories { get; }
+        IList<CountryCodeModel> CountryCodes { get; }
+        IList<OrderStatusModel> OrderStatus { get; }
+        IList<PaymentTypeModel> PaymentTypes { get; }
+        IList<ShipperModel> Shippers { get; }
+        IList<TaxTypeModel> TaxTypes { get; }
 
-        Task<int> GetCustomersCountAsync(DataRequest<Customer> request);
+        string GetCategory(int id);
+        string GetCountry(string id);
+        string GetOrderStatus(int id);
+        string GetPaymentType(int? id);
+        string GetShipper(int? id);
+        string GetTaxDesc(int id);
+        decimal GetTaxRate(int id);
+    }
 
-        Task<int> UpdateCustomerAsync(CustomerModel model);
-
-        Task<int> DeleteCustomerAsync(CustomerModel model);
-
-        Task<int> DeleteCustomerRangeAsync(int index, int length, DataRequest<Customer> request);
+    public class LookupTablesProxy
+    {
+        static public ILookupTables Instance { get; set; }
     }
 }

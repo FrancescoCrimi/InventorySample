@@ -12,28 +12,19 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.Models;
-using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using System;
 
-namespace CiccioSoft.Inventory.Uwp.Views
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public sealed partial class OrdersPane : UserControl
+    public class CategoryModel : ObservableObject
     {
-        public OrdersPane()
-        {
-            InitializeComponent();
-        }
+        public int CategoryID { get; set; }
 
-        #region ItemsSource
-        public IList<OrderModel> ItemsSource
-        {
-            get { return (IList<OrderModel>)GetValue(ItemsSourceProperty); }
-            set { SetValue(ItemsSourceProperty, value); }
-        }
+        public string Name { get; set; }
+        public string Description { get; set; }
 
-        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IList<OrderModel>), typeof(OrdersPane), new PropertyMetadata(null));
-        #endregion
+        public byte[] Picture { get; set; }
+
+        public byte[] Thumbnail { get; set; }
     }
 }

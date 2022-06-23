@@ -14,7 +14,7 @@
 
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.DataServices;
-using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Data.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

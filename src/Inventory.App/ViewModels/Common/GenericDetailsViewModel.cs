@@ -12,17 +12,17 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Uwp.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
-using CiccioSoft.Inventory.Uwp.Models;
-using CiccioSoft.Inventory.Uwp.Services;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {

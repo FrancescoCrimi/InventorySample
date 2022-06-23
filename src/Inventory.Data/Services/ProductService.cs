@@ -12,54 +12,40 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data.Models;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Uwp.Models;
-
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
     public class ProductService : IProductService
     {
+        private readonly IDataServiceFactory dataServiceFactory;
+
         public ProductService(IDataServiceFactory dataServiceFactory)
         {
-            DataServiceFactory = dataServiceFactory;
-            //LogService = logService;
+            this.dataServiceFactory = dataServiceFactory;
         }
-
-        public IDataServiceFactory DataServiceFactory { get; }
-        //public ILogService LogService { get; }
 
         public async Task<ProductModel> GetProductAsync(string id)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await GetProductAsync(dataService, id);
             }
-        }
-        static private async Task<ProductModel> GetProductAsync(IDataService dataService, string id)
-        {
-            var item = await dataService.GetProductAsync(id);
-            if (item != null)
-            {
-                return await CreateProductModelAsync(item, includeAllFields: true);
-            }
-            return null;
         }
 
         public async Task<IList<ProductModel>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
         {
             var models = new List<ProductModel>();
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var items = await dataService.GetProductsAsync(skip, take, request);
                 foreach (var item in items)
                 {
-                    models.Add(await CreateProductModelAsync(item, includeAllFields: false));
+                    models.Add(CreateProductModelAsync(item, includeAllFields: false));
                 }
                 return models;
             }
@@ -67,7 +53,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await dataService.GetProductsCountAsync(request);
             }
@@ -76,13 +62,14 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> UpdateProductAsync(ProductModel model)
         {
             string id = model.ProductID;
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var product = !String.IsNullOrEmpty(id) ? await dataService.GetProductAsync(model.ProductID) : new Product();
                 if (product != null)
                 {
                     UpdateProductFromModel(product, model);
                     await dataService.UpdateProductAsync(product);
+                    // TODO: verificare l'effetiva utilità nel'aggiornare l'oggetto nodel
                     model.Merge(await GetProductAsync(dataService, product.ProductID));
                 }
                 return 0;
@@ -92,7 +79,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         public async Task<int> DeleteProductAsync(ProductModel model)
         {
             var product = new Product { ProductID = model.ProductID };
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 return await dataService.DeleteProductsAsync(product);
             }
@@ -100,14 +87,25 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
         public async Task<int> DeleteProductRangeAsync(int index, int length, DataRequest<Product> request)
         {
-            using (var dataService = DataServiceFactory.CreateDataService())
+            using (var dataService = dataServiceFactory.CreateDataService())
             {
                 var items = await dataService.GetProductKeysAsync(index, length, request);
                 return await dataService.DeleteProductsAsync(items.ToArray());
             }
         }
 
-        static public async Task<ProductModel> CreateProductModelAsync(Product source, bool includeAllFields)
+
+        private static async Task<ProductModel> GetProductAsync(IDataService dataService, string id)
+        {
+            var item = await dataService.GetProductAsync(id);
+            if (item != null)
+            {
+                return CreateProductModelAsync(item, includeAllFields: true);
+            }
+            return null;
+        }
+
+        public static ProductModel CreateProductModelAsync(Product source, bool includeAllFields)
         {
             var model = new ProductModel()
             {
@@ -128,13 +126,11 @@ namespace CiccioSoft.Inventory.Uwp.Services
                 CreatedOn = source.CreatedOn,
                 LastModifiedOn = source.LastModifiedOn,
                 Thumbnail = source.Thumbnail,
-                ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail)
             };
 
             if (includeAllFields)
             {
                 model.Picture = source.Picture;
-                model.PictureSource = await BitmapTools.LoadBitmapAsync(source.Picture);
             }
             return model;
         }

@@ -12,14 +12,11 @@
 // ******************************************************************
 #endregion
 
-using System;
-
-namespace CiccioSoft.Inventory.Uwp.Models
+namespace CiccioSoft.Inventory.Data.Models
 {
-    public class ShipperModel : ObservableObject
+    public class CountryCodeModel : ObservableObject
     {
-        public int ShipperID { get; set; }
+        public string CountryCodeID { get; set; }
         public string Name { get; set; }
-        public string Phone { get; set; }
     }
 }

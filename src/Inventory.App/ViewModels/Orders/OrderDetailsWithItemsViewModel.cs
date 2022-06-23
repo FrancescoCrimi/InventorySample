@@ -12,12 +12,9 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
-
-using CiccioSoft.Inventory.Uwp.Models;
-using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Data.Models;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
