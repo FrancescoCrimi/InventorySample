@@ -13,7 +13,6 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
-using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -42,10 +41,10 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger<OrderItemDetailsViewModel> logger;
         private readonly IDialogService dialogService;
-        private readonly IOrderItemService orderItemService;
+        private readonly OrderItemServiceUwp orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
-                                         IOrderItemService orderItemService,
+                                         OrderItemServiceUwp orderItemService,
                                          IDialogService dialogService)
             : base()
         {

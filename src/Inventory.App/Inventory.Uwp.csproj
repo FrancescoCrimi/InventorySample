@@ -180,6 +180,8 @@
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
     <Compile Include="Services\Infrastructure\WindowService.cs" />
     <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
+    <Compile Include="Services\OrderItemServiceUwp.cs" />
+    <Compile Include="Services\OrderServiceUwp.cs" />
     <Compile Include="Services\ProductServiceUwp.cs" />
     <Compile Include="Tools\BitmapTools.cs" />
     <Compile Include="Tools\DependencyExpressions\DependencyExpression.cs" />

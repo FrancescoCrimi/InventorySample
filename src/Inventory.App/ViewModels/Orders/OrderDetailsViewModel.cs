@@ -41,11 +41,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class OrderDetailsViewModel : GenericDetailsViewModel<OrderModel>
     {
         private readonly ILogger<OrderDetailsViewModel> logger;
-        private readonly IOrderService orderService;
+        private readonly OrderServiceUwp orderService;
         private readonly IDialogService dialogService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     IOrderService orderService,
+                                     OrderServiceUwp orderService,
                                      IDialogService dialogService)
             : base()
         {

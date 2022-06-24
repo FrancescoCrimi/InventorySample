@@ -92,6 +92,8 @@ namespace CiccioSoft.Inventory.Uwp
                 // Test new ProductServiceUwp
                 .AddSingleton<ProductServiceUwp>()
                 .AddSingleton<CustomerServiceUwp>()
+                .AddSingleton<OrderServiceUwp>()
+                .AddSingleton<OrderItemServiceUwp>()
 
             //.AddSingleton<IMessageService, MessageService>()
             .AddSingleton<ILogService, LogService>()

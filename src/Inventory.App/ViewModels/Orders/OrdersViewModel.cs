@@ -14,6 +14,7 @@
 
 using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -24,10 +25,10 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class OrdersViewModel : ViewModelBase
     {
         private readonly ILogger<OrdersViewModel> logger;
-        private readonly IOrderService orderService;
+        private readonly OrderServiceUwp orderService;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
-                               IOrderService orderService,
+                               OrderServiceUwp orderService,
                                OrderListViewModel orderListViewModel,
                                OrderDetailsViewModel orderDetailsViewModel,
                                OrderItemListViewModel orderItemListViewModel)

@@ -52,13 +52,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class OrderListViewModel : GenericListViewModel<OrderModel>
     {
         private readonly ILogger<OrderListViewModel> logger;
-        private readonly IOrderService orderService;
+        private readonly OrderServiceUwp orderService;
         private readonly INavigationService navigationService;
         private readonly IWindowService windowService;
         private readonly IDialogService dialogService;
 
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
-                                  IOrderService orderService,
+                                  OrderServiceUwp orderService,
                                   INavigationService navigationService,
                                   IWindowService windowService,
                                   IDialogService dialogService)

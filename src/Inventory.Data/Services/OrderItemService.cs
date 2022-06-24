@@ -35,15 +35,6 @@ namespace CiccioSoft.Inventory.Data.Services
                 return await GetOrderItemAsync(dataService, orderID, lineID);
             }
         }
-        static private async Task<OrderItemModel> GetOrderItemAsync(IDataService dataService, long orderID, int lineID)
-        {
-            var item = await dataService.GetOrderItemAsync(orderID, lineID);
-            if (item != null)
-            {
-                return CreateOrderItemModelAsync(item, includeAllFields: true);
-            }
-            return null;
-        }
 
         public Task<IList<OrderItemModel>> GetOrderItemsAsync(DataRequest<OrderItem> request)
         {
@@ -105,6 +96,18 @@ namespace CiccioSoft.Inventory.Data.Services
                 return await dataService.DeleteOrderItemsAsync(items.ToArray());
             }
         }
+
+
+        static private async Task<OrderItemModel> GetOrderItemAsync(IDataService dataService, long orderID, int lineID)
+        {
+            var item = await dataService.GetOrderItemAsync(orderID, lineID);
+            if (item != null)
+            {
+                return CreateOrderItemModelAsync(item, includeAllFields: true);
+            }
+            return null;
+        }
+
 
         static public OrderItemModel CreateOrderItemModelAsync(OrderItem source, bool includeAllFields)
         {
