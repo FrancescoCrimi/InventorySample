@@ -356,14 +356,14 @@
     <Compile Include="Views\Settings\ValidateConnectionView.xaml.cs">
       <DependentUpon>ValidateConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="VirtualCollections\CustomerCollection.cs" />
-    <Compile Include="VirtualCollections\CustomerRangeCollection.cs" />
-    <Compile Include="VirtualCollections\OrderCollection.cs" />
-    <Compile Include="VirtualCollections\ProductCollection.cs" />
-    <Compile Include="VirtualCollections\VirtualCollection.cs" />
-    <Compile Include="VirtualCollections\VirtualCollection.IList.cs" />
-    <Compile Include="VirtualCollections\VirtualCollection.Selection.cs" />
-    <Compile Include="VirtualCollections\VirtualRangeCollection.cs" />
+    <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
+    <Compile Include="Services\VirtualCollections\CustomerRangeCollection.cs" />
+    <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
+    <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
+    <Compile Include="Common\VirtualCollection\VirtualCollection.cs" />
+    <Compile Include="Common\VirtualCollection\VirtualCollection.IList.cs" />
+    <Compile Include="Common\VirtualCollection\VirtualCollection.Selection.cs" />
+    <Compile Include="Common\VirtualCollection\VirtualRangeCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -731,9 +731,7 @@
     <None Include="CiccioKey.snk" />
     <None Include="NLog.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\VirtualCollection\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
