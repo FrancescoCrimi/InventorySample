@@ -82,7 +82,7 @@ namespace CiccioSoft.Inventory.Uwp
 
         private void AddServices(ServiceCollection services)
         {
-            services            
+            services
                 .AddSingleton<ISettingsService, SettingsService>()
                 .AddSingleton<IDataServiceFactory, DataServiceFactory>()
 
