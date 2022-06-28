@@ -37,30 +37,29 @@ namespace CiccioSoft.Inventory.Uwp
 
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            var frame = Window.Current.Content as Frame;
-            if (frame == null)
+            await InitializeAsync();
+
+            var startup = new Startup();
+            await startup.ConfigureAsync();
+
+            if (Window.Current.Content == null)
             {
                 Frame rootFrame = new Frame();
-                var startup = new Startup();
-                await startup.ConfigureAsync();
-
+                Window.Current.Content = rootFrame;
                 var shellArgs = new ShellArgs
                 {
                     ViewModel = typeof(DashboardViewModel),
                     Parameter = null,
                     UserInfo = await TryGetUserInfoAsync(e as IActivatedEventArgsWithUser)
                 };
-
                 rootFrame.Navigate(typeof(MainShellView), shellArgs);
-
-                Window.Current.Content = rootFrame;
-                //Window.Current.Activate();
             }
-
             if (e.PrelaunchActivated == false)
             {
                 Window.Current.Activate();
             }
+
+            await StartupAsync();
         }
 
         private void OnSuspending(object sender, SuspendingEventArgs e)
@@ -101,6 +100,16 @@ namespace CiccioSoft.Inventory.Uwp
                 }
             }
             return UserInfo.Default;
+        }
+
+        private async Task InitializeAsync()
+        {
+            await Task.CompletedTask;
+        }
+
+        private async Task StartupAsync()
+        {
+            await Task.CompletedTask;
         }
     }
 }

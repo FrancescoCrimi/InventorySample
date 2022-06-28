@@ -443,6 +443,14 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Domain\Inventory.Domain.csproj">
+      <Project>{6693c7c0-edf1-4f6b-89c0-f61c262d9ee5}</Project>
+      <Name>Inventory.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj">
+      <Project>{e74bba50-85e3-4c3d-814d-d8390df9a92f}</Project>
+      <Name>Inventory.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Inventory.Data\Inventory.Data.csproj">
       <Project>{515a0883-d2d9-4b97-8d73-ee6fe9bc3f2b}</Project>
       <Name>Inventory.Data</Name>
