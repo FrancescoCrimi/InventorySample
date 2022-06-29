@@ -13,6 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Domain.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

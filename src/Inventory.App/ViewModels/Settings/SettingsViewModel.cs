@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.Input;
 

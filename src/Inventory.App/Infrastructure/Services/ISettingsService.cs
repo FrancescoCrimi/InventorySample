@@ -12,18 +12,12 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Infrastructure;
 using System;
 using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {
-    public enum DataProviderType
-    {
-        SQLite,
-        SQLServer,
-        WebAPI
-    }
-
     public interface ISettingsService
     {
         string Version { get; }

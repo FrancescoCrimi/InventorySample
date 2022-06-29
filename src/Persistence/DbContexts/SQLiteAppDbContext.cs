@@ -14,24 +14,18 @@
 
 using System;
 using System.Linq;
+using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace CiccioSoft.Inventory.Data.DbContexts
+namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
     public class SQLiteAppDbContext : DbContext, IAppDbContext
     {
-        private string _connectionString = null;
+        protected SQLiteAppDbContext() { }
 
-        public SQLiteAppDbContext(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite(_connectionString);
-        }
+        public SQLiteAppDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,8 +49,8 @@ namespace CiccioSoft.Inventory.Data.DbContexts
                         .HasConversion(new DateTimeOffsetToBinaryConverter());
                 }
 
-                var properties2 = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(Decimal)
-                                                                            || p.PropertyType == typeof(Decimal?));
+                var properties2 = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal)
+                                                                            || p.PropertyType == typeof(decimal?));
                 foreach (var property in properties2)
                 {
                     modelBuilder
@@ -68,14 +62,11 @@ namespace CiccioSoft.Inventory.Data.DbContexts
         }
 
         public DbSet<DbVersion> DbVersion { get; set; }
-
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<CountryCode> CountryCodes { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<TaxType> TaxTypes { get; set; }

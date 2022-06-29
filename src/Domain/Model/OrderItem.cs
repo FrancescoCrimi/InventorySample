@@ -16,23 +16,32 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Domain.Model
 {
-    [Table("Categories")]
-    public partial class Category
+    [Table("OrderItems")]
+    public partial class OrderItem
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int CategoryID { get; set; }
+        public long OrderID { get; set; }
+
+        [Key, Column(Order = 1)]
+        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        public int OrderLine { get; set; }
 
         [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
+        [MaxLength(16)]
+        public string ProductID { get; set; }
 
-        [MaxLength(400)]
-        public string Description { get; set; }
+        [Required]
+        public int Quantity { get; set; }
+        [Required]
+        public decimal UnitPrice { get; set; }
+        [Required]
+        public decimal Discount { get; set; }
+        [Required]
+        public int TaxType { get; set; }
 
-        public byte[] Picture { get; set; }
-        public byte[] Thumbnail { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

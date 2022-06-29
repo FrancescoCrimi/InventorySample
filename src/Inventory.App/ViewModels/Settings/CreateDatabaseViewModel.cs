@@ -13,11 +13,13 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Persistence.DbContexts;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -89,7 +91,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             {
                 ProgressMaximum = 14;
                 ProgressStatus = "Connecting to Database";
-                using (var db = new SQLServerAppDbContext(connectionString))
+                //TODO: fixxa qui connectionstring non funziona più
+                //using (var db = new SQLServerAppDbContext(connectionString))
+                using (var db = Ioc.Default.GetService<SQLServerAppDbContext>())
                 {
                     var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
                     if (!await dbCreator.ExistsAsync())
@@ -123,7 +127,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         private async Task CopyDataTables(SQLServerAppDbContext db)
         {
-            using (var sourceDb = new SQLiteAppDbContext(settingsService.PatternConnectionString))
+            //TODO: fixxa qui
+            //using (var sourceDb = new SQLiteAppDbContext(settingsService.PatternConnectionString))
+            using (var sourceDb =  Ioc.Default.GetService<SQLiteAppDbContext>())
             {
                 ProgressStatus = "Creating table Categories...";
                 foreach (var item in sourceDb.Categories.AsNoTracking())

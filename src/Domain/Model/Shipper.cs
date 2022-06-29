@@ -16,20 +16,20 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Domain.Model
 {
-    [Table("TaxTypes")]
-    public partial class TaxType
+    [Table("Shippers")]
+    public partial class Shipper
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int TaxTypeID { get; set; }
+        public int ShipperID { get; set; }
 
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
-        public decimal Rate { get; set; }
+        [MaxLength(20)]
+        public string Phone { get; set; }
     }
 }

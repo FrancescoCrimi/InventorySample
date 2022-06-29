@@ -12,16 +12,16 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.DbContexts;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Domain.Model
 {
-    public class SQLServerDataService : DataServiceBase
+    [Table("DbVersion")]
+    public class DbVersion
     {
-        public SQLServerDataService(string connectionString)
-            : base(new SQLServerAppDbContext(connectionString))
-        {
-        }
+        [Key]
+        public string Version { get; set; }
     }
 }

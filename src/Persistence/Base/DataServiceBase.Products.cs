@@ -18,42 +18,38 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
+using CiccioSoft.Inventory.Domain.Model;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
     partial class DataServiceBase
     {
-        public async Task<Customer> GetCustomerAsync(long id)
+        public async Task<Product> GetProductAsync(string id)
         {
-            return await _dataSource.Customers.Where(r => r.CustomerID == id).FirstOrDefaultAsync();
+            return await _dataSource.Products.Where(r => r.ProductID == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<Customer>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
+        public async Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
         {
-            IQueryable<Customer> items = GetCustomers(request);
+            IQueryable<Product> items = GetProducts(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
-                .Select(r => new Customer
+                .AsNoTracking()
+                .ToListAsync();
+
+            return records;
+        }
+
+        public async Task<IList<Product>> GetProductKeysAsync(int skip, int take, DataRequest<Product> request)
+        {
+            IQueryable<Product> items = GetProducts(request);
+
+            // Execute
+            var records = await items.Skip(skip).Take(take)
+                .Select(r => new Product
                 {
-                    CustomerID = r.CustomerID,
-                    Title = r.Title,
-                    FirstName = r.FirstName,
-                    MiddleName = r.MiddleName,
-                    LastName = r.LastName,
-                    Suffix = r.Suffix,
-                    Gender = r.Gender,
-                    EmailAddress = r.EmailAddress,
-                    AddressLine1 = r.AddressLine1,
-                    AddressLine2 = r.AddressLine2,
-                    City = r.City,
-                    Region = r.Region,
-                    CountryCode = r.CountryCode,
-                    PostalCode = r.PostalCode,
-                    Phone = r.Phone,
-                    CreatedOn = r.CreatedOn,
-                    LastModifiedOn = r.LastModifiedOn,
-                    Thumbnail = r.Thumbnail
+                    ProductID = r.ProductID,
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -61,25 +57,9 @@ namespace CiccioSoft.Inventory.Data.Services
             return records;
         }
 
-        public async Task<IList<Customer>> GetCustomerKeysAsync(int skip, int take, DataRequest<Customer> request)
+        private IQueryable<Product> GetProducts(DataRequest<Product> request)
         {
-            IQueryable<Customer> items = GetCustomers(request);
-
-            // Execute
-            var records = await items.Skip(skip).Take(take)
-                .Select(r => new Customer
-                {
-                    CustomerID = r.CustomerID,
-                })
-                .AsNoTracking()
-                .ToListAsync();
-
-            return records;
-        }
-
-        private IQueryable<Customer> GetCustomers(DataRequest<Customer> request)
-        {
-            IQueryable<Customer> items = _dataSource.Customers;
+            IQueryable<Product> items = _dataSource.Products;
 
             // Query
             if (!String.IsNullOrEmpty(request.Query))
@@ -106,9 +86,9 @@ namespace CiccioSoft.Inventory.Data.Services
             return items;
         }
 
-        public async Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
+        public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
         {
-            IQueryable<Customer> items = _dataSource.Customers;
+            IQueryable<Product> items = _dataSource.Products;
 
             // Query
             if (!String.IsNullOrEmpty(request.Query))
@@ -125,27 +105,26 @@ namespace CiccioSoft.Inventory.Data.Services
             return await items.CountAsync();
         }
 
-        public async Task<int> UpdateCustomerAsync(Customer customer)
+        public async Task<int> UpdateProductAsync(Product product)
         {
-            if (customer.CustomerID > 0)
+            if (!String.IsNullOrEmpty(product.ProductID))
             {
-                _dataSource.Entry(customer).State = EntityState.Modified;
+                _dataSource.Entry(product).State = EntityState.Modified;
             }
             else
             {
-                customer.CustomerID = UIDGenerator.Next();
-                customer.CreatedOn = DateTime.UtcNow;
-                _dataSource.Entry(customer).State = EntityState.Added;
+                product.ProductID = UIDGenerator.Next(6).ToString();
+                product.CreatedOn = DateTime.UtcNow;
+                _dataSource.Entry(product).State = EntityState.Added;
             }
-            customer.LastModifiedOn = DateTime.UtcNow;
-            customer.SearchTerms = customer.BuildSearchTerms();
-            int res = await _dataSource.SaveChangesAsync();
-            return res;
+            product.LastModifiedOn = DateTime.UtcNow;
+            product.SearchTerms = product.BuildSearchTerms();
+            return await _dataSource.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteCustomersAsync(params Customer[] customers)
+        public async Task<int> DeleteProductsAsync(params Product[] products)
         {
-            _dataSource.Customers.RemoveRange(customers);
+            _dataSource.Products.RemoveRange(products);
             return await _dataSource.SaveChangesAsync();
         }
     }

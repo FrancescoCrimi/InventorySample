@@ -13,7 +13,10 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Domain.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,18 +26,18 @@ namespace CiccioSoft.Inventory.Data.Services
     public class CustomerService : ICustomerService
     {
         private readonly ILogger<CustomerService> logger;
-        public readonly IDataServiceFactory dataServiceFactory;
+        private readonly IServiceProvider serviceProvider;
 
         public CustomerService(ILogger<CustomerService> logger,
-                               IDataServiceFactory dataServiceFactory)
+                               IServiceProvider serviceProvider)
         {
             this.logger = logger;
-            this.dataServiceFactory = dataServiceFactory;
+            this.serviceProvider = serviceProvider;
         }
 
         public async Task<CustomerModel> GetCustomerAsync(long id)
         {
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 return await GetCustomerAsync(dataService, id);
             }
@@ -43,7 +46,7 @@ namespace CiccioSoft.Inventory.Data.Services
         public async Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
         {
             var models = new List<CustomerModel>();
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 var items = await dataService.GetCustomersAsync(skip, take, request);
                 foreach (var item in items)
@@ -56,7 +59,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
         {
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 return await dataService.GetCustomersCountAsync(request);
             }
@@ -65,7 +68,7 @@ namespace CiccioSoft.Inventory.Data.Services
         public async Task<int> UpdateCustomerAsync(CustomerModel model)
         {
             long id = model.CustomerID;
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 var customer = id > 0 ? await dataService.GetCustomerAsync(model.CustomerID) : new Customer();
                 if (customer != null)
@@ -81,7 +84,7 @@ namespace CiccioSoft.Inventory.Data.Services
         public async Task<int> DeleteCustomerAsync(CustomerModel model)
         {
             var customer = new Customer { CustomerID = model.CustomerID };
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 return await dataService.DeleteCustomersAsync(customer);
             }
@@ -89,7 +92,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<int> DeleteCustomerRangeAsync(int index, int length, DataRequest<Customer> request)
         {
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 var items = await dataService.GetCustomerKeysAsync(index, length, request);
                 return await dataService.DeleteCustomersAsync(items.ToArray());

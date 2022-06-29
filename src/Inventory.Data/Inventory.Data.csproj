@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Inventory.Domain.csproj" />
+    <ProjectReference Include="..\Persistence\Inventory.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

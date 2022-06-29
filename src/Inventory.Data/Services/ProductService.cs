@@ -13,6 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Domain.Model;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +24,16 @@ namespace CiccioSoft.Inventory.Data.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IDataServiceFactory dataServiceFactory;
+        private readonly IServiceProvider serviceProvider;
 
-        public ProductService(IDataServiceFactory dataServiceFactory)
+        public ProductService(IServiceProvider serviceProvider)
         {
-            this.dataServiceFactory = dataServiceFactory;
+            this.serviceProvider = serviceProvider;
         }
 
         public async Task<ProductModel> GetProductAsync(string id)
         {
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 return await GetProductAsync(dataService, id);
             }
@@ -40,7 +42,7 @@ namespace CiccioSoft.Inventory.Data.Services
         public async Task<IList<ProductModel>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
         {
             var models = new List<ProductModel>();
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 var items = await dataService.GetProductsAsync(skip, take, request);
                 foreach (var item in items)
@@ -53,7 +55,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
         {
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 return await dataService.GetProductsCountAsync(request);
             }
@@ -62,7 +64,7 @@ namespace CiccioSoft.Inventory.Data.Services
         public async Task<int> UpdateProductAsync(ProductModel model)
         {
             string id = model.ProductID;
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 var product = !String.IsNullOrEmpty(id) ? await dataService.GetProductAsync(model.ProductID) : new Product();
                 if (product != null)
@@ -79,7 +81,7 @@ namespace CiccioSoft.Inventory.Data.Services
         public async Task<int> DeleteProductAsync(ProductModel model)
         {
             var product = new Product { ProductID = model.ProductID };
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 return await dataService.DeleteProductsAsync(product);
             }
@@ -87,7 +89,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<int> DeleteProductRangeAsync(int index, int length, DataRequest<Product> request)
         {
-            using (var dataService = dataServiceFactory.CreateDataService())
+            using (var dataService = serviceProvider.GetService<IDataService>())
             {
                 var items = await dataService.GetProductKeysAsync(index, length, request);
                 return await dataService.DeleteProductsAsync(items.ToArray());

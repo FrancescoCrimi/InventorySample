@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Views;
 using System;
 using System.Threading.Tasks;

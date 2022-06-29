@@ -13,10 +13,12 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Persistence.DbContexts;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -73,7 +75,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             try
             {
-                using (var db = new SQLServerAppDbContext(connectionString))
+                //TODO: fixxa qui connectionstring non funziona più
+                //using (var db = new SQLServerAppDbContext(connectionString))
+                using (var db = Ioc.Default.GetService<SQLServerAppDbContext>())
                 {
                     var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
                     if (await dbCreator.ExistsAsync())

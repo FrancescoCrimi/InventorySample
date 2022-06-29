@@ -13,24 +13,17 @@
 #endregion
 
 using System;
-
+using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace CiccioSoft.Inventory.Data.DbContexts
+namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
     public class SQLServerAppDbContext : DbContext, IAppDbContext
     {
-        private string _connectionString = null;
+        protected SQLServerAppDbContext() { }
 
-        public SQLServerAppDbContext(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
-        }
+        public SQLServerAppDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,14 +31,11 @@ namespace CiccioSoft.Inventory.Data.DbContexts
         }
 
         public DbSet<DbVersion> DbVersion { get; set; }
-
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<CountryCode> CountryCodes { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<TaxType> TaxTypes { get; set; }

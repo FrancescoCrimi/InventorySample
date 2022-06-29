@@ -169,7 +169,6 @@
     <Compile Include="Infrastructure\ViewModels\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CustomerServiceUwp.cs" />
-    <Compile Include="Services\DataServiceFactory.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\Infrastructure\LoginService.cs" />
@@ -454,6 +453,10 @@
     <ProjectReference Include="..\Inventory.Data\Inventory.Data.csproj">
       <Project>{515a0883-d2d9-4b97-8d73-ee6fe9bc3f2b}</Project>
       <Name>Inventory.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Persistence\Inventory.Persistence.csproj">
+      <Project>{665A2311-C34F-4803-B30B-223D74CC7FFF}</Project>
+      <Name>Inventory.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

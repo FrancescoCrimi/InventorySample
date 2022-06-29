@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Domain.Model
 {
     [Table("Orders")]
     public partial class Order

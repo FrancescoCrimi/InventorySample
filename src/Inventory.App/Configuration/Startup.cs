@@ -15,6 +15,7 @@
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.DbContexts;
 using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
@@ -83,11 +84,12 @@ namespace CiccioSoft.Inventory.Uwp
         private void AddServices(ServiceCollection services)
         {
             services
+                .AddSingleton<IAppSettings, AppSettings>()
                 .AddSingleton<ISettingsService, SettingsService>()
-                .AddSingleton<IDataServiceFactory, DataServiceFactory>()
+                //.AddSingleton<IDataServiceFactory, DataServiceFactory>()
 
                 // Modiica Ioc
-                .AddInventoryCore()
+                .AddInventoryData()
 
                 // Test new ProductServiceUwp
                 .AddSingleton<ProductServiceUwp>()

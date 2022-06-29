@@ -13,16 +13,20 @@
 #endregion
 
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Domain.Model
 {
-    static class UIDGenerator
+    [Table("CountryCodes")]
+    public partial class CountryCode
     {
-        static private readonly DateTime DateSeed = DateTime.Parse("2015/01/01");
+        [MaxLength(2)]
+        [Key]
+        public string CountryCodeID { get; set; }
 
-        static public long Next(int prefix = 1)
-        {
-            return (long)(DateTime.UtcNow - DateSeed).TotalMilliseconds + prefix * 100000000000;
-        }
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; }
     }
 }

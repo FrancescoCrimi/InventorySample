@@ -1,6 +1,7 @@
 ﻿using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

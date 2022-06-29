@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
 using System;
 using System.IO;
@@ -20,7 +21,7 @@ using Windows.Storage;
 
 namespace CiccioSoft.Inventory.Uwp
 {
-    public class AppSettings
+    public class AppSettings : IAppSettings
     {
         const string DB_NAME = "VanArsdel";
         const string DB_VERSION = "1.01";
@@ -53,9 +54,9 @@ namespace CiccioSoft.Inventory.Uwp
         static public readonly string DatabasePatternFileName = Path.Combine(DatabasePath, DatabasePattern);
         static public readonly string DatabaseUrl = $"{DB_BASEURL}/{DatabaseName}";
 
-        public readonly string SQLiteConnectionString = $"Data Source={DatabaseFileName}";
+        //public readonly string SQLiteConnectionString = $"Data Source={DatabaseFileName}";
 
-        public ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+        private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
         public string Version
         {
@@ -96,6 +97,12 @@ namespace CiccioSoft.Inventory.Uwp
         {
             get => GetSettingsValue("IsRandomErrorsEnabled", false);
             set => LocalSettings.Values["IsRandomErrorsEnabled"] = value;
+        }
+
+        public string SQLiteConnectionString
+        {
+            get => GetSettingsValue("SQLiteConnectionString", $"Data Source={DatabaseFileName}");
+            set => SetSettingsValue("SQLiteConnectionString", value);
         }
 
         private TResult GetSettingsValue<TResult>(string name, TResult defaultValue)

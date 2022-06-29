@@ -12,16 +12,24 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.DbContexts;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Domain.Model
 {
-    public class SQLiteDataService : DataServiceBase
+    [Table("TaxTypes")]
+    public partial class TaxType
     {
-        public SQLiteDataService(string connectionString)
-            : base(new SQLiteAppDbContext(connectionString))
-        {
-        }
+        [Key]
+        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        public int TaxTypeID { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; }
+
+        [Required]
+        public decimal Rate { get; set; }
     }
 }

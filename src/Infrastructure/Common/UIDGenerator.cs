@@ -13,20 +13,16 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CiccioSoft.Inventory.Data
 {
-    [Table("PaymentTypes")]
-    public partial class PaymentType
+    static public class UIDGenerator
     {
-        [Key]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int PaymentTypeID { get; set; }
+        static private readonly DateTime DateSeed = DateTime.Parse("2015/01/01");
 
-        [Required]
-        [MaxLength(50)]
-        public string Name { get; set; }
+        static public long Next(int prefix = 1)
+        {
+            return (long)(DateTime.UtcNow - DateSeed).TotalMilliseconds + prefix * 100000000000;
+        }
     }
 }
