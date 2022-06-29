@@ -1,33 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using CiccioSoft.Inventory.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace CiccioSoft.Inventory.Data.DbContexts
+namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
-    public class LogDbContext : DbContext, IDisposable
+    public class LogDbContext : DbContext
     {
-        //private readonly string connectionString;
+        public LogDbContext(DbContextOptions<LogDbContext> options) : base(options) { }
 
-        //public LogDbContext(string connectionString)
-        //    : base()
-        //{
-        //    this.connectionString = connectionString;
-        //}
-
-        public LogDbContext(DbContextOptions<LogDbContext> options)
-            : base(options)
-        {
-        }
+        protected LogDbContext() { }
 
         public virtual DbSet<Log> Logs { get; set; }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder
-        //        .UseSqlite(connectionString);
-        //    base.OnConfiguring(optionsBuilder);
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

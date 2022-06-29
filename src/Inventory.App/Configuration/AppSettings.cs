@@ -14,7 +14,6 @@
 
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Uwp.Services;
 using System;
 using System.IO;
 using Windows.ApplicationModel;
@@ -43,10 +42,6 @@ namespace CiccioSoft.Inventory.Uwp
 
         public static readonly string LogName = $"Log.db";
         static public readonly string LogFileName = Path.Combine(AppLogPath, LogName);
-        public readonly string LogConnectionString = $"Data Source={LogFileName};Cache=Shared";
-
-        public readonly string MsLogConnectionString = "Server=(localdb)\\mssqllocaldb;Database=ConsoleApp;Trusted_Connection=True;MultipleActiveResultSets=true";
-        public readonly string MySqlLogConnectionString = "host=localhost;port=3306;user id=ConsoleApp;password=ConsoleApp;database=ConsoleApp;";
 
         static public readonly string DatabasePath = "Database";
         static public readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";
@@ -55,7 +50,6 @@ namespace CiccioSoft.Inventory.Uwp
         static public readonly string DatabasePatternFileName = Path.Combine(DatabasePath, DatabasePattern);
         static public readonly string DatabaseUrl = $"{DB_BASEURL}/{DatabaseName}";
 
-        //public readonly string SQLiteConnectionString = $"Data Source={DatabaseFileName}";
 
         private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
@@ -82,10 +76,23 @@ namespace CiccioSoft.Inventory.Uwp
             set => LocalSettings.Values["WindowsHelloPublicKeyHint"] = value;
         }
 
+        public bool IsRandomErrorsEnabled
+        {
+            get => GetSettingsValue("IsRandomErrorsEnabled", false);
+            set => LocalSettings.Values["IsRandomErrorsEnabled"] = value;
+        }
+
         public DataProviderType DataProvider
         {
             get => (DataProviderType)GetSettingsValue("DataProvider", (int)DataProviderType.SQLite);
             set => LocalSettings.Values["DataProvider"] = (int)value;
+        }
+
+        //public readonly string SQLiteConnectionString = $"Data Source={DatabaseFileName}";
+        public string SQLiteConnectionString
+        {
+            get => GetSettingsValue("SQLiteConnectionString", $"Data Source={DatabaseFileName}");
+            set => SetSettingsValue("SQLiteConnectionString", value);
         }
 
         public string SQLServerConnectionString
@@ -94,17 +101,24 @@ namespace CiccioSoft.Inventory.Uwp
             set => SetSettingsValue("SQLServerConnectionString", value);
         }
 
-        public bool IsRandomErrorsEnabled
+        public LogDatabaseType LogDatabase
         {
-            get => GetSettingsValue("IsRandomErrorsEnabled", false);
-            set => LocalSettings.Values["IsRandomErrorsEnabled"] = value;
+            get => (LogDatabaseType)GetSettingsValue("DataProvider", (int)LogDatabaseType.MySql);
+            set => LocalSettings.Values["DataProvider"] = (int)value;
         }
 
-        public string SQLiteConnectionString
+        public string LogMySqlConnectionString
         {
-            get => GetSettingsValue("SQLiteConnectionString", $"Data Source={DatabaseFileName}");
-            set => SetSettingsValue("SQLiteConnectionString", value);
+            get => GetSettingsValue("LogMySqlConnectionString", "host=localhost;port=3306;user id=ConsoleApp;password=ConsoleApp;database=ConsoleApp;");
+            set => SetSettingsValue("LogMySqlConnectionString", value);
         }
+
+        public readonly string LogConnectionString = $"Data Source={LogFileName};Cache=Shared";
+        public readonly string MsLogConnectionString = "Server=(localdb)\\mssqllocaldb;Database=ConsoleApp;Trusted_Connection=True;MultipleActiveResultSets=true";
+        //public readonly string MySqlLogConnectionString = "host=localhost;port=3306;user id=ConsoleApp;password=ConsoleApp;database=ConsoleApp;";
+
+
+        #region private method
 
         private TResult GetSettingsValue<TResult>(string name, TResult defaultValue)
         {
@@ -122,9 +136,12 @@ namespace CiccioSoft.Inventory.Uwp
                 return defaultValue;
             }
         }
+
         private void SetSettingsValue(string name, object value)
         {
             LocalSettings.Values[name] = value;
         }
+
+        #endregion
     }
 }

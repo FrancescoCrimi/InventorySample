@@ -13,6 +13,14 @@ namespace CiccioSoft.Inventory.Persistence
         public static IServiceCollection AddInventoryPersistence(this IServiceCollection serviceCollection)
         {
             IAppSettings settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
+            serviceCollection
+               .AddDbContext<LogDbContext>(option =>
+                {
+                    //option.UseSqlite(AppSettings.Current.LogConnectionString);
+                    option.UseMySql(settings.LogMySqlConnectionString);
+                    //option.UseSqlServer(AppSettings.Current.MsLogConnectionString);
+                }, ServiceLifetime.Transient);
+
             switch (settings.DataProvider)
             {
                 case DataProviderType.SQLite:

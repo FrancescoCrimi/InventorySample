@@ -13,18 +13,15 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.DbContexts;
 using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using NLog.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -52,46 +49,30 @@ namespace CiccioSoft.Inventory.Uwp
         private IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-            services.AddLogging(AddLogging);
-            AddDbContexts(services);
+
+            services
+                .AddSingleton<IAppSettings, AppSettings>()
+                //.AddLogging(AddLogging)
+                .AddInventoryData();
+
+            //AddDbContexts(services);
             AddServices(services);
+
             return services.BuildServiceProvider();
         }
 
-        private void AddLogging(ILoggingBuilder loggingBuilder)
-        {
-            //loggingBuilder.ClearProviders();
-            //loggingBuilder.AddConfiguration();
+        //private void AddDbContexts(IServiceCollection services)
+        //{
+        //    services
 
-            // Add visual studio viewer
-            //loggingBuilder.AddDebug();
-
-            // Add NLog
-            loggingBuilder.AddNLog(ConfigureNLog());
-        }
-
-        private void AddDbContexts(IServiceCollection services)
-        {
-            services
-               .AddDbContext<LogDbContext>(option =>
-               {
-                   //option.UseSqlite(AppSettings.Current.LogConnectionString);
-                   option.UseMySql(AppSettings.Current.MySqlLogConnectionString);
-                   //option.UseSqlServer(AppSettings.Current.MsLogConnectionString);
-               }, ServiceLifetime.Transient);
-        }
+        //}
 
         private void AddServices(ServiceCollection services)
         {
             services
-                .AddSingleton<IAppSettings, AppSettings>()
+                
                 .AddSingleton<ISettingsService, SettingsService>()
-                //.AddSingleton<IDataServiceFactory, DataServiceFactory>()
 
-                // Modiica Ioc
-                .AddInventoryData()
-
-                // Test new ProductServiceUwp
                 .AddSingleton<ProductServiceUwp>()
                 .AddSingleton<CustomerServiceUwp>()
                 .AddSingleton<OrderServiceUwp>()
@@ -157,52 +138,6 @@ namespace CiccioSoft.Inventory.Uwp
             .AddTransient<AppLogListViewModel>()
             .AddTransient<AppLogDetailsViewModel>();
         }
-
-        private NLog.Config.LoggingConfiguration ConfigureNLog()
-        {
-            var config = new NLog.Config.LoggingConfiguration();
-
-            ////var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
-            //var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole");
-            //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
-
-            var vsDebug = new NLog.Targets.DebuggerTarget();
-            config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, vsDebug);
-
-            var db = new NLog.Targets.DatabaseTarget("database");
-
-            //db.DBProvider = "Microsoft.Data.Sqlite.SqliteConnection, Microsoft.Data.Sqlite";
-            ////db.IsolationLevel = System.Data.IsolationLevel.ReadUncommitted;
-            //db.ConnectionString = AppSettings.Current.LogConnectionString;
-
-            //db.DBProvider = "Microsoft.Data.SqlClient.SqlConnection, Microsoft.Data.SqlClient";
-            //db.ConnectionString = AppSettings.Current.MsLogConnectionString;
-
-            db.DBProvider = "MySql.Data.MySqlClient.MySqlConnection, MySqlConnector";
-            db.ConnectionString = AppSettings.Current.MySqlLogConnectionString;
-
-            db.CommandText =
-                @"insert into Log (
-                MachineName, Logged, Level, Message,
-                Logger, Callsite, Exception
-                ) values(
-                @MachineName, @Logged, @Level, @Message,
-                @Logger, @Callsite, @Exception
-                );";
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@MachineName", NLog.Layouts.Layout.FromString("${machinename}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logged", NLog.Layouts.Layout.FromString("${date}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Level", NLog.Layouts.Layout.FromString("${level}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Message", NLog.Layouts.Layout.FromString("${message}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Logger", NLog.Layouts.Layout.FromString("${logger}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Callsite", NLog.Layouts.Layout.FromString("${callsite}")));
-            db.Parameters.Add(new NLog.Targets.DatabaseParameterInfo("@Exception", NLog.Layouts.Layout.FromString("${exception:tostring}")));
-
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, new NLog.Targets.NullTarget(), "Microsoft.EntityFrameworkCore.*", true);
-            config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, db);
-
-            return config;
-        }
-
 
 
         private void ConfigureNavigation()

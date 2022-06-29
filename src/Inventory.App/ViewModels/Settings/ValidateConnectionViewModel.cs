@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.DbContexts;
 using CiccioSoft.Inventory.Persistence.DbContexts;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.EntityFrameworkCore.Infrastructure;

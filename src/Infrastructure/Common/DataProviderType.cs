@@ -6,4 +6,11 @@
         SQLServer,
         WebAPI
     }
+
+    public enum LogDatabaseType
+    {
+        SQLite,
+        SQLServer,
+        MySql
+    }
 }
