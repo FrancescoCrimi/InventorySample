@@ -1,4 +1,5 @@
 ﻿using CiccioSoft.Inventory.Data.DbContexts;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

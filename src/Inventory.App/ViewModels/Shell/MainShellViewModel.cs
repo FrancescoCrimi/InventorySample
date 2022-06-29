@@ -13,6 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Helpers;
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Extensions.Logging;

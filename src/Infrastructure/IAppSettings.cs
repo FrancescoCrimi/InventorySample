@@ -1,4 +1,5 @@
 ﻿using System;
+using CiccioSoft.Inventory.Infrastructure.Common;
 
 namespace CiccioSoft.Inventory.Infrastructure
 {

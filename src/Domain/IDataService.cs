@@ -12,12 +12,13 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CiccioSoft.Inventory.Domain.Model;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Domain
 {
     public interface IDataService : IDisposable
     {

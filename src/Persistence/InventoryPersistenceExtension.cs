@@ -1,13 +1,10 @@
-﻿using CiccioSoft.Inventory.Data.DbContexts;
-using CiccioSoft.Inventory.Data.Services;
+﻿using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Domain;
 using CiccioSoft.Inventory.Infrastructure;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CiccioSoft.Inventory.Persistence
 {

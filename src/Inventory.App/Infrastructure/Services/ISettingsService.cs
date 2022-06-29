@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Infrastructure;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using System;
 using System.Threading.Tasks;
 

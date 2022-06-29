@@ -14,6 +14,7 @@
 
 using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

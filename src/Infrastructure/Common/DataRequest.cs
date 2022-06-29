@@ -15,7 +15,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Infrastructure.Common
 {
     public class DataRequest<T>
     {

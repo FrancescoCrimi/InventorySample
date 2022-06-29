@@ -12,12 +12,11 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using CiccioSoft.Inventory.Data.DbContexts;
 using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
+using System.Linq;
 
 namespace CiccioSoft.Inventory.Persistence.DbContexts
 {

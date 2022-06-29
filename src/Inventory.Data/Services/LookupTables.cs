@@ -13,6 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;

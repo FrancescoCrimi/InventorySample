@@ -12,8 +12,6 @@
 // ******************************************************************
 #endregion
 
-using System;
-using CiccioSoft.Inventory.Data.DbContexts;
 using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 

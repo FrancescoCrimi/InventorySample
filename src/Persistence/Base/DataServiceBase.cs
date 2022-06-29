@@ -12,12 +12,13 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Domain;
+using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CiccioSoft.Inventory.Data.DbContexts;
-using CiccioSoft.Inventory.Domain.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace CiccioSoft.Inventory.Data.Services
 {

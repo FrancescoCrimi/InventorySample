@@ -12,14 +12,14 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.DbContexts
+namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
     public interface IAppDbContext : IDisposable
     {
@@ -40,6 +40,6 @@ namespace CiccioSoft.Inventory.Data.DbContexts
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 
         int SaveChanges();
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

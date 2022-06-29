@@ -14,7 +14,7 @@
 
 using System;
 
-namespace CiccioSoft.Inventory.Data
+namespace CiccioSoft.Inventory.Infrastructure.Common
 {
     static public class UIDGenerator
     {

@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Infrastructure.Common;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
