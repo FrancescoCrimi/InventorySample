@@ -23,17 +23,11 @@ namespace CiccioSoft.Inventory.Data.Services
     public interface IOrderService
     {
         Task<OrderModel> GetOrderAsync(long id);
-
         Task<IList<OrderModel>> GetOrdersAsync(int skip, int take, DataRequest<Order> request);
-
         Task<int> GetOrdersCountAsync(DataRequest<Order> request);
-
         Task<OrderModel> CreateNewOrderAsync(long customerID);
-
         Task<int> UpdateOrderAsync(OrderModel model);
-
         Task<int> DeleteOrderAsync(OrderModel model);
-
         Task<int> DeleteOrderRangeAsync(int index, int length, DataRequest<Order> request);
     }
 }

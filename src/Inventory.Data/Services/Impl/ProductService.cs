@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services.Impl
 {
     public class ProductService : IProductService
     {
@@ -68,7 +68,7 @@ namespace CiccioSoft.Inventory.Data.Services
             string id = model.ProductID;
             using (var dataService = serviceProvider.GetService<IDataService>())
             {
-                var product = !String.IsNullOrEmpty(id) ? await dataService.GetProductAsync(model.ProductID) : new Product();
+                var product = !string.IsNullOrEmpty(id) ? await dataService.GetProductAsync(model.ProductID) : new Product();
                 if (product != null)
                 {
                     UpdateProductFromModel(product, model);

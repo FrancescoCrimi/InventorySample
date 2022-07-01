@@ -1,5 +1,6 @@
 ﻿using CiccioSoft.Inventory.Data.DataServices;
 using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Data.Services.Impl;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Persistence;
 using Microsoft.Extensions.DependencyInjection;

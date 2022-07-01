@@ -14,8 +14,10 @@
 
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -171,7 +173,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             if (!ViewModelArgs.IsEmpty)
             {
                 DataRequest<Log> request = BuildDataRequest();
-                return await logService.GetLogsAsync(request);
+
+                var collection = new LogCollection(logService);
+                await collection.LoadAsync(request);
+                return collection;
+
+
+                //return await logService.GetLogsAsync(request);
             }
             return new List<AppLogModel>();
         }

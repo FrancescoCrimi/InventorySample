@@ -14,8 +14,11 @@
 
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Data.Services.Impl;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Data.Sqlite;

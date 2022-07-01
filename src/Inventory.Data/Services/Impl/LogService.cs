@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.DataServices;
 using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Infrastructure.Common;
@@ -22,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services.Impl
 {
     public class LogService : ILogService
     {
@@ -87,12 +86,12 @@ namespace CiccioSoft.Inventory.Uwp.Services
             }
         }
 
-        public async Task<IList<AppLogModel>> GetLogsAsync(DataRequest<Log> request)
-        {
-            var collection = new LogCollection(this);
-            await collection.LoadAsync(request);
-            return collection;
-        }
+        //public async Task<IList<AppLogModel>> GetLogsAsync(DataRequest<Log> request)
+        //{
+        //    var collection = new LogCollection(this);
+        //    await collection.LoadAsync(request);
+        //    return collection;
+        //}
 
         public async Task<IList<AppLogModel>> GetLogsAsync(int skip, int take, DataRequest<Log> request)
         {

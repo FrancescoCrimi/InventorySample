@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
 {
     public class SettingsService : ISettingsService
     {

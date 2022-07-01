@@ -15,11 +15,18 @@
 using System;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    public interface IDialogService
+    public class ImagePickerResult
     {
-        Task ShowAsync(string title, Exception ex, string ok = "Ok");
-        Task<bool> ShowAsync(string title, string content, string ok = "Ok", string cancel = null);
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] ImageBytes { get; set; }
+        public object ImageSource { get; set; }
+    }
+
+    public interface IFilePickerService
+    {
+        Task<ImagePickerResult> OpenImagePickerAsync();
     }
 }

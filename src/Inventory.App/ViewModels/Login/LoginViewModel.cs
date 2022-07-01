@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.Input;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {

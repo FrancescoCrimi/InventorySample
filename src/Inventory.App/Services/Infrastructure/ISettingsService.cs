@@ -12,24 +12,27 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Infrastructure.Common;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    public interface ILogService
+    public interface ISettingsService
     {
-        Task<AppLogModel> GetLogAsync(long id);
-        Task<IList<AppLogModel>> GetLogsAsync(DataRequest<Log> request);
-        Task<IList<AppLogModel>> GetLogsAsync(int skip, int take, DataRequest<Log> request);
-        Task<int> GetLogsCountAsync(DataRequest<Log> request);
+        string Version { get; }
+        string DbVersion { get; }
 
-        Task<int> DeleteLogAsync(AppLogModel model);
-        Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request);
+        string UserName { get; set; }
 
-        Task MarkAllAsReadAsync();
+        DataProviderType DataProvider { get; set; }
+        string PatternConnectionString { get; }
+        string SQLServerConnectionString { get; set; }
+        bool IsRandomErrorsEnabled { get; set; }
+
+        Task<Result> ResetLocalDataProviderAsync();
+
+        Task<Result> ValidateConnectionAsync(string connectionString);
+        Task<Result> CreateDabaseAsync(string connectionString);
     }
 }

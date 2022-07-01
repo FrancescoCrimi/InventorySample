@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services.Impl
 {
     public class OrderItemService : IOrderItemService
     {

@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace CiccioSoft.Inventory.Data.Services.Impl
 {
     public class CustomerService : ICustomerService
     {
@@ -100,7 +100,6 @@ namespace CiccioSoft.Inventory.Data.Services
                 return await dataService.DeleteCustomersAsync(items.ToArray());
             }
         }
-
 
         private static async Task<CustomerModel> GetCustomerAsync(IDataService dataService, long id)
         {

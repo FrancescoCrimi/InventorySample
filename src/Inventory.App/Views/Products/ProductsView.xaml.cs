@@ -19,8 +19,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 using CiccioSoft.Inventory.Uwp.ViewModels;
-using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 
 namespace CiccioSoft.Inventory.Uwp.Views
 {

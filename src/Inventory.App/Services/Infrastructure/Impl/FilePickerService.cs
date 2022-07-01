@@ -15,11 +15,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
 {
     public class FilePickerService : IFilePickerService
     {

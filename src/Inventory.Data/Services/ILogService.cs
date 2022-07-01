@@ -12,21 +12,20 @@
 // ******************************************************************
 #endregion
 
-using System;
+using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Infrastructure.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Data.Services
 {
-    public class ImagePickerResult
+    public interface ILogService
     {
-        public string FileName { get; set; }
-        public string ContentType { get; set; }
-        public byte[] ImageBytes { get; set; }
-        public object ImageSource { get; set; }
-    }
-
-    public interface IFilePickerService
-    {
-        Task<ImagePickerResult> OpenImagePickerAsync();
+        Task<AppLogModel> GetLogAsync(long id);
+        Task<IList<AppLogModel>> GetLogsAsync(int skip, int take, DataRequest<Log> request);
+        Task<int> GetLogsCountAsync(DataRequest<Log> request);
+        Task<int> DeleteLogAsync(AppLogModel model);
+        Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request);
+        Task MarkAllAsReadAsync();
     }
 }

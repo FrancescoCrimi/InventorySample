@@ -12,27 +12,14 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Infrastructure.Common;
 using System;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Uwp.Services
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    public interface ISettingsService
+    public interface IDialogService
     {
-        string Version { get; }
-        string DbVersion { get; }
-
-        string UserName { get; set; }
-
-        DataProviderType DataProvider { get; set; }
-        string PatternConnectionString { get; }
-        string SQLServerConnectionString { get; set; }
-        bool IsRandomErrorsEnabled { get; set; }
-
-        Task<Result> ResetLocalDataProviderAsync();
-
-        Task<Result> ValidateConnectionAsync(string connectionString);
-        Task<Result> CreateDabaseAsync(string connectionString);
+        Task ShowAsync(string title, Exception ex, string ok = "Ok");
+        Task<bool> ShowAsync(string title, string content, string ok = "Ok", string cancel = null);
     }
 }
