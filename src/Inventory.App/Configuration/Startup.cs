@@ -14,7 +14,6 @@
 
 using CiccioSoft.Inventory.Data;
 using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Data.Services.Impl;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
