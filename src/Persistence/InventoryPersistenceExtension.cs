@@ -33,7 +33,7 @@ namespace CiccioSoft.Inventory.Persistence
                             .UseSqlite(settings.SQLiteConnectionString);
                     }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
-                    serviceCollection.AddTransient<IAppDbContext>((serviceProvider)
+                    serviceCollection.AddTransient<AppDbContext>((serviceProvider)
                         => serviceProvider.GetRequiredService<SQLiteAppDbContext>());
 
                     break;
@@ -45,7 +45,7 @@ namespace CiccioSoft.Inventory.Persistence
                             .UseSqlServer(settings.SQLServerConnectionString);
                     }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
-                    serviceCollection.AddTransient<IAppDbContext>((serviceProvider)
+                    serviceCollection.AddTransient<AppDbContext>((serviceProvider)
                         => serviceProvider.GetRequiredService<SQLServerAppDbContext>());
 
                     break;

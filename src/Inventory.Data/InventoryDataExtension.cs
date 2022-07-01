@@ -13,6 +13,7 @@ namespace CiccioSoft.Inventory.Data
             serviceCollection
                 .AddInventoryInfrastructure()
                 .AddInventoryPersistence()
+                .AddSingleton<ILogService, LogService>()
                 .AddSingleton<ILookupTableService, LookupTableService>()
                 .AddSingleton<ICustomerService, CustomerService>()
                 .AddSingleton<IOrderService, OrderService>()

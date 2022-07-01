@@ -14,32 +14,25 @@
 
 using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
-    public interface IAppDbContext : IDisposable
+    public abstract class AppDbContext : DbContext
     {
-        DbSet<DbVersion> DbVersion { get; }
+        protected AppDbContext() { }
 
-        DbSet<Category> Categories { get; }
-        DbSet<CountryCode> CountryCodes { get; }
-        DbSet<OrderStatus> OrderStatus { get; }
-        DbSet<PaymentType> PaymentTypes { get; }
-        DbSet<Shipper> Shippers { get; }
-        DbSet<TaxType> TaxTypes { get; }
+        protected AppDbContext(DbContextOptions options) : base(options) { }
 
-        DbSet<Customer> Customers { get; }
-        DbSet<Order> Orders { get; }
-        DbSet<OrderItem> OrderItems { get; }
-        DbSet<Product> Products { get; }
-
-        EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
-
-        int SaveChanges();
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        public DbSet<DbVersion> DbVersion { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<CountryCode> CountryCodes { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
+        public DbSet<PaymentType> PaymentTypes { get; set; }
+        public DbSet<Shipper> Shippers { get; set; }
+        public DbSet<TaxType> TaxTypes { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }

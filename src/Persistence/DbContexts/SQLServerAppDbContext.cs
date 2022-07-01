@@ -17,27 +17,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
-    public class SQLServerAppDbContext : DbContext, IAppDbContext
+    public class SQLServerAppDbContext : AppDbContext
     {
         protected SQLServerAppDbContext() { }
 
-        public SQLServerAppDbContext(DbContextOptions options) : base(options) { }
+        public SQLServerAppDbContext(DbContextOptions<SQLServerAppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OrderItem>().HasKey(e => new { e.OrderID, e.OrderLine });
         }
-
-        public DbSet<DbVersion> DbVersion { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<CountryCode> CountryCodes { get; set; }
-        public DbSet<PaymentType> PaymentTypes { get; set; }
-        public DbSet<TaxType> TaxTypes { get; set; }
-        public DbSet<OrderStatus> OrderStatus { get; set; }
-        public DbSet<Shipper> Shippers { get; set; }
     }
 }

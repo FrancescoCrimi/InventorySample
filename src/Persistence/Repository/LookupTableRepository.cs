@@ -24,9 +24,9 @@ namespace CiccioSoft.Inventory.Data.Services
 {
     internal class LookupTableRepository : ILookupTableRepository
     {
-        private IAppDbContext _dataSource = null;
+        private AppDbContext _dataSource = null;
 
-        public LookupTableRepository(IAppDbContext dataSource)
+        public LookupTableRepository(AppDbContext dataSource)
         {
             _dataSource = dataSource;
         }

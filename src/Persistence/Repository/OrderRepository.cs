@@ -26,9 +26,9 @@ namespace CiccioSoft.Inventory.Data.Services
 {
     internal class OrderRepository : IOrderRepository
     {
-        private IAppDbContext _dataSource = null;
+        private AppDbContext _dataSource = null;
 
-        public OrderRepository(IAppDbContext dataSource)
+        public OrderRepository(AppDbContext dataSource)
         {
             _dataSource = dataSource;
         }

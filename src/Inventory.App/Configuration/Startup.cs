@@ -82,7 +82,6 @@ namespace CiccioSoft.Inventory.Uwp
                 .AddSingleton<OrderItemServiceUwp>()
 
             //.AddSingleton<IMessageService, MessageService>()
-            .AddSingleton<ILogService, LogService>()
             .AddSingleton<IDialogService, DialogService>()
             .AddSingleton<IFilePickerService, FilePickerService>()
             //.AddSingleton<ILoginService, LoginService>()
