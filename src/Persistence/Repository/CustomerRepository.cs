@@ -12,19 +12,27 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
-    partial class DataServiceBase
+    internal class CustomerRepository : ICustomerRepository
     {
+        private IAppDbContext _dataSource = null;
+
+        public CustomerRepository(IAppDbContext dataSource)
+        {
+            _dataSource = dataSource;
+        }
+
         public async Task<Customer> GetCustomerAsync(long id)
         {
             return await _dataSource.Customers.Where(r => r.CustomerID == id).FirstOrDefaultAsync();
@@ -150,5 +158,24 @@ namespace CiccioSoft.Inventory.Data.Services
             _dataSource.Customers.RemoveRange(customers);
             return await _dataSource.SaveChangesAsync();
         }
+
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_dataSource != null)
+                {
+                    _dataSource.Dispose();
+                }
+            }
+        }
+        #endregion
     }
 }

@@ -1,19 +1,19 @@
-﻿using CiccioSoft.Inventory.Infrastructure.Common;
+﻿using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Domain.Repository;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.DataServices
+namespace CiccioSoft.Inventory.Persistence.Repository
 {
-    public class LogDataService : ILogDataService
+    internal class LogRepository : ILogRepository
     {
         private readonly LogDbContext logDbContext;
 
-        public LogDataService(LogDbContext logDbContext)
+        public LogRepository(LogDbContext logDbContext)
         {
             this.logDbContext = logDbContext;
         }

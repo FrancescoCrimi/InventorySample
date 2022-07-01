@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.DataServices;
 using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -74,7 +74,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<AppLogModel> GetLogAsync(long id)
         {
             //using (var dc = CreateDataSource())
-            using (var repo = serviceProvider.GetService<ILogDataService>())
+            using (var repo = serviceProvider.GetService<ILogRepository>())
             {
                 //var repo = new LogRepository(dc);
                 var item = await repo.GetLogAsync(id);
@@ -107,7 +107,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
             //}
 
             //using (var dc = CreateDataSource())
-            using (var repo = serviceProvider.GetService<ILogDataService>())
+            using (var repo = serviceProvider.GetService<ILogRepository>())
             {
                 //var repo = new LogRepository(dc);
                 var items = await repo.GetLogsAsync(skip, take/*, request*/);
@@ -122,7 +122,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<int> GetLogsCountAsync(DataRequest<Log> request)
         {
             //using (var dc = CreateDataSource())
-            using (var repo = serviceProvider.GetService<ILogDataService>())
+            using (var repo = serviceProvider.GetService<ILogRepository>())
             {
                 //var repo = new LogRepository(dc);
                 return await repo.GetLogsCountAsync(request);
@@ -141,7 +141,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             var appLog = new Log { Id = (int)model.Id };
             //using (var dc = CreateDataSource())
-            using (var repo = serviceProvider.GetService<ILogDataService>())
+            using (var repo = serviceProvider.GetService<ILogRepository>())
             {
                 //var repo = new LogRepository(dc);
                 return await repo.DeleteLogsAsync(appLog);
@@ -151,7 +151,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request)
         {
             //using (var dc = CreateDataSource())
-            using (var repo = serviceProvider.GetService<ILogDataService>())
+            using (var repo = serviceProvider.GetService<ILogRepository>())
             {
                 //var repo = new LogRepository(dc);
                 var items = await repo.GetLogKeysAsync(index, length, request);
@@ -162,7 +162,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task MarkAllAsReadAsync()
         {
             //using (var dc = CreateDataSource())
-            using (var repo = serviceProvider.GetService<ILogDataService>())
+            using (var repo = serviceProvider.GetService<ILogRepository>())
             {
                 //var repo = new LogRepository(dc);
                 await repo.MarkAllAsReadAsync();

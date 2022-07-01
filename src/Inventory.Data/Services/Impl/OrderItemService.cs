@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
-using CiccioSoft.Inventory.Domain;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -35,7 +35,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<OrderItemModel> GetOrderItemAsync(long orderID, int lineID)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderItemRepository>())
             {
                 return await GetOrderItemAsync(dataService, orderID, lineID);
             }
@@ -50,7 +50,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<IList<OrderItemModel>> GetOrderItemsAsync(int skip, int take, DataRequest<OrderItem> request)
         {
             var models = new List<OrderItemModel>();
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderItemRepository>())
             {
                 var items = await dataService.GetOrderItemsAsync(skip, take, request);
                 foreach (var item in items)
@@ -63,7 +63,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<int> GetOrderItemsCountAsync(DataRequest<OrderItem> request)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderItemRepository>())
             {
                 return await dataService.GetOrderItemsCountAsync(request);
             }
@@ -71,7 +71,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<int> UpdateOrderItemAsync(OrderItemModel model)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderItemRepository>())
             {
                 var orderItem = model.OrderLine > 0 ? await dataService.GetOrderItemAsync(model.OrderID, model.OrderLine) : new OrderItem();
                 if (orderItem != null)
@@ -87,7 +87,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<int> DeleteOrderItemAsync(OrderItemModel model)
         {
             var orderItem = new OrderItem { OrderID = model.OrderID, OrderLine = model.OrderLine };
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderItemRepository>())
             {
                 return await dataService.DeleteOrderItemsAsync(orderItem);
             }
@@ -95,7 +95,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<int> DeleteOrderItemRangeAsync(int index, int length, DataRequest<OrderItem> request)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderItemRepository>())
             {
                 var items = await dataService.GetOrderItemKeysAsync(index, length, request);
                 return await dataService.DeleteOrderItemsAsync(items.ToArray());
@@ -103,7 +103,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         }
 
 
-        static private async Task<OrderItemModel> GetOrderItemAsync(IDataService dataService, long orderID, int lineID)
+        static private async Task<OrderItemModel> GetOrderItemAsync(IOrderItemRepository dataService, long orderID, int lineID)
         {
             var item = await dataService.GetOrderItemAsync(orderID, lineID);
             if (item != null)

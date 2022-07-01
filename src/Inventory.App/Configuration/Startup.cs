@@ -202,7 +202,7 @@ namespace CiccioSoft.Inventory.Uwp
 
         private async Task ConfigureLookupTables()
         {
-            var lookupTables = Ioc.Default.GetService<ILookupTables>();
+            var lookupTables = Ioc.Default.GetService<ILookupTableService>();
             await lookupTables.InitializeAsync();
             LookupTablesProxy.Instance = lookupTables;
         }

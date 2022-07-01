@@ -30,7 +30,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
         }
 
-        public ILookupTables LookupTables => LookupTablesProxy.Instance;
+        public ILookupTableService LookupTables => LookupTablesProxy.Instance;
 
         public override string Title => String.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
 

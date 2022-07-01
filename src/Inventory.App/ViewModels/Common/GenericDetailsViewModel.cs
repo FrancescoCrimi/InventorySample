@@ -41,7 +41,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             windowService = Ioc.Default.GetService<IWindowService>();
         }
 
-        public ILookupTables LookupTables => LookupTablesProxy.Instance;
+        public ILookupTableService LookupTables => LookupTablesProxy.Instance;
 
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;

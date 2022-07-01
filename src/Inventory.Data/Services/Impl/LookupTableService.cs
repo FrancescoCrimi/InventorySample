@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
-using CiccioSoft.Inventory.Domain;
+using CiccioSoft.Inventory.Domain.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,12 +23,12 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Data.Services.Impl
 {
-    public class LookupTables : ILookupTables
+    public class LookupTableService : ILookupTableService
     {
-        private readonly ILogger<LookupTables> logger;
+        private readonly ILogger<LookupTableService> logger;
         private readonly IServiceProvider serviceProvider;
 
-        public LookupTables(ILogger<LookupTables> logger,
+        public LookupTableService(ILogger<LookupTableService> logger,
                             IServiceProvider serviceProvider)
         {
             this.logger = logger;
@@ -90,7 +90,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             try
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 {
                     var items = await dataService.GetCategoriesAsync();
                     return items.Select(r => new CategoryModel
@@ -112,7 +112,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             try
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 {
                     var items = await dataService.GetCountryCodesAsync();
                     return items.OrderBy(r => r.Name).Select(r => new CountryCodeModel
@@ -134,7 +134,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             try
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 {
                     var items = await dataService.GetOrderStatusAsync();
                     return items.Select(r => new OrderStatusModel
@@ -156,7 +156,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             try
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 {
                     var items = await dataService.GetPaymentTypesAsync();
                     return items.Select(r => new PaymentTypeModel
@@ -178,7 +178,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             try
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 {
                     var items = await dataService.GetShippersAsync();
                     return items.Select(r => new ShipperModel
@@ -201,7 +201,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         {
             try
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 {
                     var items = await dataService.GetTaxTypesAsync();
                     return items.Select(r => new TaxTypeModel

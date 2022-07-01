@@ -1,13 +1,13 @@
-﻿using CiccioSoft.Inventory.Infrastructure.Common;
+﻿using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.DataServices
+namespace CiccioSoft.Inventory.Domain.Repository
 {
-    public interface ILogDataService : IDisposable
+    public interface ILogRepository : IDisposable
     {
-        //Task<int> CreateLogAsync(Log appLog);
         Task<int> DeleteLogsAsync(params Log[] logs);
         Task<Log> GetLogAsync(long id);
         Task<IList<Log>> GetLogKeysAsync(int skip, int take, DataRequest<Log> request);

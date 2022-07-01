@@ -16,15 +16,23 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Microsoft.EntityFrameworkCore;
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Domain.Repository;
+using CiccioSoft.Inventory.Persistence.DbContexts;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
-    partial class DataServiceBase
+    internal class OrderItemRepository : IOrderItemRepository
     {
+        private IAppDbContext _dataSource = null;
+
+        public OrderItemRepository(IAppDbContext dataSource)
+        {
+            _dataSource = dataSource;
+        }
+
         public async Task<OrderItem> GetOrderItemAsync(long orderID, int orderLine)
         {
             return await _dataSource.OrderItems
@@ -136,5 +144,24 @@ namespace CiccioSoft.Inventory.Data.Services
             _dataSource.OrderItems.RemoveRange(orderItems);
             return await _dataSource.SaveChangesAsync();
         }
+
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_dataSource != null)
+                {
+                    _dataSource.Dispose();
+                }
+            }
+        }
+        #endregion
     }
 }

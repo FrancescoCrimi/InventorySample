@@ -1,8 +1,9 @@
 ﻿using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Domain;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Persistence.DbContexts;
+using CiccioSoft.Inventory.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,10 +32,10 @@ namespace CiccioSoft.Inventory.Persistence
                             //.ConfigureWarnings(w => w.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning))
                             .UseSqlite(settings.SQLiteConnectionString);
                     }, ServiceLifetime.Transient, ServiceLifetime.Transient);
-                    
+
                     serviceCollection.AddTransient<IAppDbContext>((serviceProvider)
                         => serviceProvider.GetRequiredService<SQLiteAppDbContext>());
-                    
+
                     break;
                 case DataProviderType.SQLServer:
                     serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>
@@ -54,7 +55,13 @@ namespace CiccioSoft.Inventory.Persistence
                     break;
             }
 
-            serviceCollection.AddTransient<IDataService, DataServiceBase>();
+            serviceCollection
+                .AddTransient<ILogRepository, LogRepository>()
+                .AddTransient<ICustomerRepository, CustomerRepository>()
+                .AddTransient<IOrderRepository, OrderRepository>()
+                .AddTransient<IOrderItemRepository, OrderItemRepository>()
+                .AddTransient<IProductRepository, ProductRepository>()
+                .AddTransient<ILookupTableRepository, LookupTableRepository>();
 
             return serviceCollection;
         }

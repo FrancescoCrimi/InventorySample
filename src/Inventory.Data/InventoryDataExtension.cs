@@ -1,5 +1,4 @@
-﻿using CiccioSoft.Inventory.Data.DataServices;
-using CiccioSoft.Inventory.Data.Services;
+﻿using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Data.Services.Impl;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Persistence;
@@ -14,8 +13,7 @@ namespace CiccioSoft.Inventory.Data
             serviceCollection
                 .AddInventoryInfrastructure()
                 .AddInventoryPersistence()
-                .AddTransient<ILogDataService, LogDataService>()
-                .AddSingleton<ILookupTables, LookupTables>()
+                .AddSingleton<ILookupTableService, LookupTableService>()
                 .AddSingleton<ICustomerService, CustomerService>()
                 .AddSingleton<IOrderService, OrderService>()
                 .AddSingleton<IOrderItemService, OrderItemService>()

@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,11 +22,11 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
-    internal partial class DataServiceBase : IDataService, IDisposable
+    internal class LookupTableRepository : ILookupTableRepository
     {
         private IAppDbContext _dataSource = null;
 
-        public DataServiceBase(IAppDbContext dataSource)
+        public LookupTableRepository(IAppDbContext dataSource)
         {
             _dataSource = dataSource;
         }

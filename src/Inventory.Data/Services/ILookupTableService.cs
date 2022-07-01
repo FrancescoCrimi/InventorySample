@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
-    public interface ILookupTables
+    public interface ILookupTableService
     {
         Task InitializeAsync();
 
@@ -40,6 +40,6 @@ namespace CiccioSoft.Inventory.Data.Services
 
     public class LookupTablesProxy
     {
-        static public ILookupTables Instance { get; set; }
+        static public ILookupTableService Instance { get; set; }
     }
 }

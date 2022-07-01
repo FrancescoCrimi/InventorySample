@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data.Models;
-using CiccioSoft.Inventory.Domain;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -35,13 +35,13 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<OrderModel> GetOrderAsync(long id)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderRepository>())
             {
                 return await GetOrderAsync(dataService, id);
             }
         }
 
-        static private async Task<OrderModel> GetOrderAsync(IDataService dataService, long id)
+        static private async Task<OrderModel> GetOrderAsync(IOrderRepository dataService, long id)
         {
             var item = await dataService.GetOrderAsync(id);
             if (item != null)
@@ -54,7 +54,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<IList<OrderModel>> GetOrdersAsync(int skip, int take, DataRequest<Order> request)
         {
             var models = new List<OrderModel>();
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderRepository>())
             {
                 var items = await dataService.GetOrdersAsync(skip, take, request);
                 foreach (var item in items)
@@ -67,7 +67,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<int> GetOrdersCountAsync(DataRequest<Order> request)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderRepository>())
             {
                 return await dataService.GetOrdersCountAsync(request);
             }
@@ -83,7 +83,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
             };
             if (customerID > 0)
             {
-                using (var dataService = serviceProvider.GetService<IDataService>())
+                using (var dataService = serviceProvider.GetService<ICustomerRepository>())
                 {
                     var parent = await dataService.GetCustomerAsync(customerID);
                     if (parent != null)
@@ -104,7 +104,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<int> UpdateOrderAsync(OrderModel model)
         {
             long id = model.OrderID;
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderRepository>())
             {
                 var order = id > 0 ? await dataService.GetOrderAsync(model.OrderID) : new Order();
                 if (order != null)
@@ -120,7 +120,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
         public async Task<int> DeleteOrderAsync(OrderModel model)
         {
             var order = new Order { OrderID = model.OrderID };
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderRepository>())
             {
                 return await dataService.DeleteOrdersAsync(order);
             }
@@ -128,7 +128,7 @@ namespace CiccioSoft.Inventory.Data.Services.Impl
 
         public async Task<int> DeleteOrderRangeAsync(int index, int length, DataRequest<Order> request)
         {
-            using (var dataService = serviceProvider.GetService<IDataService>())
+            using (var dataService = serviceProvider.GetService<IOrderRepository>())
             {
                 var items = await dataService.GetOrderKeysAsync(index, length, request);
                 return await dataService.DeleteOrdersAsync(items.ToArray());

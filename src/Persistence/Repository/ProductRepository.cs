@@ -12,29 +12,35 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
 using CiccioSoft.Inventory.Domain.Model;
+using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Data.Services
 {
-    partial class DataServiceBase
+    internal class ProductRepository : IProductRepository
     {
-        public async Task<Order> GetOrderAsync(long id)
+        private IAppDbContext _dataSource = null;
+
+        public ProductRepository(IAppDbContext dataSource)
         {
-            return await _dataSource.Orders.Where(r => r.OrderID == id)
-                .Include(r => r.Customer)
-                .FirstOrDefaultAsync();
+            _dataSource = dataSource;
         }
 
-        public async Task<IList<Order>> GetOrdersAsync(int skip, int take, DataRequest<Order> request)
+        public async Task<Product> GetProductAsync(string id)
         {
-            IQueryable<Order> items = GetOrders(request);
+            return await _dataSource.Products.Where(r => r.ProductID == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
+        {
+            IQueryable<Product> items = GetProducts(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
@@ -44,15 +50,15 @@ namespace CiccioSoft.Inventory.Data.Services
             return records;
         }
 
-        public async Task<IList<Order>> GetOrderKeysAsync(int skip, int take, DataRequest<Order> request)
+        public async Task<IList<Product>> GetProductKeysAsync(int skip, int take, DataRequest<Product> request)
         {
-            IQueryable<Order> items = GetOrders(request);
+            IQueryable<Product> items = GetProducts(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
-                .Select(r => new Order
+                .Select(r => new Product
                 {
-                    OrderID = r.OrderID,
+                    ProductID = r.ProductID,
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -60,9 +66,9 @@ namespace CiccioSoft.Inventory.Data.Services
             return records;
         }
 
-        private IQueryable<Order> GetOrders(DataRequest<Order> request)
+        private IQueryable<Product> GetProducts(DataRequest<Product> request)
         {
-            IQueryable<Order> items = _dataSource.Orders;
+            IQueryable<Product> items = _dataSource.Products;
 
             // Query
             if (!String.IsNullOrEmpty(request.Query))
@@ -89,9 +95,9 @@ namespace CiccioSoft.Inventory.Data.Services
             return items;
         }
 
-        public async Task<int> GetOrdersCountAsync(DataRequest<Order> request)
+        public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
         {
-            IQueryable<Order> items = _dataSource.Orders;
+            IQueryable<Product> items = _dataSource.Products;
 
             // Query
             if (!String.IsNullOrEmpty(request.Query))
@@ -108,27 +114,46 @@ namespace CiccioSoft.Inventory.Data.Services
             return await items.CountAsync();
         }
 
-        public async Task<int> UpdateOrderAsync(Order order)
+        public async Task<int> UpdateProductAsync(Product product)
         {
-            if (order.OrderID > 0)
+            if (!String.IsNullOrEmpty(product.ProductID))
             {
-                _dataSource.Entry(order).State = EntityState.Modified;
+                _dataSource.Entry(product).State = EntityState.Modified;
             }
             else
             {
-                order.OrderID = UIDGenerator.Next(4);
-                order.OrderDate = DateTime.UtcNow;
-                _dataSource.Entry(order).State = EntityState.Added;
+                product.ProductID = UIDGenerator.Next(6).ToString();
+                product.CreatedOn = DateTime.UtcNow;
+                _dataSource.Entry(product).State = EntityState.Added;
             }
-            order.LastModifiedOn = DateTime.UtcNow;
-            order.SearchTerms = order.BuildSearchTerms();
+            product.LastModifiedOn = DateTime.UtcNow;
+            product.SearchTerms = product.BuildSearchTerms();
             return await _dataSource.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteOrdersAsync(params Order[] orders)
+        public async Task<int> DeleteProductsAsync(params Product[] products)
         {
-            _dataSource.Orders.RemoveRange(orders);
+            _dataSource.Products.RemoveRange(products);
             return await _dataSource.SaveChangesAsync();
         }
+
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_dataSource != null)
+                {
+                    _dataSource.Dispose();
+                }
+            }
+        }
+        #endregion
     }
 }
