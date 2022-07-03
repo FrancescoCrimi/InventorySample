@@ -20,11 +20,12 @@ using System.Linq;
 
 namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
-    public class SQLiteAppDbContext :  AppDbContext
+    public class SQLiteAppDbContext : AppDbContext
     {
-        protected SQLiteAppDbContext() { }
-
-        public SQLiteAppDbContext(DbContextOptions<SQLiteAppDbContext> options) : base(options) { }
+        public SQLiteAppDbContext(DbContextOptions<SQLiteAppDbContext> options)
+            : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -14,6 +14,7 @@
 
 using CiccioSoft.Inventory.Persistence.DbContexts;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -76,7 +77,10 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             {
                 //TODO: fixxa qui connectionstring non funziona più
                 //using (var db = new SQLServerAppDbContext(connectionString))
-                using (var db = Ioc.Default.GetService<SQLServerAppDbContext>())
+
+                var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
+                optionsBuilder.UseSqlServer(connectionString);
+                using (var db = new SQLServerAppDbContext(optionsBuilder.Options))
                 {
                     var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
                     if (await dbCreator.ExistsAsync())

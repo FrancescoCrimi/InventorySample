@@ -92,7 +92,10 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 ProgressStatus = "Connecting to Database";
                 //TODO: fixxa qui connectionstring non funziona più
                 //using (var db = new SQLServerAppDbContext(connectionString))
-                using (var db = Ioc.Default.GetService<SQLServerAppDbContext>())
+
+                var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
+                optionsBuilder.UseSqlServer(connectionString);
+                using (SQLServerAppDbContext db = new SQLServerAppDbContext(optionsBuilder.Options))
                 {
                     var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
                     if (!await dbCreator.ExistsAsync())
@@ -128,7 +131,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             //TODO: fixxa qui
             //using (var sourceDb = new SQLiteAppDbContext(settingsService.PatternConnectionString))
-            using (var sourceDb =  Ioc.Default.GetService<SQLiteAppDbContext>())
+            using (var sourceDb = Ioc.Default.GetService<SQLiteAppDbContext>())
             {
                 ProgressStatus = "Creating table Categories...";
                 foreach (var item in sourceDb.Categories.AsNoTracking())

@@ -19,9 +19,10 @@ namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
     public class SQLServerAppDbContext : AppDbContext
     {
-        protected SQLServerAppDbContext() { }
-
-        public SQLServerAppDbContext(DbContextOptions<SQLServerAppDbContext> options) : base(options) { }
+        public SQLServerAppDbContext(DbContextOptions<SQLServerAppDbContext> options)
+            : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

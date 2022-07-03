@@ -22,32 +22,30 @@ namespace CiccioSoft.Inventory.Persistence
                     //option.UseSqlServer(AppSettings.Current.MsLogConnectionString);
                 }, ServiceLifetime.Transient);
 
+            serviceCollection.AddDbContext<SQLiteAppDbContext>(options =>
+            {
+                options
+                    //.UseLazyLoadingProxies()
+                    //.ConfigureWarnings(w => w.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning))
+                    .UseSqlite(settings.SQLiteConnectionString);
+            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+
+            serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>
+            {
+                options
+                    //.UseLazyLoadingProxies()
+                    .UseSqlServer(settings.SQLServerConnectionString);
+            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+
             switch (settings.DataProvider)
             {
                 case DataProviderType.SQLite:
-                    serviceCollection.AddDbContext<SQLiteAppDbContext>(options =>
-                    {
-                        options
-                            //.UseLazyLoadingProxies()
-                            //.ConfigureWarnings(w => w.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning))
-                            .UseSqlite(settings.SQLiteConnectionString);
-                    }, ServiceLifetime.Transient, ServiceLifetime.Transient);
-
                     serviceCollection.AddTransient<AppDbContext>((serviceProvider)
                         => serviceProvider.GetRequiredService<SQLiteAppDbContext>());
-
                     break;
                 case DataProviderType.SQLServer:
-                    serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>
-                    {
-                        options
-                            //.UseLazyLoadingProxies()
-                            .UseSqlServer(settings.SQLServerConnectionString);
-                    }, ServiceLifetime.Transient, ServiceLifetime.Transient);
-
                     serviceCollection.AddTransient<AppDbContext>((serviceProvider)
                         => serviceProvider.GetRequiredService<SQLServerAppDbContext>());
-
                     break;
                 case DataProviderType.WebAPI:
                     break;

@@ -28,7 +28,7 @@ namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
             DialogService = dialogService;
         }
 
-        public IDialogService DialogService { get; }
+        private IDialogService DialogService { get; }
 
         public string Version => AppSettings.Current.Version;
 
