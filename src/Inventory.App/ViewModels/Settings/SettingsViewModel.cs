@@ -17,7 +17,10 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Toolkit.Mvvm.Input;
+using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
@@ -30,15 +33,15 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
     public class SettingsViewModel : ViewModelBase
     {
-        private readonly ISettingsService settingsService;
+        private readonly IDialogService dialogService;
 
-        public SettingsViewModel(ISettingsService settingsService)
+        public SettingsViewModel(IDialogService dialogService)
             : base()
         {
-            this.settingsService = settingsService;
+            this.dialogService = dialogService;
         }
 
-        public string Version => $"v{settingsService.Version}";
+        public string Version => $"v{AppSettings.Current.Version}";
 
         private bool _isBusy = false;
         public bool IsBusy
@@ -70,8 +73,8 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         public bool IsRandomErrorsEnabled
         {
-            get { return settingsService.IsRandomErrorsEnabled; }
-            set { settingsService.IsRandomErrorsEnabled = value; }
+            get { return AppSettings.Current.IsRandomErrorsEnabled; }
+            set { AppSettings.Current.IsRandomErrorsEnabled = value; }
         }
 
         public ICommand ResetLocalDataCommand => new RelayCommand(OnResetLocalData);
@@ -87,10 +90,10 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
             StatusReady();
 
-            IsLocalProvider = settingsService.DataProvider == DataProviderType.SQLite;
+            IsLocalProvider = AppSettings.Current.DataProvider == DataProviderType.SQLite;
 
-            SqlConnectionString = settingsService.SQLServerConnectionString;
-            IsSqlProvider = settingsService.DataProvider == DataProviderType.SQLServer;
+            SqlConnectionString = AppSettings.Current.SQLServerConnectionString;
+            IsSqlProvider = AppSettings.Current.DataProvider == DataProviderType.SQLServer;
 
             return Task.CompletedTask;
         }
@@ -99,7 +102,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             if (IsLocalProvider && !IsSqlProvider)
             {
-                settingsService.DataProvider = DataProviderType.SQLite;
+                AppSettings.Current.DataProvider = DataProviderType.SQLite;
             }
         }
 
@@ -107,7 +110,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             IsBusy = true;
             StatusMessage("Waiting database reset...");
-            var result = await settingsService.ResetLocalDataProviderAsync();
+            var result = await ResetLocalDataProviderAsync();
             IsBusy = false;
             if (result.IsOk)
             {
@@ -129,7 +132,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             StatusReady();
             IsBusy = true;
             StatusMessage("Validating connection string...");
-            var result = await settingsService.ValidateConnectionAsync(SqlConnectionString);
+
+            var dialog = new ValidateConnectionView(SqlConnectionString);
+            var res = await dialog.ShowAsync();
+            Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
+
             IsBusy = false;
             if (result.IsOk)
             {
@@ -147,7 +154,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             StatusReady();
             DisableAllViews("Waiting for the database to be created...");
-            var result = await settingsService.CreateDabaseAsync(SqlConnectionString);
+
+            var dialog = new CreateDatabaseView(SqlConnectionString);
+            var res = await dialog.ShowAsync();
+            Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
+
             EnableOtherViews();
             EnableThisView("");
             await Task.Delay(100);
@@ -167,14 +178,40 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             {
                 if (await ValidateSqlConnectionAsync())
                 {
-                    settingsService.SQLServerConnectionString = SqlConnectionString;
-                    settingsService.DataProvider = DataProviderType.SQLServer;
+                    AppSettings.Current.SQLServerConnectionString = SqlConnectionString;
+                    AppSettings.Current.DataProvider = DataProviderType.SQLServer;
                 }
             }
             else
             {
-                settingsService.DataProvider = DataProviderType.SQLite;
+                AppSettings.Current.DataProvider = DataProviderType.SQLite;
             }
+        }
+
+        private async Task<Result> ResetLocalDataProviderAsync()
+        {
+            Result result = null;
+            string errorMessage = null;
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
+                var sourceFile = await databaseFolder.GetFileAsync(AppSettings.DatabasePattern);
+                var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
+                await sourceFile.CopyAndReplaceAsync(targetFile);
+                await dialogService.ShowAsync("Reset Local Data Provider", "Local Data Provider restore successfully.");
+                result = Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                result = Result.Error(ex);
+            }
+            if (errorMessage != null)
+            {
+                await dialogService.ShowAsync("Reset Local Data Provider", errorMessage);
+            }
+            return result;
         }
     }
 }

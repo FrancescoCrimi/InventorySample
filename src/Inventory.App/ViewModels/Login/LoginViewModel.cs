@@ -29,18 +29,18 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         public LoginViewModel(INavigationService navigationService,
                               //ILoginService loginService,
-                              ISettingsService settingsService,
+                              //ISettingsService settingsService,
                               IDialogService dialogService)
             : base()
         {
             this.navigationService = navigationService;
             //LoginService = loginService;
-            SettingsService = settingsService;
+            //SettingsService = settingsService;
             this.dialogService = dialogService;
         }
 
         public ILoginService LoginService { get; }
-        public ISettingsService SettingsService { get; }
+        //public ISettingsService SettingsService { get; }
 
         private ShellArgs ViewModelArgs { get; set; }
 
@@ -88,7 +88,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             ViewModelArgs = args;
 
-            UserName = SettingsService.UserName ?? args.UserInfo.AccountName;
+            UserName = AppSettings.Current.UserName ?? args.UserInfo.AccountName;
             IsLoginWithWindowsHello = LoginService.IsWindowsHelloEnabled(UserName);
             IsLoginWithPassword = !IsLoginWithWindowsHello;
             IsBusy = false;
@@ -126,7 +126,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                     {
                         await LoginService.TrySetupWindowsHelloAsync(UserName);
                     }
-                    SettingsService.UserName = UserName;
+                    AppSettings.Current.UserName = UserName;
                     EnterApplication();
                     return;
                 }

@@ -163,7 +163,6 @@
     <Compile Include="Services\Infrastructure\IFilePickerService.cs" />
     <Compile Include="Services\Infrastructure\ILoginService.cs" />
     <Compile Include="Services\Infrastructure\INavigationService.cs" />
-    <Compile Include="Services\Infrastructure\ISettingsService.cs" />
     <Compile Include="Services\Infrastructure\IWindowService.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,7 +173,6 @@
     <Compile Include="Services\VirtualCollections\LogCollection.cs" />
     <Compile Include="Services\Infrastructure\Impl\NavigationService.cs" />
     <Compile Include="Services\Infrastructure\PageService.cs" />
-    <Compile Include="Services\Infrastructure\Impl\SettingsService.cs" />
     <Compile Include="Services\Infrastructure\Impl\WindowService.cs" />
     <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
     <Compile Include="Services\OrderItemServiceUwp.cs" />

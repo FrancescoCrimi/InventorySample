@@ -12,15 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Persistence.DbContexts;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
+using CiccioSoft.Inventory.Persistence;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
@@ -28,14 +23,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class ValidateConnectionViewModel : ViewModelBase
     {
         private readonly ILogger<ValidateConnectionViewModel> logger;
-        private readonly ISettingsService settingsService;
 
-        public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger,
-                                           ISettingsService settingsService)
+        public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger)
             : base()
         {
             this.logger = logger;
-            this.settingsService = settingsService;
             Result = Result.Error("Operation cancelled");
         }
 
@@ -75,27 +67,21 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             try
             {
-                //TODO: fixxa qui connectionstring non funziona più
-                //using (var db = new SQLServerAppDbContext(connectionString))
-
-                var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
-                optionsBuilder.UseSqlServer(connectionString);
-                using (var db = new SQLServerAppDbContext(optionsBuilder.Options))
+                using (var db = new DatabaseSettings(connectionString, Infrastructure.Common.DataProviderType.SQLServer, Ioc.Default))
                 {
-                    var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-                    if (await dbCreator.ExistsAsync())
+                    if (await db.ExistsAsync())
                     {
-                        var version = db.DbVersion.FirstOrDefault();
+                        var version = db.GetDbVersion();
                         if (version != null)
                         {
-                            if (version.Version == settingsService.DbVersion)
+                            if (version == AppSettings.Current.DbVersion)
                             {
                                 Message = $"Database connection succeeded and version is up to date.";
                                 Result = Result.Ok("Database connection succeeded");
                             }
                             else
                             {
-                                Message = $"Database version mismatch. Current version is {version.Version}, expected version is {settingsService.DbVersion}. Please, recreate the database.";
+                                Message = $"Database version mismatch. Current version is {version}, expected version is {AppSettings.Current.DbVersion}. Please, recreate the database.";
                                 Result = Result.Error("Database version mismatch");
                             }
                         }

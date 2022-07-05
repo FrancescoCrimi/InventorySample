@@ -12,11 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Persistence.DbContexts;
+using CiccioSoft.Inventory.Persistence;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
@@ -27,14 +24,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger<CreateDatabaseViewModel> logger;
-        private readonly ISettingsService settingsService;
 
-        public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
-                                       ISettingsService settingsService)
+        public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger)
             : base()
         {
             this.logger = logger;
-            this.settingsService = settingsService;
             Result = Result.Error("Operation cancelled");
         }
 
@@ -90,21 +84,16 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             {
                 ProgressMaximum = 14;
                 ProgressStatus = "Connecting to Database";
-                //TODO: fixxa qui connectionstring non funziona più
-                //using (var db = new SQLServerAppDbContext(connectionString))
 
-                var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
-                optionsBuilder.UseSqlServer(connectionString);
-                using (SQLServerAppDbContext db = new SQLServerAppDbContext(optionsBuilder.Options))
+                using (var db = new DatabaseSettings(connectionString, Infrastructure.Common.DataProviderType.SQLServer, Ioc.Default))
                 {
-                    var dbCreator = db.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-                    if (!await dbCreator.ExistsAsync())
+                    if (!await db.ExistsAsync())
                     {
                         ProgressValue = 1;
                         ProgressStatus = "Creating Database...";
-                        await db.Database.EnsureCreatedAsync();
+                        await db.EnsureCreatedAsync();
                         ProgressValue = 2;
-                        await CopyDataTables(db);
+                        await db.CopyDataTables(SetValue, SetStatus);
                         ProgressValue = 14;
                         Message = "Database created successfully.";
                         Result = Result.Ok("Database created successfully.");
@@ -127,97 +116,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             SecondaryButtonText = null;
         }
 
-        private async Task CopyDataTables(SQLServerAppDbContext db)
-        {
-            //TODO: fixxa qui
-            //using (var sourceDb = new SQLiteAppDbContext(settingsService.PatternConnectionString))
-            using (var sourceDb = Ioc.Default.GetService<SQLiteAppDbContext>())
-            {
-                ProgressStatus = "Creating table Categories...";
-                foreach (var item in sourceDb.Categories.AsNoTracking())
-                {
-                    await db.Categories.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 3;
-
-                ProgressStatus = "Creating table CountryCodes...";
-                foreach (var item in sourceDb.CountryCodes.AsNoTracking())
-                {
-                    await db.CountryCodes.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 4;
-
-                ProgressStatus = "Creating table OrderStatus...";
-                foreach (var item in sourceDb.OrderStatus.AsNoTracking())
-                {
-                    await db.OrderStatus.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 5;
-
-                ProgressStatus = "Creating table PaymentTypes...";
-                foreach (var item in sourceDb.PaymentTypes.AsNoTracking())
-                {
-                    await db.PaymentTypes.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 6;
-
-                ProgressStatus = "Creating table Shippers...";
-                foreach (var item in sourceDb.Shippers.AsNoTracking())
-                {
-                    await db.Shippers.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 7;
-
-                ProgressStatus = "Creating table TaxTypes...";
-                foreach (var item in sourceDb.TaxTypes.AsNoTracking())
-                {
-                    await db.TaxTypes.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 8;
-
-                ProgressStatus = "Creating table Customers...";
-                foreach (var item in sourceDb.Customers.AsNoTracking())
-                {
-                    await db.Customers.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 9;
-
-                ProgressStatus = "Creating table Products...";
-                foreach (var item in sourceDb.Products.AsNoTracking())
-                {
-                    await db.Products.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 10;
-
-                ProgressStatus = "Creating table Orders...";
-                foreach (var item in sourceDb.Orders.AsNoTracking())
-                {
-                    await db.Orders.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 11;
-
-                ProgressStatus = "Creating table OrderItems...";
-                foreach (var item in sourceDb.OrderItems.AsNoTracking())
-                {
-                    await db.OrderItems.AddAsync(item);
-                }
-                await db.SaveChangesAsync();
-                ProgressValue = 12;
-
-                ProgressStatus = "Creating database version...";
-                await db.DbVersion.AddAsync(await sourceDb.DbVersion.FirstAsync());
-                await db.SaveChangesAsync();
-                ProgressValue = 13;
-            }
-        }
+        private void SetValue(double value) => ProgressValue = value;
+        private void SetStatus(string status) => ProgressStatus = status;
     }
 }

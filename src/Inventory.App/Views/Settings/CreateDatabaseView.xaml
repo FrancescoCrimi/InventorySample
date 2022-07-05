@@ -9,7 +9,9 @@
     PrimaryButtonClick="OnOkClick"
     SecondaryButtonText="{x:Bind ViewModel.SecondaryButtonText, Mode=OneWay}"
     SecondaryButtonClick="OnCancelClick"
-    mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="840">
+    mc:Ignorable="d"
+    d:DesignWidth="1280"
+    d:DesignHeight="840">
 
     <StackPanel Margin="0,24" Width="480" Spacing="12">
         <StackPanel Spacing="12" Visibility="{x:Bind ViewModel.HasMessage, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">

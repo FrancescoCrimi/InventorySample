@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Hosting;
 
 namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
 {
+    //TODO: refactory this class as Windows Template Studio and add new AppWindow mode
     public class WindowService : IWindowService
     {
         private readonly ILogger<WindowService> logger;

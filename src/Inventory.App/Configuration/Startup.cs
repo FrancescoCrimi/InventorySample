@@ -73,7 +73,7 @@ namespace CiccioSoft.Inventory.Uwp
         {
             services
                 
-                .AddSingleton<ISettingsService, SettingsService>()
+                //.AddSingleton<ISettingsService, SettingsService>()
 
                 .AddSingleton<ProductServiceUwp>()
                 .AddSingleton<CustomerServiceUwp>()

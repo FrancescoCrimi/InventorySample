@@ -4,6 +4,7 @@
     {
         SQLite,
         SQLServer,
+        MySql,
         WebAPI
     }
 
