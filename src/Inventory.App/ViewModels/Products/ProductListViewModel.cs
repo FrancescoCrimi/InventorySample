@@ -53,22 +53,19 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private readonly ILogger<ProductListViewModel> logger;
         //private readonly IProductService productService;
         private readonly ProductServiceUwp productService;
-        private readonly INavigationService navigationService;
-        private readonly IWindowService windowService;
-        private readonly IDialogService dialogService;
+        private readonly NavigationService navigationService;
+        private readonly WindowService windowService;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
                                     ProductServiceUwp productService,
-                                    INavigationService navigationService,
-                                    IWindowService windowService,
-                                    IDialogService dialogService)
+                                    NavigationService navigationService,
+                                    WindowService windowService)
             : base()
         {
             this.logger = logger;
             this.productService = productService;
             this.navigationService = navigationService;
             this.windowService = windowService;
-            this.dialogService = dialogService;
         }
 
         public ProductListArgs ViewModelArgs { get; private set; }
@@ -190,7 +187,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         protected override async void OnDeleteSelection()
         {
             StatusReady();
-            if (await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected products?", "Ok", "Cancel"))
+            if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected products?", "Ok", "Cancel"))
             {
                 int count = 0;
                 try

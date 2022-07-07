@@ -17,9 +17,9 @@ using System;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    public partial class NavigationService : INavigationService
+    public partial class NavigationService
     {
         private readonly ILogger<NavigationService> logger;
         private readonly PageService pageService;

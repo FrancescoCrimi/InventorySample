@@ -14,23 +14,30 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    public class DialogService : IDialogService
+    public class DialogService
     {
-        public async Task ShowAsync(string title, Exception ex, string ok = "Ok")
+        private static DialogService current;
+
+        public static DialogService Current => current ?? (current = new DialogService());
+
+        public async Task ShowAsync(string title,
+                                    Exception ex,
+                                    string ok = "Ok",
+                                    XamlRoot xamlRoot = null)
         {
-            await ShowAsync(title, ex.Message, ok);
+            await ShowAsync(title, ex.Message, ok, null, xamlRoot);
         }
 
-        public async Task ShowAsync(Result result, string ok = "Ok")
-        {
-            await ShowAsync(result.Message, result.Description, ok);
-        }
-
-        public async Task<bool> ShowAsync(string title, string content, string ok = "Ok", string cancel = null)
+        public async Task<bool> ShowAsync(string title,
+                                          string content,
+                                          string ok = "Ok",
+                                          string cancel = null,
+                                          XamlRoot xamlRoot = null)
         {
             var dialog = new ContentDialog
             {
@@ -41,6 +48,10 @@ namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
             if (cancel != null)
             {
                 dialog.SecondaryButtonText = cancel;
+            }
+            if (xamlRoot != null)
+            {
+                dialog.XamlRoot = xamlRoot;
             }
             var result = await dialog.ShowAsync();
             return result == ContentDialogResult.Primary;

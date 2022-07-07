@@ -41,19 +41,16 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger<ProductDetailsViewModel> logger;
         private readonly ProductServiceUwp productService;
-        private readonly IFilePickerService filePickerService;
-        private readonly IDialogService dialogService;
+        private readonly FilePickerService filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
                                        ProductServiceUwp productService,
-                                       IFilePickerService filePickerService,
-                                       IDialogService dialogService)
+                                       FilePickerService filePickerService)
             : base()
         {
             this.logger = logger;
             this.productService = productService;
             this.filePickerService = filePickerService;
-            this.dialogService = dialogService;
         }
 
         override public string Title => (Item?.IsNew ?? true) ? "New Product" : TitleEdit;
@@ -186,7 +183,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         protected override async Task<bool> ConfirmDeleteAsync()
         {
-            return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current product?", "Ok", "Cancel");
+            return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current product?", "Ok", "Cancel");
         }
 
         override protected IEnumerable<IValidationConstraint<ProductModel>> GetValidationConstraints(ProductModel model)

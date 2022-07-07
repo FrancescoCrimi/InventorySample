@@ -43,16 +43,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger<OrderDetailsViewModel> logger;
         private readonly OrderServiceUwp orderService;
-        private readonly IDialogService dialogService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderServiceUwp orderService,
-                                     IDialogService dialogService)
+                                     OrderServiceUwp orderService)
             : base()
         {
             this.logger = logger;
             this.orderService = orderService;
-            this.dialogService = dialogService;
         }
 
         override public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
@@ -174,7 +171,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         protected override async Task<bool> ConfirmDeleteAsync()
         {
-            return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
+            return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
         }
 
         override protected IEnumerable<IValidationConstraint<OrderModel>> GetValidationConstraints(OrderModel model)

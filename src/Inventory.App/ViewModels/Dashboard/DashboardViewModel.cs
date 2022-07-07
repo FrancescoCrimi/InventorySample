@@ -16,6 +16,7 @@ using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -26,13 +27,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     public class DashboardViewModel : ViewModelBase
     {
         private readonly ILogger<DashboardViewModel> logger;
-        private readonly INavigationService navigationService;
+        private readonly NavigationService navigationService;
         private readonly CustomerServiceUwp customerService;
         private readonly OrderServiceUwp orderService;
         private readonly ProductServiceUwp productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
-                                  INavigationService navigationService,
+                                  NavigationService navigationService,
                                   CustomerServiceUwp customerService,
                                   OrderServiceUwp orderService,
                                   ProductServiceUwp productService)

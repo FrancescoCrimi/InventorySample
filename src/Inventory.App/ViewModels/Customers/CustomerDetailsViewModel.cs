@@ -41,19 +41,16 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger<CustomerDetailsViewModel> logger;
         private readonly CustomerServiceUwp customerService;
-        private readonly IFilePickerService filePickerService;
-        private readonly IDialogService dialogService;
+        private readonly FilePickerService filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
                                         CustomerServiceUwp customerService,
-                                        IFilePickerService filePickerService,
-                                        IDialogService dialogService)
+                                        FilePickerService filePickerService)
             : base()
         {
             this.logger = logger;
             this.customerService = customerService;
             this.filePickerService = filePickerService;
-            this.dialogService = dialogService;
         }
 
 
@@ -188,7 +185,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         protected override async Task<bool> ConfirmDeleteAsync()
         {
-            return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current customer?", "Ok", "Cancel");
+            return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current customer?", "Ok", "Cancel");
         }
 
         override protected IEnumerable<IValidationConstraint<CustomerModel>> GetValidationConstraints(CustomerModel model)

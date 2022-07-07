@@ -33,12 +33,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
     public class SettingsViewModel : ViewModelBase
     {
-        private readonly IDialogService dialogService;
-
-        public SettingsViewModel(IDialogService dialogService)
+        public SettingsViewModel()
             : base()
         {
-            this.dialogService = dialogService;
         }
 
         public string Version => $"v{AppSettings.Current.Version}";
@@ -199,7 +196,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 var sourceFile = await databaseFolder.GetFileAsync(AppSettings.DatabasePattern);
                 var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
                 await sourceFile.CopyAndReplaceAsync(targetFile);
-                await dialogService.ShowAsync("Reset Local Data Provider", "Local Data Provider restore successfully.");
+                await ShowDialogAsync("Reset Local Data Provider", "Local Data Provider restore successfully.");
                 result = Result.Ok();
             }
             catch (Exception ex)
@@ -209,7 +206,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
             if (errorMessage != null)
             {
-                await dialogService.ShowAsync("Reset Local Data Provider", errorMessage);
+                await ShowDialogAsync("Reset Local Data Provider", errorMessage);
             }
             return result;
         }

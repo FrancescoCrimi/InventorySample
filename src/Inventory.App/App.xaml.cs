@@ -52,7 +52,7 @@ namespace CiccioSoft.Inventory.Uwp
                     Parameter = null,
                     UserInfo = await TryGetUserInfoAsync(e as IActivatedEventArgsWithUser)
                 };
-                rootFrame.Navigate(typeof(MainShellView), shellArgs);
+                rootFrame.Navigate(typeof(ShellView), shellArgs);
             }
             if (e.PrelaunchActivated == false)
             {

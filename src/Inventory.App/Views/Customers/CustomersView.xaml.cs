@@ -12,28 +12,24 @@
 // ******************************************************************
 #endregion
 
-using System;
-
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-using CiccioSoft.Inventory.Uwp.ViewModels;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Windows.ApplicationModel.Core;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 
 namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class CustomersView : Page
     {
-        private readonly IWindowService windowService;
+        private readonly WindowService windowService;
 
         public CustomersView()
         {
             ViewModel = Ioc.Default.GetService<CustomersViewModel>();
             //NavigationService = Ioc.Default.GetService<INavigationService>();
-            windowService = Ioc.Default.GetService<IWindowService>();
+            windowService = Ioc.Default.GetService<WindowService>();
             InitializeComponent();
         }
 

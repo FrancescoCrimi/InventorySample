@@ -51,16 +51,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger logger;
         private readonly ILogService logService;
-        private readonly IDialogService dialogService;
 
         public AppLogListViewModel(ILogger<AppLogListViewModel> logger,
-                                   ILogService logService,
-                                   IDialogService dialogService)
+                                   ILogService logService)
             : base()
         {
             this.logger = logger;
             this.logService = logService;
-            this.dialogService = dialogService;
         }
 
         public AppLogListArgs ViewModelArgs { get; private set; }
@@ -201,7 +198,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         protected override async void OnDeleteSelection()
         {
             StatusReady();
-            if (await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
+            if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
             {
                 int count = 0;
                 try

@@ -23,13 +23,13 @@ namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class OrderItemsView : Page
     {
-        private readonly IWindowService windowService;
+        private readonly WindowService windowService;
 
         public OrderItemsView()
         {
             ViewModel = Ioc.Default.GetService<OrderItemsViewModel>();
             //NavigationService = Ioc.Default.GetService<INavigationService>();
-            windowService = Ioc.Default.GetService<IWindowService>();
+            windowService = Ioc.Default.GetService<WindowService>();
             InitializeComponent();
         }
 

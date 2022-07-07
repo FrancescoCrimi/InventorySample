@@ -12,9 +12,12 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
@@ -27,7 +30,16 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             //IsMainView = false;
         }
 
-        //public bool IsMainView => ContextService.IsMainView;
+        public XamlRoot ViewXamlRoot { get; set; }
+
+        protected Task<bool> ShowDialogAsync(string title,
+                                          string content,
+                                          string ok = "Ok",
+                                          string cancel = null)
+        {
+            return DialogService.Current.ShowAsync(title, content, ok, cancel, ViewXamlRoot);
+        }
+
         public bool IsMainView => true;
 
         virtual public string Title => String.Empty;
@@ -38,6 +50,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             _stopwatch.Reset();
             _stopwatch.Start();
         }
+
         public void EndStatusMessage(string message)
         {
             _stopwatch.Stop();
@@ -49,11 +62,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             //MessageService.Send(this, "StatusMessage", "Ready");
             Messenger.Send(new StatusMessage("Ready", "StatusMessage"));
         }
+
         public void StatusMessage(string message)
         {
             //MessageService.Send(this, "StatusMessage", message);
             Messenger.Send(new StatusMessage(message, "StatusMessage"));
         }
+
         public void StatusError(string message)
         {
             //MessageService.Send(this, "StatusError", message);
@@ -66,6 +81,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             //MessageService.Send(this, "EnableThisView", message);
             Messenger.Send(new StatusMessage(message, "EnableThisView"));
         }
+
         public void DisableThisView(string message)
         {
             //MessageService.Send(this, "DisableThisView", message);
@@ -78,6 +94,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             //MessageService.Send(this, "EnableOtherViews", message);
             Messenger.Send(new StatusMessage(message, "EnableOtherViews"));
         }
+
         public void DisableOtherViews(string message)
         {
             //MessageService.Send(this, "DisableOtherViews", message);
@@ -90,6 +107,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             //MessageService.Send(this, "EnableAllViews", message);
             Messenger.Send(new StatusMessage(message, "EnableAllViews"));
         }
+
         public void DisableAllViews(string message)
         {
             //MessageService.Send(this, "DisableAllViews", message);

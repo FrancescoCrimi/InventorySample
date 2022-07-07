@@ -17,7 +17,6 @@ using CiccioSoft.Inventory.Data.Services;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Data.Sqlite;
@@ -63,91 +62,59 @@ namespace CiccioSoft.Inventory.Uwp
             return services.BuildServiceProvider();
         }
 
-        //private void AddDbContexts(IServiceCollection services)
-        //{
-        //    services
-
-        //}
-
         private void AddServices(ServiceCollection services)
         {
             services
-                
-                //.AddSingleton<ISettingsService, SettingsService>()
-
                 .AddSingleton<ProductServiceUwp>()
                 .AddSingleton<CustomerServiceUwp>()
                 .AddSingleton<OrderServiceUwp>()
                 .AddSingleton<OrderItemServiceUwp>()
 
-            //.AddSingleton<IMessageService, MessageService>()
-            .AddSingleton<IDialogService, DialogService>()
-            .AddSingleton<IFilePickerService, FilePickerService>()
-            //.AddSingleton<ILoginService, LoginService>()
+                //.AddSingleton<IMessageService, MessageService>()
+                .AddSingleton<FilePickerService, FilePickerService>()
 
-            //.AddScoped<IContextService, ContextService>()
-            .AddScoped<INavigationService, NavigationService>()
-            .AddSingleton<PageService>()
-            .AddSingleton<IWindowService, WindowService>()
-            //.AddScoped<ICommonServices, CommonServices>()
+                .AddScoped<NavigationService, NavigationService>()
+                .AddSingleton<PageService>()
+                .AddSingleton<WindowService, WindowService>()
 
-            .AddTransient<LoginViewModel>()
+                //.AddTransient<ShellViewModel>()
+                .AddTransient<ShellViewModel>()
 
-            .AddTransient<ShellViewModel>()
-            .AddTransient<MainShellViewModel>()
+                .AddTransient<DashboardViewModel>()
+                .AddTransient<SettingsViewModel>()
+                .AddTransient<ValidateConnectionViewModel>()
+                .AddTransient<CreateDatabaseViewModel>()
 
-            .AddTransient<DashboardViewModel>()
-
-            .AddTransient<CustomersViewModel>()
-            .AddTransient<CustomerDetailsViewModel>()
-
-            .AddTransient<OrdersViewModel>()
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderDetailsWithItemsViewModel>()
-
-            .AddTransient<OrderItemsViewModel>()
-            .AddTransient<OrderItemDetailsViewModel>()
-
-            .AddTransient<ProductsViewModel>()
-            .AddTransient<ProductDetailsViewModel>()
-
-            .AddTransient<AppLogsViewModel>()
-
-            .AddTransient<SettingsViewModel>()
-            .AddTransient<ValidateConnectionViewModel>()
-            .AddTransient<CreateDatabaseViewModel>()
-
-
-
-            .AddTransient<CustomerListViewModel>()
-            .AddTransient<CustomerDetailsViewModel>()
-            .AddTransient<OrderListViewModel>()
-
-            .AddTransient<ProductListViewModel>()
-            .AddTransient<ProductDetailsViewModel>()
-
-            .AddTransient<OrderListViewModel>()
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderItemListViewModel>()
-
-            .AddTransient<OrderItemListViewModel>()
-            .AddTransient<OrderItemDetailsViewModel>()
-
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderItemListViewModel>()
-
-            .AddTransient<AppLogListViewModel>()
-            .AddTransient<AppLogDetailsViewModel>();
+                .AddTransient<CustomerListViewModel>()
+                .AddTransient<CustomerDetailsViewModel>()
+                .AddTransient<CustomersViewModel>()
+            
+                .AddTransient<ProductListViewModel>()
+                .AddTransient<ProductDetailsViewModel>()
+                .AddTransient<ProductsViewModel>()
+            
+                .AddTransient<OrderDetailsViewModel>()
+                .AddTransient<OrderDetailsWithItemsViewModel>()
+                .AddTransient<OrderListViewModel>()
+                .AddTransient<OrdersViewModel>()
+            
+                .AddTransient<OrderItemListViewModel>()
+                .AddTransient<OrderItemDetailsViewModel>()
+                .AddTransient<OrderItemsViewModel>()
+            
+                .AddTransient<AppLogsViewModel>()
+                .AddTransient<AppLogListViewModel>()            
+                .AddTransient<AppLogDetailsViewModel>();
         }
 
 
         private void ConfigureNavigation()
         {
             var pageService = Ioc.Default.GetService<PageService>();
-            pageService.Register<LoginViewModel, LoginView>();
+            //pageService.Register<LoginViewModel, LoginView>();
 
+            //pageService.Register<ShellViewModel, ShellView>();
             pageService.Register<ShellViewModel, ShellView>();
-            pageService.Register<MainShellViewModel, MainShellView>();
 
             pageService.Register<DashboardViewModel, DashboardView>();
 

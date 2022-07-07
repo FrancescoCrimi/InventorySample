@@ -37,16 +37,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger logger;
         private readonly ILogService logService;
-        private readonly IDialogService dialogService;
 
         public AppLogDetailsViewModel(ILogger<AppLogListViewModel> logger,
-                                      ILogService logService,
-                                      IDialogService dialogService)
+                                      ILogService logService)
             : base()
         {
             this.logger = logger;
             this.logService = logService;
-            this.dialogService = dialogService;
         }
 
         override public string Title => "Activity Logs";
@@ -122,7 +119,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         protected override async Task<bool> ConfirmDeleteAsync()
         {
-            return await dialogService.ShowAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
+            return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
         }
 
         /*

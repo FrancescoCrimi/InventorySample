@@ -14,7 +14,6 @@
 
 using CiccioSoft.Inventory.Data.Models;
 using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -29,16 +28,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
     abstract public partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
     {
-        private readonly INavigationService navigationService;
-        private readonly IDialogService dialogService;
-        private readonly IWindowService windowService;
+        private readonly NavigationService navigationService;
+        private readonly WindowService windowService;
 
         public GenericDetailsViewModel()
             : base()
         {
-            navigationService = Ioc.Default.GetService<INavigationService>();
-            dialogService = Ioc.Default.GetService<IDialogService>();
-            windowService = Ioc.Default.GetService<IWindowService>();
+            navigationService = Ioc.Default.GetService<NavigationService>();
+            windowService = Ioc.Default.GetService<WindowService>();
         }
 
         public ILookupTableService LookupTables => LookupTablesProxy.Instance;
@@ -159,7 +156,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
             else
             {
-                await dialogService.ShowAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
+                await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
             }
         }
         virtual public async Task SaveAsync()

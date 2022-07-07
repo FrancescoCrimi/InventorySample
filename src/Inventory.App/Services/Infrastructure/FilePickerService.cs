@@ -18,9 +18,17 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    public class FilePickerService : IFilePickerService
+    public class ImagePickerResult
+    {
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] ImageBytes { get; set; }
+        public object ImageSource { get; set; }
+    }
+
+    public class FilePickerService
     {
         public async Task<ImagePickerResult> OpenImagePickerAsync()
         {

@@ -12,12 +12,19 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Uwp.Helpers;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
-
-using CiccioSoft.Inventory.Uwp.Services;
-//using Microsoft.Extensions.Uwp.Logging;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using System.Windows.Input;
+using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
@@ -30,36 +37,28 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
     public class ShellViewModel : ViewModelBase
     {
-        private readonly INavigationService navigationService;
+        private readonly ILogger<ShellViewModel> logger;
+        private readonly NavigationService navigationService;
+        private readonly ILogService logService;
 
-        public ShellViewModel(
-                              //ILoginService loginService,
-                              INavigationService navigationService)
-            : base()
+        public ShellViewModel(ILogger<ShellViewModel> logger,
+                                  NavigationService navigationService,
+                                  ILogService logService)
         {
-            //IsLocked = !loginService.IsAuthenticated;
+            this.logger = logger;
             this.navigationService = navigationService;
+            this.logService = logService;
         }
 
-        private bool _isLocked = false;
-        public bool IsLocked
-        {
-            get => _isLocked;
-            set => SetProperty(ref _isLocked, value);
-        }
+        public ShellArgs ViewModelArgs { get; protected set; }
+
+        public UserInfo UserInfo { get; protected set; }
 
         private bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
-        }
-
-        private string _message = "Ready";
-        public string Message
-        {
-            get => _message;
-            set => SetProperty(ref _message, value);
         }
 
         private bool _isError = false;
@@ -69,55 +68,62 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             set => SetProperty(ref _isError, value);
         }
 
-        public UserInfo UserInfo { get; protected set; }
-
-        public ShellArgs ViewModelArgs { get; protected set; }
-
-        virtual public Task LoadAsync(ShellArgs args)
+        private string _message = "Ready";
+        public string Message
         {
+            get => _message;
+            set => SetProperty(ref _message, value);
+        }
+
+        private int logNewCount = 10;
+        public int LogNewCount
+        {
+            get => logNewCount;
+            set => SetProperty(ref logNewCount, value);
+        }
+
+        private bool isBackEnabled;
+        public bool IsBackEnabled
+        {
+            get => isBackEnabled;
+            set => SetProperty(ref isBackEnabled, value);
+        }
+
+        public async Task LoadAsync(ShellArgs args)
+        {
+            //Items = GetItems().ToArray();
+            await UpdateAppLogBadge();
             ViewModelArgs = args;
             if (ViewModelArgs != null)
             {
                 UserInfo = ViewModelArgs.UserInfo;
                 navigationService.Navigate(ViewModelArgs.ViewModel, ViewModelArgs.Parameter);
             }
-            return Task.CompletedTask;
-        }
-        virtual public void Unload()
-        {
         }
 
-        virtual public void Subscribe()
+        public void Subscribe()
         {
+            // Todo: ILoggerService non scrive piu i log, ma vengono scritti da NLog
+            //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
             //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
             //MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
             Messenger.Register<StatusMessage>(this, OnStatusMessage);
         }
 
-        virtual public void Unsubscribe()
+        private void SetStatus(string message)
         {
-            //MessageService.Unsubscribe(this);
-            Messenger.UnregisterAll(this);
+            message = message ?? "";
+            message = message.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
+            Message = message;
         }
-
-        //private async void OnLoginMessage(ILoginService loginService, string message, bool isAuthenticated)
-        //{
-        //    if (message == "AuthenticationChanged")
-        //    {
-        //        //await ContextService.RunAsync(() =>
-        //        //{
-        //        IsLocked = !isAuthenticated;
-        //        //});
-        //    }
-        //}
 
         private void OnStatusMessage(object recipient, StatusMessage message)
         {
-        //    throw new NotImplementedException();
-        //}
+            //    throw new NotImplementedException();
+            //}
 
-        //private async void OnMessage(ViewModelBase viewModel, string message, string status)
-        //{
+            //private async void OnMessage(ViewModelBase viewModel, string message, string status)
+            //{
             switch (message.Value)
             {
                 case "StatusMessage":
@@ -146,11 +152,98 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        private void SetStatus(string message)
+        public void Unsubscribe()
         {
-            message = message ?? "";
-            message = message.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
-            Message = message;
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
+        }
+
+        public void Unload()
+        {
+        }
+
+        private async void NavigateTo(Type viewModel)
+        {
+            switch (viewModel.Name)
+            {
+                case "DashboardViewModel":
+                    navigationService.Navigate(viewModel);
+                    break;
+                case "CustomersViewModel":
+                    navigationService.Navigate(viewModel, new CustomerListArgs());
+                    break;
+                case "OrdersViewModel":
+                    navigationService.Navigate(viewModel, new OrderListArgs());
+                    break;
+                case "ProductsViewModel":
+                    navigationService.Navigate(viewModel, new ProductListArgs());
+                    break;
+                case "AppLogsViewModel":
+                    navigationService.Navigate(viewModel, new AppLogListArgs());
+                    await logService.MarkAllAsReadAsync();
+                    await UpdateAppLogBadge();
+                    break;
+                case "SettingsViewModel":
+                    navigationService.Navigate(viewModel, new SettingsArgs());
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
+        //{
+        //    if (message == "LogAdded")
+        //    {
+        //        await UpdateAppLogBadge();
+        //    }
+        //}
+
+        private async Task UpdateAppLogBadge()
+        {
+            int count = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
+            //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+        }
+
+
+        private RelayCommand<WinUI.NavigationViewItemInvokedEventArgs> itemInvokedCommand;
+        public ICommand ItemInvokedCommand => itemInvokedCommand ??
+            (itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(ItemInvoked));
+        private void ItemInvoked(NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.IsSettingsInvoked)
+            {
+                NavigateTo(typeof(SettingsViewModel));
+            }
+            else
+            {
+                var selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
+                var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
+
+                if (pageType != null)
+                {
+                    NavigateTo(pageType);
+                }
+            }
+        }
+
+        private RelayCommand<NavigationViewBackRequestedEventArgs> backRequestedCommand;
+        public ICommand BackRequestedCommand => backRequestedCommand ??
+            (backRequestedCommand = new RelayCommand<NavigationViewBackRequestedEventArgs>(BackRequested));
+        private void BackRequested(NavigationViewBackRequestedEventArgs obj)
+        {
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+        private RelayCommand frameNavigatedCommand;
+        public ICommand FrameNavigatedCommand => frameNavigatedCommand ??
+            (frameNavigatedCommand = new RelayCommand(FrameNavigated));
+        private void FrameNavigated()
+        {
+            IsBackEnabled = navigationService.CanGoBack;
         }
     }
 }

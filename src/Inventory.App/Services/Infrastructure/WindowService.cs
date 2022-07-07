@@ -1,14 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.UI;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
-namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
+namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
 {
-    //TODO: refactory this class as Windows Template Studio and add new AppWindow mode
-    public class WindowService : IWindowService
+    public class WindowService
     {
         private readonly ILogger<WindowService> logger;
         private readonly PageService pageService;
@@ -20,29 +21,28 @@ namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure.Impl
             this.pageService = pageService;
         }
 
-        public bool? OpenInDialog(Type viewModelType, object parameter = null)
-        {
-            throw new NotImplementedException();
-        }
-
+        public Dictionary<UIContext, AppWindow> AppWindows { get; set; }
+            = new Dictionary<UIContext, AppWindow>();
 
         public async Task<int> OpenInNewWindow<TViewModel>(object parameter = null)
         {
             return await OpenInNewWindow(typeof(TViewModel), parameter);
         }
+
         public async Task<int> OpenInNewWindow(Type viewModelType, object parameter = null)
         {
-            // New Implementation in AppWindow
-            Frame appWindowFrame = new Frame();
-            // Create a new window
             AppWindow appWindow = await AppWindow.TryCreateAsync();
-            // Make sure we release the reference to this window, and release XAML resources, when it's closed
-            appWindow.Closed += delegate { appWindow = null; appWindowFrame.Content = null; };
+            Frame appWindowFrame = new Frame();
             var view = pageService.GetView(viewModelType);
-            // Navigate the frame to the page we want to show in the new window
             appWindowFrame.Navigate(view, parameter);
-            // Attach the XAML content to our window
             ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowFrame);
+            AppWindows.Add(appWindowFrame.UIContext, appWindow);
+            appWindow.Closed += delegate
+            {
+                AppWindows.Remove(appWindowFrame.UIContext);
+                appWindowFrame.Content = null;
+                appWindow = null;
+            };
             await appWindow.TryShowAsync();
             return 0;
         }

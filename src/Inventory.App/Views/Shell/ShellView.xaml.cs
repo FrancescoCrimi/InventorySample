@@ -13,9 +13,10 @@
 #endregion
 
 using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -23,50 +24,40 @@ namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class ShellView : Page
     {
+        private readonly ShellViewModel viewModel;
+
         public ShellView()
         {
-            ViewModel = Ioc.Default.GetService<ShellViewModel>();
-            InitializeContext();
             InitializeComponent();
-            InitializeNavigation();
-        }
-
-        public ShellViewModel ViewModel { get; private set; }
-
-        private void InitializeContext()
-        {
-            //var context = Ioc.Default.GetService<IContextService>();
-            //context.Initialize(Dispatcher, ApplicationView.GetForCurrentView().Id, CoreApplication.GetCurrentView().IsMain);
-        }
-
-        private void InitializeNavigation()
-        {
-            var navigationService = Ioc.Default.GetService<INavigationService>();
+            viewModel = Ioc.Default.GetService<ShellViewModel>();
+            DataContext = viewModel;
+            NavigationService navigationService = Ioc.Default.GetService<NavigationService>();
             navigationService.Initialize(frame);
-            var appView = ApplicationView.GetForCurrentView();
-            appView.Consolidated += OnViewConsolidated;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await ViewModel.LoadAsync(e.Parameter as ShellArgs);
-            ViewModel.Subscribe();
+            await viewModel.LoadAsync(e.Parameter as ShellArgs);
+            viewModel.Subscribe();
         }
 
-        private void OnViewConsolidated(ApplicationView sender, ApplicationViewConsolidatedEventArgs args)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            ViewModel.Unsubscribe();
-            ViewModel = null;
-            Bindings.StopTracking();
-            var appView = ApplicationView.GetForCurrentView();
-            appView.Consolidated -= OnViewConsolidated;
-            //ServiceLocator.DisposeCurrent();
+            viewModel.Unload();
+            viewModel.Unsubscribe();
         }
 
-        private  void OnUnlockClick(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void OnLogoff(object sender, RoutedEventArgs e)
         {
-            //var context = Ioc.Default.GetService<IContextService>();
-            //await ApplicationViewSwitcher.SwitchAsync(context.MainViewID);
+            if (await DialogService.Current.ShowAsync("Confirm logoff", "Are you sure you want to logoff?", "Ok", "Cancel", XamlRoot))
+            {
+                //var loginService = Ioc.Default.GetService<ILoginService>();
+                //loginService.Logoff();
+                if (Frame.CanGoBack)
+                {
+                    Frame.GoBack();
+                }
+            }
         }
     }
 }
