@@ -12,54 +12,45 @@
 // ******************************************************************
 #endregion
 
+using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Infrastructure;
+using CiccioSoft.Inventory.Uwp.Activation;
+using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.Uwp
 {
     sealed partial class App : Windows.UI.Xaml.Application
     {
+        private ActivationService ActivationService => new ActivationService();
+
         public App()
         {
             InitializeComponent();
             Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
+            Ioc.Default.ConfigureServices(ConfigureServices());
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
-            await InitializeAsync();
-
-            var startup = new Startup();
-            await startup.ConfigureAsync();
-
-            if (Window.Current.Content == null)
+            if (!args.PrelaunchActivated)
             {
-                Frame rootFrame = new Frame();
-                Window.Current.Content = rootFrame;
-                var shellArgs = new ShellArgs
-                {
-                    ViewModel = typeof(DashboardViewModel),
-                    Parameter = null,
-                    UserInfo = await TryGetUserInfoAsync(e as IActivatedEventArgsWithUser)
-                };
-                rootFrame.Navigate(typeof(ShellView), shellArgs);
+                await ActivationService.ActivateAsync(args);
             }
-            if (e.PrelaunchActivated == false)
-            {
-                Window.Current.Activate();
-            }
+        }
 
-            await StartupAsync();
+        protected override async void OnActivated(IActivatedEventArgs args)
+        {
+            await ActivationService.ActivateAsync(args);
         }
 
         private void OnSuspending(object sender, SuspendingEventArgs e)
@@ -74,42 +65,58 @@ namespace CiccioSoft.Inventory.Uwp
             logger.LogError("UnhandledException: " + e.Message);
         }
 
-        private async Task<UserInfo> TryGetUserInfoAsync(IActivatedEventArgsWithUser argsWithUser)
-        {
-            if (argsWithUser != null)
-            {
-                var user = argsWithUser.User;
-                var userInfo = new UserInfo
-                {
-                    AccountName = await user.GetPropertyAsync(KnownUserProperties.AccountName) as String,
-                    FirstName = await user.GetPropertyAsync(KnownUserProperties.FirstName) as String,
-                    LastName = await user.GetPropertyAsync(KnownUserProperties.LastName) as String
-                };
-                if (!userInfo.IsEmpty)
-                {
-                    if (String.IsNullOrEmpty(userInfo.AccountName))
-                    {
-                        userInfo.AccountName = $"{userInfo.FirstName} {userInfo.LastName}";
-                    }
-                    var pictureStream = await user.GetPictureAsync(UserPictureSize.Size64x64);
-                    if (pictureStream != null)
-                    {
-                        userInfo.PictureSource = await BitmapTools.LoadBitmapAsync(pictureStream);
-                    }
-                    return userInfo;
-                }
-            }
-            return UserInfo.Default;
-        }
 
-        private async Task InitializeAsync()
-        {
-            await Task.CompletedTask;
-        }
 
-        private async Task StartupAsync()
+        private IServiceProvider ConfigureServices()
         {
-            await Task.CompletedTask;
+            return new ServiceCollection()
+
+                .AddSingleton<DefaultActivationHandler>()
+                .AddSingleton<IAppSettings, AppSettings>()
+                .AddInventoryData()
+
+                .AddSingleton<ProductServiceUwp>()
+                .AddSingleton<CustomerServiceUwp>()
+                .AddSingleton<OrderServiceUwp>()
+                .AddSingleton<OrderItemServiceUwp>()
+
+                //.AddSingleton<IMessageService, MessageService>()
+                .AddSingleton<FilePickerService, FilePickerService>()
+
+                .AddScoped<NavigationService, NavigationService>()
+                .AddSingleton<PageService>()
+                .AddSingleton<WindowService, WindowService>()
+
+                .AddTransient<ShellView>()
+                .AddTransient<ShellViewModel>()
+
+                .AddTransient<DashboardViewModel>()
+                .AddTransient<SettingsViewModel>()
+                .AddTransient<ValidateConnectionViewModel>()
+                .AddTransient<CreateDatabaseViewModel>()
+
+                .AddTransient<CustomerListViewModel>()
+                .AddTransient<CustomerDetailsViewModel>()
+                .AddTransient<CustomersViewModel>()
+
+                .AddTransient<ProductListViewModel>()
+                .AddTransient<ProductDetailsViewModel>()
+                .AddTransient<ProductsViewModel>()
+
+                .AddTransient<OrderDetailsViewModel>()
+                .AddTransient<OrderDetailsWithItemsViewModel>()
+                .AddTransient<OrderListViewModel>()
+                .AddTransient<OrdersViewModel>()
+
+                .AddTransient<OrderItemListViewModel>()
+                .AddTransient<OrderItemDetailsViewModel>()
+                .AddTransient<OrderItemsViewModel>()
+
+                .AddTransient<AppLogsViewModel>()
+                .AddTransient<AppLogListViewModel>()
+                .AddTransient<AppLogDetailsViewModel>()
+
+                .BuildServiceProvider();
         }
     }
 }

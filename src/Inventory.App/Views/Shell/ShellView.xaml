@@ -14,6 +14,17 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
     mc:Ignorable="d">
 
+
+    <i:Interaction.Behaviors>
+        <ic:EventTriggerBehavior EventName="Loaded">
+            <ic:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </ic:EventTriggerBehavior>
+        <ic:EventTriggerBehavior EventName="Unloaded">
+            <ic:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+        </ic:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
+
     <Page.Resources>
 
         <DataTemplate x:Name="NavigationViewItemProfile" x:DataType="local:UserInfo">

@@ -30,12 +30,17 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             //IsMainView = false;
         }
 
-        public XamlRoot ViewXamlRoot { get; set; }
+        protected XamlRoot ViewXamlRoot { get; set; }
+        public void Initialize(XamlRoot xamlRoot)
+        {
+            ViewXamlRoot = xamlRoot;
+        }
+
 
         protected Task<bool> ShowDialogAsync(string title,
-                                          string content,
-                                          string ok = "Ok",
-                                          string cancel = null)
+                                             string content,
+                                             string ok = "Ok",
+                                             string cancel = null)
         {
             return DialogService.Current.ShowAsync(title, content, ok, cancel, ViewXamlRoot);
         }

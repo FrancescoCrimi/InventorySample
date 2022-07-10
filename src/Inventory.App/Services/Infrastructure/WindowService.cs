@@ -15,7 +15,7 @@ namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
         private readonly PageService pageService;
 
         public WindowService(ILogger<WindowService> logger,
-                                    PageService pageService)
+                             PageService pageService)
         {
             this.logger = logger;
             this.pageService = pageService;

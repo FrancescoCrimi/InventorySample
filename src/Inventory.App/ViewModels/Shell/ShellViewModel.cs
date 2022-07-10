@@ -24,17 +24,9 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
-    public class ShellArgs
-    {
-        public Type ViewModel { get; set; }
-        public object Parameter { get; set; }
-        public UserInfo UserInfo { get; set; }
-    }
-
     public class ShellViewModel : ViewModelBase
     {
         private readonly ILogger<ShellViewModel> logger;
@@ -42,15 +34,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private readonly ILogService logService;
 
         public ShellViewModel(ILogger<ShellViewModel> logger,
-                                  NavigationService navigationService,
-                                  ILogService logService)
+                              NavigationService navigationService,
+                              ILogService logService)
         {
             this.logger = logger;
             this.navigationService = navigationService;
             this.logService = logService;
         }
 
-        public ShellArgs ViewModelArgs { get; protected set; }
 
         public UserInfo UserInfo { get; protected set; }
 
@@ -89,26 +80,77 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             set => SetProperty(ref isBackEnabled, value);
         }
 
-        public async Task LoadAsync(ShellArgs args)
+        public void Initialize(Windows.UI.Xaml.Controls.Frame frame)
+        {
+            navigationService.Initialize(frame);
+        }
+
+
+        private AsyncRelayCommand loadedCommand;
+        public ICommand LoadedCommand => loadedCommand ??
+            (loadedCommand = new AsyncRelayCommand(Loaded));
+        private async Task Loaded()
         {
             //Items = GetItems().ToArray();
             await UpdateAppLogBadge();
-            ViewModelArgs = args;
-            if (ViewModelArgs != null)
-            {
-                UserInfo = ViewModelArgs.UserInfo;
-                navigationService.Navigate(ViewModelArgs.ViewModel, ViewModelArgs.Parameter);
-            }
-        }
 
-        public void Subscribe()
-        {
             // Todo: ILoggerService non scrive piu i log, ma vengono scritti da NLog
             //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
             //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
             //MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
             Messenger.Register<StatusMessage>(this, OnStatusMessage);
         }
+
+        private RelayCommand unloadedCommand;
+        public ICommand UnloadedCommand => unloadedCommand ??
+                    (unloadedCommand = new RelayCommand(Unloaded));
+        private void Unloaded()
+        {
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
+        }
+
+        private RelayCommand<NavigationViewItemInvokedEventArgs> itemInvokedCommand;
+        public ICommand ItemInvokedCommand => itemInvokedCommand ??
+            (itemInvokedCommand = new RelayCommand<NavigationViewItemInvokedEventArgs>(ItemInvoked));
+        private void ItemInvoked(NavigationViewItemInvokedEventArgs args)
+        {
+            if (args.IsSettingsInvoked)
+            {
+                NavigateTo(typeof(SettingsViewModel));
+            }
+            else
+            {
+                var selectedItem = args.InvokedItemContainer as NavigationViewItem;
+                var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
+
+                if (pageType != null)
+                {
+                    NavigateTo(pageType);
+                }
+            }
+        }
+
+        private RelayCommand<NavigationViewBackRequestedEventArgs> backRequestedCommand;
+        public ICommand BackRequestedCommand => backRequestedCommand ??
+            (backRequestedCommand = new RelayCommand<NavigationViewBackRequestedEventArgs>(BackRequested));
+        private void BackRequested(NavigationViewBackRequestedEventArgs obj)
+        {
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+        private RelayCommand frameNavigatedCommand;
+        public ICommand FrameNavigatedCommand => frameNavigatedCommand ??
+            (frameNavigatedCommand = new RelayCommand(FrameNavigated));
+        private void FrameNavigated()
+        {
+            IsBackEnabled = navigationService.CanGoBack;
+        }
+
+
 
         private void SetStatus(string message)
         {
@@ -152,16 +194,6 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        public void Unsubscribe()
-        {
-            //MessageService.Unsubscribe(this);
-            Messenger.UnregisterAll(this);
-        }
-
-        public void Unload()
-        {
-        }
-
         private async void NavigateTo(Type viewModel)
         {
             switch (viewModel.Name)
@@ -191,14 +223,6 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
-        //{
-        //    if (message == "LogAdded")
-        //    {
-        //        await UpdateAppLogBadge();
-        //    }
-        //}
-
         private async Task UpdateAppLogBadge()
         {
             int count = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
@@ -206,44 +230,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
 
-        private RelayCommand<WinUI.NavigationViewItemInvokedEventArgs> itemInvokedCommand;
-        public ICommand ItemInvokedCommand => itemInvokedCommand ??
-            (itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(ItemInvoked));
-        private void ItemInvoked(NavigationViewItemInvokedEventArgs args)
-        {
-            if (args.IsSettingsInvoked)
-            {
-                NavigateTo(typeof(SettingsViewModel));
-            }
-            else
-            {
-                var selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
-                var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
-
-                if (pageType != null)
-                {
-                    NavigateTo(pageType);
-                }
-            }
-        }
-
-        private RelayCommand<NavigationViewBackRequestedEventArgs> backRequestedCommand;
-        public ICommand BackRequestedCommand => backRequestedCommand ??
-            (backRequestedCommand = new RelayCommand<NavigationViewBackRequestedEventArgs>(BackRequested));
-        private void BackRequested(NavigationViewBackRequestedEventArgs obj)
-        {
-            if (navigationService.CanGoBack)
-            {
-                navigationService.GoBack();
-            }
-        }
-
-        private RelayCommand frameNavigatedCommand;
-        public ICommand FrameNavigatedCommand => frameNavigatedCommand ??
-            (frameNavigatedCommand = new RelayCommand(FrameNavigated));
-        private void FrameNavigated()
-        {
-            IsBackEnabled = navigationService.CanGoBack;
-        }
+        //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
+        //{
+        //    if (message == "LogAdded")
+        //    {
+        //        await UpdateAppLogBadge();
+        //    }
+        //}
     }
 }

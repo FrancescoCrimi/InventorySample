@@ -37,5 +37,10 @@ namespace CiccioSoft.Inventory.Uwp.Views
         {
             ViewModel.LoadAsync(e.Parameter as SettingsArgs);
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

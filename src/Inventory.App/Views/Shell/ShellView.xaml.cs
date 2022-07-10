@@ -12,39 +12,20 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.ViewModels;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
 namespace CiccioSoft.Inventory.Uwp.Views
 {
     public sealed partial class ShellView : Page
     {
-        private readonly ShellViewModel viewModel;
-
-        public ShellView()
+        public ShellView(ShellViewModel viewModel)
         {
             InitializeComponent();
-            viewModel = Ioc.Default.GetService<ShellViewModel>();
+            viewModel.Initialize(frame);
             DataContext = viewModel;
-            NavigationService navigationService = Ioc.Default.GetService<NavigationService>();
-            navigationService.Initialize(frame);
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            await viewModel.LoadAsync(e.Parameter as ShellArgs);
-            viewModel.Subscribe();
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            viewModel.Unload();
-            viewModel.Unsubscribe();
         }
 
         private async void OnLogoff(object sender, RoutedEventArgs e)
