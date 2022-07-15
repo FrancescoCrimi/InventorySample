@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Data.Services;
+﻿using CiccioSoft.Inventory.Application.Services;
 using CiccioSoft.Inventory.Uwp.Activation;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.ViewModels;
@@ -67,8 +67,6 @@ namespace CiccioSoft.Inventory.Uwp.Services
             ConfigureNavigation();
             //await EnsureLogDbAsync();
             await EnsureDatabaseAsync();
-            await ConfigureLookupTables();
-
         }
 
         private async Task HandleActivationAsync(object activationArgs)
@@ -95,6 +93,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
         private async Task StartupAsync()
         {
             //await ThemeSelectorService.SetRequestedThemeAsync();
+            await ConfigureLookupTables();
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()

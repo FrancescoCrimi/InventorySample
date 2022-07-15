@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Models;
-using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Application.Models;
+using CiccioSoft.Inventory.Application.Services;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using CiccioSoft.Inventory.Domain.Model;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {

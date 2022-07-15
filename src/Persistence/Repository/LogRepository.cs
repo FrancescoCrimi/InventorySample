@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Data;
+﻿using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Persistence.DbContexts;

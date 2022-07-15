@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Application.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

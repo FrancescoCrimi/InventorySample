@@ -12,9 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.Models;
-using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using CiccioSoft.Inventory.Application.Models;
+using CiccioSoft.Inventory.Application.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -66,6 +65,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 logger.LogError(ex, "Load");
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.AppLogID = Item?.Id ?? 0;

@@ -1,5 +1,5 @@
 ﻿using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Application.Models;
 using CiccioSoft.Inventory.Data.Services;
 using System;
 using System.Collections.Generic;

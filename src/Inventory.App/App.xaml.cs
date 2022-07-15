@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
+using CiccioSoft.Inventory.Application;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Activation;
 using CiccioSoft.Inventory.Uwp.Services;

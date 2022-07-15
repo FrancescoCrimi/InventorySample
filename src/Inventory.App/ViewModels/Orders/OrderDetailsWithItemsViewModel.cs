@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data.Models;
+using CiccioSoft.Inventory.Application.Models;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
 

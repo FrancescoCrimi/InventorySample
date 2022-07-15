@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Data;
+﻿using CiccioSoft.Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace CiccioSoft.Inventory.Persistence.DbContexts

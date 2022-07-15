@@ -103,7 +103,6 @@
     </Compile>
     <Compile Include="Common\GridLengths.cs" />
     <Compile Include="Configuration\AppSettings.cs" />
-    <Compile Include="Configuration\Startup.cs" />
     <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.cs" />
     <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.Properties.cs" />
     <Compile Include="Controls\AdaptiveGridView\AdaptiveHeightValueConverter.cs" />
@@ -360,6 +359,7 @@
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -405,10 +405,13 @@
       <Version>2.0.3</Version>
     </PackageReference>
     <PackageReference Include="NLog">
-      <Version>4.7.15</Version>
+      <Version>5.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="NLog.Database">
+      <Version>5.0.1</Version>
     </PackageReference>
     <PackageReference Include="NLog.Extensions.Logging">
-      <Version>1.7.5</Version>
+      <Version>5.0.1</Version>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql">
       <Version>2.2.6</Version>
@@ -421,6 +424,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Application\Inventory.Application.csproj">
+      <Project>{6ec1d4de-2028-4a8e-a583-270dd444618c}</Project>
+      <Name>Inventory.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\Inventory.Domain.csproj">
       <Project>{6693c7c0-edf1-4f6b-89c0-f61c262d9ee5}</Project>
       <Name>Inventory.Domain</Name>
@@ -428,10 +435,6 @@
     <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj">
       <Project>{e74bba50-85e3-4c3d-814d-d8390df9a92f}</Project>
       <Name>Inventory.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Inventory.Data\Inventory.Data.csproj">
-      <Project>{515a0883-d2d9-4b97-8d73-ee6fe9bc3f2b}</Project>
-      <Name>Inventory.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Persistence\Inventory.Persistence.csproj">
       <Project>{665A2311-C34F-4803-B30B-223D74CC7FFF}</Project>

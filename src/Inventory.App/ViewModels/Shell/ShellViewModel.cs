@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Data.Services;
+using CiccioSoft.Inventory.Application.Services;
+using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Helpers;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
@@ -96,6 +96,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
             // Todo: ILoggerService non scrive piu i log, ma vengono scritti da NLog
             //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
+            Infrastructure.Logging.AddLogEvent += Logging_AddLogEvent;
             //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
             //MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
             Messenger.Register<StatusMessage>(this, OnStatusMessage);
@@ -107,6 +108,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private void Unloaded()
         {
             //MessageService.Unsubscribe(this);
+            Infrastructure.Logging.AddLogEvent -= Logging_AddLogEvent;
             Messenger.UnregisterAll(this);
         }
 
@@ -225,10 +227,15 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         private async Task UpdateAppLogBadge()
         {
-            int count = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
+            LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
             //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
         }
 
+
+        private async void Logging_AddLogEvent(object sender, EventArgs e)
+        {
+            await UpdateAppLogBadge();
+        }
 
         //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
         //{
