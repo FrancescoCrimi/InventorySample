@@ -12,8 +12,9 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Application.Models;
-using CiccioSoft.Inventory.Application.Services;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -30,7 +31,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
         }
 
-        public ILookupTableService LookupTables => LookupTablesProxy.Instance;
+        public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
 
         public override string Title => String.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
 

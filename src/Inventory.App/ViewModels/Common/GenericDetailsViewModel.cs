@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Application.Models;
-using CiccioSoft.Inventory.Application.Services;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -38,7 +38,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             windowService = Ioc.Default.GetService<WindowService>();
         }
 
-        public ILookupTableService LookupTables => LookupTablesProxy.Instance;
+        public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
 
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;

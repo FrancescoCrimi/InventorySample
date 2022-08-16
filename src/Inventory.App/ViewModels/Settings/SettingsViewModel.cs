@@ -107,14 +107,16 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             IsBusy = true;
             StatusMessage("Waiting database reset...");
-            var result = await ResetLocalDataProviderAsync();
+            var result = await SettingsService.ResetLocalDataProviderAsync();
             IsBusy = false;
             if (result.IsOk)
             {
+                await ShowDialogAsync("Reset Local Data Provider", "Local Data Provider restore successfully.");
                 StatusReady();
             }
             else
             {
+                await ShowDialogAsync("Reset Local Data Provider", result.Message);
                 StatusMessage(result.Message);
             }
         }
@@ -183,32 +185,6 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             {
                 AppSettings.Current.DataProvider = DataProviderType.SQLite;
             }
-        }
-
-        private async Task<Result> ResetLocalDataProviderAsync()
-        {
-            Result result = null;
-            string errorMessage = null;
-            try
-            {
-                var localFolder = ApplicationData.Current.LocalFolder;
-                var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
-                var sourceFile = await databaseFolder.GetFileAsync(AppSettings.DatabasePattern);
-                var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
-                await sourceFile.CopyAndReplaceAsync(targetFile);
-                await ShowDialogAsync("Reset Local Data Provider", "Local Data Provider restore successfully.");
-                result = Result.Ok();
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-                result = Result.Error(ex);
-            }
-            if (errorMessage != null)
-            {
-                await ShowDialogAsync("Reset Local Data Provider", errorMessage);
-            }
-            return result;
         }
     }
 }

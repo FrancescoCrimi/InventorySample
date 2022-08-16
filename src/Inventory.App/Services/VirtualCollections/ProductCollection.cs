@@ -12,10 +12,9 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Application.Models;
-using CiccioSoft.Inventory.Application.Services;
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Uwp.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
@@ -29,13 +28,13 @@ namespace CiccioSoft.Inventory.Uwp.Services
         private DataRequest<Product> _dataRequest = null;
         private readonly ILogger<ProductCollection> logger = Ioc.Default.GetService<ILogger<ProductCollection>>();
 
-        public ProductCollection(IProductService productService)
+        public ProductCollection(ProductServiceUwp productService)
             : base()
         {
             ProductService = productService;
         }
 
-        public IProductService ProductService { get; }
+        public ProductServiceUwp ProductService { get; }
 
         private ProductModel _defaultItem = ProductModel.CreateEmpty();
         protected override ProductModel DefaultItem => _defaultItem;

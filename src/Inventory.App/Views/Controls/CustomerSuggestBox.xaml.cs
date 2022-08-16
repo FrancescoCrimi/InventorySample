@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Application.Models;
-using CiccioSoft.Inventory.Application.Services;
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -33,12 +33,12 @@ namespace CiccioSoft.Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                CustomerService = Ioc.Default.GetService<ICustomerService>();
+                CustomerService = Ioc.Default.GetService<CustomerServiceUwp>();
             }
             InitializeComponent();
         }
 
-        private ICustomerService CustomerService { get; }
+        private CustomerServiceUwp CustomerService { get; }
 
         #region Items
         public IList<CustomerModel> Items

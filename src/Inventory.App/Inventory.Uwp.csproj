@@ -160,7 +160,23 @@
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\UserInfo.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
+    <Compile Include="Models\AppLogModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\CountryCodeModel.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\ObservableObject.cs" />
+    <Compile Include="Models\OrderItemModel.cs" />
+    <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Models\OrderStatusModel.cs" />
+    <Compile Include="Models\PaymentTypeModel.cs" />
+    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Models\ShipperModel.cs" />
+    <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Services\ActivationService.cs" />
+    <Compile Include="Services\Infrastructure\SettingsService.cs" />
+    <Compile Include="Services\LookupTableServiceFacade.cs" />
+    <Compile Include="ViewModels\Common\GenericDetailsViewModelReadOnly.cs" />
+    <Compile Include="ViewModels\Common\GenericListViewModelReadOnly.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CustomerServiceUwp.cs" />
@@ -183,9 +199,9 @@
     <Compile Include="Tools\ElementSet\ElementSet.Events.cs" />
     <Compile Include="Tools\ElementSet\ElementSet.Methods.cs" />
     <Compile Include="Tools\ElementSet\ElementSet.Properties.cs" />
-    <Compile Include="ViewModels\AppLogs\AppLogDetailsViewModel.cs" />
-    <Compile Include="ViewModels\AppLogs\AppLogListViewModel.cs" />
-    <Compile Include="ViewModels\AppLogs\AppLogsViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogListViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogsViewModel.cs" />
     <Compile Include="ViewModels\Common\GenericDetailsViewModel.cs" />
     <Compile Include="ViewModels\Common\GenericListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomerDetailsViewModel.cs" />
@@ -207,14 +223,14 @@
     <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\ValidateConnectionViewModel.cs" />
     <Compile Include="ViewModels\Shell\ShellViewModel.cs" />
-    <Compile Include="Views\AppLogs\AppLogsView.xaml.cs">
-      <DependentUpon>AppLogsView.xaml</DependentUpon>
+    <Compile Include="Views\AppLogs\LogsView.xaml.cs">
+      <DependentUpon>LogsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AppLogs\Details\AppLogsDetails.xaml.cs">
-      <DependentUpon>AppLogsDetails.xaml</DependentUpon>
+    <Compile Include="Views\AppLogs\Details\LogsDetailsView.xaml.cs">
+      <DependentUpon>LogsDetailsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AppLogs\List\AppLogsList.xaml.cs">
-      <DependentUpon>AppLogsList.xaml</DependentUpon>
+    <Compile Include="Views\AppLogs\List\LogsListView.xaml.cs">
+      <DependentUpon>LogsListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\CustomerSuggestBox.xaml.cs">
       <DependentUpon>CustomerSuggestBox.xaml</DependentUpon>
@@ -533,15 +549,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\AppLogs\AppLogsView.xaml">
+    <Page Include="Views\AppLogs\LogsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\AppLogs\Details\AppLogsDetails.xaml">
+    <Page Include="Views\AppLogs\Details\LogsDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\AppLogs\List\AppLogsList.xaml">
+    <Page Include="Views\AppLogs\List\LogsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

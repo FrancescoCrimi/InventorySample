@@ -1,9 +1,9 @@
-﻿using CiccioSoft.Inventory.Application.Services;
-using CiccioSoft.Inventory.Uwp.Activation;
+﻿using CiccioSoft.Inventory.Uwp.Activation;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             //await WindowManagerService.Current.InitializeAsync();
 
             ConfigureNavigation();
-            //await EnsureLogDbAsync();
+            await EnsureLogDbAsync();
             await EnsureDatabaseAsync();
         }
 
@@ -94,6 +94,9 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             //await ThemeSelectorService.SetRequestedThemeAsync();
             await ConfigureLookupTables();
+            var logger = Ioc.Default.GetRequiredService<ILogger<ActivationService>>();
+            //await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
+            logger.LogInformation($"Application started.");
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()
@@ -127,7 +130,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             pageService.Register<ProductsViewModel, ProductsView>();
             pageService.Register<ProductDetailsViewModel, ProductView>();
 
-            pageService.Register<AppLogsViewModel, AppLogsView>();
+            pageService.Register<LogsViewModel, LogsView>();
 
             pageService.Register<SettingsViewModel, SettingsView>();
         }
@@ -136,12 +139,12 @@ namespace CiccioSoft.Inventory.Uwp.Services
         {
             var localFolder = ApplicationData.Current.LocalFolder;
             var appLogFolder = await localFolder.CreateFolderAsync(AppSettings.AppLogPath, CreationCollisionOption.OpenIfExists);
-            if (await appLogFolder.TryGetItemAsync(AppSettings.LogName) == null)
+            if (await appLogFolder.TryGetItemAsync(AppSettings.AppLogName) == null)
             {
-                //var sourceLogFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/AppLog/AppLog.db"));
-                //var targetLogFile = await appLogFolder.CreateFileAsync(AppSettings.AppLogName, CreationCollisionOption.ReplaceExisting);
-                //await sourceLogFile.CopyAndReplaceAsync(targetLogFile);
-                CreateSqliteLogDb();
+                var sourceLogFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/AppLog/AppLog.db"));
+                var targetLogFile = await appLogFolder.CreateFileAsync(AppSettings.AppLogName, CreationCollisionOption.ReplaceExisting);
+                await sourceLogFile.CopyAndReplaceAsync(targetLogFile);
+                //CreateSqliteLogDb();
             }
         }
 
@@ -193,9 +196,9 @@ IsRead INTEGER NOT NULL
 
         private async Task ConfigureLookupTables()
         {
-            var lookupTables = Ioc.Default.GetService<ILookupTableService>();
+            var lookupTables = Ioc.Default.GetService<LookupTableServiceFacade>();
             await lookupTables.InitializeAsync();
-            LookupTablesProxy.Instance = lookupTables;
+            //LookupTablesProxy.Instance = lookupTables;
         }
     }
 }

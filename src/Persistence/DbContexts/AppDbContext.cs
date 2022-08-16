@@ -19,9 +19,14 @@ namespace CiccioSoft.Inventory.Persistence.DbContexts
 {
     public abstract class AppDbContext : DbContext
     {
-        protected AppDbContext() { }
+        protected AppDbContext()
+        {
+        }
 
-        protected AppDbContext(DbContextOptions options) : base(options) { }
+        protected AppDbContext(DbContextOptions options)
+            : base(options)
+        {
+        }
 
         public DbSet<DbVersion> DbVersion { get; set; }
         public DbSet<Category> Categories { get; set; }

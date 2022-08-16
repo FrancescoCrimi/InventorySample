@@ -3,7 +3,7 @@ using CiccioSoft.Inventory.Domain.Repository;
 using CiccioSoft.Inventory.Infrastructure;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Persistence.DbContexts;
-using CiccioSoft.Inventory.Persistence.Repository;
+//using CiccioSoft.Inventory.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,13 +14,6 @@ namespace CiccioSoft.Inventory.Persistence
         public static IServiceCollection AddInventoryPersistence(this IServiceCollection serviceCollection)
         {
             IAppSettings settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
-            serviceCollection
-               .AddDbContext<LogDbContext>(option =>
-                {
-                    //option.UseSqlite(AppSettings.Current.LogConnectionString);
-                    option.UseMySql(settings.LogMySqlConnectionString);
-                    //option.UseSqlServer(AppSettings.Current.MsLogConnectionString);
-                }, ServiceLifetime.Transient);
 
             serviceCollection.AddDbContext<SQLiteAppDbContext>(options =>
             {
@@ -54,7 +47,6 @@ namespace CiccioSoft.Inventory.Persistence
             }
 
             serviceCollection
-                .AddTransient<ILogRepository, LogRepository>()
                 .AddTransient<ICustomerRepository, CustomerRepository>()
                 .AddTransient<IOrderRepository, OrderRepository>()
                 .AddTransient<IOrderItemRepository, OrderItemRepository>()

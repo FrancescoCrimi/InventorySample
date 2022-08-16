@@ -10,10 +10,11 @@ namespace CiccioSoft.Inventory.Infrastructure
         string UserName { get; set; }
         string Version { get; }
         string WindowsHelloPublicKeyHint { get; set; }
+
         DataProviderType DataProvider { get; set; }
         string SQLiteConnectionString { get; }
-        string SQLServerConnectionString { get; set; }
-        LogDatabaseType LogDatabase { get; set; }
-        string LogMySqlConnectionString { get; set; }
+        string SQLServerConnectionString { get; set; }                
+        string LogConnectionString { get; }
+        string AppLogConnectionString { get; }
     }
 }

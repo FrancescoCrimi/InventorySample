@@ -1,9 +1,4 @@
-﻿using CiccioSoft.Inventory.Data;
-using CiccioSoft.Inventory.Application.Models;
-using CiccioSoft.Inventory.Data.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using CiccioSoft.Inventory.Uwp.Models;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {

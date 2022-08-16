@@ -12,9 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Application.Services;
-using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Infrastructure.Logging;
 using CiccioSoft.Inventory.Uwp.Helpers;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using Microsoft.Extensions.Logging;
@@ -31,11 +30,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     {
         private readonly ILogger<ShellViewModel> logger;
         private readonly NavigationService navigationService;
-        private readonly ILogService logService;
+        private readonly LogService logService;
 
         public ShellViewModel(ILogger<ShellViewModel> logger,
                               NavigationService navigationService,
-                              ILogService logService)
+                              LogService logService)
         {
             this.logger = logger;
             this.navigationService = navigationService;
@@ -96,7 +95,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
             // Todo: ILoggerService non scrive piu i log, ma vengono scritti da NLog
             //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
-            Infrastructure.Logging.AddLogEvent += Logging_AddLogEvent;
+            LogService.AddLogEvent += Logging_AddLogEvent;
             //MessageService.Subscribe<ILoginService, bool>(this, OnLoginMessage);
             //MessageService.Subscribe<ViewModelBase, string>(this, OnMessage);
             Messenger.Register<StatusMessage>(this, OnStatusMessage);
@@ -108,7 +107,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private void Unloaded()
         {
             //MessageService.Unsubscribe(this);
-            Infrastructure.Logging.AddLogEvent -= Logging_AddLogEvent;
+            LogService.AddLogEvent -= Logging_AddLogEvent;
             Messenger.UnregisterAll(this);
         }
 
@@ -212,8 +211,8 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 case "ProductsViewModel":
                     navigationService.Navigate(viewModel, new ProductListArgs());
                     break;
-                case "AppLogsViewModel":
-                    navigationService.Navigate(viewModel, new AppLogListArgs());
+                case "LogsViewModel":
+                    navigationService.Navigate(viewModel, new LogListArgs());
                     await logService.MarkAllAsReadAsync();
                     await UpdateAppLogBadge();
                     break;
@@ -227,7 +226,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         private async Task UpdateAppLogBadge()
         {
-            LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { /*Where = r => !r.IsRead*/ });
+            LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
             //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
         }
 

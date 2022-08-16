@@ -36,12 +36,19 @@ namespace CiccioSoft.Inventory.Uwp
 
         static public readonly string AppLogPath = "AppLog";
 
-        static public readonly string AppLogName = $"AppLog.1.0.db";
-        static public readonly string AppLogFileName = Path.Combine(AppLogPath, AppLogName);
-        public readonly string AppLogConnectionString = $"Data Source={AppLogFileName}";
+        //// Log Database
 
+        // original sqlite log db
+        public static readonly string AppLogName = $"AppLog.1.0.db";
+        public static readonly string AppLogFileName = Path.Combine(AppLogPath, AppLogName);
+        public string AppLogConnectionString => $"Data Source={AppLogFileName}";
+
+        // new sqlite log db
         public static readonly string LogName = $"Log.db";
-        static public readonly string LogFileName = Path.Combine(AppLogPath, LogName);
+        public static readonly string LogFileName = Path.Combine(AppLogPath, LogName);
+        public string LogConnectionString => $"Data Source={LogFileName}";
+        //public string LogConnectionString => $"Data Source={LogFileName};Cache=Shared";
+
 
         static public readonly string DatabasePath = "Database";
         static public readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";
@@ -101,11 +108,11 @@ namespace CiccioSoft.Inventory.Uwp
             set => SetSettingsValue("SQLServerConnectionString", value);
         }
 
-        public LogDatabaseType LogDatabase
-        {
-            get => (LogDatabaseType)GetSettingsValue("DataProvider", (int)LogDatabaseType.MySql);
-            set => LocalSettings.Values["DataProvider"] = (int)value;
-        }
+        //public LogDatabaseType LogDatabase
+        //{
+        //    get => (LogDatabaseType)GetSettingsValue("DataProvider", (int)LogDatabaseType.MySql);
+        //    set => LocalSettings.Values["DataProvider"] = (int)value;
+        //}
 
         public string LogMySqlConnectionString
         {
@@ -113,7 +120,6 @@ namespace CiccioSoft.Inventory.Uwp
             set => SetSettingsValue("LogMySqlConnectionString", value);
         }
 
-        public readonly string LogConnectionString = $"Data Source={LogFileName};Cache=Shared";
         public readonly string MsLogConnectionString = "Server=(localdb)\\mssqllocaldb;Database=ConsoleApp;Trusted_Connection=True;MultipleActiveResultSets=true";
         //public readonly string MySqlLogConnectionString = "host=localhost;port=3306;user id=ConsoleApp;password=ConsoleApp;database=ConsoleApp;";
 

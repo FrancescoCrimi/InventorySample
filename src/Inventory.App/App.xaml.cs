@@ -75,6 +75,8 @@ namespace CiccioSoft.Inventory.Uwp
                 .AddSingleton<IAppSettings, AppSettings>()
                 .AddInventoryData()
 
+                                
+                .AddSingleton<LookupTableServiceFacade>()
                 .AddSingleton<ProductServiceUwp>()
                 .AddSingleton<CustomerServiceUwp>()
                 .AddSingleton<OrderServiceUwp>()
@@ -112,9 +114,9 @@ namespace CiccioSoft.Inventory.Uwp
                 .AddTransient<OrderItemDetailsViewModel>()
                 .AddTransient<OrderItemsViewModel>()
 
-                .AddTransient<AppLogsViewModel>()
-                .AddTransient<AppLogListViewModel>()
-                .AddTransient<AppLogDetailsViewModel>()
+                .AddTransient<LogsViewModel>()
+                .AddTransient<LogListViewModel>()
+                .AddTransient<LogDetailsViewModel>()
 
                 .BuildServiceProvider();
         }

@@ -12,10 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Application.Models;
-using CiccioSoft.Inventory.Application.Services;
-using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Infrastructure.Logging;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
@@ -24,21 +22,21 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {
-    public class LogCollection : VirtualCollection<AppLogModel>
+    public class LogCollection : VirtualCollection<Log>
     {
         private DataRequest<Log> _dataRequest = null;
-        private readonly ILogService logService;
+        private readonly LogService logService;
         private readonly ILogger<LogCollection> logger = Ioc.Default.GetService<ILogger<LogCollection>>();
 
-        public LogCollection(ILogService logService)
+        public LogCollection(LogService logService)
             : base()
         {
             this.logService = logService;
         }
 
-        private AppLogModel _defaultItem = AppLogModel.CreateEmpty();
+        private Log _defaultItem = /*AppLogModel.CreateEmpty()*/ new Log();
 
-        protected override AppLogModel DefaultItem => _defaultItem;
+        protected override Log DefaultItem => _defaultItem;
 
         public async Task LoadAsync(DataRequest<Log> dataRequest)
         {
@@ -55,7 +53,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             }
         }
 
-        protected override async Task<IList<AppLogModel>> FetchDataAsync(int rangeIndex, int rangeSize)
+        protected override async Task<IList<Log>> FetchDataAsync(int rangeIndex, int rangeSize)
         {
             try
             {
