@@ -16,7 +16,6 @@ using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Infrastructure.Logging;
 using CiccioSoft.Inventory.Uwp.Models;
 using CiccioSoft.Inventory.Uwp.Services;
-using CiccioSoft.Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
