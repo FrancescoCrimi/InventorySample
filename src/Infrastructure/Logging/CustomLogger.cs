@@ -49,7 +49,8 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
                 Source = categoryName,
                 Action = "action",
                 Message = message,
-                DateTime = DateTime.Now
+                DateTime = DateTime.Now,
+                IsRead = false
                 //MachineName = "Suca",
                 //Level = "Suca"
                 //Description = description,

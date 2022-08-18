@@ -73,9 +73,10 @@ namespace CiccioSoft.Inventory.Uwp
 
                 .AddSingleton<DefaultActivationHandler>()
                 .AddSingleton<IAppSettings, AppSettings>()
-                .AddInventoryData()
+                .AddInventoryApplication()
 
-                                
+                           
+                .AddTransient<LogServiceFacade>()
                 .AddSingleton<LookupTableServiceFacade>()
                 .AddSingleton<ProductServiceUwp>()
                 .AddSingleton<CustomerServiceUwp>()

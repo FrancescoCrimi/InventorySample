@@ -13,6 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Infrastructure.Logging;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -32,13 +34,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     }
     #endregion
 
-    public class LogDetailsViewModel : GenericDetailsViewModelReadOnly<Log>
+    public class LogDetailsViewModel : GenericDetailsViewModel<LogModel>
     {
         private readonly ILogger logger;
-        private readonly LogService logService;
+        private readonly LogServiceFacade logService;
 
         public LogDetailsViewModel(ILogger<LogListViewModel> logger,
-                                      LogService logService)
+                                   LogServiceFacade logService)
             : base()
         {
             this.logger = logger;
@@ -58,7 +60,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             try
             {
                 var item = await logService.GetLogAsync(ViewModelArgs.AppLogID);
-                Item = item ?? new Log { Id = 0/*, IsEmpty = true*/ };
+                Item = item ?? new LogModel { Id = 0, IsEmpty = true };
             }
             catch (Exception ex)
             {
@@ -94,12 +96,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             };
         }
 
-        protected override Task<bool> SaveItemAsync(Log model)
+        protected override Task<bool> SaveItemAsync(LogModel model)
         {
             throw new NotImplementedException();
         }
 
-        protected override async Task<bool> DeleteItemAsync(Log model)
+        protected override async Task<bool> DeleteItemAsync(LogModel model)
         {
             try
             {

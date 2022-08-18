@@ -14,6 +14,7 @@
 
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Infrastructure.Logging;
+using CiccioSoft.Inventory.Uwp.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
@@ -22,21 +23,21 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.Services
 {
-    public class LogCollection : VirtualCollection<Log>
+    public class LogCollection : VirtualCollection<LogModel>
     {
         private DataRequest<Log> _dataRequest = null;
-        private readonly LogService logService;
+        private readonly LogServiceFacade logService;
         private readonly ILogger<LogCollection> logger = Ioc.Default.GetService<ILogger<LogCollection>>();
 
-        public LogCollection(LogService logService)
+        public LogCollection(LogServiceFacade logService)
             : base()
         {
             this.logService = logService;
         }
 
-        private Log _defaultItem = /*AppLogModel.CreateEmpty()*/ new Log();
+        private LogModel _defaultItem = LogModel.CreateEmpty();
 
-        protected override Log DefaultItem => _defaultItem;
+        protected override LogModel DefaultItem => _defaultItem;
 
         public async Task LoadAsync(DataRequest<Log> dataRequest)
         {
@@ -53,7 +54,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             }
         }
 
-        protected override async Task<IList<Log>> FetchDataAsync(int rangeIndex, int rangeSize)
+        protected override async Task<IList<LogModel>> FetchDataAsync(int rangeIndex, int rangeSize)
         {
             try
             {

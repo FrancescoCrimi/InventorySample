@@ -15,20 +15,20 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-//namespace CiccioSoft.Inventory.Application.Models
-//{
-//    public class AppLogModel : ObservableObject
-//    {
-//        static public AppLogModel CreateEmpty() => new AppLogModel { Id = -1, IsEmpty = true };
+namespace CiccioSoft.Inventory.Uwp.Models
+{
+    public class LogModel : ObservableObject
+    {
+        static public LogModel CreateEmpty() => new LogModel { Id = -1, IsEmpty = true };
 
-//        public long Id { get; set; }
-//        public bool IsRead { get; set; }
-//        public DateTimeOffset DateTime { get; set; }
-//        public string User { get; set; }
-//        public LogLevel Type { get; set; }
-//        public string Source { get; set; }
-//        public string Action { get; set; }
-//        public string Message { get; set; }
-//        public string Description { get; set; }
-//    }
-//}
+        public long Id { get; set; }
+        public bool IsRead { get; set; }
+        public DateTimeOffset DateTime { get; set; }
+        public string User { get; set; }
+        public LogLevel Type { get; set; }
+        public string Source { get; set; }
+        public string Action { get; set; }
+        public string Message { get; set; }
+        public string Description { get; set; }
+    }
+}

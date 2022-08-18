@@ -160,7 +160,7 @@
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\UserInfo.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
-    <Compile Include="Models\AppLogModel.cs" />
+    <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CountryCodeModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
@@ -174,6 +174,7 @@
     <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Services\Infrastructure\SettingsService.cs" />
+    <Compile Include="Services\LogServiceFacade.cs" />
     <Compile Include="Services\LookupTableServiceFacade.cs" />
     <Compile Include="ViewModels\Common\GenericDetailsViewModelReadOnly.cs" />
     <Compile Include="ViewModels\Common\GenericListViewModelReadOnly.cs" />

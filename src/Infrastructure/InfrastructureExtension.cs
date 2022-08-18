@@ -28,7 +28,7 @@ namespace CiccioSoft.Inventory.Infrastructure
 
 
             serviceCollection
-                .AddTransient<ILogRepository, LogRepository>()
+                //.AddTransient<ILogRepository, LogRepository>()
                 .AddSingleton<LogService>()
                 .AddLogging(AddLogging);
 

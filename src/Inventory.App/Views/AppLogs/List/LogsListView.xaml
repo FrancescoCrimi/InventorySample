@@ -4,8 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:CiccioSoft.Inventory.Application.Models"
-    xmlns:logging="using:CiccioSoft.Inventory.Infrastructure.Logging"
+    xmlns:models="using:CiccioSoft.Inventory.Uwp.Models"
     xmlns:controls="using:CiccioSoft.Inventory.Uwp.Controls"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400">
 
@@ -34,7 +33,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="ItemTemplate" x:DataType="logging:Log">
+        <DataTemplate x:Key="ItemTemplate" x:DataType="models:LogModel">
             <Grid Height="32">
                 <Grid>
                     <Grid.ColumnDefinitions>

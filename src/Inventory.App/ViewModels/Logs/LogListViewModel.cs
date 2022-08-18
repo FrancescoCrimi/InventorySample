@@ -14,6 +14,7 @@
 
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Infrastructure.Logging;
+using CiccioSoft.Inventory.Uwp.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
@@ -45,13 +46,13 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     }
     #endregion
 
-    public class LogListViewModel : GenericListViewModelReadOnly<Log>
+    public class LogListViewModel : GenericListViewModel<LogModel>
     {
         private readonly ILogger logger;
-        private readonly LogService logService;
+        private readonly LogServiceFacade logService;
 
         public LogListViewModel(ILogger<LogListViewModel> logger,
-                                   LogService logService)
+                                LogServiceFacade logService)
             : base()
         {
             this.logger = logger;
@@ -147,7 +148,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
             catch (Exception ex)
             {
-                Items = new List<Log>();
+                Items = new List<LogModel>();
                 StatusError($"Error loading Logs: {ex.Message}");
                 logger.LogError(ex, "Refresh");
                 isOk = false;
@@ -163,7 +164,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             return isOk;
         }
 
-        private async Task<IList<Log>> GetItemsAsync()
+        private async Task<IList<LogModel>> GetItemsAsync()
         {
             if (!ViewModelArgs.IsEmpty)
             {
@@ -176,7 +177,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
                 //return await logService.GetLogsAsync(request);
             }
-            return new List<Log>();
+            return new List<LogModel>();
         }
 
         protected override void OnNew()
@@ -215,7 +216,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<Log>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ItemMessage<IList<LogModel>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -234,7 +235,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<Log> models)
+        private async Task DeleteItemsAsync(IEnumerable<LogModel> models)
         {
             foreach (var model in models)
             {

@@ -13,6 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Infrastructure.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,117 @@ using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Infrastructure.Logging
 {
-    public class LogService /*: ILogService*/
+    public class LogService
     {
         private readonly IServiceProvider serviceProvider;
+
+        public LogService(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+        }
+
+
+        public async Task<Log> GetLogAsync(long id)
+        {
+            using (var logDbContext = serviceProvider.GetService<LogDbContext>())
+            {
+                var item = await logDbContext.Logs.Where(r => r.Id == id).FirstOrDefaultAsync();
+                return item;
+            }
+        }
+
+
+        //public async Task<IList<AppLogModel>> GetLogsAsync(DataRequest<Log> request)
+        //{
+        //    var collection = new LogCollection(this);
+        //    await collection.LoadAsync(request);
+        //    return collection;
+        //}
+
+        public async Task<IList<Log>> GetLogsAsync(int skip, int take, DataRequest<Log> request)
+        {
+            using (var logDbContext = serviceProvider.GetService<LogDbContext>())
+            {
+                IQueryable<Log> items = GetLogs(request, logDbContext);
+                // Execute
+                var records = await items
+                    .Skip(skip)
+                    .Take(take)
+                    .AsNoTracking()
+                    .ToListAsync();
+                return records;
+            }
+        }
+
+        public async Task<int> GetLogsCountAsync(DataRequest<Log> request)
+        {
+            using (var logDbContext = serviceProvider.GetService<LogDbContext>())
+            {
+                IQueryable<Log> items = logDbContext.Logs;
+
+                // Query
+                if (!string.IsNullOrEmpty(request.Query))
+                {
+                    items = items.Where(r => r.Message.Contains(request.Query.ToLower()));
+                }
+
+                // Where
+                if (request.Where != null)
+                {
+                    items = items.Where(request.Where);
+                }
+
+                int ret = await items.CountAsync();
+                return ret;
+            }
+        }
+
+        public async Task<int> DeleteLogAsync(Log log)
+        {
+            using (var logDbContext = serviceProvider.GetService<LogDbContext>())
+            {
+                logDbContext.Logs.RemoveRange(log);
+                return await logDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request)
+        {
+            using (var logDbContext = serviceProvider.GetService<LogDbContext>())
+            {
+                IQueryable<Log> items = GetLogs(request, logDbContext);
+
+                // Execute
+                var records = await items
+                    .Skip(index)
+                    .Take(length)
+                    .Select(r => new Log
+                    {
+                        Id = r.Id,
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                logDbContext.Logs.RemoveRange(records);
+                return await logDbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task MarkAllAsReadAsync()
+        {
+            using (var logDbContext = serviceProvider.GetService<LogDbContext>())
+            {
+                var items = await logDbContext.Logs.Where(r => !r.IsRead).ToListAsync();
+                foreach (var item in items)
+                {
+                    item.IsRead = true;
+                }
+                await logDbContext.SaveChangesAsync();
+            }
+        }
+
+
+
 
         public static event EventHandler AddLogEvent;
 
@@ -35,75 +144,34 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
             }
         }
 
-        public LogService(IServiceProvider serviceProvider)
-        {
-            this.serviceProvider = serviceProvider;
-        }
 
-        public async Task<Log> GetLogAsync(long id)
+        private IQueryable<Log> GetLogs(DataRequest<Log> request, LogDbContext logDbContext)
         {
-            using (var repo = serviceProvider.GetService<ILogRepository>())
+            IQueryable<Log> items = logDbContext.Logs;
+
+            // Query
+            if (!string.IsNullOrEmpty(request.Query))
             {
-                var item = await repo.GetLogAsync(id);
-                return item;
+                items = items.Where(r => r.Message.Contains(request.Query.ToLower()));
             }
-        }
 
-        //public async Task<IList<AppLogModel>> GetLogsAsync(DataRequest<Log> request)
-        //{
-        //    var collection = new LogCollection(this);
-        //    await collection.LoadAsync(request);
-        //    return collection;
-        //}
-
-        public async Task<IList<Log>> GetLogsAsync(int skip, int take, DataRequest<Log> request)
-        {
-            using (var repo = serviceProvider.GetService<ILogRepository>())
+            // Where
+            if (request.Where != null)
             {
-                var items = await repo.GetLogsAsync(skip, take/*, request*/);
-                return items;
+                items = items.Where(request.Where);
             }
-        }
 
-        public async Task<int> GetLogsCountAsync(DataRequest<Log> request)
-        {
-            using (var repo = serviceProvider.GetService<ILogRepository>())
+            // Order By
+            if (request.OrderBy != null)
             {
-                return await repo.GetLogsCountAsync(request);
+                items = items.OrderBy(request.OrderBy);
             }
-        }
-
-        //public async Task<int> CreateLogAsync(AppLog appLog)
-        //{
-        //    using (var ds = CreateDataSource())
-        //    {
-        //        return await ds.CreateLogAsync(appLog);
-        //    }
-        //}
-
-        public async Task<int> DeleteLogAsync(Log log)
-        {
-            using (var repo = serviceProvider.GetService<ILogRepository>())
+            if (request.OrderByDesc != null)
             {
-                return await repo.DeleteLogsAsync(log);
+                items = items.OrderByDescending(request.OrderByDesc);
             }
-        }
 
-        public async Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request)
-        {
-            using (var repo = serviceProvider.GetService<ILogRepository>())
-            {
-                var items = await repo.GetLogKeysAsync(index, length, request);
-                return await repo.DeleteLogsAsync(items.ToArray());
-            }
-        }
-
-        public async Task MarkAllAsReadAsync()
-        {
-            using (var repo = serviceProvider.GetService<ILogRepository>())
-            {
-                await repo.MarkAllAsReadAsync();
-            }
+            return items;
         }
     }
 }

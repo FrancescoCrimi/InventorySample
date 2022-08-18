@@ -13,6 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Infrastructure.Logging;
+using CiccioSoft.Inventory.Uwp.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -52,7 +53,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<Log>>(this, OnMessage);
+            Messenger.Register<ItemMessage<LogModel>>(this, OnMessage);
             AppLogList.Subscribe();
             AppLogDetails.Subscribe();
         }
@@ -65,7 +66,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             AppLogDetails.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, ItemMessage<Log> message)
+        private async void OnMessage(object recipient, ItemMessage<LogModel> message)
         {
             if (/*recipient == AppLogList &&*/ message.Message == "ItemSelected")
             {
@@ -90,7 +91,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             AppLogDetails.Item = selected;
         }
 
-        private async Task<Log> PopulateDetails(Log selected)
+        private async Task<Log> PopulateDetails(LogModel selected)
         {
             try
             {
