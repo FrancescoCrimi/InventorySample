@@ -27,9 +27,9 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private readonly LogService logService;
 
         public LogsViewModel(ILogger<LogsViewModel> logger,
-                                LogService logService,
-                                LogListViewModel appLogListViewModel,
-                                LogDetailsViewModel appLogDetailsViewModel)
+                             LogService logService,
+                             LogListViewModel appLogListViewModel,
+                             LogDetailsViewModel appLogDetailsViewModel)
             : base()
         {
             this.logger = logger;

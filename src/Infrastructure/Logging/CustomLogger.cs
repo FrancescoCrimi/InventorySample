@@ -50,9 +50,9 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
                 Action = "action",
                 Message = message,
                 DateTime = DateTime.Now,
-                IsRead = false
+                IsRead = false,
                 //MachineName = "Suca",
-                //Level = "Suca"
+                Level = logLevel
                 //Description = description,
             };
 

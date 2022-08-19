@@ -25,7 +25,7 @@ namespace CiccioSoft.Inventory.Uwp.Models
         public bool IsRead { get; set; }
         public DateTimeOffset DateTime { get; set; }
         public string User { get; set; }
-        public LogLevel Type { get; set; }
+        public LogLevel Level { get; set; }
         public string Source { get; set; }
         public string Action { get; set; }
         public string Message { get; set; }

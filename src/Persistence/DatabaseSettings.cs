@@ -57,7 +57,7 @@ namespace CiccioSoft.Inventory.Persistence
         }
 
         public async Task CopyDataTables(Action<double> setValue,
-                             Action<string> setStatus)
+                                         Action<string> setStatus)
         {
             using (var sourceDb = serviceProvider.GetService<AppDbContext>())
             {

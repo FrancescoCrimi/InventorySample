@@ -38,7 +38,8 @@
             <converters:Int16Converter x:Key="Int16Converter" />
             <converters:Int32Converter x:Key="Int32Converter" />
             <converters:Int64Converter x:Key="Int64Converter" />
-            <converters:LogTypeConverter x:Key="LogTypeConverter" />
+         
+            <converters:LogLevelConverter x:Key="LogLevelConverter" />
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <converters:ObjectToImageConverter x:Key="ObjectToImageConverter" />
 

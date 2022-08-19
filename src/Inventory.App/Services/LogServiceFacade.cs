@@ -63,6 +63,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
                 DateTime = source.DateTime,
                 //User = source.User,
                 //Type = source.Type,
+                Level = source.Level,
                 Source = source.Source,
                 Action = source.Action,
                 Message = source.Message,

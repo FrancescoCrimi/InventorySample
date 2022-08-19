@@ -47,8 +47,8 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <FontIcon Glyph="{x:Bind Type, Converter={StaticResource LogTypeConverter}}" Foreground="{x:Bind Type, Converter={StaticResource LogTypeConverter}}" />
-                    <TextBlock Grid.Column="1" Text="{x:Bind Type}" Style="{StaticResource ColumnValueStyle}" />
+                    <FontIcon Glyph="{x:Bind Level, Converter={StaticResource LogLevelConverter}}" Foreground="{x:Bind Level, Converter={StaticResource LogLevelConverter}}" />
+                    <TextBlock Grid.Column="1" Text="{x:Bind Level}" Style="{StaticResource ColumnValueStyle}" />
                     <TextBlock Grid.Column="2" Text="{x:Bind Id}" Style="{StaticResource ColumnValueStyle}" />
                     <TextBlock Grid.Column="3" Text="{x:Bind DateTime, Converter={StaticResource DateTimeFormatConverter}}" Style="{StaticResource ColumnValueStyle}" />
                     <TextBlock Grid.Column="4" Text="{x:Bind DateTime, Converter={StaticResource DateTimeFormatConverter}, ConverterParameter=longtime}" Style="{StaticResource ColumnValueStyle}" />

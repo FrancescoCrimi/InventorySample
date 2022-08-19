@@ -30,11 +30,11 @@
             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,12">
                 <FontIcon Margin="0,0,12,6"
                               FontSize="42"
-                              Glyph="{x:Bind ViewModel.Item.Type, Mode=OneWay, Converter={StaticResource LogTypeConverter}}"
-                              Foreground="{x:Bind ViewModel.Item.Type, Mode=OneWay, Converter={StaticResource LogTypeConverter}}" />
+                              Glyph="{x:Bind ViewModel.Item.Level, Mode=OneWay, Converter={StaticResource LogLevelConverter}}"
+                              Foreground="{x:Bind ViewModel.Item.Level, Mode=OneWay, Converter={StaticResource LogLevelConverter}}" />
 
                 <TextBlock Style="{StaticResource CardSuperHeader}" 
-                               Text="{x:Bind ViewModel.Item.Type, Mode=OneWay}" 
+                               Text="{x:Bind ViewModel.Item.Level, Mode=OneWay}" 
                                VerticalAlignment="Center" />
             </StackPanel>
 
