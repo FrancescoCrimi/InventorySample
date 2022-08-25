@@ -14,8 +14,8 @@
 
 using CiccioSoft.Inventory.Uwp.Models;
 using CiccioSoft.Inventory.Uwp.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Threading.Tasks;
 

@@ -4,7 +4,7 @@ using CiccioSoft.Inventory.Uwp.ViewModels;
 using CiccioSoft.Inventory.Uwp.Views;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

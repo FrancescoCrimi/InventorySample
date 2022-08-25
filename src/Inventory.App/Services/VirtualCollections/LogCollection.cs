@@ -15,8 +15,8 @@
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Infrastructure.Logging;
 using CiccioSoft.Inventory.Uwp.Models;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

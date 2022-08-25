@@ -13,9 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Persistence;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 

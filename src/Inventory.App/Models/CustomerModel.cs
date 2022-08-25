@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Uwp.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System;
 
 namespace CiccioSoft.Inventory.Uwp.Models

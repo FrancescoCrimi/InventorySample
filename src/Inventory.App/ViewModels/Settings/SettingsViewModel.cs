@@ -12,14 +12,13 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Views;
-using Microsoft.Toolkit.Mvvm.Input;
-using Windows.Storage;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels

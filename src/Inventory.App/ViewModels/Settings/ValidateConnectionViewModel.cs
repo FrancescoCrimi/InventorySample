@@ -13,8 +13,8 @@
 #endregion
 
 using CiccioSoft.Inventory.Persistence;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 

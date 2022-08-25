@@ -16,7 +16,7 @@ using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Models;
 using CiccioSoft.Inventory.Uwp.Services;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Uwp.ViewModels;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;

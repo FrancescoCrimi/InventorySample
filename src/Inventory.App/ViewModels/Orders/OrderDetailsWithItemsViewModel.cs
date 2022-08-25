@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Uwp.Models;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels

@@ -12,15 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
-
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using CiccioSoft.Inventory.Uwp.ViewModels;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-using CiccioSoft.Inventory.Uwp.ViewModels;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 
 namespace CiccioSoft.Inventory.Uwp.Views
 {

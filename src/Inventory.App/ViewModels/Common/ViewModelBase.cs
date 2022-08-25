@@ -13,7 +13,7 @@
 #endregion
 
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
-    public class ViewModelBase : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableRecipient
+    public class ViewModelBase : CommunityToolkit.Mvvm.ComponentModel.ObservableRecipient
     {
         private Stopwatch _stopwatch = new Stopwatch();
 

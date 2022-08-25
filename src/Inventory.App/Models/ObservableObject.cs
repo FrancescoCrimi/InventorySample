@@ -14,7 +14,7 @@
 
 namespace CiccioSoft.Inventory.Uwp.Models
 {
-    public class ObservableObject : Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject
+    public class ObservableObject : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
     {
         public bool IsEmpty { get; set; }
 
