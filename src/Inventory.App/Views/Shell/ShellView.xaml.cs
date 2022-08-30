@@ -34,9 +34,9 @@ namespace CiccioSoft.Inventory.Uwp.Views
             {
                 //var loginService = Ioc.Default.GetService<ILoginService>();
                 //loginService.Logoff();
-                if (Frame.CanGoBack)
+                if (frame.CanGoBack)
                 {
-                    Frame.GoBack();
+                    frame.GoBack();
                 }
             }
         }

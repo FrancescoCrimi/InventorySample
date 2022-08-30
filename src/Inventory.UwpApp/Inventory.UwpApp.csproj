@@ -144,8 +144,6 @@
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
-    <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
     <Compile Include="Behaviors\TreeViewCollapseBehavior.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\ObjectToImageConverter.cs" />

@@ -24,6 +24,12 @@
     </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Margin="12,0" Text="Dashboard" FontSize="22" Foreground="Gray" />
 
         <GridView
             Grid.Row="1"

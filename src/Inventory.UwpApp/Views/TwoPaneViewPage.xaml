@@ -13,7 +13,6 @@
     xmlns:converters="using:Inventory.UwpApp.Converters"
     Style="{StaticResource PageStyle}"
     xmlns:behaviors="using:Inventory.UwpApp.Behaviors"
-    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
     <Page.Resources>
         <toolkitConverters:BoolToVisibilityConverter x:Name="ReverseBoolToVisibility" TrueValue="Collapsed" FalseValue="Visible" />

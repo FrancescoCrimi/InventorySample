@@ -11,7 +11,16 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock
+                Text="ContentGrid"
+                Style="{ThemeResource TitleTextBlockStyle}"
+                Margin="{StaticResource SmallLeftRightMargin}" />
         <controls:AdaptiveGridView
+            Grid.Row="1"
             Padding="{StaticResource MediumLeftRightMargin}"
             animations:Connected.ListItemElementName="itemThumbnail"
             animations:Connected.ListItemKey="animationKeyContentGrid"

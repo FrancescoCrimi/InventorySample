@@ -13,6 +13,10 @@
                 The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.
             -->
+            <TextBlock
+                Text="Main"
+                Style="{ThemeResource TitleTextBlockStyle}"
+                Margin="{StaticResource SmallLeftRightMargin}" />
         </Grid>
     </Grid>
 </Page>

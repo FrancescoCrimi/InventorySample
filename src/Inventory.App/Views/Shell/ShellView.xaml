@@ -14,7 +14,6 @@
     d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
     mc:Ignorable="d">
 
-
     <i:Interaction.Behaviors>
         <ic:EventTriggerBehavior EventName="Loaded">
             <ic:InvokeCommandAction Command="{Binding LoadedCommand}" />
@@ -23,7 +22,6 @@
             <ic:InvokeCommandAction Command="{Binding UnloadedCommand}" />
         </ic:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-
 
     <Page.Resources>
 
@@ -129,5 +127,7 @@
             <Rectangle Fill="{StaticResource Error}" Visibility="{Binding IsError, Mode=OneWay}" />
             <TextBlock Margin="6,4" Text="{Binding Message, Mode=OneWay}" Foreground="White" FontSize="12" />
         </Grid>
+
     </Grid>
+
 </Page>

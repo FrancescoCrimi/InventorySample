@@ -10,7 +10,16 @@
     mc:Ignorable="d">
     <Grid x:Name="ContentArea" Margin="{StaticResource SmallLeftRightMargin}">
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock
+                Text="DataGrid"
+                Style="{ThemeResource TitleTextBlockStyle}"
+                Margin="{StaticResource SmallLeftRightMargin}" />
             <controls:DataGrid
+                Grid.Row="1"
                 x:Uid="DataTable"
                 AutoGenerateColumns="False"
                 GridLinesVisibility="Horizontal"

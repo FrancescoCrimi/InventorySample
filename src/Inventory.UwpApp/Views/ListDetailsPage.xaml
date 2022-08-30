@@ -8,14 +8,14 @@
     Style="{StaticResource PageStyle}"
     xmlns:model="using:Inventory.UwpApp.Core.Models"
     xmlns:views="using:Inventory.UwpApp.Views"
-    xmlns:behaviors="using:Inventory.UwpApp.Behaviors"
-    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
     mc:Ignorable="d">
+
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition />
         </TransitionCollection>
     </Page.Transitions>
+
     <Page.Resources>
         <DataTemplate x:Key="ItemTemplate" x:DataType="model:SampleOrder">
             <Grid Height="60">

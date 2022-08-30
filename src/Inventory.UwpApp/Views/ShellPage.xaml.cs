@@ -8,13 +8,12 @@ namespace Inventory.UwpApp.Views
     // TODO: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page
     {
-        public ShellViewModel ViewModel { get; } = Ioc.Default.GetService<ShellViewModel>();
-
         public ShellPage()
         {
             InitializeComponent();
-            DataContext = ViewModel;
-            ViewModel.Initialize(shellFrame, navigationView, KeyboardAccelerators);
+            ShellViewModel viewModel = Ioc.Default.GetService<ShellViewModel>();
+            DataContext = viewModel;
+            viewModel.Initialize(shellFrame, KeyboardAccelerators);
         }
     }
 }

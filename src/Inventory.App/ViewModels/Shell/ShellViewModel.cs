@@ -44,12 +44,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         public UserInfo UserInfo { get; protected set; }
 
+
         private bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
         }
+
 
         private bool _isError = false;
         public bool IsError
@@ -58,12 +60,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             set => SetProperty(ref _isError, value);
         }
 
+
         private string _message = "Ready";
         public string Message
         {
             get => _message;
             set => SetProperty(ref _message, value);
         }
+
 
         private int logNewCount = 10;
         public int LogNewCount
@@ -72,12 +76,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             set => SetProperty(ref logNewCount, value);
         }
 
+
         private bool isBackEnabled;
         public bool IsBackEnabled
         {
             get => isBackEnabled;
             set => SetProperty(ref isBackEnabled, value);
         }
+
 
         public void Initialize(Windows.UI.Xaml.Controls.Frame frame)
         {
@@ -101,6 +107,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             Messenger.Register<StatusMessage>(this, OnStatusMessage);
         }
 
+
         private RelayCommand unloadedCommand;
         public ICommand UnloadedCommand => unloadedCommand ??
                     (unloadedCommand = new RelayCommand(Unloaded));
@@ -110,6 +117,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             LogService.AddLogEvent -= Logging_AddLogEvent;
             Messenger.UnregisterAll(this);
         }
+
 
         private RelayCommand<NavigationViewItemInvokedEventArgs> itemInvokedCommand;
         public ICommand ItemInvokedCommand => itemInvokedCommand ??
@@ -132,6 +140,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
+
         private RelayCommand<NavigationViewBackRequestedEventArgs> backRequestedCommand;
         public ICommand BackRequestedCommand => backRequestedCommand ??
             (backRequestedCommand = new RelayCommand<NavigationViewBackRequestedEventArgs>(BackRequested));
@@ -142,6 +151,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 navigationService.GoBack();
             }
         }
+
 
         private RelayCommand frameNavigatedCommand;
         public ICommand FrameNavigatedCommand => frameNavigatedCommand ??
@@ -229,7 +239,6 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
             //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
         }
-
 
         private async void Logging_AddLogEvent(object sender, EventArgs e)
         {
