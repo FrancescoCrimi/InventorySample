@@ -1,0 +1,32 @@
+﻿using System;
+
+using Windows.UI.Xaml.Data;
+
+namespace Inventory.UwpApp.Converters
+{
+    public class DateTimeFormatConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is DateTime dt && parameter != null)
+            {
+                return dt.ToString(parameter.ToString());
+            }
+            if (value is DateTimeOffset dto && parameter != null)
+            {
+                return dto.ToString(parameter.ToString());
+            }
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value != null)
+            {
+                return DateTime.Parse(value.ToString());
+            }
+
+            return default(DateTime);
+        }
+    }
+}

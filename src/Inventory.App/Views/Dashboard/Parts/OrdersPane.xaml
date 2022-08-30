@@ -5,7 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CiccioSoft.Inventory.Uwp.Models"
-    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400">
+    mc:Ignorable="d"
+    d:DesignWidth="800"
+    d:DesignHeight="400">
 
     <UserControl.Resources>
         <DataTemplate x:Key="HeaderTemplate" x:DataType="models:OrderModel">
@@ -20,7 +22,6 @@
                 <TextBlock Grid.Column="2" Text="Order Date" Style="{StaticResource ColumnHeaderStyle}" />
             </Grid>
         </DataTemplate>
-
         <DataTemplate x:Key="ItemTemplate" x:DataType="models:OrderModel">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -41,13 +42,22 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
         <TextBlock Margin="6,0" Text="Latest Orders" FontSize="18" />
         <Grid Grid.Row="1">
-            <ContentControl ContentTemplate="{StaticResource HeaderTemplate}" HorizontalContentAlignment="Stretch" />
-            <Border Margin="4" BorderBrush="LightGray" BorderThickness="0,0,0,1" />
+            <ContentControl
+                ContentTemplate="{StaticResource HeaderTemplate}"
+                HorizontalContentAlignment="Stretch" />
+            <Border
+                Margin="4"
+                BorderBrush="LightGray"
+                BorderThickness="0,0,0,1" />
         </Grid>
-        <ListView Grid.Row="2" ItemsSource="{x:Bind ItemsSource, Mode=OneWay}" ItemTemplate="{StaticResource ItemTemplate}"
-                  ItemContainerStyle="{StaticResource RowItemStyle}" IsHitTestVisible="False" />
+        <ListView
+            Grid.Row="2"
+            ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+            ItemTemplate="{StaticResource ItemTemplate}"
+            ItemContainerStyle="{StaticResource RowItemStyle}"
+            IsHitTestVisible="False" />
     </Grid>
+
 </UserControl>

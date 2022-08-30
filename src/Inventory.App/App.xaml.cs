@@ -65,8 +65,6 @@ namespace CiccioSoft.Inventory.Uwp
             logger.LogError("UnhandledException: " + e.Message);
         }
 
-
-
         private IServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
