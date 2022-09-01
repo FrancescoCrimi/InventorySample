@@ -61,6 +61,7 @@
                     ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}" 
                     Tag="Orders" />
             </GridView>
+
         </Grid>
     </Grid>
 </Page>

@@ -14,12 +14,16 @@
 
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
+using CommunityToolkit.Mvvm.Input;
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
+using Inventory.UwpApp.Views;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Inventory.UwpApp.ViewModels
 {
@@ -44,6 +48,18 @@ namespace Inventory.UwpApp.ViewModels
             this.orderService = orderService;
             this.productService = productService;
         }
+
+        private AsyncRelayCommand loadedCommand = null;
+        public IAsyncRelayCommand LoadedCommand => loadedCommand ??
+            (loadedCommand = new AsyncRelayCommand(LoadAsync));
+
+        private RelayCommand unLoadedCommand = null;
+        public ICommand UnLoadedCommand => unLoadedCommand ??
+            (unLoadedCommand = new RelayCommand(Unload));
+
+        private RelayCommand<ItemClickEventArgs> itemClickCommand = null;
+        public ICommand ItemClickCommand => itemClickCommand ??
+                (itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick));
 
         private IList<CustomerModel> _customers = null;
         public IList<CustomerModel> Customers
@@ -129,21 +145,24 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        public void ItemSelected(string item)
+        private void ItemClick(ItemClickEventArgs e)
         {
-            switch (item)
+            if (e.ClickedItem is Control control)
             {
-                case "Customers":
-                    //navigationService.Navigate<CustomersViewModel>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
-                    break;
-                case "Orders":
-                    //navigationService.Navigate<OrdersViewModel>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
-                    break;
-                case "Products":
-                    //navigationService.Navigate<ProductsViewModel>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
-                    break;
-                default:
-                    break;
+                switch (control.Tag as String)
+                {
+                    case "Customers":
+                        navigationService.Navigate<CustomersPage>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
+                        break;
+                    case "Orders":
+                        navigationService.Navigate<OrdersPage>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
+                        break;
+                    case "Products":
+                        navigationService.Navigate<ProductsPage>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

@@ -15,19 +15,28 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.UwpApp.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
 namespace Inventory.UwpApp.Views
 {
-    // TODO: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-    public sealed partial class ShellPage : Page
+    public sealed partial class DashboardPage : Page
     {
-        public ShellPage()
+        public DashboardPage()
         {
-            InitializeComponent();
-            ShellViewModel viewModel = Ioc.Default.GetService<ShellViewModel>();
-            DataContext = viewModel;
-            viewModel.Initialize(shellFrame, KeyboardAccelerators);
+            this.InitializeComponent();
+            DataContext = Ioc.Default.GetService<DashboardViewModel>();
         }
     }
 }

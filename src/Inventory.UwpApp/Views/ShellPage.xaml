@@ -17,9 +17,18 @@
         <ic:EventTriggerBehavior EventName="Loaded">
             <ic:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ic:EventTriggerBehavior>
+        <ic:EventTriggerBehavior EventName="Unloaded">
+            <ic:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+        </ic:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
-    <winui:NavigationView
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <winui:NavigationView
         x:Name="navigationView"
         IsBackButtonVisible="Visible"
         IsBackEnabled="{Binding IsBackEnabled, Mode=OneWay}"
@@ -27,37 +36,44 @@
         ExpandedModeThresholdWidth="1280"
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
 
-        <winui:NavigationView.MenuItems>
-            <!--
-            TODO: Change the symbols for each item as appropriate for your app
-            More on Segoe UI Symbol icons: https://docs.microsoft.com/windows/uwp/style/segoe-ui-symbol-font
-            Or to use an IconElement instead of a Symbol see https://github.com/microsoft/TemplateStudio/blob/main/docs/UWP/projectTypes/navigationpane.md
-            Edit String/en-US/Resources.resw: Add a menu item title for each page
-            -->
-            <winui:NavigationViewItem x:Uid="Shell_Dashboard" Icon="Home" helpers:NavHelper.NavigateTo="views:DashboardView"/>
-            <winui:NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />
-            <winui:NavigationViewItem x:Uid="Shell_ListDetails" Icon="Document" helpers:NavHelper.NavigateTo="views:ListDetailsPage" />
-            <winui:NavigationViewItem x:Uid="Shell_ContentGrid" Icon="Document" helpers:NavHelper.NavigateTo="views:ContentGridPage" />
-            <winui:NavigationViewItem x:Uid="Shell_DataGrid" Icon="Document" helpers:NavHelper.NavigateTo="views:DataGridPage" />
-            <winui:NavigationViewItem x:Uid="Shell_TreeView" Icon="Document" helpers:NavHelper.NavigateTo="views:TreeViewPage" />
-            <winui:NavigationViewItem x:Uid="Shell_TwoPaneView" Icon="Document" helpers:NavHelper.NavigateTo="views:TwoPaneViewPage" />
-            <!--<winui:NavigationViewItem x:Uid="Shell_TabbedPivot" Icon="Document" helpers:NavHelper.NavigateTo="views:TabbedPivotPage" />
-            <winui:NavigationViewItem x:Uid="Shell_TabView" Icon="Document" helpers:NavHelper.NavigateTo="views:TabViewPage" />-->
-        </winui:NavigationView.MenuItems>
+            <winui:NavigationView.MenuItems>
+                <winui:NavigationViewItem x:Uid="Shell_Dashboard" Icon="Home" helpers:NavHelper.NavigateTo="views:DashboardPage"/>
+                <winui:NavigationViewItem x:Uid="Shell_Customers" Icon="People" helpers:NavHelper.NavigateTo="views:CustomersPage" />
+                <winui:NavigationViewItem x:Uid="Shell_Orders" Icon="PreviewLink" helpers:NavHelper.NavigateTo="views:OrdersPage" />
+                <winui:NavigationViewItem x:Uid="Shell_Products" helpers:NavHelper.NavigateTo="views:ProductsPage">
+                    <winui:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE781;" FontFamily="Segoe MDL2 Assets"/>
+                    </winui:NavigationViewItem.Icon>
+                </winui:NavigationViewItem>
 
-        <i:Interaction.Behaviors>
-            <ic:EventTriggerBehavior EventName="ItemInvoked">
-                <ic:InvokeCommandAction Command="{Binding ItemInvokedCommand}" />
-            </ic:EventTriggerBehavior>
-            <ic:EventTriggerBehavior EventName="BackRequested">
-                <ic:InvokeCommandAction Command="{Binding BackRequestedCommand}"/>
-            </ic:EventTriggerBehavior>
-        </i:Interaction.Behaviors>
+                <!--<winui:NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />-->
+                <winui:NavigationViewItem x:Uid="Shell_ListDetails" Icon="Document" helpers:NavHelper.NavigateTo="views:ListDetailsPage" />
+                <winui:NavigationViewItem x:Uid="Shell_ContentGrid" Icon="Document" helpers:NavHelper.NavigateTo="views:ContentGridPage" />
+                <winui:NavigationViewItem x:Uid="Shell_DataGrid" Icon="Document" helpers:NavHelper.NavigateTo="views:DataGridPage" />
+                <winui:NavigationViewItem x:Uid="Shell_TreeView" Icon="Document" helpers:NavHelper.NavigateTo="views:TreeViewPage" />
+                <winui:NavigationViewItem x:Uid="Shell_TwoPaneView" Icon="Document" helpers:NavHelper.NavigateTo="views:TwoPaneViewPage" />
+            </winui:NavigationView.MenuItems>
 
-        <Grid>
-            <Frame x:Name="shellFrame" />
+            <i:Interaction.Behaviors>
+                <ic:EventTriggerBehavior EventName="ItemInvoked">
+                    <ic:InvokeCommandAction Command="{Binding ItemInvokedCommand}" />
+                </ic:EventTriggerBehavior>
+                <ic:EventTriggerBehavior EventName="BackRequested">
+                    <ic:InvokeCommandAction Command="{Binding BackRequestedCommand}"/>
+                </ic:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+
+            <Grid>
+                <Frame x:Name="shellFrame" />
+            </Grid>
+
+        </winui:NavigationView>
+
+        <Grid Grid.Row="1"  Background="DarkGray">
+            <Rectangle Fill="#ce0e0e" Visibility="{Binding IsError, Mode=OneWay}" />
+            <TextBlock Margin="6,4" Text="{Binding Message, Mode=OneWay}" Foreground="White" FontSize="12" />
         </Grid>
 
-    </winui:NavigationView>
+    </Grid>
 
 </Page>

@@ -233,4 +233,16 @@
     <value>Dashboard</value>
     <comment>Navigation view item name for Dashboard</comment>
   </data>
+  <data name="Shell_Customers.Content" xml:space="preserve">
+    <value>Customers</value>
+    <comment>Navigation view item name for Customers</comment>
+  </data>
+  <data name="Shell_Orders.Content" xml:space="preserve">
+    <value>Orders</value>
+    <comment>Navigation view item name for Orders</comment>
+  </data>
+  <data name="Shell_Products.Content" xml:space="preserve">
+    <value>Products</value>
+    <comment>Navigation view item name for Products</comment>
+  </data>
 </root>

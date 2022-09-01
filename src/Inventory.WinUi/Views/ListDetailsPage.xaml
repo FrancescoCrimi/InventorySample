@@ -8,8 +8,9 @@
     xmlns:models="using:Inventory.WinUi.Core.Models"
     xmlns:views="using:Inventory.WinUi.Views"
     xmlns:behaviors="using:Inventory.WinUi.Behaviors"
-    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
+   
     mc:Ignorable="d">
+
     <Page.Resources>
         <DataTemplate x:Key="ItemTemplate" x:DataType="models:SampleOrder">
             <Grid Height="60">
@@ -97,4 +98,5 @@
             SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
             ViewStateChanged="OnViewStateChanged"/>
     </Grid>
+
 </Page>

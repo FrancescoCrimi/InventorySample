@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="Inventory.UwpApp.Views.DashboardView"
+    x:Class="Inventory.UwpApp.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Inventory.UwpApp.Views"
@@ -8,6 +8,8 @@
     xmlns:views="using:Inventory.UwpApp.Views.Dashboard"
     xmlns:viewmodels="using:Inventory.UwpApp.ViewModels"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
     d:DataContext="{d:DesignInstance Type=viewmodels:DashboardViewModel}"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -23,6 +25,15 @@
         </Style>
     </Page.Resources>
 
+    <i:Interaction.Behaviors>
+        <ic:EventTriggerBehavior EventName="Loaded">
+            <ic:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </ic:EventTriggerBehavior>
+        <ic:EventTriggerBehavior EventName="UnLoaded">
+            <ic:InvokeCommandAction Command="{Binding UnLoadedCommand}" />
+        </ic:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -37,6 +48,13 @@
             ItemContainerStyle="{StaticResource GridItemStyle}"
             SelectionMode="None"
             IsItemClickEnabled="True">
+
+            <i:Interaction.Behaviors>
+                <ic:EventTriggerBehavior EventName="ItemClick">
+                    <ic:InvokeCommandAction Command="{Binding ItemClickCommand}" />
+                </ic:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <controls:WrapPanel />

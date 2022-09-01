@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.UwpApp.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,27 +20,11 @@ namespace Inventory.UwpApp.Views
     /// <summary>
     /// Pagina vuota che può essere usata autonomamente oppure per l'esplorazione all'interno di un frame.
     /// </summary>
-    public sealed partial class DashboardView : Page
+    public sealed partial class CustomersPage : Page
     {
-        private readonly DashboardViewModel viewModel;
-
-        public DashboardView()
+        public CustomersPage()
         {
             this.InitializeComponent();
-            viewModel = Ioc.Default.GetService<DashboardViewModel>();
-            DataContext = viewModel;
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            await viewModel.LoadAsync();
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            viewModel.Unload();
         }
     }
 }

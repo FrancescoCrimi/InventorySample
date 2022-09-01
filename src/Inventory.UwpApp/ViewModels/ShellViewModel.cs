@@ -1,8 +1,26 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿#region copyright
+// ******************************************************************
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+// ******************************************************************
+#endregion
+
+using CiccioSoft.Inventory.Infrastructure.Common;
+using CiccioSoft.Inventory.Infrastructure.Logging;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Inventory.UwpApp.Helpers;
 using Inventory.UwpApp.Services;
 using Inventory.UwpApp.Views;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,57 +34,97 @@ using WinUI = Microsoft.UI.Xaml.Controls;
 
 namespace Inventory.UwpApp.ViewModels
 {
-    public class ShellViewModel : ObservableObject
+    public class ShellViewModel : ViewModelBase
     {
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator;
         private readonly KeyboardAccelerator _backKeyboardAccelerator;
+        private readonly ILogger<ShellViewModel> logger;
         private readonly NavigationService navigationService;
-        private bool _isBackEnabled;
+        private readonly LogService logService;
         private IList<KeyboardAccelerator> _keyboardAccelerators;
-        private ICommand _loadedCommand;
-        private ICommand _itemInvokedCommand;
-        private RelayCommand backRequestedCommand;
 
+        public ShellViewModel(ILogger<ShellViewModel> logger,
+                              NavigationService navigationService,
+                              LogService logService)
+        {
+            this.logger = logger;
+            this.navigationService = navigationService;
+            this.logService = logService;
+            _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
+            _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+        }
+
+
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
+
+
+        private bool _isError = false;
+        public bool IsError
+        {
+            get => _isError;
+            set => SetProperty(ref _isError, value);
+        }
+
+
+        private string _message = "Ready";
+        public string Message
+        {
+            get => _message;
+            set => SetProperty(ref _message, value);
+        }
+
+
+        private int logNewCount = 10;
+        public int LogNewCount
+        {
+            get => logNewCount;
+            set => SetProperty(ref logNewCount, value);
+        }
+
+
+        private bool _isBackEnabled;
         public bool IsBackEnabled
         {
             get { return _isBackEnabled; }
             set { SetProperty(ref _isBackEnabled, value); }
         }
 
+
+        private ICommand _loadedCommand;
         public ICommand LoadedCommand => _loadedCommand ??
             (_loadedCommand = new RelayCommand(OnLoaded));
-
-        public ICommand ItemInvokedCommand => _itemInvokedCommand ??
-            (_itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(OnItemInvoked));
-
-        public ICommand BackRequestedCommand => backRequestedCommand ??
-            (backRequestedCommand = new RelayCommand(OnBackRequested));
-
-        public ShellViewModel(NavigationService navigationService)
-        {
-            this.navigationService = navigationService;
-            _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
-            _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
-        }
-
-        public void Initialize(Frame frame, IList<KeyboardAccelerator> keyboardAccelerators)
-        {
-            _keyboardAccelerators = keyboardAccelerators;
-            navigationService.Frame = frame;
-            navigationService.NavigationFailed += Frame_NavigationFailed;
-            navigationService.Navigated += Frame_Navigated;
-            navigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
-        }
-
         private async void OnLoaded()
         {
             // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
             // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
             _keyboardAccelerators.Add(_altLeftKeyboardAccelerator);
             _keyboardAccelerators.Add(_backKeyboardAccelerator);
-            await Task.CompletedTask;
+
+            await UpdateAppLogBadge();
+            LogService.AddLogEvent += Logging_AddLogEvent;
+            Messenger.Register<StatusMessage>(this, OnStatusMessage);
         }
 
+
+        private RelayCommand unloadedCommand;
+        public ICommand UnloadedCommand => unloadedCommand ??
+                    (unloadedCommand = new RelayCommand(Unloaded));
+        private void Unloaded()
+        {
+            //MessageService.Unsubscribe(this);
+            LogService.AddLogEvent -= Logging_AddLogEvent;
+            Messenger.UnregisterAll(this);
+        }
+
+
+        private ICommand _itemInvokedCommand;
+        public ICommand ItemInvokedCommand => _itemInvokedCommand ??
+            (_itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(OnItemInvoked));
         private void OnItemInvoked(WinUI.NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
@@ -85,9 +143,23 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
+
+        private RelayCommand backRequestedCommand;
+        public ICommand BackRequestedCommand => backRequestedCommand ??
+            (backRequestedCommand = new RelayCommand(OnBackRequested));
         private void OnBackRequested()
         {
             navigationService.GoBack();
+        }
+
+
+        public void Initialize(Frame frame, IList<KeyboardAccelerator> keyboardAccelerators)
+        {
+            _keyboardAccelerators = keyboardAccelerators;
+            navigationService.Frame = frame;
+            navigationService.NavigationFailed += Frame_NavigationFailed;
+            navigationService.Navigated += Frame_Navigated;
+            navigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
         }
 
         private void Frame_NavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -119,6 +191,59 @@ namespace Inventory.UwpApp.ViewModels
         {
             var result = navigationService.GoBack();
             args.Handled = result;
+        }
+
+        private void SetStatus(string message)
+        {
+            message = message ?? "";
+            message = message.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
+            Message = message;
+        }
+
+        private void OnStatusMessage(object recipient, StatusMessage message)
+        {
+            //    throw new NotImplementedException();
+            //}
+
+            //private async void OnMessage(ViewModelBase viewModel, string message, string status)
+            //{
+            switch (message.Value)
+            {
+                case "StatusMessage":
+                case "StatusError":
+                    IsError = message.Value == "StatusError";
+                    SetStatus(message.Args);
+                    break;
+
+                case "EnableThisView":
+                case "DisableThisView":
+                    IsEnabled = message.Value == "EnableThisView";
+                    SetStatus(message.Args);
+                    break;
+
+                case "EnableOtherViews":
+                case "DisableOtherViews":
+                    IsEnabled = message.Value == "EnableOtherViews";
+                    SetStatus(message.Args);
+                    break;
+
+                case "EnableAllViews":
+                case "DisableAllViews":
+                    IsEnabled = message.Value == "EnableAllViews";
+                    SetStatus(message.Args);
+                    break;
+            }
+        }
+
+        private async Task UpdateAppLogBadge()
+        {
+            LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
+            //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+        }
+
+        private async void Logging_AddLogEvent(object sender, EventArgs e)
+        {
+            await UpdateAppLogBadge();
         }
     }
 }

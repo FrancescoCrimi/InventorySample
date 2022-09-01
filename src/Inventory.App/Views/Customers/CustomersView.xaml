@@ -64,6 +64,8 @@
                 <controls:Section Header="No item selected" 
                                   Visibility="{x:Bind ViewModel.CustomerDetails.IsDataUnavailable, Mode=OneWay}" />
             </Grid>
+
         </Grid>
+
     </Grid>
 </Page>

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:behaviors="using:Inventory.WinUi.Behaviors"
-    behaviors:NavigationViewHeaderBehavior.HeaderMode="Never"
+  
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
@@ -53,4 +53,5 @@
             </StackPanel>
         </Grid>
     </Grid>
+
 </Page>

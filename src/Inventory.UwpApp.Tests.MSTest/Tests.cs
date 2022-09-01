@@ -15,14 +15,14 @@ namespace Inventory.UwpApp.Tests.MSTest
         {
         }
 
-        // TODO: Add tests for functionality you add to ContentGridViewModel.
-        [TestMethod]
-        public void TestContentGridViewModelCreation()
-        {
-            // This test is trivial. Add your own tests for the logic you add to the ViewModel.
-            var vm = new ContentGridViewModel();
-            Assert.IsNotNull(vm);
-        }
+        //// TODO: Add tests for functionality you add to ContentGridViewModel.
+        //[TestMethod]
+        //public void TestContentGridViewModelCreation()
+        //{
+        //    // This test is trivial. Add your own tests for the logic you add to the ViewModel.
+        //    var vm = new ContentGridViewModel();
+        //    Assert.IsNotNull(vm);
+        //}
 
         // TODO: Add tests for functionality you add to DataGridViewModel.
         [TestMethod]
