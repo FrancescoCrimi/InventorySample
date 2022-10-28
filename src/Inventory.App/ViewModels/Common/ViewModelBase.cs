@@ -47,7 +47,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
 
         public bool IsMainView => true;
 
-        virtual public string Title => String.Empty;
+        public virtual string Title => String.Empty;
 
         public void StartStatusMessage(string message)
         {

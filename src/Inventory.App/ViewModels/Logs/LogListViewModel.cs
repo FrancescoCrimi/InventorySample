@@ -29,7 +29,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region LogListArgs
     public class LogListArgs
     {
-        static public LogListArgs CreateEmpty() => new LogListArgs { IsEmpty = true };
+        public static LogListArgs CreateEmpty() => new LogListArgs { IsEmpty = true };
 
         public LogListArgs()
         {
@@ -184,7 +184,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             throw new NotImplementedException();
         }
 
-        protected override async void OnRefresh()
+        protected async override void OnRefresh()
         {
             StartStatusMessage("Loading logs...");
             if (await RefreshAsync())
@@ -193,7 +193,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async void OnDeleteSelection()
+        protected async override void OnDeleteSelection()
         {
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))

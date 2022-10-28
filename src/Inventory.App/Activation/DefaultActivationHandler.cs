@@ -14,7 +14,7 @@ namespace CiccioSoft.Inventory.Uwp.Activation
             this.navigationService = navigationService;
         }
 
-        protected override async Task HandleInternalAsync(IActivatedEventArgs args)
+        protected async override Task HandleInternalAsync(IActivatedEventArgs args)
         {
             // When the navigation stack isn't restored, navigate to the first page and configure
             // the new page by passing required information in the navigation parameter

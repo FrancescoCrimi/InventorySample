@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 
-namespace Inventory.UwpApp.Services.Infrastructure
+namespace Inventory.UwpApp.Services
 {
     public class ImagePickerResult
     {

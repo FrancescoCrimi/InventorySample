@@ -35,8 +35,8 @@ namespace CiccioSoft.Inventory.Uwp.Views
 
         public CustomersViewModel ViewModel { get; }
         //public INavigationService NavigationService { get; }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.Subscribe();
             await ViewModel.LoadAsync(e.Parameter as CustomerListArgs);

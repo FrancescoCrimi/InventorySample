@@ -28,7 +28,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region OrderItemDetailsArgs
     public class OrderItemDetailsArgs
     {
-        static public OrderItemDetailsArgs CreateDefault() => new OrderItemDetailsArgs();
+        public static OrderItemDetailsArgs CreateDefault() => new OrderItemDetailsArgs();
 
         public long OrderID { get; set; }
         public int OrderLine { get; set; }
@@ -50,7 +50,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             this.orderItemService = orderItemService;
         }
 
-        override public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
         public string TitleNew => $"New Order Item, Order #{OrderID}";
         public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderID}" ?? String.Empty;
 
@@ -123,7 +123,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             };
         }
 
-        protected override async Task<bool> SaveItemAsync(OrderItemModel model)
+        protected async override Task<bool> SaveItemAsync(OrderItemModel model)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(OrderItemModel model)
+        protected async override Task<bool> DeleteItemAsync(OrderItemModel model)
         {
             try
             {
@@ -161,12 +161,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async override Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order item?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<OrderItemModel>> GetValidationConstraints(OrderItemModel model)
+        protected override IEnumerable<IValidationConstraint<OrderItemModel>> GetValidationConstraints(OrderItemModel model)
         {
             yield return new RequiredConstraint<OrderItemModel>("Product", m => m.ProductID);
             yield return new NonZeroConstraint<OrderItemModel>("Quantity", m => m.Quantity);

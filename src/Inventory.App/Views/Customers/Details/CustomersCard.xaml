@@ -65,4 +65,5 @@
             <TextBlock Style="{StaticResource CardText}" Text="{x:Bind Item.LastModifiedOn, Mode=OneWay, Converter={StaticResource DateTimeFormatConverter}}" />
         </StackPanel>
     </ScrollViewer>
+
 </UserControl>

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using Inventory.UwpApp.Library.Common;
 
 namespace Inventory.UwpApp.ViewModels
 {
@@ -38,8 +39,14 @@ namespace Inventory.UwpApp.ViewModels
         private IList<TModel> _items = null;
         public IList<TModel> Items
         {
-            get => _items;
-            set => SetProperty(ref _items, value);
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                SetProperty(ref _items, value);
+            }
         }
 
         private int _itemsCount = 0;
@@ -59,8 +66,9 @@ namespace Inventory.UwpApp.ViewModels
                 {
                     if (!IsMultipleSelection)
                     {
-                        //MessageService.Send(this, "ItemSelected", _selectedItem);
-                        Messenger.Send(new ItemMessage<TModel>(_selectedItem, "ItemSelected"));
+                        // Todo: fixare selectedItem.Id = 0
+                        ////MessageService.Send(this, "ItemSelected", _selectedItem);
+                        //Messenger.Send(new ItemMessage<TModel>(_selectedItem, "ItemSelected"));
                     }
                 }
             }

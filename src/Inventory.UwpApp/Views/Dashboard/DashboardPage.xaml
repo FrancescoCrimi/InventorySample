@@ -10,6 +10,8 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    ui:ApplicationViewExtensions.Title="Dashboard"
     d:DataContext="{d:DesignInstance Type=viewmodels:DashboardViewModel}"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -40,7 +42,12 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Margin="12,0" Text="Dashboard" FontSize="22" Foreground="Gray" />
+        <TextBlock
+            Grid.Row="0"
+            Margin="12,0"
+            Text="Dashboard"
+            FontSize="22"
+            Foreground="Gray" />
 
         <GridView
             Grid.Row="1"
@@ -60,24 +67,28 @@
                     <controls:WrapPanel />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
+
             <views:CustomersPane
                 Margin="2"
                 Width="600"
                 Height="250"
                 ItemsSource="{Binding Customers}"
                 Tag="Customers"/>
+
             <views:ProductsPane
                 Margin="1" 
                 Width="400"
                 Height="250"
                 ItemsSource="{Binding Products}"
                 Tag="Products"/>
+
             <views:OrdersPane
                 Margin="1"
                 Width="400"
                 Height="250"
                 ItemsSource="{Binding Orders}"
                 Tag="Orders"/>
+
         </GridView>
 
     </Grid>

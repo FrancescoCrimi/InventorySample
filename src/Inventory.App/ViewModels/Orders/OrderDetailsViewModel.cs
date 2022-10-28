@@ -28,7 +28,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region OrderDetailsArgs
     public class OrderDetailsArgs
     {
-        static public OrderDetailsArgs CreateDefault() => new OrderDetailsArgs { CustomerID = 0 };
+        public static OrderDetailsArgs CreateDefault() => new OrderDetailsArgs { CustomerID = 0 };
 
         public long CustomerID { get; set; }
         public long OrderID { get; set; }
@@ -50,7 +50,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             this.orderService = orderService;
         }
 
-        override public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
         public string TitleNew => Item?.Customer == null ? "New Order" : $"New Order, {Item?.Customer?.FullName}";
         public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.OrderID}";
 
@@ -128,7 +128,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             };
         }
 
-        protected override async Task<bool> SaveItemAsync(OrderModel model)
+        protected async override Task<bool> SaveItemAsync(OrderModel model)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(OrderModel model)
+        protected async override Task<bool> DeleteItemAsync(OrderModel model)
         {
             try
             {
@@ -167,12 +167,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async override Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<OrderModel>> GetValidationConstraints(OrderModel model)
+        protected override IEnumerable<IValidationConstraint<OrderModel>> GetValidationConstraints(OrderModel model)
         {
             yield return new RequiredGreaterThanZeroConstraint<OrderModel>("Customer", m => m.CustomerID);
             if (model.Status > 0)

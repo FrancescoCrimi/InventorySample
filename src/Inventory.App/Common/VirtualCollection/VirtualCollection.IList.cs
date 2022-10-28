@@ -37,7 +37,7 @@ namespace CiccioSoft.Inventory.Uwp
             set { throw new NotImplementedException(); }
         }
 
-        virtual protected T GetItem(int index)
+        protected virtual T GetItem(int index)
         {
             int rangeIndex = index / RangeSize;
             if (Ranges.ContainsKey(rangeIndex))

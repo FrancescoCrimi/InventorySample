@@ -32,7 +32,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region ProductListArgs
     public class ProductListArgs
     {
-        static public ProductListArgs CreateEmpty() => new ProductListArgs { IsEmpty = true };
+        public static ProductListArgs CreateEmpty() => new ProductListArgs { IsEmpty = true };
 
         public ProductListArgs()
         {
@@ -160,7 +160,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             return new List<ProductModel>();
         }
 
-        protected override async void OnNew()
+        protected async override void OnNew()
         {
 
             if (IsMainView)
@@ -175,7 +175,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             StatusReady();
         }
 
-        protected override async void OnRefresh()
+        protected async override void OnRefresh()
         {
             StartStatusMessage("Loading products...");
             if (await RefreshAsync())
@@ -184,7 +184,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async void OnDeleteSelection()
+        protected async override void OnDeleteSelection()
         {
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected products?", "Ok", "Cancel"))

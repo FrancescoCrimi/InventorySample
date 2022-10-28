@@ -7,7 +7,7 @@ using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
-namespace Inventory.UwpApp.Services.Infrastructure
+namespace Inventory.UwpApp.Services
 {
     public class WindowService
     {

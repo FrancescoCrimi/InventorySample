@@ -6,7 +6,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CiccioSoft.Inventory.Uwp.Models"
     xmlns:controls="using:CiccioSoft.Inventory.Uwp.Controls"
-    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400">
+    mc:Ignorable="d"
+    d:DesignWidth="800"
+    d:DesignHeight="400">
 
     <UserControl.Resources>
         <DataTemplate x:Key="HeaderTemplate" x:DataType="models:OrderModel">

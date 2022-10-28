@@ -32,9 +32,9 @@ namespace CiccioSoft.Inventory.Uwp
             Current = new AppSettings();
         }
 
-        static public AppSettings Current { get; }
+        public static AppSettings Current { get; }
 
-        static public readonly string AppLogPath = "AppLog";
+        public static readonly string AppLogPath = "AppLog";
 
         //// Log Database
 
@@ -50,12 +50,12 @@ namespace CiccioSoft.Inventory.Uwp
         //public string LogConnectionString => $"Data Source={LogFileName};Cache=Shared";
 
 
-        static public readonly string DatabasePath = "Database";
-        static public readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";
-        static public readonly string DatabasePattern = $"{DB_NAME}.{DB_VERSION}.pattern.db";
-        static public readonly string DatabaseFileName = Path.Combine(DatabasePath, DatabaseName);
-        static public readonly string DatabasePatternFileName = Path.Combine(DatabasePath, DatabasePattern);
-        static public readonly string DatabaseUrl = $"{DB_BASEURL}/{DatabaseName}";
+        public static readonly string DatabasePath = "Database";
+        public static readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";
+        public static readonly string DatabasePattern = $"{DB_NAME}.{DB_VERSION}.pattern.db";
+        public static readonly string DatabaseFileName = Path.Combine(DatabasePath, DatabaseName);
+        public static readonly string DatabasePatternFileName = Path.Combine(DatabasePath, DatabasePattern);
+        public static readonly string DatabaseUrl = $"{DB_BASEURL}/{DatabaseName}";
 
 
         private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;

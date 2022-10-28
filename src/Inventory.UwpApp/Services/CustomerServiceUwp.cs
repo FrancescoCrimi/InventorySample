@@ -3,6 +3,7 @@ using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Tools;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,17 +32,18 @@ namespace Inventory.UwpApp.Services
         public async Task<CustomerModel> GetCustomerAsync(long id)
         {
             Customer customer = await customerService.GetCustomerAsync(id);
-            CustomerModel model = await CreateCustomerModelAsync(customer, includeAllFields: true);
+            CustomerModel model = await CreateCustomerModelAsync(customer, includeAllFields: true, null);
             return model;
         }
 
-        public async Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
+        public async Task<IList<CustomerModel>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request, Windows.UI.Core.CoreDispatcher dispatcher = null)
         {
             var models = new List<CustomerModel>();
             var customers = await customerService.GetCustomersAsync(skip, take, request);
             foreach (var item in customers)
             {
-                models.Add(await CreateCustomerModelAsync(item, includeAllFields: false));
+                var model = await CreateCustomerModelAsync(item, includeAllFields: false, dispatcher);
+                models.Add(model);
             }
             return models;
         }
@@ -62,14 +64,14 @@ namespace Inventory.UwpApp.Services
                 rtn = await customerService.UpdateCustomerAsync(customer);
                 //TODO: fix below
                 var item = await customerService.GetCustomerAsync(id);
-                var newmodel = await CreateCustomerModelAsync(item, includeAllFields: true);
+                var newmodel = await CreateCustomerModelAsync(item, includeAllFields: true, null);
                 model.Merge(newmodel);
             }
             return rtn;
         }
 
 
-        public static async Task<CustomerModel> CreateCustomerModelAsync(Customer source, bool includeAllFields)
+        public static async Task<CustomerModel> CreateCustomerModelAsync(Customer source, bool includeAllFields, Windows.UI.Core.CoreDispatcher dispatcher = null)
         {
             var model = new CustomerModel()
             {
@@ -90,9 +92,20 @@ namespace Inventory.UwpApp.Services
                 Phone = source.Phone,
                 CreatedOn = source.CreatedOn,
                 LastModifiedOn = source.LastModifiedOn,
-                Thumbnail = source.Thumbnail,
-                ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail)
+                Thumbnail = source.Thumbnail
+                //ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail)
             };
+
+            if(dispatcher != null)
+            {
+                await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                {
+                    model.ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail);
+                });
+            }
+            else
+                model.ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail);
+
             if (includeAllFields)
             {
                 model.BirthDate = source.BirthDate;

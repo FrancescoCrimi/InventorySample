@@ -62,12 +62,12 @@ namespace CiccioSoft.Inventory.Uwp.Controls
         #endregion
 
         #region ColumnSpan
-        static public int GetColumnSpan(UIElement element)
+        public static int GetColumnSpan(UIElement element)
         {
             return (int)element.GetValue(ColumnSpanProperty);
         }
 
-        static public void SetColumnSpan(UIElement element, int value)
+        public static void SetColumnSpan(UIElement element, int value)
         {
             element.SetValue(ColumnSpanProperty, value);
         }

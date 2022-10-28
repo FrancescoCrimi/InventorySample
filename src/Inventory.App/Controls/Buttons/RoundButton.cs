@@ -47,7 +47,7 @@ namespace CiccioSoft.Inventory.Uwp.Controls
             set { SetValue(CornerRadiusProperty, value); }
         }
 
-        public static new readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(RoundButton), new PropertyMetadata(new CornerRadius(0)));
+        public static readonly new DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(RoundButton), new PropertyMetadata(new CornerRadius(0)));
         #endregion
     }
 }

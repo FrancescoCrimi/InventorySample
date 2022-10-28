@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -42,6 +43,7 @@ namespace Inventory.UwpApp.ViewModels
         private readonly NavigationService navigationService;
         private readonly LogService logService;
         private IList<KeyboardAccelerator> _keyboardAccelerators;
+        private readonly CoreDispatcher dispatcher;
 
         public ShellViewModel(ILogger<ShellViewModel> logger,
                               NavigationService navigationService,
@@ -52,6 +54,7 @@ namespace Inventory.UwpApp.ViewModels
             this.logService = logService;
             _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
             _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
+            dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
         }
 
 
@@ -138,7 +141,32 @@ namespace Inventory.UwpApp.ViewModels
 
                 if (pageType != null)
                 {
-                    navigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
+                    switch (pageType.Name)
+                    {
+                        case "DashboardPage":
+                            navigationService.Navigate(pageType);
+                            break;
+                        case "CustomersPage":
+                            navigationService.Navigate(pageType, new CustomerListArgs());
+                            break;
+                        case "OrdersPage":
+                            navigationService.Navigate(pageType, new OrderListArgs());
+                            break;
+                        case "ProductsPage":
+                            navigationService.Navigate(pageType, new ProductListArgs());
+                            break;
+                        //case "LogsViewModel":
+                        //    navigationService.Navigate(viewModel, new LogListArgs());
+                        //    await logService.MarkAllAsReadAsync();
+                        //    await UpdateAppLogBadge();
+                        //    break;
+                        //case "SettingsViewModel":
+                        //    navigationService.Navigate(viewModel, new SettingsArgs());
+                        //    break;
+                        default:
+                            navigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
+                            break;
+                    }
                 }
             }
         }
@@ -237,13 +265,20 @@ namespace Inventory.UwpApp.ViewModels
 
         private async Task UpdateAppLogBadge()
         {
-            LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
-            //AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+            //var result = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
+            ////LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
+            //////AppLogsItem.Badge = count > 0 ? count.ToString() : null;
+
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                var result = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
+                LogNewCount = result;
+            });
         }
 
         private async void Logging_AddLogEvent(object sender, EventArgs e)
         {
-            await UpdateAppLogBadge();
+            //await UpdateAppLogBadge();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace CiccioSoft.Inventory.Uwp
             Ioc.Default.ConfigureServices(ConfigureServices());
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        protected async override void OnLaunched(LaunchActivatedEventArgs args)
         {
             if (!args.PrelaunchActivated)
             {
@@ -48,7 +48,7 @@ namespace CiccioSoft.Inventory.Uwp
             }
         }
 
-        protected override async void OnActivated(IActivatedEventArgs args)
+        protected async override void OnActivated(IActivatedEventArgs args)
         {
             await ActivationService.ActivateAsync(args);
         }

@@ -35,7 +35,7 @@ namespace CiccioSoft.Inventory.Uwp.Controls
             DependencyExpressions.Initialize(this);
         }
 
-        static private readonly DependencyExpressions DependencyExpressions = new DependencyExpressions();
+        private static readonly DependencyExpressions DependencyExpressions = new DependencyExpressions();
 
         #region NewLabel
         public string NewLabel

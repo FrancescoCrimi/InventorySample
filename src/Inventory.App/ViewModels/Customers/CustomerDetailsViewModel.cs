@@ -29,7 +29,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region CustomerDetailsArgs
     public class CustomerDetailsArgs
     {
-        static public CustomerDetailsArgs CreateDefault() => new CustomerDetailsArgs();
+        public static CustomerDetailsArgs CreateDefault() => new CustomerDetailsArgs();
 
         public long CustomerID { get; set; }
 
@@ -54,7 +54,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
 
-        override public string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
         public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -145,7 +145,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> SaveItemAsync(CustomerModel model)
+        protected async override Task<bool> SaveItemAsync(CustomerModel model)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(CustomerModel model)
+        protected async override Task<bool> DeleteItemAsync(CustomerModel model)
         {
             try
             {
@@ -183,12 +183,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async override Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current customer?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<CustomerModel>> GetValidationConstraints(CustomerModel model)
+        protected override IEnumerable<IValidationConstraint<CustomerModel>> GetValidationConstraints(CustomerModel model)
         {
             yield return new RequiredConstraint<CustomerModel>("First Name", m => m.FirstName);
             yield return new RequiredConstraint<CustomerModel>("Last Name", m => m.LastName);

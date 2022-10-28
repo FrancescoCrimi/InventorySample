@@ -91,21 +91,21 @@ namespace CiccioSoft.Inventory.Uwp
             return new ElementSet<T>(Enumerable.Reverse());
         }
 
-        static public ElementSet<S> Children<S>(DependencyObject source, string category) where S : FrameworkElement
+        public static ElementSet<S> Children<S>(DependencyObject source, string category) where S : FrameworkElement
         {
             return new ElementSet<S>(GetChildren<S>(source, v => v.IsCategory(category)));
         }
 
-        static public ElementSet<S> Children<S>(object source, Func<S, bool> predicate = null) where S : UIElement
+        public static ElementSet<S> Children<S>(object source, Func<S, bool> predicate = null) where S : UIElement
         {
             return new ElementSet<S>(GetChildren<S>(source, predicate));
         }
-        static public ElementSet<S> Children<S>(DependencyObject source, Func<S, bool> predicate = null) where S : UIElement
+        public static ElementSet<S> Children<S>(DependencyObject source, Func<S, bool> predicate = null) where S : UIElement
         {
             return new ElementSet<S>(GetChildren<S>(source, predicate));
         }
 
-        static private IEnumerable<S> GetChildren<S>(object source, Func<S, bool> predicate = null) where S : UIElement
+        private static IEnumerable<S> GetChildren<S>(object source, Func<S, bool> predicate = null) where S : UIElement
         {
             predicate = predicate ?? new Func<S, bool>((e) => true);
 
@@ -140,7 +140,7 @@ namespace CiccioSoft.Inventory.Uwp
             }
         }
 
-        static private IEnumerable<S> GetChildren<S>(DependencyObject source, Func<S, bool> predicate = null) where S : UIElement
+        private static IEnumerable<S> GetChildren<S>(DependencyObject source, Func<S, bool> predicate = null) where S : UIElement
         {
             if (source != null)
             {

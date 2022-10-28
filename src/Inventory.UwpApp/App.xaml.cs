@@ -68,7 +68,7 @@ namespace Inventory.UwpApp
                 .AddSingleton<ActivationService>()
                 .AddScoped<NavigationService>()
                 .AddSingleton<PageService>()
-                //.AddSingleton<WindowService, WindowService>()
+                .AddSingleton<WindowService, WindowService>()
 
                 .AddSingleton<IAppSettings, AppSettings>()
                 .AddInventoryApplication()
@@ -81,7 +81,7 @@ namespace Inventory.UwpApp
                 //.AddSingleton<OrderItemServiceUwp>()
 
                 ////.AddSingleton<IMessageService, MessageService>()
-                //.AddSingleton<FilePickerService, FilePickerService>()
+                .AddSingleton<FilePickerService, FilePickerService>()
 
                 // Views and ViewModels
                 //.AddTransient<ShellView>()
@@ -100,9 +100,9 @@ namespace Inventory.UwpApp
                 //.AddTransient<ValidateConnectionViewModel>()
                 //.AddTransient<CreateDatabaseViewModel>()
 
-                //.AddTransient<CustomerListViewModel>()
-                //.AddTransient<CustomerDetailsViewModel>()
-                //.AddTransient<CustomersViewModel>()
+                .AddTransient<CustomerListViewModel>()
+                .AddTransient<CustomerDetailsViewModel>()
+                .AddTransient<CustomersViewModel>()
 
                 //.AddTransient<ProductListViewModel>()
                 //.AddTransient<ProductDetailsViewModel>()
@@ -110,8 +110,8 @@ namespace Inventory.UwpApp
 
                 //.AddTransient<OrderDetailsViewModel>()
                 //.AddTransient<OrderDetailsWithItemsViewModel>()
-                //.AddTransient<OrderListViewModel>()
-                //.AddTransient<OrdersViewModel>()
+                .AddTransient<OrderListViewModel>()
+                .AddTransient<OrdersViewModel>()
 
                 //.AddTransient<OrderItemListViewModel>()
                 //.AddTransient<OrderItemDetailsViewModel>()

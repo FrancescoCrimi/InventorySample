@@ -32,7 +32,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region CustomerListArgs
     public class CustomerListArgs
     {
-        static public CustomerListArgs CreateEmpty() => new CustomerListArgs { IsEmpty = true };
+        public static CustomerListArgs CreateEmpty() => new CustomerListArgs { IsEmpty = true };
 
         public CustomerListArgs()
         {
@@ -84,6 +84,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 EndStatusMessage("Customers loaded");
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.Query = Query;
@@ -166,7 +167,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async void OnNew()
+        protected async override void OnNew()
         {
             if (IsMainView)
             {
@@ -180,7 +181,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             StatusReady();
         }
 
-        protected override async void OnRefresh()
+        protected async override void OnRefresh()
         {
             StartStatusMessage("Loading customers...");
             if (await RefreshAsync())
@@ -189,7 +190,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async void OnDeleteSelection()
+        protected async override void OnDeleteSelection()
         {
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected customers?", "Ok", "Cancel"))

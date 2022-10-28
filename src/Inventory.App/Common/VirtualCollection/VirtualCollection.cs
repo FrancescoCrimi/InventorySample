@@ -25,7 +25,7 @@ using CiccioSoft.Inventory.Data;
 
 namespace CiccioSoft.Inventory.Uwp
 {
-    abstract public partial class VirtualCollection<T> : IItemsRangeInfo, INotifyCollectionChanged
+    public abstract partial class VirtualCollection<T> : IItemsRangeInfo, INotifyCollectionChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
@@ -161,9 +161,9 @@ namespace CiccioSoft.Inventory.Uwp
         //    }
         //}
 
-        virtual public void Dispose() { }
+        public virtual void Dispose() { }
 
-        abstract protected T DefaultItem { get; }
-        abstract protected Task<IList<T>> FetchDataAsync(int pageIndex, int pageSize);
+        protected abstract T DefaultItem { get; }
+        protected abstract Task<IList<T>> FetchDataAsync(int pageIndex, int pageSize);
     }
 }

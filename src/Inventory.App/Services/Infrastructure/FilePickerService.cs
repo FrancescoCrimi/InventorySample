@@ -58,7 +58,7 @@ namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
             return null;
         }
 
-        static private async Task<byte[]> GetImageBytesAsync(StorageFile file)
+        private static async Task<byte[]> GetImageBytesAsync(StorageFile file)
         {
             using (var randomStream = await file.OpenReadAsync())
             {

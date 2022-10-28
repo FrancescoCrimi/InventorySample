@@ -20,7 +20,7 @@ namespace CiccioSoft.Inventory.Uwp.Models
 {
     public class OrderModel : ObservableObject
     {
-        static public OrderModel CreateEmpty() => new OrderModel { OrderID = -1, CustomerID = -1, IsEmpty = true };
+        public static OrderModel CreateEmpty() => new OrderModel { OrderID = -1, CustomerID = -1, IsEmpty = true };
 
         public long OrderID { get; set; }
         public long CustomerID { get; set; }

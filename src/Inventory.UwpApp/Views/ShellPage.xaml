@@ -7,6 +7,7 @@
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:helpers="using:Inventory.UwpApp.Helpers"
     xmlns:views="using:Inventory.UwpApp.Views"
+    xmlns:customers="using:Inventory.UwpApp.Views.Customers"
     xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:viewmodels="using:Inventory.UwpApp.ViewModels"
@@ -38,7 +39,7 @@
 
             <winui:NavigationView.MenuItems>
                 <winui:NavigationViewItem x:Uid="Shell_Dashboard" Icon="Home" helpers:NavHelper.NavigateTo="views:DashboardPage"/>
-                <winui:NavigationViewItem x:Uid="Shell_Customers" Icon="People" helpers:NavHelper.NavigateTo="views:CustomersPage" />
+                <winui:NavigationViewItem x:Uid="Shell_Customers" Icon="People" helpers:NavHelper.NavigateTo="customers:CustomersPage" />
                 <winui:NavigationViewItem x:Uid="Shell_Orders" Icon="PreviewLink" helpers:NavHelper.NavigateTo="views:OrdersPage" />
                 <winui:NavigationViewItem x:Uid="Shell_Products" helpers:NavHelper.NavigateTo="views:ProductsPage">
                     <winui:NavigationViewItem.Icon>

@@ -40,7 +40,7 @@ namespace CiccioSoft.Inventory.Infrastructure
 
         private static void AddLogging(ILoggingBuilder loggingBuilder)
         {
-            //loggingBuilder.ClearProviders();
+            loggingBuilder.ClearProviders();
             //loggingBuilder.AddConfiguration();
 
             // Add visual studio viewer

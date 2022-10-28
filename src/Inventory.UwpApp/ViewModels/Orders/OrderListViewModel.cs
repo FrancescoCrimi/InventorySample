@@ -16,7 +16,6 @@ using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
-using Inventory.UwpApp.Services.Infrastructure;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
@@ -26,6 +25,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Inventory.UwpApp.Library.Common;
 
 namespace Inventory.UwpApp.ViewModels
 {

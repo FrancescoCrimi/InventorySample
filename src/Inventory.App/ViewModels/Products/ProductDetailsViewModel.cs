@@ -29,7 +29,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region ProductDetailsArgs
     public class ProductDetailsArgs
     {
-        static public ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
+        public static ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
 
         public string ProductID { get; set; }
 
@@ -53,7 +53,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             this.filePickerService = filePickerService;
         }
 
-        override public string Title => (Item?.IsNew ?? true) ? "New Product" : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? "New Product" : TitleEdit;
         public string TitleEdit => Item == null ? "Product" : $"{Item.Name}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -143,7 +143,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> SaveItemAsync(ProductModel model)
+        protected async override Task<bool> SaveItemAsync(ProductModel model)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(ProductModel model)
+        protected async override Task<bool> DeleteItemAsync(ProductModel model)
         {
             try
             {
@@ -181,12 +181,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async override Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current product?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<ProductModel>> GetValidationConstraints(ProductModel model)
+        protected override IEnumerable<IValidationConstraint<ProductModel>> GetValidationConstraints(ProductModel model)
         {
             yield return new RequiredConstraint<ProductModel>("Name", m => m.Name);
             yield return new RequiredGreaterThanZeroConstraint<ProductModel>("Category", m => m.CategoryID);

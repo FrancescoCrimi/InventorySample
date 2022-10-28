@@ -30,7 +30,7 @@ namespace CiccioSoft.Inventory.Uwp.Views
 
         public DashboardViewModel ViewModel { get; }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             await ViewModel.LoadAsync();
         }

@@ -14,7 +14,6 @@
 
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
-using Inventory.UwpApp.Services.Infrastructure;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;

@@ -31,7 +31,7 @@ namespace CiccioSoft.Inventory.Uwp.Services.Infrastructure
             this.pageService = pageService;
         }
 
-        static public int MainViewId { get; }
+        public static int MainViewId { get; }
 
         public bool IsMainView => CoreApplication.GetCurrentView().IsMain;
 

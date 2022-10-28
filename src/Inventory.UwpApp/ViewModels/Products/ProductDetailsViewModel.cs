@@ -14,7 +14,6 @@
 
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
-using Inventory.UwpApp.Services.Infrastructure;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
@@ -23,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Inventory.UwpApp.Library.Common;
 
 namespace Inventory.UwpApp.ViewModels
 {

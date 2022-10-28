@@ -12,12 +12,14 @@
 // ******************************************************************
 #endregion
 
+using CommunityToolkit.Mvvm.Input;
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Inventory.UwpApp.ViewModels
 {
@@ -50,6 +52,7 @@ namespace Inventory.UwpApp.ViewModels
             //IsMainView = args.IsMainView;
             //OnPropertyChanged(nameof(IsMainView));
         }
+
         public void Unload()
         {
             CustomerDetails.CancelEdit();

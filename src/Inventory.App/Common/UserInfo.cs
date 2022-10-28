@@ -18,7 +18,7 @@ namespace CiccioSoft.Inventory.Uwp
 {
     public class UserInfo
     {
-        static readonly public UserInfo Default = new UserInfo
+        public static readonly UserInfo Default = new UserInfo
         {
             AccountName = "Lacey Heath",
             FirstName = "Lacey",

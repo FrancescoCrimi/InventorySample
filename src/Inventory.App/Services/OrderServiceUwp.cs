@@ -83,7 +83,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
 
 
 
-        static public async Task<OrderModel> CreateOrderModelAsync(Order source, bool includeAllFields)
+        public static async Task<OrderModel> CreateOrderModelAsync(Order source, bool includeAllFields)
         {
             var model = new OrderModel()
             {

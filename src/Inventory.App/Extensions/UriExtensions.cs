@@ -18,9 +18,9 @@ using Windows.Foundation;
 
 namespace CiccioSoft.Inventory.Uwp
 {
-    static public class UriExtensions
+    public static class UriExtensions
     {
-        static public Int64 GetInt64Parameter(this Uri uri, string name)
+        public static Int64 GetInt64Parameter(this Uri uri, string name)
         {
             string value = GetParameter(uri, name);
             if (value != null)
@@ -33,7 +33,7 @@ namespace CiccioSoft.Inventory.Uwp
             return 0;
         }
 
-        static public Int32 GetInt32Parameter(this Uri uri, string name)
+        public static Int32 GetInt32Parameter(this Uri uri, string name)
         {
             string value = GetParameter(uri, name);
             if (value != null)
@@ -46,7 +46,7 @@ namespace CiccioSoft.Inventory.Uwp
             return 0;
         }
 
-        static public string GetParameter(this Uri uri, string name)
+        public static string GetParameter(this Uri uri, string name)
         {
             string query = uri.Query;
             if (!String.IsNullOrEmpty(query))

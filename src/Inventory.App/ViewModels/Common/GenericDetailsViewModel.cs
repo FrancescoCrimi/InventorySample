@@ -26,7 +26,7 @@ using System.Windows.Input;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {
-    abstract public partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
+    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
     {
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
@@ -84,7 +84,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
         public ICommand BackCommand => new RelayCommand(OnBack);
-        virtual protected void OnBack()
+        protected virtual void OnBack()
         {
             StatusReady();
             if (navigationService.CanGoBack)
@@ -94,14 +94,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
         public ICommand EditCommand => new RelayCommand(OnEdit);
-        virtual protected void OnEdit()
+        protected virtual void OnEdit()
         {
             StatusReady();
             BeginEdit();
             //MessageService.Send(this, "BeginEdit", Item);
             Messenger.Send(new ItemMessage<TModel>(Item, "BeginEdit"));
         }
-        virtual public void BeginEdit()
+        public virtual void BeginEdit()
         {
             if (!IsEditMode)
             {
@@ -114,14 +114,14 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
         public ICommand CancelCommand => new RelayCommand(OnCancel);
-        virtual protected void OnCancel()
+        protected virtual void OnCancel()
         {
             StatusReady();
             CancelEdit();
             //MessageService.Send(this, "CancelEdit", Item);
             Messenger.Send(new ItemMessage<TModel>(Item, "CancelEdit"));
         }
-        virtual public void CancelEdit()
+        public virtual void CancelEdit()
         {
             if (ItemIsNew)
             {
@@ -146,7 +146,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
         public ICommand SaveCommand => new RelayCommand(OnSave);
-        virtual protected async void OnSave()
+        protected async virtual void OnSave()
         {
             StatusReady();
             var result = Validate(EditableItem);
@@ -159,7 +159,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
             }
         }
-        virtual public async Task SaveAsync()
+        public async virtual Task SaveAsync()
         {
             IsEnabled = false;
             bool isNew = ItemIsNew;
@@ -188,7 +188,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         }
 
         public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        virtual protected async void OnDelete()
+        protected async virtual void OnDelete()
         {
             StatusReady();
             if (await ConfirmDeleteAsync())
@@ -196,7 +196,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 await DeleteAsync();
             }
         }
-        virtual public async Task DeleteAsync()
+        public async virtual Task DeleteAsync()
         {
             var model = Item;
             if (model != null)
@@ -214,7 +214,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        virtual public Result Validate(TModel model)
+        public virtual Result Validate(TModel model)
         {
             foreach (var constraint in GetValidationConstraints(model))
             {
@@ -226,12 +226,12 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             return Result.Ok();
         }
 
-        virtual protected IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
+        protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
 
-        abstract public bool ItemIsNew { get; }
+        public abstract bool ItemIsNew { get; }
 
-        abstract protected Task<bool> SaveItemAsync(TModel model);
-        abstract protected Task<bool> DeleteItemAsync(TModel model);
-        abstract protected Task<bool> ConfirmDeleteAsync();
+        protected abstract Task<bool> SaveItemAsync(TModel model);
+        protected abstract Task<bool> DeleteItemAsync(TModel model);
+        protected abstract Task<bool> ConfirmDeleteAsync();
     }
 }

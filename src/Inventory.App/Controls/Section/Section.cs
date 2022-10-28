@@ -13,11 +13,9 @@
 #endregion
 
 using System;
-
+using CiccioSoft.Inventory.Uwp.Animations;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-using CiccioSoft.Inventory.Uwp.Animations;
 
 namespace CiccioSoft.Inventory.Uwp.Controls
 {

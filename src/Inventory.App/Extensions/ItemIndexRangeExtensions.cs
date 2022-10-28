@@ -21,18 +21,18 @@ using Windows.UI.Xaml.Data;
 
 namespace CiccioSoft.Inventory.Uwp
 {
-    static public partial class ItemIndexRangeExtensions
+    public static partial class ItemIndexRangeExtensions
     {
-        static public int IndexCount(this IEnumerable<ItemIndexRange> ranges)
+        public static int IndexCount(this IEnumerable<ItemIndexRange> ranges)
         {
             return ranges.Normalize().Sum(r => (int)r.Length);
         }
 
-        static public IList<ItemIndexRange> Normalize(this IList<ItemIndexRange> ranges)
+        public static IList<ItemIndexRange> Normalize(this IList<ItemIndexRange> ranges)
         {
             return Normalize((IEnumerable<ItemIndexRange>)ranges).ToList();
         }
-        static public IEnumerable<ItemIndexRange> Normalize(this IEnumerable<ItemIndexRange> ranges)
+        public static IEnumerable<ItemIndexRange> Normalize(this IEnumerable<ItemIndexRange> ranges)
         {
             if (ranges.Any())
             {
@@ -41,11 +41,11 @@ namespace CiccioSoft.Inventory.Uwp
             return Enumerable.Empty<ItemIndexRange>();
         }
 
-        static public IList<ItemIndexRange> Merge(this IList<ItemIndexRange> ranges, ItemIndexRange range)
+        public static IList<ItemIndexRange> Merge(this IList<ItemIndexRange> ranges, ItemIndexRange range)
         {
             return Merge((IEnumerable<ItemIndexRange>)ranges, range).ToList();
         }
-        static public IEnumerable<ItemIndexRange> Merge(this IEnumerable<ItemIndexRange> ranges, ItemIndexRange range)
+        public static IEnumerable<ItemIndexRange> Merge(this IEnumerable<ItemIndexRange> ranges, ItemIndexRange range)
         {
             var sorted = ranges.Concat(new[] { range }).OrderByDescending(r => r.Length).OrderBy(r => r.FirstIndex);
             foreach (var item in MergeInternal(sorted.Skip(1), sorted.First()))
@@ -54,7 +54,7 @@ namespace CiccioSoft.Inventory.Uwp
             }
         }
 
-        static private IEnumerable<ItemIndexRange> MergeInternal(this IEnumerable<ItemIndexRange> ranges, ItemIndexRange range)
+        private static IEnumerable<ItemIndexRange> MergeInternal(this IEnumerable<ItemIndexRange> ranges, ItemIndexRange range)
         {
             if (ranges.Any())
             {
@@ -75,7 +75,7 @@ namespace CiccioSoft.Inventory.Uwp
             yield return range;
         }
 
-        static public IEnumerable<ItemIndexRange> Merge(this ItemIndexRange me, ItemIndexRange range)
+        public static IEnumerable<ItemIndexRange> Merge(this ItemIndexRange me, ItemIndexRange range)
         {
             if (me.GreaterThan(range))
             {
@@ -108,11 +108,11 @@ namespace CiccioSoft.Inventory.Uwp
             yield return range;
         }
 
-        static public IList<ItemIndexRange> Subtract(this IList<ItemIndexRange> ranges, ItemIndexRange range)
+        public static IList<ItemIndexRange> Subtract(this IList<ItemIndexRange> ranges, ItemIndexRange range)
         {
             return Subtract((IEnumerable<ItemIndexRange>)ranges, range).ToList();
         }
-        static public IEnumerable<ItemIndexRange> Subtract(this IEnumerable<ItemIndexRange> ranges, ItemIndexRange range)
+        public static IEnumerable<ItemIndexRange> Subtract(this IEnumerable<ItemIndexRange> ranges, ItemIndexRange range)
         {
             if (ranges.Any())
             {
@@ -126,7 +126,7 @@ namespace CiccioSoft.Inventory.Uwp
             }
         }
 
-        static public IEnumerable<ItemIndexRange> Subtract(this ItemIndexRange me, ItemIndexRange range)
+        public static IEnumerable<ItemIndexRange> Subtract(this ItemIndexRange me, ItemIndexRange range)
         {
             if (range.LastIndex < me.FirstIndex)
             {
@@ -160,17 +160,17 @@ namespace CiccioSoft.Inventory.Uwp
             yield return new ItemIndexRange(range.LastIndex + 1, (uint)(me.LastIndex - range.LastIndex));
         }
 
-        static public bool GreaterThan(this ItemIndexRange me, ItemIndexRange range)
+        public static bool GreaterThan(this ItemIndexRange me, ItemIndexRange range)
         {
             return me.FirstIndex > range.FirstIndex || (me.FirstIndex == range.FirstIndex && me.LastIndex > range.LastIndex);
         }
 
-        static public bool Contains(this ItemIndexRange me, ItemIndexRange range)
+        public static bool Contains(this ItemIndexRange me, ItemIndexRange range)
         {
             return me.FirstIndex <= range.FirstIndex && me.LastIndex >= range.LastIndex;
         }
 
-        static public bool Intersects(this IEnumerable<ItemIndexRange> me, ItemIndexRange range)
+        public static bool Intersects(this IEnumerable<ItemIndexRange> me, ItemIndexRange range)
         {
             foreach (var item in me)
             {
@@ -181,17 +181,17 @@ namespace CiccioSoft.Inventory.Uwp
             }
             return false;
         }
-        static public bool Intersects(this ItemIndexRange me, ItemIndexRange range)
+        public static bool Intersects(this ItemIndexRange me, ItemIndexRange range)
         {
             return (range.FirstIndex >= me.FirstIndex && range.FirstIndex <= me.LastIndex) || (range.LastIndex >= me.FirstIndex && range.LastIndex <= me.LastIndex);
         }
-        static public bool Intersects(this ItemIndexRange me, int firstIndex, uint Length)
+        public static bool Intersects(this ItemIndexRange me, int firstIndex, uint Length)
         {
             int LastIndex = firstIndex + (int)Length - 1;
             return (firstIndex >= me.FirstIndex && firstIndex <= me.LastIndex) || (LastIndex >= me.FirstIndex && LastIndex <= me.LastIndex);
         }
 
-        static public IEnumerable<IndexRange> GetIndexRanges(this IReadOnlyList<ItemIndexRange> ranges)
+        public static IEnumerable<IndexRange> GetIndexRanges(this IReadOnlyList<ItemIndexRange> ranges)
         {
             foreach (var range in ranges)
             {
@@ -199,13 +199,13 @@ namespace CiccioSoft.Inventory.Uwp
             }
         }
 
-        static private ItemIndexRange CreateRange(int firstIndex, int lastIndex)
+        private static ItemIndexRange CreateRange(int firstIndex, int lastIndex)
         {
             return new ItemIndexRange(firstIndex, (uint)(lastIndex - firstIndex + 1));
         }
 
         #region AsString
-        static public string AsString(this IEnumerable<ItemIndexRange> ranges)
+        public static string AsString(this IEnumerable<ItemIndexRange> ranges)
         {
             using (var writer = new StringWriter())
             {
@@ -217,7 +217,7 @@ namespace CiccioSoft.Inventory.Uwp
             }
         }
 
-        static public string AsString(this ItemIndexRange me)
+        public static string AsString(this ItemIndexRange me)
         {
             return String.Format("[{0},{1}]", me.FirstIndex, me.LastIndex);
         }

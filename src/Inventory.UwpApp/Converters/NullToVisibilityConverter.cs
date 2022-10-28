@@ -14,11 +14,21 @@
 
 using System;
 
-namespace Inventory.UwpApp
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
+
+namespace Inventory.UwpApp.Converters
 {
-    public class IndexRange
+    public sealed class NullToVisibilityConverter : IValueConverter
     {
-        public int Index { get; set; }
-        public int Length { get; set; }
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            return value == null ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

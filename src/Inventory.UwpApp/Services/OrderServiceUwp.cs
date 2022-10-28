@@ -105,7 +105,7 @@ namespace Inventory.UwpApp.Services
             };
             if (source.Customer != null)
             {
-                model.Customer = await CustomerServiceUwp.CreateCustomerModelAsync(source.Customer, includeAllFields);
+                model.Customer = await CustomerServiceUwp.CreateCustomerModelAsync(source.Customer, includeAllFields, null);
             }
             return model;
         }

@@ -54,7 +54,7 @@ namespace CiccioSoft.Inventory.Uwp.Services
             }
         }
 
-        protected override async Task<IList<OrderModel>> FetchDataAsync(int rangeIndex, int rangeSize)
+        protected async override Task<IList<OrderModel>> FetchDataAsync(int rangeIndex, int rangeSize)
         {
             try
             {

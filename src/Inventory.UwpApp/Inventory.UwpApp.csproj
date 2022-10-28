@@ -145,11 +145,13 @@
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="Behaviors\TreeViewCollapseBehavior.cs" />
-    <Compile Include="Common\IndexRange.cs" />
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
+    <Compile Include="Common\VirtualCollection\VirtualRangeCollection.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToImageConverter.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\IBackNavigationHandler.cs" />
@@ -223,6 +225,18 @@
     <Compile Include="Views\ContentGridPage.xaml.cs">
       <DependentUpon>ContentGridPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Customers\CustomerCardControl.xaml.cs">
+      <DependentUpon>CustomerCardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Customers\CustomersDetailsControl.xaml.cs">
+      <DependentUpon>CustomersDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Customers\CustomersList.xaml.cs">
+      <DependentUpon>CustomersList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Customers\CustomersOrdersControl.xaml.cs">
+      <DependentUpon>CustomersOrdersControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Customers\CustomersPage.xaml.cs">
       <DependentUpon>CustomersPage.xaml</DependentUpon>
     </Compile>
@@ -288,11 +302,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Styles\Cards.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\DataGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\Page.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ToolBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -319,6 +341,22 @@
     <Page Include="Views\ContentGridPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Customers\CustomerCardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Customers\CustomersDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Customers\CustomersList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Customers\CustomersOrdersControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Customers\CustomersPage.xaml">
       <SubType>Designer</SubType>
@@ -406,6 +444,7 @@
     <Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppLogo.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -446,6 +485,13 @@
       <Project>{59A94D08-1091-453A-92A4-B1C2622AD8DE}</Project>
       <Name>Inventory.UwpApp.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Inventory.UwpApp.Library\Inventory.UwpApp.Library.csproj">
+      <Project>{eae99947-ca0b-42d9-8f05-ae092aa104d2}</Project>
+      <Name>Inventory.UwpApp.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

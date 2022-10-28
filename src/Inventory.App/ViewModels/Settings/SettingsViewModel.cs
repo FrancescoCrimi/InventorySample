@@ -26,7 +26,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region SettingsArgs
     public class SettingsArgs
     {
-        static public SettingsArgs CreateDefault() => new SettingsArgs();
+        public static SettingsArgs CreateDefault() => new SettingsArgs();
     }
     #endregion
 

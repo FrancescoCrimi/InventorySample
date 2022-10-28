@@ -19,19 +19,19 @@ using Windows.UI.Xaml;
 
 namespace CiccioSoft.Inventory.Uwp
 {
-    static public class ElementExtensions
+    public static class ElementExtensions
     {
-        static public void Show(this FrameworkElement elem, bool visible = true)
+        public static void Show(this FrameworkElement elem, bool visible = true)
         {
             elem.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        static public void Hide(this FrameworkElement elem)
+        public static void Hide(this FrameworkElement elem)
         {
             elem.Visibility = Visibility.Collapsed;
         }
 
-        static public bool IsCategory(this FrameworkElement elem, string category)
+        public static bool IsCategory(this FrameworkElement elem, string category)
         {
             if (elem.Tag is String tag)
             {
@@ -40,7 +40,7 @@ namespace CiccioSoft.Inventory.Uwp
             return false;
         }
 
-        static public bool IsCategory(this FrameworkElement elem, params string[] categories)
+        public static bool IsCategory(this FrameworkElement elem, params string[] categories)
         {
             if (elem.Tag is String tag)
             {

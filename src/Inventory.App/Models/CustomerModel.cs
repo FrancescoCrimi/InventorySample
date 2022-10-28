@@ -20,7 +20,7 @@ namespace CiccioSoft.Inventory.Uwp.Models
 {
     public class CustomerModel : ObservableObject
     {
-        static public CustomerModel CreateEmpty() => new CustomerModel { CustomerID = -1, IsEmpty = true };
+        public static CustomerModel CreateEmpty() => new CustomerModel { CustomerID = -1, IsEmpty = true };
 
         public long CustomerID { get; set; }
 

@@ -18,6 +18,7 @@ using CommunityToolkit.Mvvm.Input;
 using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using Inventory.UwpApp.Views;
+using Inventory.UwpApp.Views.Customers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

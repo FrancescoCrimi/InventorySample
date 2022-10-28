@@ -32,7 +32,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region OrderItemListArgs
     public class OrderItemListArgs
     {
-        static public OrderItemListArgs CreateEmpty() => new OrderItemListArgs { IsEmpty = true };
+        public static OrderItemListArgs CreateEmpty() => new OrderItemListArgs { IsEmpty = true };
 
         public OrderItemListArgs()
         {
@@ -170,7 +170,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async void OnNew()
+        protected async override void OnNew()
         {
             if (IsMainView)
             {
@@ -184,7 +184,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             StatusReady();
         }
 
-        protected override async void OnRefresh()
+        protected async override void OnRefresh()
         {
             StartStatusMessage("Loading order items...");
             if (await RefreshAsync())
@@ -193,7 +193,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async void OnDeleteSelection()
+        protected async override void OnDeleteSelection()
         {
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected order items?", "Ok", "Cancel"))

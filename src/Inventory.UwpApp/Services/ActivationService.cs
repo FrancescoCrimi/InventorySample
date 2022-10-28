@@ -89,6 +89,7 @@ namespace Inventory.UwpApp.Services
         private async Task StartupAsync()
         {
             await ThemeSelectorService.SetRequestedThemeAsync();
+            await ConfigureLookupTables();
         }
 
         //private IEnumerable<ActivationHandler> GetActivationHandlers()
@@ -99,6 +100,13 @@ namespace Inventory.UwpApp.Services
         private bool IsInteractive(object args)
         {
             return args is IActivatedEventArgs;
+        }
+
+        private async Task ConfigureLookupTables()
+        {
+            var lookupTables = Ioc.Default.GetService<LookupTableServiceFacade>();
+            await lookupTables.InitializeAsync();
+            //LookupTablesProxy.Instance = lookupTables;
         }
     }
 }

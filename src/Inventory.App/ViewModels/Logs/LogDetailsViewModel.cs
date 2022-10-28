@@ -27,7 +27,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
     #region AppLogDetailsArgs
     public class LogDetailsArgs
     {
-        static public LogDetailsArgs CreateDefault() => new LogDetailsArgs();
+        public static LogDetailsArgs CreateDefault() => new LogDetailsArgs();
 
         public long AppLogID { get; set; }
     }
@@ -46,7 +46,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             this.logService = logService;
         }
 
-        override public string Title => "Activity Logs";
+        public override string Title => "Activity Logs";
 
         public override bool ItemIsNew => false;
 
@@ -100,7 +100,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             throw new NotImplementedException();
         }
 
-        protected override async Task<bool> DeleteItemAsync(LogModel model)
+        protected async override Task<bool> DeleteItemAsync(LogModel model)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             }
         }
 
-        protected override async Task<bool> ConfirmDeleteAsync()
+        protected async override Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
         }
