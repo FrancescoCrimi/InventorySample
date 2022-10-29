@@ -13,23 +13,23 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Input;
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     public class CustomersViewModel : ViewModelBase
     {
         private readonly ILogger<CustomersViewModel> logger;
-        private readonly CustomerServiceUwp customerService;
+        private readonly CustomerServiceFacade customerService;
 
         public CustomersViewModel(ILogger<CustomersViewModel> logger,
-                                  CustomerServiceUwp customerService,
+                                  CustomerServiceFacade customerService,
                                   CustomerListViewModel customerListViewModel,
                                   CustomerDetailsViewModel customerDetailsViewModel,
                                   OrderListViewModel orderListViewModel)
@@ -62,7 +62,7 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<CustomerModel>>(this, OnCustomerMessage);
+            Messenger.Register<ItemMessage<CustomerDto>>(this, OnCustomerMessage);
             CustomerList.Subscribe();
             CustomerDetails.Subscribe();
             CustomerOrders.Subscribe();
@@ -71,17 +71,20 @@ namespace Inventory.UwpApp.ViewModels
         public void Unsubscribe()
         {
             //MessageService.Unsubscribe(this);
-            Messenger.Unregister<ItemMessage<CustomerModel>>(this);
+            Messenger.Unregister<ItemMessage<CustomerDto>>(this);
             CustomerList.Unsubscribe();
             CustomerDetails.Unsubscribe();
             CustomerOrders.Unsubscribe();
         }
 
-        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerModel> message)
+        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerDto> message)
         {
             if (/*recipient == CustomerList &&*/ message.Message == "ItemSelected")
             {
-                await OnItemSelected();
+                if(message.Value.CustomerID != 0)
+                {
+                    await OnItemSelected();
+                }
             }
         }
 
@@ -116,7 +119,7 @@ namespace Inventory.UwpApp.ViewModels
             CustomerDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(CustomerModel selected)
+        private async Task PopulateDetails(CustomerDto selected)
         {
             try
             {
@@ -129,7 +132,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async Task PopulateOrders(CustomerModel selectedItem)
+        private async Task PopulateOrders(CustomerDto selectedItem)
         {
             try
             {

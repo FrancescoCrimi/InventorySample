@@ -13,14 +13,15 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using System;
 
-namespace Inventory.UwpApp.Models
+namespace Inventory.UwpApp.Dto
 {
-    public class OrderModel : ObservableObject
+    public class OrderDto : ObservableObject
     {
-        static public OrderModel CreateEmpty() => new OrderModel { OrderID = -1, CustomerID = -1, IsEmpty = true };
+        public static OrderDto CreateEmpty() => new OrderDto { OrderID = -1, CustomerID = -1, IsEmpty = true };
 
         public long OrderID { get; set; }
         public long CustomerID { get; set; }
@@ -64,7 +65,7 @@ namespace Inventory.UwpApp.Models
         public string ShipPostalCode { get; set; }
         public string ShipPhone { get; set; }
 
-        public CustomerModel Customer { get; set; }
+        public CustomerDto Customer { get; set; }
 
         public bool IsNew => OrderID <= 0;
 
@@ -104,13 +105,13 @@ namespace Inventory.UwpApp.Models
 
         public override void Merge(ObservableObject source)
         {
-            if (source is OrderModel model)
+            if (source is OrderDto model)
             {
                 Merge(model);
             }
         }
 
-        public void Merge(OrderModel source)
+        public void Merge(OrderDto source)
         {
             if (source != null)
             {

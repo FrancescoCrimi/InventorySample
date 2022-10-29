@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,13 +22,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region OrderDetailsArgs
     public class OrderDetailsArgs
     {
-        static public OrderDetailsArgs CreateDefault() => new OrderDetailsArgs { CustomerID = 0 };
+        public static OrderDetailsArgs CreateDefault() => new OrderDetailsArgs { CustomerID = 0 };
 
         public long CustomerID { get; set; }
         public long OrderID { get; set; }
@@ -38,20 +38,20 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class OrderDetailsViewModel : GenericDetailsViewModel<OrderModel>
+    public class OrderDetailsViewModel : GenericDetailsViewModel<OrderDto>
     {
         private readonly ILogger<OrderDetailsViewModel> logger;
-        private readonly OrderServiceUwp orderService;
+        private readonly OrderServiceFacade orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderServiceUwp orderService)
+                                     OrderServiceFacade orderService)
             : base()
         {
             this.logger = logger;
             this.orderService = orderService;
         }
 
-        override public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
         public string TitleNew => Item?.Customer == null ? "New Order" : $"New Order, {Item?.Customer?.FullName}";
         public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.OrderID}";
 
@@ -59,8 +59,8 @@ namespace Inventory.UwpApp.ViewModels
 
         public bool CanEditCustomer => Item?.CustomerID <= 0;
 
-        public ICommand CustomerSelectedCommand => new RelayCommand<CustomerModel>(CustomerSelected);
-        private void CustomerSelected(CustomerModel customer)
+        public ICommand CustomerSelectedCommand => new RelayCommand<CustomerDto>(CustomerSelected);
+        private void CustomerSelected(CustomerDto customer)
         {
             EditableItem.CustomerID = customer.CustomerID;
             EditableItem.ShipAddress = customer.AddressLine1;
@@ -89,7 +89,7 @@ namespace Inventory.UwpApp.ViewModels
                 try
                 {
                     var item = await orderService.GetOrderAsync(ViewModelArgs.OrderID);
-                    Item = item ?? new OrderModel { OrderID = ViewModelArgs.OrderID, IsEmpty = true };
+                    Item = item ?? new OrderDto { OrderID = ViewModelArgs.OrderID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -107,10 +107,10 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<OrderModel>>(this, OnOrderMessage);
+            Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
 
             //MessageService.Subscribe<OrderListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<OrderModel>>>(this, OnOrderListMessage);
+            Messenger.Register<ItemMessage<IList<OrderDto>>>(this, OnOrderListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
         }
 
@@ -129,7 +129,7 @@ namespace Inventory.UwpApp.ViewModels
             };
         }
 
-        protected override async Task<bool> SaveItemAsync(OrderModel model)
+        protected override async Task<bool> SaveItemAsync(OrderDto model)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(OrderModel model)
+        protected override async Task<bool> DeleteItemAsync(OrderDto model)
         {
             try
             {
@@ -173,17 +173,17 @@ namespace Inventory.UwpApp.ViewModels
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<OrderModel>> GetValidationConstraints(OrderModel model)
+        protected override IEnumerable<IValidationConstraint<OrderDto>> GetValidationConstraints(OrderDto model)
         {
-            yield return new RequiredGreaterThanZeroConstraint<OrderModel>("Customer", m => m.CustomerID);
+            yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Customer", m => m.CustomerID);
             if (model.Status > 0)
             {
-                yield return new RequiredConstraint<OrderModel>("Payment Type", m => m.PaymentType);
-                yield return new RequiredGreaterThanZeroConstraint<OrderModel>("Payment Type", m => m.PaymentType);
+                yield return new RequiredConstraint<OrderDto>("Payment Type", m => m.PaymentType);
+                yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Payment Type", m => m.PaymentType);
                 if (model.Status > 1)
                 {
-                    yield return new RequiredConstraint<OrderModel>("Shipper", m => m.ShipVia);
-                    yield return new RequiredGreaterThanZeroConstraint<OrderModel>("Shipper", m => m.ShipVia);
+                    yield return new RequiredConstraint<OrderDto>("Shipper", m => m.ShipVia);
+                    yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Shipper", m => m.ShipVia);
                 }
             }
         }
@@ -192,7 +192,7 @@ namespace Inventory.UwpApp.ViewModels
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnOrderMessage(object recipient, ItemMessage<OrderModel> message)
+        private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
         {
         //    throw new NotImplementedException();
         //}
@@ -211,7 +211,7 @@ namespace Inventory.UwpApp.ViewModels
                                 try
                                 {
                                     var item = await orderService.GetOrderAsync(current.OrderID);
-                                    item = item ?? new OrderModel { OrderID = current.OrderID, IsEmpty = true };
+                                    item = item ?? new OrderDto { OrderID = current.OrderID, IsEmpty = true };
                                     current.Merge(item);
                                     current.NotifyChanges();
                                     OnPropertyChanged(nameof(Title));
@@ -258,7 +258,7 @@ namespace Inventory.UwpApp.ViewModels
                 }
             }
         }
-        private async void OnOrderListMessage(object recipient, ItemMessage<IList<OrderModel>> message)
+        private async void OnOrderListMessage(object recipient, ItemMessage<IList<OrderDto>> message)
         {
             var current = Item;
             if (current != null)
@@ -266,7 +266,7 @@ namespace Inventory.UwpApp.ViewModels
                 switch (message.Message)
                 {
                     case "ItemsDeleted":
-                        if (message.Value is IList<OrderModel> deletedModels)
+                        if (message.Value is IList<OrderDto> deletedModels)
                         {
                             if (deletedModels.Any(r => r.OrderID == current.OrderID))
                             {

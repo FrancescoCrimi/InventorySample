@@ -18,9 +18,9 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Inventory.UwpApp.Views.Customers
 {
-    public sealed partial class CustomersList : UserControl
+    public sealed partial class CustomersListControl : UserControl
     {
-        public CustomersList()
+        public CustomersListControl()
         {
             this.InitializeComponent();
         }
@@ -39,7 +39,7 @@ namespace Inventory.UwpApp.Views.Customers
                 SetValue(ViewModelProperty, value);
             }
         }
-        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(CustomerListViewModel), typeof(CustomersList), new PropertyMetadata(null));
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(CustomerListViewModel), typeof(CustomersListControl), new PropertyMetadata(null));
 
         #endregion
     }

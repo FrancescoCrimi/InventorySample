@@ -394,16 +394,16 @@
       <Version>2.2.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>3.1.26</Version>
+      <Version>3.1.30</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
-      <Version>3.1.26</Version>
+      <Version>3.1.30</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration">
-      <Version>3.1.26</Version>
+      <Version>3.1.30</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug">
-      <Version>3.1.26</Version>
+      <Version>3.1.30</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>

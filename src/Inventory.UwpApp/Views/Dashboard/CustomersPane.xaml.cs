@@ -1,4 +1,4 @@
-﻿using Inventory.UwpApp.Models;
+﻿using Inventory.UwpApp.Dto;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,13 +26,13 @@ namespace Inventory.UwpApp.Views.Dashboard
         }
 
         #region ItemsSource
-        public IList<CustomerModel> ItemsSource
+        public IList<CustomerDto> ItemsSource
         {
-            get { return (IList<CustomerModel>)GetValue(ItemsSourceProperty); }
+            get { return (IList<CustomerDto>)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
-        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IList<CustomerModel>), typeof(CustomersPane), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IList<CustomerDto>), typeof(CustomersPane), new PropertyMetadata(null));
         #endregion
     }
 }

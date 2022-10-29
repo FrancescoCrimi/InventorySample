@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inventory.UwpApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,5 +24,17 @@ namespace Inventory.UwpApp.Views.Customers
         {
             this.InitializeComponent();
         }
+
+        #region ViewModel
+
+        public CustomerDetailsViewModel ViewModel
+        {
+            get { return (CustomerDetailsViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(nameof(ViewModel), typeof(CustomerDetailsViewModel), typeof(CustomersDetailsControl), new PropertyMetadata(null));
+
+        #endregion
     }
 }

@@ -21,9 +21,9 @@ using Windows.Storage.Streams;
 
 namespace Inventory.UwpApp.Tools
 {
-    static public class BitmapTools
+    public static class BitmapTools
     {
-        static public async Task<BitmapImage> LoadBitmapAsync(byte[] bytes)
+        public static async Task<BitmapImage> LoadBitmapAsync(byte[] bytes)
         {
             if (bytes != null && bytes.Length > 0)
             {
@@ -39,7 +39,7 @@ namespace Inventory.UwpApp.Tools
             return null;
         }
 
-        static public async Task<BitmapImage> LoadBitmapAsync(IRandomAccessStreamReference randomStreamReference)
+        public static async Task<BitmapImage> LoadBitmapAsync(IRandomAccessStreamReference randomStreamReference)
         {
             var bitmap = new BitmapImage();
             try

@@ -14,7 +14,6 @@
 
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -27,13 +26,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Views.OrderItem;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region OrderItemListArgs
     public class OrderItemListArgs
     {
-        static public OrderItemListArgs CreateEmpty() => new OrderItemListArgs { IsEmpty = true };
+        public static OrderItemListArgs CreateEmpty() => new OrderItemListArgs { IsEmpty = true };
 
         public OrderItemListArgs()
         {
@@ -51,15 +51,15 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class OrderItemListViewModel : GenericListViewModel<OrderItemModel>
+    public class OrderItemListViewModel : GenericListViewModel<OrderItemDto>
     {
         private readonly ILogger<OrderItemListViewModel> logger;
-        private readonly OrderItemServiceUwp orderItemService;
+        private readonly OrderItemServiceFacade orderItemService;
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
-                                      OrderItemServiceUwp orderItemService,
+                                      OrderItemServiceFacade orderItemService,
                                       NavigationService navigationService,
                                       WindowService windowService)
             : base()
@@ -98,11 +98,11 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<IList<OrderItemModel>>>(this, OnOrderItemListMessage);
+            Messenger.Register<ItemMessage<IList<OrderItemDto>>>(this, OnOrderItemListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
 
             //MessageService.Subscribe<OrderItemDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderItemModel>>(this, OnOrderItemMessage);
+            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
         }
 
         public void Unsubscribe()
@@ -136,7 +136,7 @@ namespace Inventory.UwpApp.ViewModels
             }
             catch (Exception ex)
             {
-                Items = new List<OrderItemModel>();
+                Items = new List<OrderItemDto>();
                 StatusError($"Error loading Order items: {ex.Message}");
                 logger.LogError(ex, "Refresh");
                 isOk = false;
@@ -152,14 +152,14 @@ namespace Inventory.UwpApp.ViewModels
             return isOk;
         }
 
-        private async Task<IList<OrderItemModel>> GetItemsAsync()
+        private async Task<IList<OrderItemDto>> GetItemsAsync()
         {
             if (!ViewModelArgs.IsEmpty)
             {
                 DataRequest<OrderItem> request = BuildDataRequest();
                 return await orderItemService.GetOrderItemsAsync(request);
             }
-            return new List<OrderItemModel>();
+            return new List<OrderItemDto>();
         }
 
         public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);
@@ -216,7 +216,7 @@ namespace Inventory.UwpApp.ViewModels
                         StartStatusMessage($"Deleting {count} order items...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<OrderItemModel>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ItemMessage<IList<OrderItemDto>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -235,7 +235,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<OrderItemModel> models)
+        private async Task DeleteItemsAsync(IEnumerable<OrderItemDto> models)
         {
             foreach (var model in models)
             {
@@ -297,7 +297,7 @@ namespace Inventory.UwpApp.ViewModels
                     break;
             }
         }
-        private async void OnOrderItemListMessage(object recipient, ItemMessage<IList<OrderItemModel>> message)
+        private async void OnOrderItemListMessage(object recipient, ItemMessage<IList<OrderItemDto>> message)
         {
             switch (message.Message)
             {
@@ -312,7 +312,7 @@ namespace Inventory.UwpApp.ViewModels
                     break;
             }
         }
-        private async void OnOrderItemMessage(object recipient, ItemMessage<OrderItemModel> message)
+        private async void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
         {
             switch (message.Message)
             {

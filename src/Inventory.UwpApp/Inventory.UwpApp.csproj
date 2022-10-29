@@ -148,40 +148,40 @@
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
-    <Compile Include="Common\VirtualCollection\VirtualRangeCollection.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToImageConverter.cs" />
+    <Compile Include="Dto\DtoAssembler.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\IBackNavigationHandler.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CountryCodeModel.cs" />
-    <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Dto\CustomerDto.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\ObservableObject.cs" />
-    <Compile Include="Models\OrderItemModel.cs" />
-    <Compile Include="Models\OrderModel.cs" />
+    <Compile Include="Dto\OrderItemDto.cs" />
+    <Compile Include="Dto\OrderDto.cs" />
     <Compile Include="Models\OrderStatusModel.cs" />
     <Compile Include="Models\PaymentTypeModel.cs" />
-    <Compile Include="Models\ProductModel.cs" />
+    <Compile Include="Dto\ProductDto.cs" />
     <Compile Include="Models\ShipperModel.cs" />
     <Compile Include="Models\TabViewItemData.cs" />
     <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
-    <Compile Include="Services\CustomerServiceUwp.cs" />
+    <Compile Include="Services\CustomerServiceFacade.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\LogServiceFacade.cs" />
     <Compile Include="Services\LookupTableServiceFacade.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\OrderItemServiceUwp.cs" />
-    <Compile Include="Services\OrderServiceUwp.cs" />
+    <Compile Include="Services\OrderItemServiceFacade.cs" />
+    <Compile Include="Services\OrderServiceFacade.cs" />
     <Compile Include="Services\PageService.cs" />
-    <Compile Include="Services\ProductServiceUwp.cs" />
+    <Compile Include="Services\ProductServiceFacade.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
@@ -231,8 +231,8 @@
     <Compile Include="Views\Customers\CustomersDetailsControl.xaml.cs">
       <DependentUpon>CustomersDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersList.xaml.cs">
-      <DependentUpon>CustomersList.xaml</DependentUpon>
+    <Compile Include="Views\Customers\CustomersListControl.xaml.cs">
+      <DependentUpon>CustomersListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Customers\CustomersOrdersControl.xaml.cs">
       <DependentUpon>CustomersOrdersControl.xaml</DependentUpon>
@@ -350,7 +350,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomersList.xaml">
+    <Page Include="Views\Customers\CustomersListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

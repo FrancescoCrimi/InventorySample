@@ -14,7 +14,6 @@
 
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -26,13 +25,14 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region CustomerListArgs
     public class CustomerListArgs
     {
-        static public CustomerListArgs CreateEmpty() => new CustomerListArgs { IsEmpty = true };
+        public static CustomerListArgs CreateEmpty() => new CustomerListArgs { IsEmpty = true };
 
         public CustomerListArgs()
         {
@@ -52,15 +52,15 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class CustomerListViewModel : GenericListViewModel<CustomerModel>
+    public class CustomerListViewModel : GenericListViewModel<CustomerDto>
     {
         private readonly ILogger<CustomerListViewModel> logger;
-        private readonly CustomerServiceUwp customerService;
+        private readonly CustomerServiceFacade customerService;
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
-                                     CustomerServiceUwp customerService,
+                                     CustomerServiceFacade customerService,
                                      NavigationService navigationService,
                                      WindowService windowService)
             : base()
@@ -92,11 +92,11 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<IList<CustomerModel>>>(this, OnCustomerListMessage);
+            Messenger.Register<ItemMessage<IList<CustomerDto>>>(this, OnCustomerListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
 
             //MessageService.Subscribe<CustomerDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<CustomerModel>>(this, OnCustomerMessage);
+            Messenger.Register<ItemMessage<CustomerDto>>(this, OnCustomerMessage);
         }
 
         public void Unsubscribe()
@@ -129,7 +129,7 @@ namespace Inventory.UwpApp.ViewModels
             }
             catch (Exception ex)
             {
-                Items = new List<CustomerModel>();
+                Items = new List<CustomerDto>();
                 StatusError($"Error loading Customers: {ex.Message}");
                 logger.LogError(ex, "Refresh");
                 isOk = false;
@@ -145,7 +145,7 @@ namespace Inventory.UwpApp.ViewModels
             return isOk;
         }
 
-        private async Task<IList<CustomerModel>> GetItemsAsync()
+        private async Task<IList<CustomerDto>> GetItemsAsync()
         {
             if (!ViewModelArgs.IsEmpty)
             {
@@ -155,7 +155,7 @@ namespace Inventory.UwpApp.ViewModels
                 await collection.LoadAsync();
                 return collection;
             }
-            return new List<CustomerModel>();
+            return new List<CustomerDto>();
         }
 
         public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);
@@ -212,7 +212,7 @@ namespace Inventory.UwpApp.ViewModels
                         StartStatusMessage($"Deleting {count} customers...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<CustomerModel>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ItemMessage<IList<CustomerDto>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -231,7 +231,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<CustomerModel> models)
+        private async Task DeleteItemsAsync(IEnumerable<CustomerDto> models)
         {
             foreach (var model in models)
             {
@@ -287,7 +287,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async void OnCustomerListMessage(object recipient, ItemMessage<IList<CustomerModel>> message)
+        private async void OnCustomerListMessage(object recipient, ItemMessage<IList<CustomerDto>> message)
         {
             switch (message.Message)
             {
@@ -300,7 +300,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerModel> message)
+        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerDto> message)
         {
             switch (message.Message)
             {

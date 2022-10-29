@@ -12,7 +12,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Data;
 using System.ComponentModel;
 
-namespace Inventory.UwpApp
+namespace Inventory.UwpApp.Library.Common
 {
     /// <summary>
     /// Collezione Virtuale che usa l'interfaccia IItemsRangeInfo

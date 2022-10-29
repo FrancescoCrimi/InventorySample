@@ -5,7 +5,7 @@
     xmlns:local="using:Inventory.UwpApp.Views.Dashboard"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:Inventory.UwpApp.Models"
+    xmlns:dto="using:Inventory.UwpApp.Dto"
     xmlns:converters="using:Inventory.UwpApp.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
@@ -13,7 +13,7 @@
 
     <UserControl.Resources>
         <converters:ObjectToImageConverter x:Name="objectToImageConverter"/>
-        <DataTemplate x:Key="HeaderTemplate" x:DataType="models:ProductModel">
+        <DataTemplate x:Key="HeaderTemplate" x:DataType="dto:ProductDto">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48"/>
@@ -26,7 +26,7 @@
                 <TextBlock Grid.Column="3" Text="Price" Style="{StaticResource ColumnHeaderStyle}"/>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="ItemTemplate" x:DataType="models:ProductModel">
+        <DataTemplate x:Key="ItemTemplate" x:DataType="dto:ProductDto">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48"/>

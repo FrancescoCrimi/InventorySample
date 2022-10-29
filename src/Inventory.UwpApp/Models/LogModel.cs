@@ -19,7 +19,7 @@ namespace Inventory.UwpApp.Models
 {
     public class LogModel : ObservableObject
     {
-        static public LogModel CreateEmpty() => new LogModel { Id = -1, IsEmpty = true };
+        public static LogModel CreateEmpty() => new LogModel { Id = -1, IsEmpty = true };
 
         public long Id { get; set; }
         public bool IsRead { get; set; }

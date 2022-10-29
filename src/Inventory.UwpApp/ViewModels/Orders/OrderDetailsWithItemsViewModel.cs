@@ -12,9 +12,9 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Threading.Tasks;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
@@ -55,7 +55,7 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderModel>>(this, OnOrderMessage);
+            Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
@@ -69,7 +69,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
 
-        private async void OnOrderMessage(object recipient, ItemMessage<OrderModel> message)
+        private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
         {
         //    throw new NotImplementedException();
         //}

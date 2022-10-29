@@ -15,7 +15,7 @@
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
 using CommunityToolkit.Mvvm.Input;
-using Inventory.UwpApp.Models;
+using Inventory.UwpApp.Dto;
 using Inventory.UwpApp.Services;
 using Inventory.UwpApp.Views;
 using Inventory.UwpApp.Views.Customers;
@@ -32,15 +32,15 @@ namespace Inventory.UwpApp.ViewModels
     {
         private readonly ILogger<DashboardViewModel> logger;
         private readonly NavigationService navigationService;
-        private readonly CustomerServiceUwp customerService;
-        private readonly OrderServiceUwp orderService;
-        private readonly ProductServiceUwp productService;
+        private readonly CustomerServiceFacade customerService;
+        private readonly OrderServiceFacade orderService;
+        private readonly ProductServiceFacade productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   NavigationService navigationService,
-                                  CustomerServiceUwp customerService,
-                                  OrderServiceUwp orderService,
-                                  ProductServiceUwp productService)
+                                  CustomerServiceFacade customerService,
+                                  OrderServiceFacade orderService,
+                                  ProductServiceFacade productService)
             : base()
         {
             this.logger = logger;
@@ -62,22 +62,22 @@ namespace Inventory.UwpApp.ViewModels
         public ICommand ItemClickCommand => itemClickCommand ??
                 (itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick));
 
-        private IList<CustomerModel> _customers = null;
-        public IList<CustomerModel> Customers
+        private IList<CustomerDto> _customers = null;
+        public IList<CustomerDto> Customers
         {
             get => _customers;
             set => SetProperty(ref _customers, value);
         }
 
-        private IList<ProductModel> _products = null;
-        public IList<ProductModel> Products
+        private IList<ProductDto> _products = null;
+        public IList<ProductDto> Products
         {
             get => _products;
             set => SetProperty(ref _products, value);
         }
 
-        private IList<OrderModel> _orders = null;
-        public IList<OrderModel> Orders
+        private IList<OrderDto> _orders = null;
+        public IList<OrderDto> Orders
         {
             get => _orders;
             set => SetProperty(ref _orders, value);

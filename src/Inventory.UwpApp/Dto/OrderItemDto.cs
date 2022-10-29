@@ -13,11 +13,12 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 
-namespace Inventory.UwpApp.Models
+namespace Inventory.UwpApp.Dto
 {
-    public class OrderItemModel : ObservableObject
+    public class OrderItemDto : ObservableObject
     {
         public long OrderID { get; set; }
         public int OrderLine { get; set; }
@@ -51,7 +52,7 @@ namespace Inventory.UwpApp.Models
 
         public decimal Total => (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
 
-        public ProductModel Product { get; set; }
+        public ProductDto Product { get; set; }
 
         public bool IsNew => OrderLine <= 0;
 
@@ -63,13 +64,13 @@ namespace Inventory.UwpApp.Models
 
         public override void Merge(ObservableObject source)
         {
-            if (source is OrderItemModel model)
+            if (source is OrderItemDto model)
             {
                 Merge(model);
             }
         }
 
-        public void Merge(OrderItemModel source)
+        public void Merge(OrderItemDto source)
         {
             if (source != null)
             {

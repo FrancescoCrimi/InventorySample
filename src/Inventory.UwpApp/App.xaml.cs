@@ -75,9 +75,9 @@ namespace Inventory.UwpApp
 
                 .AddTransient<LogServiceFacade>()
                 .AddSingleton<LookupTableServiceFacade>()
-                .AddSingleton<ProductServiceUwp>()
-                .AddSingleton<CustomerServiceUwp>()
-                .AddSingleton<OrderServiceUwp>()
+                .AddSingleton<ProductServiceFacade>()
+                .AddSingleton<CustomerServiceFacade>()
+                .AddSingleton<OrderServiceFacade>()
                 //.AddSingleton<OrderItemServiceUwp>()
 
                 ////.AddSingleton<IMessageService, MessageService>()

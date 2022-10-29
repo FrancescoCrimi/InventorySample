@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,13 +22,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region CustomerDetailsArgs
     public class CustomerDetailsArgs
     {
-        static public CustomerDetailsArgs CreateDefault() => new CustomerDetailsArgs();
+        public static CustomerDetailsArgs CreateDefault() => new CustomerDetailsArgs();
 
         public long CustomerID { get; set; }
 
@@ -37,14 +37,14 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class CustomerDetailsViewModel : GenericDetailsViewModel<CustomerModel>
+    public class CustomerDetailsViewModel : GenericDetailsViewModel<CustomerDto>
     {
         private readonly ILogger<CustomerDetailsViewModel> logger;
-        private readonly CustomerServiceUwp customerService;
+        private readonly CustomerServiceFacade customerService;
         private readonly FilePickerService filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
-                                        CustomerServiceUwp customerService,
+                                        CustomerServiceFacade customerService,
                                         FilePickerService filePickerService)
             : base()
         {
@@ -54,7 +54,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
 
-        override public string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
         public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -67,7 +67,7 @@ namespace Inventory.UwpApp.ViewModels
 
             if (ViewModelArgs.IsNew)
             {
-                Item = new CustomerModel();
+                Item = new CustomerDto();
                 IsEditMode = true;
             }
             else
@@ -75,7 +75,7 @@ namespace Inventory.UwpApp.ViewModels
                 try
                 {
                     var item = await customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
-                    Item = item ?? new CustomerModel { CustomerID = ViewModelArgs.CustomerID, IsEmpty = true };
+                    Item = item ?? new CustomerDto { CustomerID = ViewModelArgs.CustomerID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -91,10 +91,10 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<CustomerModel>>(this, OnCustomerMessage);
+            Messenger.Register<ItemMessage<CustomerDto>>(this, OnCustomerMessage);
 
             //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<CustomerModel>>>(this, OnCustomerListMessage);
+            Messenger.Register<ItemMessage<IList<CustomerDto>>>(this, OnCustomerListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
         }
 
@@ -145,7 +145,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        protected override async Task<bool> SaveItemAsync(CustomerModel model)
+        protected override async Task<bool> SaveItemAsync(CustomerDto model)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(CustomerModel model)
+        protected override async Task<bool> DeleteItemAsync(CustomerDto model)
         {
             try
             {
@@ -188,23 +188,23 @@ namespace Inventory.UwpApp.ViewModels
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current customer?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<CustomerModel>> GetValidationConstraints(CustomerModel model)
+        protected override IEnumerable<IValidationConstraint<CustomerDto>> GetValidationConstraints(CustomerDto model)
         {
-            yield return new RequiredConstraint<CustomerModel>("First Name", m => m.FirstName);
-            yield return new RequiredConstraint<CustomerModel>("Last Name", m => m.LastName);
-            yield return new RequiredConstraint<CustomerModel>("Email Address", m => m.EmailAddress);
-            yield return new RequiredConstraint<CustomerModel>("Address Line 1", m => m.AddressLine1);
-            yield return new RequiredConstraint<CustomerModel>("City", m => m.City);
-            yield return new RequiredConstraint<CustomerModel>("Region", m => m.Region);
-            yield return new RequiredConstraint<CustomerModel>("Postal Code", m => m.PostalCode);
-            yield return new RequiredConstraint<CustomerModel>("Country", m => m.CountryCode);
+            yield return new RequiredConstraint<CustomerDto>("First Name", m => m.FirstName);
+            yield return new RequiredConstraint<CustomerDto>("Last Name", m => m.LastName);
+            yield return new RequiredConstraint<CustomerDto>("Email Address", m => m.EmailAddress);
+            yield return new RequiredConstraint<CustomerDto>("Address Line 1", m => m.AddressLine1);
+            yield return new RequiredConstraint<CustomerDto>("City", m => m.City);
+            yield return new RequiredConstraint<CustomerDto>("Region", m => m.Region);
+            yield return new RequiredConstraint<CustomerDto>("Postal Code", m => m.PostalCode);
+            yield return new RequiredConstraint<CustomerDto>("Country", m => m.CountryCode);
         }
 
         /*
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerModel> message)
+        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerDto> message)
         {
             //    throw new NotImplementedException();
             //}
@@ -223,7 +223,7 @@ namespace Inventory.UwpApp.ViewModels
                             try
                             {
                                 var item = await customerService.GetCustomerAsync(current.CustomerID);
-                                item = item ?? new CustomerModel { CustomerID = current.CustomerID, IsEmpty = true };
+                                item = item ?? new CustomerDto { CustomerID = current.CustomerID, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -246,7 +246,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async void OnCustomerListMessage(object recipient, ItemMessage<IList<CustomerModel>> message)
+        private async void OnCustomerListMessage(object recipient, ItemMessage<IList<CustomerDto>> message)
         {
             var current = Item;
             if (current != null)

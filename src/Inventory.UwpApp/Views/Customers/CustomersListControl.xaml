@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="Inventory.UwpApp.Views.Customers.CustomersList"
+﻿<UserControl x:Class="Inventory.UwpApp.Views.Customers.CustomersListControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Inventory.UwpApp.Views.Customers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="using:Inventory.UwpApp.Models"
+             xmlns:dto="using:Inventory.UwpApp.Dto"
              xmlns:viewmodels="using:Inventory.UwpApp.ViewModels"
              xmlns:Custom="using:Inventory.UwpApp.Library.Controls"
              d:DataContext="{d:DesignInstance Type=viewmodels:CustomerListViewModel}"
@@ -47,7 +47,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ItemTemplate"
-                      x:DataType="models:CustomerModel">
+                      x:DataType="dto:CustomerDto">
             <Grid Visibility="{x:Bind IsEmpty, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>

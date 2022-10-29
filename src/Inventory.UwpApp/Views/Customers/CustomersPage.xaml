@@ -9,7 +9,7 @@
       xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:libControls="using:Inventory.UwpApp.Library.Controls"      
+      xmlns:libControls="using:Inventory.UwpApp.Library.Controls"
       ui:ApplicationViewExtensions.Title="Customers"
       d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}"
       mc:Ignorable="d"
@@ -89,14 +89,43 @@
             <!--Customers-->
             <Grid Grid.RowSpan="{x:Bind GetRowSpan(ViewModel.CustomerList.IsMultipleSelection), Mode=OneWay}">
                 <libControls:Section Header="{x:Bind ViewModel.CustomerList.Title, Mode=OneWay}"
-                                HeaderTemplate="{StaticResource ListHeaderTemplate}"
-                                HeaderButtonGlyph="&#xE2B4;"
-                                HeaderButtonClick="OpenInNewView"
-                                IsButtonVisible="{x:Bind ViewModel.IsMainView}">
-                    <local:CustomersList ViewModel="{x:Bind ViewModel.CustomerList}" />
+                                     HeaderTemplate="{StaticResource ListHeaderTemplate}"
+                                     HeaderButtonGlyph="&#xE2B4;"
+                                     HeaderButtonClick="OpenInNewView"
+                                     IsButtonVisible="{x:Bind ViewModel.IsMainView}">
+                    <local:CustomersListControl ViewModel="{x:Bind ViewModel.CustomerList}" />
                 </libControls:Section>
             </Grid>
 
+            <!--Details-->
+            <Grid Grid.Row="1"
+                  BorderBrush="LightGray"
+                  BorderThickness="0,1,0,0"
+                  Visibility="{x:Bind ViewModel.CustomerList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+
+                <libControls:Section IsEnabled="{x:Bind ViewModel.CustomerDetails.IsEnabled, Mode=OneWay}"
+                                     HeaderButtonGlyph="&#xE2B4;"
+                                     Background="{StaticResource DetailsViewBackgroundColor}"
+                                     Visibility="{x:Bind ViewModel.CustomerDetails.IsDataAvailable, Mode=OneWay}">
+                    <Pivot x:Name="pivot">
+                        <PivotItem Header="Customer">
+                            <local:CustomersDetailsControl DataContext="DataContext"
+                                                           ViewModel="{x:Bind ViewModel.CustomerDetails}" />
+                        </PivotItem>
+                        <PivotItem Header="Orders">
+                            <local:CustomersOrdersControl ViewModel="{x:Bind ViewModel.CustomerOrders}" />
+                        </PivotItem>
+                    </Pivot>
+
+                </libControls:Section>
+
+                <!--Empty Details-->
+                <libControls:Section Header="No item selected"
+                                     Visibility="{x:Bind ViewModel.CustomerDetails.IsDataUnavailable, Mode=OneWay}" />
+
+            </Grid>
+
+            <!--Customers-->
             <!--<Grid Grid.Row="0">
                 <Border Background="#FFFFFF"
                         Padding="6,2">

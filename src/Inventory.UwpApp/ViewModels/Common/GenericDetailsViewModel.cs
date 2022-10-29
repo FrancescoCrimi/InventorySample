@@ -25,7 +25,7 @@ using System.Windows.Input;
 
 namespace Inventory.UwpApp.ViewModels
 {
-    abstract public partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
+    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
     {
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
@@ -83,7 +83,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand BackCommand => new RelayCommand(OnBack);
-        virtual protected void OnBack()
+        protected virtual void OnBack()
         {
             StatusReady();
             if (navigationService.CanGoBack)
@@ -93,14 +93,14 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand EditCommand => new RelayCommand(OnEdit);
-        virtual protected void OnEdit()
+        protected virtual void OnEdit()
         {
             StatusReady();
             BeginEdit();
             //MessageService.Send(this, "BeginEdit", Item);
             Messenger.Send(new ItemMessage<TModel>(Item, "BeginEdit"));
         }
-        virtual public void BeginEdit()
+        public virtual void BeginEdit()
         {
             if (!IsEditMode)
             {
@@ -113,14 +113,14 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand CancelCommand => new RelayCommand(OnCancel);
-        virtual protected void OnCancel()
+        protected virtual void OnCancel()
         {
             StatusReady();
             CancelEdit();
             //MessageService.Send(this, "CancelEdit", Item);
             Messenger.Send(new ItemMessage<TModel>(Item, "CancelEdit"));
         }
-        virtual public void CancelEdit()
+        public virtual void CancelEdit()
         {
             if (ItemIsNew)
             {
@@ -145,7 +145,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand SaveCommand => new RelayCommand(OnSave);
-        virtual protected async void OnSave()
+        protected virtual async void OnSave()
         {
             StatusReady();
             var result = Validate(EditableItem);
@@ -158,7 +158,7 @@ namespace Inventory.UwpApp.ViewModels
                 await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
             }
         }
-        virtual public async Task SaveAsync()
+        public virtual async Task SaveAsync()
         {
             IsEnabled = false;
             bool isNew = ItemIsNew;
@@ -187,7 +187,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        virtual protected async void OnDelete()
+        protected virtual async void OnDelete()
         {
             StatusReady();
             if (await ConfirmDeleteAsync())
@@ -195,7 +195,7 @@ namespace Inventory.UwpApp.ViewModels
                 await DeleteAsync();
             }
         }
-        virtual public async Task DeleteAsync()
+        public virtual async Task DeleteAsync()
         {
             var model = Item;
             if (model != null)
@@ -213,7 +213,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        virtual public Result Validate(TModel model)
+        public virtual Result Validate(TModel model)
         {
             foreach (var constraint in GetValidationConstraints(model))
             {
@@ -225,12 +225,12 @@ namespace Inventory.UwpApp.ViewModels
             return Result.Ok();
         }
 
-        virtual protected IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
+        protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
 
-        abstract public bool ItemIsNew { get; }
+        public abstract bool ItemIsNew { get; }
 
-        abstract protected Task<bool> SaveItemAsync(TModel model);
-        abstract protected Task<bool> DeleteItemAsync(TModel model);
-        abstract protected Task<bool> ConfirmDeleteAsync();
+        protected abstract Task<bool> SaveItemAsync(TModel model);
+        protected abstract Task<bool> DeleteItemAsync(TModel model);
+        protected abstract Task<bool> ConfirmDeleteAsync();
     }
 }

@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,13 +22,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region OrderItemDetailsArgs
     public class OrderItemDetailsArgs
     {
-        static public OrderItemDetailsArgs CreateDefault() => new OrderItemDetailsArgs();
+        public static OrderItemDetailsArgs CreateDefault() => new OrderItemDetailsArgs();
 
         public long OrderID { get; set; }
         public int OrderLine { get; set; }
@@ -38,20 +38,20 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItemModel>
+    public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItemDto>
     {
         private readonly ILogger<OrderItemDetailsViewModel> logger;
-        private readonly OrderItemServiceUwp orderItemService;
+        private readonly OrderItemServiceFacade orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
-                                         OrderItemServiceUwp orderItemService)
+                                         OrderItemServiceFacade orderItemService)
             : base()
         {
             this.logger = logger;
             this.orderItemService = orderItemService;
         }
 
-        override public string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? TitleNew : TitleEdit;
         public string TitleNew => $"New Order Item, Order #{OrderID}";
         public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderID}" ?? String.Empty;
 
@@ -61,8 +61,8 @@ namespace Inventory.UwpApp.ViewModels
 
         public long OrderID { get; set; }
 
-        public ICommand ProductSelectedCommand => new RelayCommand<ProductModel>(ProductSelected);
-        private void ProductSelected(ProductModel product)
+        public ICommand ProductSelectedCommand => new RelayCommand<ProductDto>(ProductSelected);
+        private void ProductSelected(ProductDto product)
         {
             EditableItem.ProductID = product.ProductID;
             EditableItem.UnitPrice = product.ListPrice;
@@ -78,7 +78,7 @@ namespace Inventory.UwpApp.ViewModels
 
             if (ViewModelArgs.IsNew)
             {
-                Item = new OrderItemModel { OrderID = OrderID };
+                Item = new OrderItemDto { OrderID = OrderID };
                 IsEditMode = true;
             }
             else
@@ -86,7 +86,7 @@ namespace Inventory.UwpApp.ViewModels
                 try
                 {
                     var item = await orderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
-                    Item = item ?? new OrderItemModel { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                    Item = item ?? new OrderItemDto { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -102,10 +102,10 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderItemDetailsViewModel, OrderItemModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<OrderItemModel>>(this, OnOrderItemMessage);
+            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
 
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<OrderItemModel>>>(this, OnOrderItemListMessage);
+            Messenger.Register<ItemMessage<IList<OrderItemDto>>>(this, OnOrderItemListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
         }
 
@@ -124,7 +124,7 @@ namespace Inventory.UwpApp.ViewModels
             };
         }
 
-        protected override async Task<bool> SaveItemAsync(OrderItemModel model)
+        protected override async Task<bool> SaveItemAsync(OrderItemDto model)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(OrderItemModel model)
+        protected override async Task<bool> DeleteItemAsync(OrderItemDto model)
         {
             try
             {
@@ -167,21 +167,21 @@ namespace Inventory.UwpApp.ViewModels
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order item?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<OrderItemModel>> GetValidationConstraints(OrderItemModel model)
+        protected override IEnumerable<IValidationConstraint<OrderItemDto>> GetValidationConstraints(OrderItemDto model)
         {
-            yield return new RequiredConstraint<OrderItemModel>("Product", m => m.ProductID);
-            yield return new NonZeroConstraint<OrderItemModel>("Quantity", m => m.Quantity);
-            yield return new PositiveConstraint<OrderItemModel>("Quantity", m => m.Quantity);
-            yield return new LessThanConstraint<OrderItemModel>("Quantity", m => m.Quantity, 100);
-            yield return new PositiveConstraint<OrderItemModel>("Discount", m => m.Discount);
-            yield return new NonGreaterThanConstraint<OrderItemModel>("Discount", m => m.Discount, (double)model.Subtotal, "'Subtotal'");
+            yield return new RequiredConstraint<OrderItemDto>("Product", m => m.ProductID);
+            yield return new NonZeroConstraint<OrderItemDto>("Quantity", m => m.Quantity);
+            yield return new PositiveConstraint<OrderItemDto>("Quantity", m => m.Quantity);
+            yield return new LessThanConstraint<OrderItemDto>("Quantity", m => m.Quantity, 100);
+            yield return new PositiveConstraint<OrderItemDto>("Discount", m => m.Discount);
+            yield return new NonGreaterThanConstraint<OrderItemDto>("Discount", m => m.Discount, (double)model.Subtotal, "'Subtotal'");
         }
 
         /*
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnOrderItemMessage(object recipient, ItemMessage<OrderItemModel> message)
+        private async void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
         {
             //    throw new NotImplementedException();
             //}
@@ -200,7 +200,7 @@ namespace Inventory.UwpApp.ViewModels
                             try
                             {
                                 var item = await orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
-                                item = item ?? new OrderItemModel { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                                item = item ?? new OrderItemDto { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -248,7 +248,7 @@ namespace Inventory.UwpApp.ViewModels
                 }
             }
         }
-        private async void OnOrderItemListMessage(object recipient, ItemMessage<IList<OrderItemModel>> message)
+        private async void OnOrderItemListMessage(object recipient, ItemMessage<IList<OrderItemDto>> message)
         {
             var current = Item;
             if (current != null)

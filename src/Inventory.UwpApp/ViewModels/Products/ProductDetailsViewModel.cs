@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,13 +22,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region ProductDetailsArgs
     public class ProductDetailsArgs
     {
-        static public ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
+        public static ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
 
         public string ProductID { get; set; }
 
@@ -37,14 +37,14 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class ProductDetailsViewModel : GenericDetailsViewModel<ProductModel>
+    public class ProductDetailsViewModel : GenericDetailsViewModel<ProductDto>
     {
         private readonly ILogger<ProductDetailsViewModel> logger;
-        private readonly ProductServiceUwp productService;
+        private readonly ProductServiceFacade productService;
         private readonly FilePickerService filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
-                                       ProductServiceUwp productService,
+                                       ProductServiceFacade productService,
                                        FilePickerService filePickerService)
             : base()
         {
@@ -53,7 +53,7 @@ namespace Inventory.UwpApp.ViewModels
             this.filePickerService = filePickerService;
         }
 
-        override public string Title => (Item?.IsNew ?? true) ? "New Product" : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? "New Product" : TitleEdit;
         public string TitleEdit => Item == null ? "Product" : $"{Item.Name}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -66,7 +66,7 @@ namespace Inventory.UwpApp.ViewModels
 
             if (ViewModelArgs.IsNew)
             {
-                Item = new ProductModel();
+                Item = new ProductDto();
                 IsEditMode = true;
             }
             else
@@ -74,7 +74,7 @@ namespace Inventory.UwpApp.ViewModels
                 try
                 {
                     var item = await productService.GetProductAsync(ViewModelArgs.ProductID);
-                    Item = item ?? new ProductModel { ProductID = ViewModelArgs.ProductID, IsEmpty = true };
+                    Item = item ?? new ProductDto { ProductID = ViewModelArgs.ProductID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -90,10 +90,10 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<ProductDetailsViewModel, ProductModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<ProductModel>>(this, OnProductMessage);
+            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
 
             //MessageService.Subscribe<ProductListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<ProductModel>>>(this, OnProductListMessage);
+            Messenger.Register<ItemMessage<IList<ProductDto>>>(this, OnProductListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
         }
 
@@ -143,7 +143,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        protected override async Task<bool> SaveItemAsync(ProductModel model)
+        protected override async Task<bool> SaveItemAsync(ProductDto model)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        protected override async Task<bool> DeleteItemAsync(ProductModel model)
+        protected override async Task<bool> DeleteItemAsync(ProductDto model)
         {
             try
             {
@@ -186,17 +186,17 @@ namespace Inventory.UwpApp.ViewModels
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current product?", "Ok", "Cancel");
         }
 
-        override protected IEnumerable<IValidationConstraint<ProductModel>> GetValidationConstraints(ProductModel model)
+        protected override IEnumerable<IValidationConstraint<ProductDto>> GetValidationConstraints(ProductDto model)
         {
-            yield return new RequiredConstraint<ProductModel>("Name", m => m.Name);
-            yield return new RequiredGreaterThanZeroConstraint<ProductModel>("Category", m => m.CategoryID);
+            yield return new RequiredConstraint<ProductDto>("Name", m => m.Name);
+            yield return new RequiredGreaterThanZeroConstraint<ProductDto>("Category", m => m.CategoryID);
         }
 
         /*
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnProductMessage(object recipient, ItemMessage<ProductModel> message)
+        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
         {
         //    throw new NotImplementedException();
         //}
@@ -215,7 +215,7 @@ namespace Inventory.UwpApp.ViewModels
                                 try
                                 {
                                     var item = await productService.GetProductAsync(current.ProductID);
-                                    item = item ?? new ProductModel { ProductID = current.ProductID, IsEmpty = true };
+                                    item = item ?? new ProductDto { ProductID = current.ProductID, IsEmpty = true };
                                     current.Merge(item);
                                     current.NotifyChanges();
                                     OnPropertyChanged(nameof(Title));
@@ -264,7 +264,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductModel>> message)
+        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductDto>> message)
         {
             var current = Item;
             if (current != null)

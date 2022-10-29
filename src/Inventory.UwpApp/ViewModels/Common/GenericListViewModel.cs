@@ -25,7 +25,7 @@ using Inventory.UwpApp.Library.Common;
 
 namespace Inventory.UwpApp.ViewModels
 {
-    abstract public partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableObject
+    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableObject
     {
         public GenericListViewModel()
             : base()
@@ -59,7 +59,10 @@ namespace Inventory.UwpApp.ViewModels
         private TModel _selectedItem = default(TModel);
         public TModel SelectedItem
         {
-            get => _selectedItem;
+            get
+            {
+                return _selectedItem;
+            }
             set
             {
                 if (SetProperty(ref _selectedItem, value))
@@ -68,7 +71,7 @@ namespace Inventory.UwpApp.ViewModels
                     {
                         // Todo: fixare selectedItem.Id = 0
                         ////MessageService.Send(this, "ItemSelected", _selectedItem);
-                        //Messenger.Send(new ItemMessage<TModel>(_selectedItem, "ItemSelected"));
+                        Messenger.Send(new ItemMessage<TModel>(_selectedItem, "ItemSelected"));
                     }
                 }
             }
@@ -103,7 +106,7 @@ namespace Inventory.UwpApp.ViewModels
         public ICommand RefreshCommand => new RelayCommand(OnRefresh);
 
         public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
-        virtual protected void OnStartSelection()
+        protected virtual void OnStartSelection()
         {
             StatusMessage("Start selection");
             SelectedItem = null;
@@ -113,7 +116,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
-        virtual protected void OnCancelSelection()
+        protected virtual void OnCancelSelection()
         {
             StatusReady();
             SelectedItems = null;
@@ -123,7 +126,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
-        virtual protected void OnSelectItems(IList<object> items)
+        protected virtual void OnSelectItems(IList<object> items)
         {
             StatusReady();
             if (IsMultipleSelection)
@@ -134,7 +137,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand DeselectItemsCommand => new RelayCommand<IList<object>>(OnDeselectItems);
-        virtual protected void OnDeselectItems(IList<object> items)
+        protected virtual void OnDeselectItems(IList<object> items)
         {
             if (items?.Count > 0)
             {
@@ -151,7 +154,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
         public ICommand SelectRangesCommand => new RelayCommand<IndexRange[]>(OnSelectRanges);
-        virtual protected void OnSelectRanges(IndexRange[] indexRanges)
+        protected virtual void OnSelectRanges(IndexRange[] indexRanges)
         {
             SelectedIndexRanges = indexRanges;
             int count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
@@ -160,9 +163,9 @@ namespace Inventory.UwpApp.ViewModels
 
         public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
 
-        abstract protected void OnNew();
-        abstract protected void OnRefresh();
-        abstract protected void OnDeleteSelection();
+        protected abstract void OnNew();
+        protected abstract void OnRefresh();
+        protected abstract void OnDeleteSelection();
 
     }
 }

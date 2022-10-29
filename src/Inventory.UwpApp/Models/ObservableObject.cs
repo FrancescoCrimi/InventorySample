@@ -18,7 +18,7 @@ namespace Inventory.UwpApp.Models
     {
         public bool IsEmpty { get; set; }
 
-        virtual public void Merge(ObservableObject source) { }
+        public virtual void Merge(ObservableObject source) { }
 
         public void NotifyChanges()
         {

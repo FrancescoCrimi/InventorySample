@@ -48,7 +48,11 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private TModel _item = null;
         public TModel Item
         {
-            get => _item;
+            get
+            {
+                return _item;
+            }
+
             set
             {
                 if (SetProperty(ref _item, value))
@@ -79,8 +83,15 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         private bool _isEnabled = true;
         public bool IsEnabled
         {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
+            get
+            {
+                return _isEnabled;
+            }
+
+            set
+            {
+                SetProperty(ref _isEnabled, value);
+            }
         }
 
         public ICommand BackCommand => new RelayCommand(OnBack);

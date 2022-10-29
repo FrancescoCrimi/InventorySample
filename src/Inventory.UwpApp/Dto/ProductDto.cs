@@ -13,14 +13,15 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using System;
 
-namespace Inventory.UwpApp.Models
+namespace Inventory.UwpApp.Dto
 {
-    public class ProductModel : ObservableObject
+    public class ProductDto : ObservableObject
     {
-        static public ProductModel CreateEmpty() => new ProductModel { ProductID = "", IsEmpty = true };
+        public static ProductDto CreateEmpty() => new ProductDto { ProductID = "", IsEmpty = true };
 
         public string ProductID { get; set; }
 
@@ -51,18 +52,18 @@ namespace Inventory.UwpApp.Models
         public byte[] Thumbnail { get; set; }
         public object ThumbnailSource { get; set; }
 
-        public bool IsNew => String.IsNullOrEmpty(ProductID);
+        public bool IsNew => string.IsNullOrEmpty(ProductID);
         public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
 
         public override void Merge(ObservableObject source)
         {
-            if (source is ProductModel model)
+            if (source is ProductDto model)
             {
                 Merge(model);
             }
         }
 
-        public void Merge(ProductModel source)
+        public void Merge(ProductDto source)
         {
             if (source != null)
             {

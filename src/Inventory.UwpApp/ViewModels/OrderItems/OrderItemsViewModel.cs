@@ -12,22 +12,22 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     public class OrderItemsViewModel : ViewModelBase
     {
         private readonly ILogger<OrderItemsViewModel> logger;
-        private readonly OrderItemServiceUwp orderItemService;
+        private readonly OrderItemServiceFacade orderItemService;
 
         public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
-                                   OrderItemServiceUwp orderItemService,
+                                   OrderItemServiceFacade orderItemService,
                                    OrderItemListViewModel orderItemListViewModel,
                                    OrderItemDetailsViewModel orderItemDetailsViewModel)
             : base()
@@ -54,7 +54,7 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderItemModel>>(this, OnOrderItemMessage);
+            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
         }
@@ -67,7 +67,7 @@ namespace Inventory.UwpApp.ViewModels
             OrderItemDetails.Unsubscribe();
         }
 
-        private void OnOrderItemMessage(object recipient, ItemMessage<OrderItemModel> message)
+        private void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
         {
         //    throw new NotImplementedException();
         //}
@@ -100,7 +100,7 @@ namespace Inventory.UwpApp.ViewModels
             OrderItemDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(OrderItemModel selected)
+        private async Task PopulateDetails(OrderItemDto selected)
         {
             try
             {

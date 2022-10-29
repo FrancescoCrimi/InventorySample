@@ -12,22 +12,22 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     public class OrdersViewModel : ViewModelBase
     {
         private readonly ILogger<OrdersViewModel> logger;
-        private readonly OrderServiceUwp orderService;
+        private readonly OrderServiceFacade orderService;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
-                               OrderServiceUwp orderService,
+                               OrderServiceFacade orderService,
                                OrderListViewModel orderListViewModel,
                                OrderDetailsViewModel orderDetailsViewModel,
                                OrderItemListViewModel orderItemListViewModel)
@@ -58,7 +58,7 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderModel>>(this, OnOrderMessage);
+            Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
             OrderList.Subscribe();
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
@@ -73,7 +73,7 @@ namespace Inventory.UwpApp.ViewModels
             OrderItemList.Unsubscribe();
         }
 
-        private async void OnOrderMessage(object recipient, ItemMessage<OrderModel> message)
+        private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
         {
         //    throw new NotImplementedException();
         //}
@@ -109,7 +109,7 @@ namespace Inventory.UwpApp.ViewModels
             OrderDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(OrderModel selected)
+        private async Task PopulateDetails(OrderDto selected)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async Task PopulateOrderItems(OrderModel selectedItem)
+        private async Task PopulateOrderItems(OrderDto selectedItem)
         {
             try
             {

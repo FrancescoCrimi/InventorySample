@@ -23,20 +23,20 @@ namespace Inventory.UwpApp
         public string Description { get; set; }
         public Exception Exception { get; set; }
 
-        static public Result Ok()
+        public static Result Ok()
         {
             return Ok(null, null);
         }
-        static public Result Ok(string message = null, string description = null)
+        public static Result Ok(string message = null, string description = null)
         {
             return new Result { IsOk = true, Message = message, Description = description };
         }
 
-        static public Result Error(string message, string description = null)
+        public static Result Error(string message, string description = null)
         {
             return new Result { IsOk = false, Message = message, Description = description };
         }
-        static public Result Error(Exception ex)
+        public static Result Error(Exception ex)
         {
             return new Result { IsOk = false, Message = ex.Message, Description = ex.ToString(), Exception = ex };
         }
@@ -51,20 +51,20 @@ namespace Inventory.UwpApp
     {
         public T Value { get; private set; }
 
-        static public Result<T> Ok(T result = default(T))
+        public static Result<T> Ok(T result = default(T))
         {
             return Ok(null, null, result);
         }
-        static public Result<T> Ok(string message = null, string description = null, T result = default(T))
+        public static Result<T> Ok(string message = null, string description = null, T result = default(T))
         {
             return new Result<T> { IsOk = true, Message = message, Description = description, Value = result };
         }
 
-        static public Result<T> Error(string message = null, string description = null, T result = default(T))
+        public static Result<T> Error(string message = null, string description = null, T result = default(T))
         {
             return new Result<T> { IsOk = false, Message = message, Description = description, Value = result };
         }
-        static public Result<T> Error(Exception ex, T result = default(T))
+        public static Result<T> Error(Exception ex, T result = default(T))
         {
             return new Result<T> { IsOk = false, Message = ex.Message, Description = ex.ToString(), Exception = ex, Value = result };
         }

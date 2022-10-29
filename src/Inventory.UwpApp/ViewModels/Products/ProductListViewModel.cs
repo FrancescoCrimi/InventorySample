@@ -14,7 +14,6 @@
 
 using CiccioSoft.Inventory.Domain.Model;
 using CiccioSoft.Inventory.Infrastructure.Common;
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -27,13 +26,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Inventory.UwpApp.Views;
 using Inventory.UwpApp.Library.Common;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     #region ProductListArgs
     public class ProductListArgs
     {
-        static public ProductListArgs CreateEmpty() => new ProductListArgs { IsEmpty = true };
+        public static ProductListArgs CreateEmpty() => new ProductListArgs { IsEmpty = true };
 
         public ProductListArgs()
         {
@@ -49,16 +49,16 @@ namespace Inventory.UwpApp.ViewModels
     }
     #endregion
 
-    public class ProductListViewModel : GenericListViewModel<ProductModel>
+    public class ProductListViewModel : GenericListViewModel<ProductDto>
     {
         private readonly ILogger<ProductListViewModel> logger;
         //private readonly IProductService productService;
-        private readonly ProductServiceUwp productService;
+        private readonly ProductServiceFacade productService;
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
-                                    ProductServiceUwp productService,
+                                    ProductServiceFacade productService,
                                     NavigationService navigationService,
                                     WindowService windowService)
             : base()
@@ -71,8 +71,8 @@ namespace Inventory.UwpApp.ViewModels
 
         public ProductListArgs ViewModelArgs { get; private set; }
 
-        public ICommand ItemInvokedCommand => new RelayCommand<ProductModel>(ItemInvoked);
-        private async void ItemInvoked(ProductModel model)
+        public ICommand ItemInvokedCommand => new RelayCommand<ProductDto>(ItemInvoked);
+        private async void ItemInvoked(ProductDto model)
         {
             await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs { ProductID = model.ProductID });
         }
@@ -96,11 +96,11 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<IList<ProductModel>>>(this, OnProductListMessage);
+            Messenger.Register<ItemMessage<IList<ProductDto>>>(this, OnProductListMessage);
             Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
 
             //MessageService.Subscribe<ProductDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<ProductModel>>(this, OnProductMessage);
+            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
         }
 
         public void Unsubscribe()
@@ -133,7 +133,7 @@ namespace Inventory.UwpApp.ViewModels
             }
             catch (Exception ex)
             {
-                Items = new List<ProductModel>();
+                Items = new List<ProductDto>();
                 StatusError($"Error loading Products: {ex.Message}");
                 logger.LogError(ex, "Refresh");
                 isOk = false;
@@ -149,16 +149,17 @@ namespace Inventory.UwpApp.ViewModels
             return isOk;
         }
 
-        private async Task<IList<ProductModel>> GetItemsAsync()
+        private async Task<IList<ProductDto>> GetItemsAsync()
         {
             if (!ViewModelArgs.IsEmpty)
             {
                 DataRequest<Product> request = BuildDataRequest();
                 var collection = new ProductCollection(productService);
-                await collection.LoadAsync(request);
+                //await collection.LoadAsync(request);
+                await collection.LoadAsync();
                 return collection;
             }
-            return new List<ProductModel>();
+            return new List<ProductDto>();
         }
 
         protected override async void OnNew()
@@ -207,7 +208,7 @@ namespace Inventory.UwpApp.ViewModels
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<ProductModel>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ItemMessage<IList<ProductDto>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -226,7 +227,7 @@ namespace Inventory.UwpApp.ViewModels
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<ProductModel> models)
+        private async Task DeleteItemsAsync(IEnumerable<ProductDto> models)
         {
             foreach (var model in models)
             {
@@ -283,7 +284,7 @@ namespace Inventory.UwpApp.ViewModels
                     break;
             }
         }
-        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductModel>> message)
+        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductDto>> message)
         {
             switch (message.Message)
             {
@@ -298,7 +299,7 @@ namespace Inventory.UwpApp.ViewModels
                     break;
             }
         }
-        private async void OnProductMessage(object recipient, ItemMessage<ProductModel> message)
+        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
         {
             switch (message.Message)
             {

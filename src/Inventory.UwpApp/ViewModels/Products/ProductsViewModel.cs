@@ -12,22 +12,22 @@
 // ******************************************************************
 #endregion
 
-using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Inventory.UwpApp.Dto;
 
 namespace Inventory.UwpApp.ViewModels
 {
     public class ProductsViewModel : ViewModelBase
     {
         private readonly ILogger<ProductsViewModel> logger;
-        private readonly ProductServiceUwp productService;
+        private readonly ProductServiceFacade productService;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
-                                 ProductServiceUwp productService,
+                                 ProductServiceFacade productService,
                                  ProductListViewModel productListViewModel,
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()
@@ -55,7 +55,7 @@ namespace Inventory.UwpApp.ViewModels
         public void Subscribe()
         {
             //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<ProductModel>>(this, OnProductMessage);
+            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
             ProductList.Subscribe();
             ProductDetails.Subscribe();
         }
@@ -69,7 +69,7 @@ namespace Inventory.UwpApp.ViewModels
         }
 
 
-        private async void OnProductMessage(object recipient, ItemMessage<ProductModel> message)
+        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
         {
         //    throw new NotImplementedException();
         //}
@@ -102,7 +102,7 @@ namespace Inventory.UwpApp.ViewModels
             ProductDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(ProductModel selected)
+        private async Task PopulateDetails(ProductDto selected)
         {
             try
             {

@@ -13,14 +13,15 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.UwpApp.Models;
 using Inventory.UwpApp.Services;
 using System;
 
-namespace Inventory.UwpApp.Models
+namespace Inventory.UwpApp.Dto
 {
-    public class CustomerModel : ObservableObject
+    public class CustomerDto : ObservableObject
     {
-        static public CustomerModel CreateEmpty() => new CustomerModel { CustomerID = -1, IsEmpty = true };
+        public static CustomerDto CreateEmpty() => new CustomerDto { CustomerID = -1, IsEmpty = true };
 
         public long CustomerID { get; set; }
 
@@ -61,7 +62,7 @@ namespace Inventory.UwpApp.Models
 
         public bool IsNew => CustomerID <= 0;
         public string FullName => $"{FirstName} {LastName}";
-        public string Initials => String.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
+        public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
         public string CountryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCountry(CountryCode);
 
         public string FullAddress
@@ -69,19 +70,19 @@ namespace Inventory.UwpApp.Models
             get
             {
                 return $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}\n{CountryName}";
-          
+
             }
         }
 
         public override void Merge(ObservableObject source)
         {
-            if (source is CustomerModel model)
+            if (source is CustomerDto model)
             {
                 Merge(model);
             }
         }
 
-        public void Merge(CustomerModel source)
+        public void Merge(CustomerDto source)
         {
             if (source != null)
             {
