@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Domain.Repository;
+﻿using Inventory.Domain.Repository;
 using Inventory.UwpApp.Models;
 using Microsoft.Extensions.Logging;
 using System;

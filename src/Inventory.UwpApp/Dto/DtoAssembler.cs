@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Domain.Model;
+﻿using Inventory.Domain.Model;
 using Inventory.UwpApp.Tools;
 using System;
 using System.Collections.Generic;

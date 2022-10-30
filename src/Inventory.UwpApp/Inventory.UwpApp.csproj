@@ -228,6 +228,9 @@
     <Compile Include="Views\Customers\CustomerCardControl.xaml.cs">
       <DependentUpon>CustomerCardControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Customers\CustomersCardControl.xaml.cs">
+      <DependentUpon>CustomersCardControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Customers\CustomersDetailsControl.xaml.cs">
       <DependentUpon>CustomersDetailsControl.xaml</DependentUpon>
     </Compile>
@@ -345,6 +348,10 @@
     <Page Include="Views\Customers\CustomerCardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Customers\CustomersCardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Customers\CustomersDetailsControl.xaml">
       <SubType>Designer</SubType>

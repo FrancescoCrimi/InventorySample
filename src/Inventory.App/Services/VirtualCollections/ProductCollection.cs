@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Models;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

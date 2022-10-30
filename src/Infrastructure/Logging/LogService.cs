@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Infrastructure.Logging
+namespace Inventory.Infrastructure.Logging
 {
     public class LogService
     {
@@ -53,7 +53,7 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
         {
             using (var logDbContext = serviceProvider.GetService<LogDbContext>())
             {
-                IQueryable<Log> items = GetLogs(request, logDbContext);
+                var items = GetLogs(request, logDbContext);
                 // Execute
                 var records = await items
                     .Skip(skip)
@@ -82,7 +82,7 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
                     items = items.Where(request.Where);
                 }
 
-                int ret = await items.CountAsync();
+                var ret = await items.CountAsync();
                 return ret;
             }
         }
@@ -100,7 +100,7 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
         {
             using (var logDbContext = serviceProvider.GetService<LogDbContext>())
             {
-                IQueryable<Log> items = GetLogs(request, logDbContext);
+                var items = GetLogs(request, logDbContext);
 
                 // Execute
                 var records = await items

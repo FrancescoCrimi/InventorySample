@@ -12,13 +12,13 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Models;
 using CiccioSoft.Inventory.Uwp.Services;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

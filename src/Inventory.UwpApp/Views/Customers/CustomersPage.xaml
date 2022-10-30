@@ -4,14 +4,12 @@
       xmlns:local="using:Inventory.UwpApp.Views.Customers"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:viewmodels="using:Inventory.UwpApp.ViewModels"
       xmlns:models="using:Inventory.UwpApp.Models"
       xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:libControls="using:Inventory.UwpApp.Library.Controls"
       ui:ApplicationViewExtensions.Title="Customers"
-      d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 

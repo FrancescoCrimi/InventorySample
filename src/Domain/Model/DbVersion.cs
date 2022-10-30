@@ -16,12 +16,15 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Domain.Model
+namespace Inventory.Domain.Model
 {
     [Table("DbVersion")]
     public class DbVersion
     {
         [Key]
-        public string Version { get; set; }
+        public string Version
+        {
+            get; set;
+        }
     }
 }

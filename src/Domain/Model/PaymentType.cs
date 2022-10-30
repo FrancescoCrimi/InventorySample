@@ -16,17 +16,23 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Domain.Model
+namespace Inventory.Domain.Model
 {
     [Table("PaymentTypes")]
     public partial class PaymentType
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int PaymentTypeID { get; set; }
+        public int PaymentTypeID
+        {
+            get; set;
+        }
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public string Name
+        {
+            get; set;
+        }
     }
 }

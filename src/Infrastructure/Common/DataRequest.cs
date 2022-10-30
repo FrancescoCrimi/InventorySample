@@ -15,14 +15,26 @@
 using System;
 using System.Linq.Expressions;
 
-namespace CiccioSoft.Inventory.Infrastructure.Common
+namespace Inventory.Infrastructure.Common
 {
     public class DataRequest<T>
     {
-        public string Query { get; set; }
+        public string Query
+        {
+            get; set;
+        }
 
-        public Expression<Func<T, bool>> Where { get; set; }
-        public Expression<Func<T, object>> OrderBy { get; set; }
-        public Expression<Func<T, object>> OrderByDesc { get; set; }
+        public Expression<Func<T, bool>> Where
+        {
+            get; set;
+        }
+        public Expression<Func<T, object>> OrderBy
+        {
+            get; set;
+        }
+        public Expression<Func<T, object>> OrderByDesc
+        {
+            get; set;
+        }
     }
 }

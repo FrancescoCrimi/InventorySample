@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Persistence
+namespace Inventory.Infrastructure
 {
     public interface IDatabaseSettings
     {

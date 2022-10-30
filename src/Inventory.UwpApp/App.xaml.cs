@@ -1,6 +1,6 @@
-﻿using CiccioSoft.Inventory.Application;
-using CiccioSoft.Inventory.Infrastructure;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Application;
+using Inventory.Infrastructure;
 using Inventory.UwpApp.Activation;
 using Inventory.UwpApp.Services;
 using Inventory.UwpApp.ViewModels;
@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Inventory.UwpApp
 {
-    public sealed partial class App : Application
+    public sealed partial class App : Windows.UI.Xaml.Application
     {
         public App()
         {

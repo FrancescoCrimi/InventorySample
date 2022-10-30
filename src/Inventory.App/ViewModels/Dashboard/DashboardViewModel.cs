@@ -12,15 +12,15 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Uwp.Models;
-using CiccioSoft.Inventory.Uwp.Services;
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CiccioSoft.Inventory.Uwp.Models;
+using CiccioSoft.Inventory.Uwp.Services;
+using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Microsoft.Extensions.Logging;
 
 namespace CiccioSoft.Inventory.Uwp.ViewModels
 {

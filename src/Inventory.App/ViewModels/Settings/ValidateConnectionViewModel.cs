@@ -12,8 +12,9 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Persistence;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Infrastructure.Common;
+using Inventory.Persistence;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         {
             try
             {
-                using (var db = new DatabaseSettings(connectionString, Infrastructure.Common.DataProviderType.SQLServer, Ioc.Default))
+                using (var db = new DatabaseSettings(connectionString, DataProviderType.SQLServer, Ioc.Default))
                 {
                     if (await db.ExistsAsync())
                     {

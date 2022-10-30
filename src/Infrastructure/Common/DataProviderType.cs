@@ -1,4 +1,4 @@
-﻿namespace CiccioSoft.Inventory.Infrastructure.Common
+﻿namespace Inventory.Infrastructure.Common
 {
     public enum DataProviderType
     {

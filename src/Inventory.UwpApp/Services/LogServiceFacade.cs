@@ -1,5 +1,5 @@
-﻿using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Infrastructure.Logging;
+﻿using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.UwpApp.Models;
 using System;
 using System.Collections.Generic;

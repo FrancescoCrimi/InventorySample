@@ -36,7 +36,7 @@
                 <TextBlock Grid.Column="1" Text="{x:Bind CustomerID}" Style="{StaticResource ColumnValueStyle}"/>
                 <TextBlock
                     Grid.Column="2"
-                    Text="{x:Bind OrderDate, Converter={StaticResource dateTimeFormatConverter}, ConverterParameter='dd/MM/yy', Mode=OneWay}"
+                    Text="{x:Bind OrderDate, Converter={StaticResource dateTimeFormatConverter}, Mode=OneWay}"
                     Style="{StaticResource ColumnValueStyle}"/>
             </Grid>
         </DataTemplate>

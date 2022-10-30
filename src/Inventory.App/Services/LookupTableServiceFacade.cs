@@ -1,5 +1,5 @@
-﻿using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Uwp.Models;
+﻿using CiccioSoft.Inventory.Uwp.Models;
+using Inventory.Domain.Repository;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

@@ -16,17 +16,23 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CiccioSoft.Inventory.Domain.Model
+namespace Inventory.Domain.Model
 {
     [Table("OrderStatus")]
     public partial class OrderStatus
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int Status { get; set; }
+        public int Status
+        {
+            get; set;
+        }
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public string Name
+        {
+            get; set;
+        }
     }
 }

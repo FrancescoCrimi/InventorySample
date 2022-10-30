@@ -12,15 +12,15 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Persistence.DbContexts;
+using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
+using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace Inventory.Persistence.Repository
 {
     internal class LookupTableRepository : ILookupTableRepository
     {

@@ -12,16 +12,17 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Infrastructure.Common;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Application.Impl
+namespace Inventory.Application.Impl
 {
     public class OrderService : IOrderService
     {
@@ -60,7 +61,7 @@ namespace CiccioSoft.Inventory.Application.Impl
 
         public async Task<Order> CreateNewOrderAsync(long customerID)
         {
-            Order order = new Order
+            var order = new Order
             {
                 CustomerID = customerID,
                 OrderDate = DateTime.UtcNow,

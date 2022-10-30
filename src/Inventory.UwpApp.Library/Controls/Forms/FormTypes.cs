@@ -12,20 +12,46 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System;
 
-namespace Inventory.Application
+using Windows.UI.Xaml;
+
+namespace Inventory.UwpApp.Library.Controls
 {
-    public interface IProductService
+    public interface IFormControl
     {
-        Task<Product> GetProductAsync(string id);
-        Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request);
-        Task<int> GetProductsCountAsync(DataRequest<Product> request);
-        Task<int> UpdateProductAsync(Product model);
-        Task<int> DeleteProductAsync(Product model);
-        Task<int> DeleteProductRangeAsync(int index, int length, DataRequest<Product> request);
+        event EventHandler<FormVisualState> VisualStateChanged;
+
+        FormEditMode Mode { get; }
+        FormVisualState VisualState { get; }
+
+        bool IsEnabled { get; }
+
+        bool Focus(FocusState value);
+
+        void SetVisualState(FormVisualState visualState);
+    }
+
+    public enum TextDataType
+    {
+        String,
+        Integer,
+        Decimal,
+        Double
+    }
+
+    public enum FormEditMode
+    {
+        Auto,
+        ReadOnly,
+        ReadWrite
+    }
+
+    public enum FormVisualState
+    {
+        Idle,
+        Ready,
+        Focused,
+        Disabled
     }
 }

@@ -12,17 +12,17 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Persistence.DbContexts;
+using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Common;
+using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace Inventory.Persistence.Repository
 {
     internal class OrderRepository : IOrderRepository
     {
@@ -42,7 +42,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<IList<Order>> GetOrdersAsync(int skip, int take, DataRequest<Order> request)
         {
-            IQueryable<Order> items = GetOrders(request);
+            var items = GetOrders(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
@@ -54,7 +54,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<IList<Order>> GetOrderKeysAsync(int skip, int take, DataRequest<Order> request)
         {
-            IQueryable<Order> items = GetOrders(request);
+            var items = GetOrders(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
@@ -73,7 +73,7 @@ namespace CiccioSoft.Inventory.Data.Services
             IQueryable<Order> items = _dataSource.Orders;
 
             // Query
-            if (!String.IsNullOrEmpty(request.Query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
                 items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
             }
@@ -102,7 +102,7 @@ namespace CiccioSoft.Inventory.Data.Services
             IQueryable<Order> items = _dataSource.Orders;
 
             // Query
-            if (!String.IsNullOrEmpty(request.Query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
                 items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
             }

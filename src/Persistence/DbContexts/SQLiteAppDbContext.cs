@@ -12,13 +12,13 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
+using Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Linq;
 
-namespace CiccioSoft.Inventory.Persistence.DbContexts
+namespace Inventory.Persistence.DbContexts
 {
     public class SQLiteAppDbContext : AppDbContext
     {

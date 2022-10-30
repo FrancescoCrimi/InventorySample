@@ -1,7 +1,7 @@
-﻿using CiccioSoft.Inventory.Application;
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Uwp.Models;
+﻿using CiccioSoft.Inventory.Uwp.Models;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

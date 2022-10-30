@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

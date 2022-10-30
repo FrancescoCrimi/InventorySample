@@ -128,6 +128,12 @@
     <Compile Include="Controls\DataList.xaml.cs">
       <DependentUpon>DataList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FluidGrid.cs" />
+    <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
+    <Compile Include="Controls\Forms\FormCalendarDatePicker.cs" />
+    <Compile Include="Controls\Forms\FormComboBox.cs" />
+    <Compile Include="Controls\Forms\FormTextBox.cs" />
+    <Compile Include="Controls\Forms\FormTypes.cs" />
     <Compile Include="Controls\ListToolbar.xaml.cs">
       <DependentUpon>ListToolbar.xaml</DependentUpon>
     </Compile>

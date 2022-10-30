@@ -12,18 +12,16 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Infrastructure.Logging;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.UwpApp.Helpers;
 using Inventory.UwpApp.Services;
 using Inventory.UwpApp.Views;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.System;

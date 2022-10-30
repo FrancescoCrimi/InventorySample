@@ -1,5 +1,6 @@
-﻿using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Persistence.DbContexts;
+﻿using Inventory.Infrastructure;
+using Inventory.Infrastructure.Common;
+using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Persistence
+namespace Inventory.Persistence
 {
     public class DatabaseSettings : IDisposable, IDatabaseSettings
     {

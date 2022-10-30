@@ -1,19 +1,19 @@
-﻿using CiccioSoft.Inventory.Data.Services;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Infrastructure;
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Persistence.DbContexts;
+﻿using Inventory.Domain.Repository;
+using Inventory.Infrastructure;
+using Inventory.Infrastructure.Common;
+using Inventory.Persistence.DbContexts;
+using Inventory.Persistence.Repository;
 //using CiccioSoft.Inventory.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CiccioSoft.Inventory.Persistence
+namespace Inventory.Persistence
 {
     public static class PersistenceExtension
     {
         public static IServiceCollection AddInventoryPersistence(this IServiceCollection serviceCollection)
         {
-            IAppSettings settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
+            var settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
 
             serviceCollection.AddDbContext<SQLiteAppDbContext>(options =>
             {

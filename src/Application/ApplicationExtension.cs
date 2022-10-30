@@ -1,12 +1,12 @@
-﻿using CiccioSoft.Inventory.Application.Impl;
-using CiccioSoft.Inventory.Infrastructure;
-using CiccioSoft.Inventory.Persistence;
+﻿using Inventory.Application.Impl;
+using Inventory.Infrastructure;
+using Inventory.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CiccioSoft.Inventory.Application
+namespace Inventory.Application
 {
     public static class ApplicationExtension
     {

@@ -13,15 +13,13 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
-
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-using CiccioSoft.Inventory.Data;
 
 namespace CiccioSoft.Inventory.Uwp
 {

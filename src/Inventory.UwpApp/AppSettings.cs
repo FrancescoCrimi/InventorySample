@@ -12,8 +12,8 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Infrastructure;
-using CiccioSoft.Inventory.Infrastructure.Common;
+using Inventory.Infrastructure;
+using Inventory.Infrastructure.Common;
 using System;
 using System.IO;
 using Windows.ApplicationModel;

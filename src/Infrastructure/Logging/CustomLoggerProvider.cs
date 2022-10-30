@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CiccioSoft.Inventory.Infrastructure.Logging
+namespace Inventory.Infrastructure.Logging
 {
     public class CustomLoggerProvider : ILoggerProvider
     {
@@ -16,7 +16,7 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
         }
 
         public ILogger CreateLogger(string categoryName)
-        {             
+        {
             return new CustomLogger(categoryName, serviceProvider);
         }
 

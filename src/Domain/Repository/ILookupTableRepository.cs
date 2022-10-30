@@ -12,12 +12,12 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
+using Inventory.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Domain.Repository
+namespace Inventory.Domain.Repository
 {
     public interface ILookupTableRepository : IDisposable
     {

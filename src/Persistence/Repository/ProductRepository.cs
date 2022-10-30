@@ -12,17 +12,17 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Persistence.DbContexts;
+using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Common;
+using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace Inventory.Persistence.Repository
 {
     internal class ProductRepository : IProductRepository
     {
@@ -40,7 +40,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
         {
-            IQueryable<Product> items = GetProducts(request);
+            var items = GetProducts(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
@@ -52,7 +52,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<IList<Product>> GetProductKeysAsync(int skip, int take, DataRequest<Product> request)
         {
-            IQueryable<Product> items = GetProducts(request);
+            var items = GetProducts(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
@@ -71,7 +71,7 @@ namespace CiccioSoft.Inventory.Data.Services
             IQueryable<Product> items = _dataSource.Products;
 
             // Query
-            if (!String.IsNullOrEmpty(request.Query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
                 items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
             }
@@ -100,7 +100,7 @@ namespace CiccioSoft.Inventory.Data.Services
             IQueryable<Product> items = _dataSource.Products;
 
             // Query
-            if (!String.IsNullOrEmpty(request.Query))
+            if (!string.IsNullOrEmpty(request.Query))
             {
                 items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
             }
@@ -116,7 +116,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<int> UpdateProductAsync(Product product)
         {
-            if (!String.IsNullOrEmpty(product.ProductID))
+            if (!string.IsNullOrEmpty(product.ProductID))
             {
                 _dataSource.Entry(product).State = EntityState.Modified;
             }

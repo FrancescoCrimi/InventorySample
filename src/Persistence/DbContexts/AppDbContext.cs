@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
+using Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace CiccioSoft.Inventory.Persistence.DbContexts
+namespace Inventory.Persistence.DbContexts
 {
     public abstract class AppDbContext : DbContext
     {
@@ -28,16 +28,49 @@ namespace CiccioSoft.Inventory.Persistence.DbContexts
         {
         }
 
-        public DbSet<DbVersion> DbVersion { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<CountryCode> CountryCodes { get; set; }
-        public DbSet<OrderStatus> OrderStatus { get; set; }
-        public DbSet<PaymentType> PaymentTypes { get; set; }
-        public DbSet<Shipper> Shippers { get; set; }
-        public DbSet<TaxType> TaxTypes { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<DbVersion> DbVersion
+        {
+            get; set;
+        }
+        public DbSet<Category> Categories
+        {
+            get; set;
+        }
+        public DbSet<CountryCode> CountryCodes
+        {
+            get; set;
+        }
+        public DbSet<OrderStatus> OrderStatus
+        {
+            get; set;
+        }
+        public DbSet<PaymentType> PaymentTypes
+        {
+            get; set;
+        }
+        public DbSet<Shipper> Shippers
+        {
+            get; set;
+        }
+        public DbSet<TaxType> TaxTypes
+        {
+            get; set;
+        }
+        public DbSet<Customer> Customers
+        {
+            get; set;
+        }
+        public DbSet<Order> Orders
+        {
+            get; set;
+        }
+        public DbSet<OrderItem> OrderItems
+        {
+            get; set;
+        }
+        public DbSet<Product> Products
+        {
+            get; set;
+        }
     }
 }

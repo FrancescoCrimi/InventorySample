@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
+using Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace CiccioSoft.Inventory.Persistence.DbContexts
+namespace Inventory.Persistence.DbContexts
 {
     public class SQLServerAppDbContext : AppDbContext
     {

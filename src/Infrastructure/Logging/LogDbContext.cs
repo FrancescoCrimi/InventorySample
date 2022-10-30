@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CiccioSoft.Inventory.Infrastructure.Logging
+namespace Inventory.Infrastructure.Logging
 {
     public class LogDbContext : DbContext
     {
@@ -13,7 +13,10 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
         {
         }
 
-        public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<Log> Logs
+        {
+            get; set;
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

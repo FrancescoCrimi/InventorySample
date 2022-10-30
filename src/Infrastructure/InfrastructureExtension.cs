@@ -1,4 +1,4 @@
-﻿using CiccioSoft.Inventory.Infrastructure.Logging;
+﻿using Inventory.Infrastructure.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -8,7 +8,7 @@ using NLog.Extensions.Logging;
 using NLog.Targets;
 using System;
 
-namespace CiccioSoft.Inventory.Infrastructure
+namespace Inventory.Infrastructure
 {
     public static class InfrastructureExtension
     {
@@ -18,7 +18,7 @@ namespace CiccioSoft.Inventory.Infrastructure
         {
             settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
 
-            serviceCollection   
+            serviceCollection
                 .AddDbContext<LogDbContext>(option =>
                 {
                     option.UseSqlite(settings.AppLogConnectionString);
@@ -64,7 +64,7 @@ namespace CiccioSoft.Inventory.Infrastructure
             //var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole");
             //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, logconsole);
 
-            var vsDebug = new NLog.Targets.DebuggerTarget();
+            var vsDebug = new DebuggerTarget();
             config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, vsDebug);
 
 
@@ -102,7 +102,7 @@ namespace CiccioSoft.Inventory.Infrastructure
             //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, db);
 
             //// Aggiungi un target -> method 
-            MethodCallTarget target = new MethodCallTarget("MethodTarget", Sucaaaaa);
+            var target = new MethodCallTarget("MethodTarget", Sucaaaaa);
 
             return config;
         }

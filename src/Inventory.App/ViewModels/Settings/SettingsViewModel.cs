@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Infrastructure.Common;
 using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
 using CiccioSoft.Inventory.Uwp.Views;
 using CommunityToolkit.Mvvm.Input;
+using Inventory.Infrastructure.Common;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;

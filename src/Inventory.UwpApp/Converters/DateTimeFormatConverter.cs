@@ -1,5 +1,6 @@
 ﻿using System;
-
+using Windows.Globalization.DateTimeFormatting;
+using Windows.System.UserProfile;
 using Windows.UI.Xaml.Data;
 
 namespace Inventory.UwpApp.Converters
@@ -8,25 +9,34 @@ namespace Inventory.UwpApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is DateTime dt && parameter != null)
+            try
             {
-                return dt.ToString(parameter.ToString());
+                if (value is DateTime dateTime)
+                {
+                    if (dateTime == DateTime.MinValue)
+                    {
+                        return "";
+                    }
+                    value = new DateTimeOffset(dateTime);
+                }
+                if (value is DateTimeOffset dateTimeOffset)
+                {
+                    string format = parameter as String ?? "shortdate";
+                    var userLanguages = GlobalizationPreferences.Languages;
+                    var dateFormatter = new DateTimeFormatter(format, userLanguages);
+                    return dateFormatter.Format(dateTimeOffset.ToLocalTime());
+                }
+                return "N/A";
             }
-            if (value is DateTimeOffset dto && parameter != null)
+            catch
             {
-                return dto.ToString(parameter.ToString());
+                return "";
             }
-            return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (value != null)
-            {
-                return DateTime.Parse(value.ToString());
-            }
-
-            return default(DateTime);
+            throw new NotImplementedException();
         }
     }
 }

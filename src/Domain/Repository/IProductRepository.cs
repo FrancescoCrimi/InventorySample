@@ -1,10 +1,10 @@
-﻿using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Infrastructure.Common;
+﻿using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Domain.Repository
+namespace Inventory.Domain.Repository
 {
     public interface IProductRepository : IDisposable
     {

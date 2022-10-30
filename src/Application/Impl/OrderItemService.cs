@@ -12,16 +12,16 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Infrastructure.Common;
+using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CiccioSoft.Inventory.Application.Impl
+namespace Inventory.Application.Impl
 {
     public class OrderItemService : IOrderItemService
     {

@@ -17,12 +17,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using CiccioSoft.Inventory.Domain.Model;
-using CiccioSoft.Inventory.Infrastructure.Common;
-using CiccioSoft.Inventory.Domain.Repository;
-using CiccioSoft.Inventory.Persistence.DbContexts;
+using Inventory.Infrastructure.Common;
+using Inventory.Domain.Repository;
+using Inventory.Domain.Model;
+using Inventory.Persistence.DbContexts;
 
-namespace CiccioSoft.Inventory.Data.Services
+namespace Inventory.Persistence.Repository
 {
     internal class OrderItemRepository : IOrderItemRepository
     {
@@ -43,7 +43,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<IList<OrderItem>> GetOrderItemsAsync(int skip, int take, DataRequest<OrderItem> request)
         {
-            IQueryable<OrderItem> items = GetOrderItems(request);
+            var items = GetOrderItems(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
@@ -55,7 +55,7 @@ namespace CiccioSoft.Inventory.Data.Services
 
         public async Task<IList<OrderItem>> GetOrderItemKeysAsync(int skip, int take, DataRequest<OrderItem> request)
         {
-            IQueryable<OrderItem> items = GetOrderItems(request);
+            var items = GetOrderItems(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)

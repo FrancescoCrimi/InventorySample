@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CiccioSoft.Inventory.Infrastructure.Logging
+namespace Inventory.Infrastructure.Logging
 {
     public class CustomLogger : ILogger
     {
@@ -30,9 +30,9 @@ namespace CiccioSoft.Inventory.Infrastructure.Logging
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            LogDbContext logDbContext = serviceProvider.GetService<LogDbContext>();
+            var logDbContext = serviceProvider.GetService<LogDbContext>();
 
-            string message = "";
+            var message = "";
             if (formatter != null)
             {
                 message += formatter(state, exception);
