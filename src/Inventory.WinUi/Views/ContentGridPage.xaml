@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:models="using:Inventory.WinUi.Core.Models"
+    xmlns:models="using:Inventory.WinUi.Models"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">

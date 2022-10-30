@@ -38,9 +38,9 @@ namespace Inventory.Infrastructure.Logging
             //    .Property(x => x.Logged)
             //    .IsRequired();
 
-            //modelBuilder.Entity<Log>()
-            //    .Property(x => x.Level)
-            //    .IsRequired();
+            modelBuilder.Entity<Log>()
+                .Property(x => x.Level)
+                .IsRequired();
 
             modelBuilder.Entity<Log>()
                 .Property(x => x.Message)

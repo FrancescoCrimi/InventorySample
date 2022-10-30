@@ -1,4 +1,4 @@
-﻿using Inventory.WinUi.Core.Helpers;
+﻿using Inventory.WinUi.Helpers;
 
 using Windows.Storage;
 using Windows.Storage.Streams;

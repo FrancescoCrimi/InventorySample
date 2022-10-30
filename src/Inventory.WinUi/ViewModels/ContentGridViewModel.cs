@@ -6,8 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Inventory.WinUi.Contracts.Services;
 using Inventory.WinUi.Contracts.ViewModels;
-using Inventory.WinUi.Core.Contracts.Services;
-using Inventory.WinUi.Core.Models;
+using Inventory.WinUi.Models;
 
 namespace Inventory.WinUi.ViewModels;
 

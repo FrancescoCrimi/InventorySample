@@ -1,10 +1,8 @@
 ﻿using Inventory.WinUi.Activation;
 using Inventory.WinUi.Contracts.Services;
-using Inventory.WinUi.Core.Contracts.Services;
-using Inventory.WinUi.Core.Services;
+using Inventory.WinUi.Services;
 using Inventory.WinUi.Helpers;
 using Inventory.WinUi.Models;
-using Inventory.WinUi.Services;
 using Inventory.WinUi.ViewModels;
 using Inventory.WinUi.Views;
 

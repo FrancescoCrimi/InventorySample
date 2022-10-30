@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Inventory.WinUi.Contracts.ViewModels;
-using Inventory.WinUi.Core.Contracts.Services;
-using Inventory.WinUi.Core.Models;
+using Inventory.WinUi.Contracts.Services;
+using Inventory.WinUi.Models;
 
 namespace Inventory.WinUi.ViewModels;
 

@@ -1,6 +1,4 @@
 ﻿using Inventory.WinUi.Contracts.Services;
-using Inventory.WinUi.Core.Contracts.Services;
-using Inventory.WinUi.Core.Helpers;
 using Inventory.WinUi.Helpers;
 using Inventory.WinUi.Models;
 
