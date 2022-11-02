@@ -13,53 +13,6 @@
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <!--<Page.Resources>
-        <SolidColorBrush x:Key="DetailsViewBackgroundColor"
-                         Color="#F5F5F5" />
-        <DataTemplate x:Key="ItemTemplate"
-                      x:DataType="models:CustomerModel">
-            <Grid Height="32">
-                <Grid Visibility="{x:Bind IsEmpty, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="8*" />
-                        <ColumnDefinition Width="10*" />
-                        <ColumnDefinition Width="12*" />
-                        <ColumnDefinition Width="10*" />
-                        <ColumnDefinition Width="10*" />
-                        <ColumnDefinition Width="8*" />
-                    </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0"
-                            Margin="1"
-                            Padding="1">
-                        <PersonPicture ProfilePicture="{x:Bind ThumbnailSource, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
-                                       Width="28"
-                                       Height="28"
-                                       x:Phase="1" />
-                    </Border>
-                    <TextBlock Grid.Column="1"
-                               Text="{x:Bind CustomerID}"
-                               Style="{StaticResource ColumnValueStyle}" />
-                    <TextBlock Grid.Column="2"
-                               Text="{x:Bind FullName, Mode=OneWay}"
-                               Style="{StaticResource ColumnValueStyle}" />
-                    <TextBlock Grid.Column="3"
-                               Text="{x:Bind EmailAddress, Mode=OneWay}"
-                               Style="{StaticResource ColumnValueStyle}" />
-                    <TextBlock Grid.Column="4"
-                               Text="{x:Bind Phone, Mode=OneWay}"
-                               Style="{StaticResource ColumnValueStyle}" />
-                    <TextBlock Grid.Column="5"
-                               Text="{x:Bind AddressLine1, Mode=OneWay}"
-                               Style="{StaticResource ColumnValueStyle}" />
-                    <TextBlock Grid.Column="6"
-                               Text="{x:Bind CountryName, Mode=OneWay}"
-                               Style="{StaticResource ColumnValueStyle}" />
-                </Grid>
-            </Grid>
-        </DataTemplate>
-    </Page.Resources>-->
-
     <UserControl.Resources>
         <DataTemplate x:Key="ListHeaderTemplate">
             <StackPanel Margin="6,4,0,0"
@@ -122,49 +75,6 @@
                                      Visibility="{x:Bind ViewModel.CustomerDetails.IsDataUnavailable, Mode=OneWay}" />
 
             </Grid>
-
-            <!--Customers-->
-            <!--<Grid Grid.Row="0">
-                <Border Background="#FFFFFF"
-                        Padding="6,2">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0"
-                                    Margin="6,4,0,0"
-                                    Orientation="Horizontal"
-                                    VerticalAlignment="Center">
-                            <TextBlock Text="Customers"
-                                       FontSize="18" />
-                            <TextBlock Text="{Binding CustomerList.Title, Mode=OneWay}"
-                                       FontSize="18"
-                                       Foreground="Gray" />
-                        </StackPanel>
-                        <local:CustomersList Grid.Row="1"
-                                             ViewModel="{x:Bind ViewModel.CustomerList}" />
-                    </Grid>
-                </Border>
-            </Grid>-->
-
-            <!--Details-->
-            <!--<Grid Grid.Row="1"
-                  BorderBrush="LightGray"
-                  BorderThickness="0,1,0,0">
-                <Border Background="{StaticResource DetailsViewBackgroundColor}"
-                        Visibility="{Binding CustomerDetails.IsDataAvailable, Mode=OneWay}">
-                    <Pivot x:Name="pivot">
-                        <PivotItem Header="Customer">
-                            <local:CustomersDetailsControl DataContext="DataContext" />
-                        </PivotItem>
-                        <PivotItem Header="Orders">
-                            <local:CustomersOrdersControl />
-                        </PivotItem>
-                    </Pivot>
-                </Border>
-            </Grid>-->
 
         </Grid>
 

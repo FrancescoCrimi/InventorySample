@@ -70,8 +70,9 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border BorderThickness="0,0,1,0"
-                BorderBrush="LightGray">
+        <Border BorderBrush="LightGray"
+                BorderThickness="0,0,1,0"
+                Background="{StaticResource DetailsViewBackgroundColor}">
             <views:CustomersCard Margin="6"
                                  ViewModel="{x:Bind ViewModel}"
                                  Item="{x:Bind ViewModel.Item, Mode=OneWay}" />
@@ -89,4 +90,5 @@
                           CancelCommand="{x:Bind ViewModel.CancelCommand}" />
 
     </Grid>
+
 </UserControl>

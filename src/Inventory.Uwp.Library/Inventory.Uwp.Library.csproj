@@ -125,8 +125,11 @@
     <Compile Include="Common\GridLengths.cs" />
     <Compile Include="Common\IndexRange.cs" />
     <Compile Include="Common\VirtualRangeCollection.cs" />
-    <Compile Include="Controls\DataList.xaml.cs">
+    <Compile Include="Controls\DataList\DataList.xaml.cs">
       <DependentUpon>DataList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Details\Details.xaml.cs">
+      <DependentUpon>Details.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FluidGrid.cs" />
     <Compile Include="Controls\Forms\FormAutoSuggestBox.cs" />
@@ -134,7 +137,10 @@
     <Compile Include="Controls\Forms\FormComboBox.cs" />
     <Compile Include="Controls\Forms\FormTextBox.cs" />
     <Compile Include="Controls\Forms\FormTypes.cs" />
-    <Compile Include="Controls\ListToolbar.xaml.cs">
+    <Compile Include="Controls\Toolbar\DetailToolbar.xaml.cs">
+      <DependentUpon>DetailToolbar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Toolbar\ListToolbar.xaml.cs">
       <DependentUpon>ListToolbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MyUserControl1.xaml.cs">
@@ -145,7 +151,7 @@
       <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Section.cs" />
-    <Compile Include="Controls\ToolbarCommon.cs" />
+    <Compile Include="Controls\Toolbar\ToolbarCommon.cs" />
     <Compile Include="Extensions\Class1.cs" />
     <Compile Include="Extensions\ICommandExtensions.cs" />
     <Compile Include="Extensions\ItemIndexRangeExtensions.cs" />
@@ -173,11 +179,19 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\DataList.xaml">
+    <Page Include="Controls\DataList\DataList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ListToolbar.xaml">
+    <Page Include="Controls\Details\Details.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Toolbar\DetailToolbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Toolbar\ListToolbar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -189,9 +203,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Controls\RoundButton.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\Controls\Buttons.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Controls\FormAutoSuggestBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Controls\FormCalendarDatePicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Controls\FormComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Controls\FormTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\Controls\Section.xaml">
       <SubType>Designer</SubType>
