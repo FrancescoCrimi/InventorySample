@@ -81,6 +81,7 @@
                         <FontIcon Glyph="&#xE781;" FontFamily="Segoe MDL2 Assets"/>
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
+
                 <muxc:NavigationViewItem Content="Activity Log" helpers:NavHelper.NavigateTo="viewmodels:LogsViewModel">
                     <muxc:NavigationViewItem.InfoBadge>
                         <muxc:InfoBadge Value="{Binding LogNewCount, Mode=OneWay}"/>

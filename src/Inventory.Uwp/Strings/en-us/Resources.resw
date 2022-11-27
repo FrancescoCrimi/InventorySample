@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Inventory.UwpApp</value>
+    <value>Inventory.Uwp</value>
     <comment>Application display name</comment>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Inventory.UwpApp</value>
+    <value>Inventory.Uwp</value>
     <comment>Application description</comment>
   </data>
   <data name="Shell_Main.Content" xml:space="preserve">
@@ -149,29 +149,9 @@
     <value>Table showing sample sales data</value>
     <comment>Automation name (and description) for the DataGrid page content</comment>
   </data>
-  <data name="Shell_DataGrid.Content" xml:space="preserve">
-    <value>DataGrid</value>
-    <comment>Navigation view item name for DataGrid</comment>
-  </data>
-  <data name="TreeViewTitle.Text" xml:space="preserve">
-    <value>TreeView</value>
-    <comment>Title for TreeViewPage</comment>
-  </data>
-  <data name="TreeView_CollapseAllButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Collapse all</value>
-    <comment>Tooltip for Collapse all button in TreeViewPages</comment>
-  </data>
-  <data name="TreeView_CollapseAllButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
-    <value>Collapse all</value>
-    <comment>Automation Name for Collapse all button in TreeViewPages</comment>
-  </data>
   <data name="Shell_TreeView.Content" xml:space="preserve">
     <value>TreeView</value>
     <comment>Navigation view item name for TreeView</comment>
-  </data>
-  <data name="TwoPaneViewTitle.Text" xml:space="preserve">
-    <value>TwoPaneView</value>
-    <comment>Title for TwoPaneViewPage</comment>
   </data>
   <data name="Shell_TwoPaneView.Content" xml:space="preserve">
     <value>TwoPaneView</value>
@@ -244,5 +224,9 @@
   <data name="Shell_Products.Content" xml:space="preserve">
     <value>Products</value>
     <comment>Navigation view item name for Products</comment>
+  </data>
+  <data name="Shell_Logs.Content" xml:space="preserve">
+    <value>Logs</value>
+    <comment>Navigation view item name for Logs</comment>
   </data>
 </root>

@@ -7,6 +7,7 @@ using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.ViewModels.Customers;
 using Inventory.Uwp.ViewModels.OrderItems;
 using Inventory.Uwp.ViewModels.Orders;
+using Inventory.Uwp.ViewModels.Products;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -89,14 +90,7 @@ namespace Inventory.Uwp
                 // Views and ViewModels
                 //.AddTransient<ShellView>()
                 .AddTransient<ShellViewModel>()
-                .AddTransient<MainViewModel>()
-                .AddTransient<ContentGridDetailViewModel>()
-                .AddTransient<ContentGridViewModel>()
-                .AddTransient<DataGridViewModel>()
-                .AddTransient<ListDetailsViewModel>()
                 .AddTransient<SettingsViewModel>()
-                .AddTransient<TreeViewViewModel>()
-                .AddTransient<TwoPaneViewViewModel>()
 
                 .AddTransient<DashboardViewModel>()
                 //.AddTransient<SettingsViewModel>()
@@ -107,9 +101,9 @@ namespace Inventory.Uwp
                 .AddTransient<CustomerListViewModel>()
                 .AddTransient<CustomersViewModel>()
 
-                //.AddTransient<ProductListViewModel>()
-                //.AddTransient<ProductDetailsViewModel>()
-                //.AddTransient<ProductsViewModel>()
+                .AddTransient<ProductListViewModel>()
+                .AddTransient<ProductDetailsViewModel>()
+                .AddTransient<ProductsViewModel>()
 
                 .AddTransient<OrderDetailsViewModel>()
                 .AddTransient<OrderDetailsWithItemsViewModel>()

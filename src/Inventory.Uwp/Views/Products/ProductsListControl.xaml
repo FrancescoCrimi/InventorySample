@@ -1,17 +1,18 @@
-﻿<UserControl x:Class="CiccioSoft.Inventory.Uwp.Views.ProductsList"
+﻿<UserControl x:Class="Inventory.Uwp.Views.ProductsListControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:models="using:CiccioSoft.Inventory.Uwp.Models"
-             xmlns:controls="using:CiccioSoft.Inventory.Uwp.Controls"
+             xmlns:local="using:Inventory.Uwp.Views"
+             xmlns:libControls="using:Inventory.Uwp.Library.Controls"
+             xmlns:dto="using:Inventory.Uwp.Dto"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignWidth="800"
-             d:DesignHeight="400">
+             d:DesignHeight="300"
+             d:DesignWidth="400">
 
     <UserControl.Resources>
         <DataTemplate x:Key="ItemTemplate"
-                      x:DataType="models:ProductModel">
+                      x:DataType="dto:ProductDto">
             <Grid BorderThickness="1"
                   BorderBrush="Gainsboro"
                   Background="White">
@@ -41,7 +42,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <controls:DataGrid ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+    <libControls:DataGrid ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
                        NewLabel="New Product"
                        SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
                        ItemTemplate="{StaticResource ItemTemplate}"

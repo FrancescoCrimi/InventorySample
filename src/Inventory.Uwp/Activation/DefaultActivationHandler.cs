@@ -16,7 +16,7 @@ namespace Inventory.Uwp.Activation
 
         protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args)
         {
-            navigationService.Navigate(typeof(Views.MainPage), args.Arguments);
+            navigationService.Navigate(typeof(Views.DashboardPage), args.Arguments);
             await Task.CompletedTask;
         }
 

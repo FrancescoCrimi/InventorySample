@@ -1,14 +1,42 @@
-﻿<Page
-    x:Class="Inventory.Uwp.Views.ProductsPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Inventory.UwpApp.Views"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+﻿<Page x:Class="Inventory.Uwp.Views.ProductsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Inventory.Uwp.Views"
+      xmlns:libControls="using:Inventory.Uwp.Library.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <UserControl.Resources>
+        <DataTemplate x:Key="ListHeaderTemplate">
+            <StackPanel Margin="6,4,0,0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Products"
+                           FontSize="18" />
+                <TextBlock Text="{Binding}"
+                           FontSize="18"
+                           Foreground="Gray" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
 
+    <Grid Background="WhiteSmoke"
+          BorderBrush="LightGray"
+          BorderThickness="1,0,0,0">
+        <!--<controls:WindowTitle Prefix="Products"
+                              Title="{x:Bind ViewModel.ProductList.Title, Mode=OneWay}" />-->
+
+        <Grid Grid.RowSpan="{x:Bind GetRowSpan(ViewModel.ProductList.IsMultipleSelection), Mode=OneWay}">
+            <libControls:Section Header="{x:Bind ViewModel.ProductList.Title, Mode=OneWay}"
+                              HeaderTemplate="{StaticResource ListHeaderTemplate}"
+                              HeaderButtonGlyph="&#xE2B4;"
+                              HeaderButtonClick="OpenInNewView"
+                              IsButtonVisible="{x:Bind ViewModel.IsMainView}">
+                <local:ProductsListControl ViewModel="{x:Bind ViewModel.ProductList}" />
+            </libControls:Section>
+        </Grid>
     </Grid>
+
 </Page>

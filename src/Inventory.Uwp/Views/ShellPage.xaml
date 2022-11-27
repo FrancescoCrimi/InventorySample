@@ -40,12 +40,15 @@
                 <winui:NavigationViewItem x:Uid="Shell_Dashboard"
                                           Icon="Home"
                                           helpers:NavHelper.NavigateTo="views:DashboardPage" />
+
                 <winui:NavigationViewItem x:Uid="Shell_Customers"
                                           Icon="People"
                                           helpers:NavHelper.NavigateTo="customersViews:CustomersPage" />
+
                 <winui:NavigationViewItem x:Uid="Shell_Orders"
                                           Icon="PreviewLink"
                                           helpers:NavHelper.NavigateTo="ordersViews:OrdersPage" />
+
                 <winui:NavigationViewItem x:Uid="Shell_Products"
                                           helpers:NavHelper.NavigateTo="views:ProductsPage">
                     <winui:NavigationViewItem.Icon>
@@ -54,22 +57,14 @@
                     </winui:NavigationViewItem.Icon>
                 </winui:NavigationViewItem>
 
-                <!--<winui:NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />-->
-                <winui:NavigationViewItem x:Uid="Shell_ListDetails"
-                                          Icon="Document"
-                                          helpers:NavHelper.NavigateTo="views:ListDetailsPage" />
-                <winui:NavigationViewItem x:Uid="Shell_ContentGrid"
-                                          Icon="Document"
-                                          helpers:NavHelper.NavigateTo="views:ContentGridPage" />
-                <winui:NavigationViewItem x:Uid="Shell_DataGrid"
-                                          Icon="Document"
-                                          helpers:NavHelper.NavigateTo="views:DataGridPage" />
-                <winui:NavigationViewItem x:Uid="Shell_TreeView"
-                                          Icon="Document"
-                                          helpers:NavHelper.NavigateTo="views:TreeViewPage" />
-                <winui:NavigationViewItem x:Uid="Shell_TwoPaneView"
-                                          Icon="Document"
-                                          helpers:NavHelper.NavigateTo="views:TwoPaneViewPage" />
+                <winui:NavigationViewItem x:Uid="Shell_Logs"
+                                          helpers:NavHelper.NavigateTo="views:DashboardPage">
+                    <winui:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7BA;"
+                                  FontFamily="Segoe MDL2 Assets" />
+                    </winui:NavigationViewItem.Icon>
+                </winui:NavigationViewItem>
+
             </winui:NavigationView.MenuItems>
 
             <i:Interaction.Behaviors>

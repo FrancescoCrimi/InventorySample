@@ -37,10 +37,8 @@
         <Grid Grid.Row="2">
             <ListView x:Name="listview"
                       Padding="0,6,0,0"
-                      
                       ScrollViewer.IsDeferredScrollingEnabled="False"
                       ShowsScrollingPlaceholders="False"
-
                       DoubleTapped="OnDoubleTapped"
                       ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                       ItemTemplate="{x:Bind ItemTemplate}"

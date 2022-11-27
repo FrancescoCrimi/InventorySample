@@ -124,6 +124,12 @@
     <Compile Include="Common\IndexRange.cs" />
     <Compile Include="Common\IVirtualRangeCollection.cs" />
     <Compile Include="Common\VirtualRangeCollection.cs" />
+    <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.cs" />
+    <Compile Include="Controls\AdaptiveGridView\AdaptiveGridView.Properties.cs" />
+    <Compile Include="Controls\AdaptiveGridView\AdaptiveHeightValueConverter.cs" />
+    <Compile Include="Controls\DataGrid\DataGrid.xaml.cs">
+      <DependentUpon>DataGrid.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataList\DataList.xaml.cs">
       <DependentUpon>DataList.xaml</DependentUpon>
     </Compile>
@@ -176,6 +182,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\DataGrid\DataGrid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\DataList\DataList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

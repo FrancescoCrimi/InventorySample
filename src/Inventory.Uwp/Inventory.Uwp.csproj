@@ -212,15 +212,10 @@
     <Compile Include="Tools\BitmapTools.cs" />
     <Compile Include="ViewModels\Common\GenericDetailsViewModel.cs" />
     <Compile Include="ViewModels\Common\GenericListViewModel.cs" />
-    <Compile Include="ViewModels\ContentGridDetailViewModel.cs" />
-    <Compile Include="ViewModels\ContentGridViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomerDetailsViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\DataGridViewModel.cs" />
-    <Compile Include="ViewModels\ListDetailsViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\Messages.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemListViewModel.cs" />
@@ -234,15 +229,7 @@
     <Compile Include="ViewModels\Products\ProductsViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="ViewModels\TreeViewViewModel.cs" />
-    <Compile Include="ViewModels\TwoPaneViewViewModel.cs" />
     <Compile Include="ViewModels\Common\ViewModelBase.cs" />
-    <Compile Include="Views\ContentGridDetailPage.xaml.cs">
-      <DependentUpon>ContentGridDetailPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ContentGridPage.xaml.cs">
-      <DependentUpon>ContentGridPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Customers\CustomerCardControl.xaml.cs">
       <DependentUpon>CustomerCardControl.xaml</DependentUpon>
     </Compile>
@@ -273,18 +260,6 @@
     <Compile Include="Views\Dashboard\ProductsPane.xaml.cs">
       <DependentUpon>ProductsPane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DataGridPage.xaml.cs">
-      <DependentUpon>DataGridPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ListDetailsDetailControl.xaml.cs">
-      <DependentUpon>ListDetailsDetailControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ListDetailsPage.xaml.cs">
-      <DependentUpon>ListDetailsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\OrderItem\OrderItemDetailsPage.xaml.cs">
       <DependentUpon>OrderItemDetailsPage.xaml</DependentUpon>
     </Compile>
@@ -306,6 +281,9 @@
     <Compile Include="Views\Products\ProductPage.xaml.cs">
       <DependentUpon>ProductPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Products\ProductsListControl.xaml.cs">
+      <DependentUpon>ProductsListControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Products\ProductsPage.xaml.cs">
       <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
@@ -314,18 +292,6 @@
     </Compile>
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TreeViewPage.xaml.cs">
-      <DependentUpon>TreeViewPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TwoPaneViewDetailControl.xaml.cs">
-      <DependentUpon>TwoPaneViewDetailControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TwoPaneViewListItemControl.xaml.cs">
-      <DependentUpon>TwoPaneViewListItemControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TwoPaneViewPage.xaml.cs">
-      <DependentUpon>TwoPaneViewPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -367,14 +333,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ContentGridDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ContentGridPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\Customers\CustomerCardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -415,22 +373,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DataGridPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ListDetailsDetailControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ListDetailsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\OrderItem\OrderItemDetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -459,6 +401,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Products\ProductsListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Products\ProductsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -468,22 +414,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ShellPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TreeViewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TwoPaneViewDetailControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TwoPaneViewListItemControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\TwoPaneViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
