@@ -30,6 +30,7 @@ using Windows.UI.Xaml.Controls;
 using Inventory.Uwp.ViewModels.Customers;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.ViewModels.Products;
+using Inventory.Uwp.Views.Orders;
 
 namespace Inventory.Uwp.ViewModels
 {

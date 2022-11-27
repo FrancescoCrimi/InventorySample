@@ -122,6 +122,7 @@
   <ItemGroup>
     <Compile Include="Common\GridLengths.cs" />
     <Compile Include="Common\IndexRange.cs" />
+    <Compile Include="Common\IVirtualRangeCollection.cs" />
     <Compile Include="Common\VirtualRangeCollection.cs" />
     <Compile Include="Controls\DataList\DataList.xaml.cs">
       <DependentUpon>DataList.xaml</DependentUpon>

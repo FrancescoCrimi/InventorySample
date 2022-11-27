@@ -12,10 +12,17 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class OrderCollection : VirtualRangeCollection<OrderDto>
     {
         private readonly OrderServiceFacade orderService;
+        private string searchString = string.Empty;
 
         public OrderCollection(OrderServiceFacade orderService)
         {
             this.orderService = orderService;
+        }
+
+        public async override Task LoadAsync(string searchString = "")
+        {
+            this.searchString = searchString;
+            await LoadAsync();
         }
 
         protected override OrderDto CreateDummyEntity()
@@ -29,7 +36,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             return result;
         }
 
-        protected override async Task<IList<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected override async Task<List<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
             var result = await orderService.GetOrdersAsync(skip, take, new DataRequest<Order>(), dispatcher);

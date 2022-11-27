@@ -36,7 +36,7 @@ namespace Inventory.Uwp.Services
             return model;
         }
 
-        public async Task<IList<ProductDto>> GetProductsAsync(int skip, int take, DataRequest<Product> request, Windows.UI.Core.CoreDispatcher dispatcher = null)
+        public async Task<List<ProductDto>> GetProductsAsync(int skip, int take, DataRequest<Product> request, Windows.UI.Core.CoreDispatcher dispatcher = null)
         {
             var models = new List<ProductDto>();
             var products = await productService.GetProductsAsync(skip, take, request);

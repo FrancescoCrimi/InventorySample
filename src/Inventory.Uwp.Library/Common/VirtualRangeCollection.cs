@@ -15,41 +15,68 @@ using System.ComponentModel;
 namespace Inventory.Uwp.Library.Common
 {
     /// <summary>
-    /// Collezione Virtuale che usa l'interfaccia IItemsRangeInfo
+    /// Collezione Virtuale
+    /// 
+    /// per funzionare correttamente impostare la Proprietà CacheLength dell'ItemStackPanel a 0.0 cosi
+    ///
+    ///     <ListView.ItemsPanel>
+    ///       <ItemsPanelTemplate>
+    ///         <ItemsStackPanel Orientation = "Vertical" CacheLength="0.0"/>
+    ///       </ItemsPanelTemplate>
+    ///     </ListView.ItemsPanel>
+    ///     
+    /// Per usare la classe subclassa questa classe implementando i metodi astratti
     /// </summary>
-    public abstract class VirtualRangeCollection<T> : IList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged, IItemsRangeInfo where T : class
+    public abstract class VirtualRangeCollection<T> : IVirtualRangeCollection<T> where T : class
     {
         private readonly ILogger logger;
         protected readonly CoreDispatcher dispatcher;
-        private CancellationTokenSource cancellationTokenSource = null;
+        private CancellationTokenSource cancellationTokenSource;
         private readonly IDictionary<int, T> items;
         private readonly List<T> fakelist;
         private readonly T dummyObject;
         private int count = 0;
-        private readonly int cacheLength;
         private int FirstIndex;
         private int LastIndex;
+        private int Length;
         private const string CountString = "Count";
         private const string IndexerName = "Item[]";
 
         public VirtualRangeCollection()
         {
-            logger = Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger("VirtualRangeCollection");
+            logger = Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger("VirtualRangeSearchCollection");
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
             cancellationTokenSource = new CancellationTokenSource();
             items = new ConcurrentDictionary<int, T>();
             fakelist = new List<T>();
             dummyObject = CreateDummyEntity();
-            cacheLength = 1;
             FirstIndex = 0;
             LastIndex = 0;
         }
 
-        public async Task LoadAsync()
+        protected async Task LoadAsync()
         {
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            count = await GetCountAsync();
+            if (Length > 0)
             {
-                count = await GetCountAsync();
+                var lengthToFetch = Length * 3;
+                FirstIndex = 0;
+                LastIndex = 0 + lengthToFetch - 1;
+
+                // recupero i dati
+                logger.LogInformation("Init: {0} - {1}", 0, lengthToFetch - 1);
+                var models = await GetRangeAsync(0, lengthToFetch, NewToken());
+
+                // Aggiorno lista interna
+                items.Clear();
+                for (var i = 0; i < models.Count; i++)
+                {
+                    items.Add(i, models[i]);
+                }
+            }
+
+            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(CountString));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(IndexerName));
                 CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -59,62 +86,15 @@ namespace Inventory.Uwp.Library.Common
 
         #region abstract method
 
+        public abstract Task LoadAsync(string searchString = "");
         protected abstract T CreateDummyEntity();
         protected abstract Task<int> GetCountAsync();
-        protected abstract Task<IList<T>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken);
+        protected abstract Task<List<T>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken);
 
         #endregion
 
 
         #region private method
-
-        private async Task FetchRange(int skip, int take, CancellationToken token)
-        {
-            try
-            {
-                // ritardo inserito per velocizzare scrolling
-                if (token.IsCancellationRequested)
-                    token.ThrowIfCancellationRequested();
-                await Task.Delay(60, token);
-
-                if (token.IsCancellationRequested)
-                    token.ThrowIfCancellationRequested();
-                logger.LogWarning("FetchRange First: {0} Length: {1}", skip, take);
-                var list = await GetRangeAsync(skip, take, token);
-
-                if (token.IsCancellationRequested)
-                    token.ThrowIfCancellationRequested();
-                items.Clear();
-                for (int i = 0; i < list.Count; i++)
-                {
-                    items.Add(skip + i, list[i]);
-                }
-
-                if (token.IsCancellationRequested)
-                    token.ThrowIfCancellationRequested();
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    foreach (var item in items)
-                    {
-                        var eventArgs = new NotifyCollectionChangedEventArgs(
-                            NotifyCollectionChangedAction.Replace,
-                            item.Value,
-                            null,
-                            item.Key);
-                        CollectionChanged?.Invoke(this, eventArgs);
-                        logger.LogWarning("CollectionChanged Replace: {0}", item.Key);
-                    }
-                });
-            }
-            catch (OperationCanceledException ex)
-            {
-                logger.LogError(ex.Message);
-            }
-            catch (AggregateException agex)
-            {
-                logger.LogError("Cancel Task Id:{0}", ((TaskCanceledException)agex.InnerException).Task.Id);
-            }
-        }
 
         private CancellationToken NewToken()
         {
@@ -125,20 +105,80 @@ namespace Inventory.Uwp.Library.Common
             return cancellationTokenSource.Token;
         }
 
+        private async Task FetchRange(int skip, int take, CancellationToken token)
+        {
+            try
+            {
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+
+                // ritardo inserito per velocizzare scrolling
+                await Task.Delay(50, token);
+
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+
+                // recupero i dati
+                logger.LogInformation("FetchRange: {0} - {1}", skip, skip + take - 1);
+                var models = await GetRangeAsync(skip, take, token);
+
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+
+                // Aggiorno lista interna
+                items.Clear();
+                for (var i = 0; i < models.Count; i++)
+                {
+                    items.Add(skip + i, models[i]);
+                }
+
+                if (token.IsCancellationRequested)
+                    token.ThrowIfCancellationRequested();
+
+                // invoco CollectionChanged Replace per singolo item
+                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    try
+                    {
+                        foreach (var item in items)
+                        {
+                            if (token.IsCancellationRequested)
+                                token.ThrowIfCancellationRequested();
+                            var eventArgs = new NotifyCollectionChangedEventArgs(
+                                NotifyCollectionChangedAction.Replace,
+                                item.Value,
+                                null,
+                                item.Key);
+                            CollectionChanged?.Invoke(this, eventArgs);
+                        }
+                    }
+                    catch (OperationCanceledException ocex)
+                    {
+                        logger.LogInformation("NotifyCollectionChanged Replace: {0} - {1} {2}", skip, skip + take - 1, ocex.Message);
+                    }
+                });
+            }
+            catch (TaskCanceledException tcex)
+            {
+                logger.LogInformation("FetchRange: {0} - {1} {2} Id:{3}", skip, skip + take - 1, tcex.Message, tcex.Task.Id);
+            }
+            catch (OperationCanceledException ocex)
+            {
+                logger.LogInformation(ocex.Message);
+            }
+        }
+
         #endregion
 
 
         #region interface member implemented
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public void RangesChanged(ItemIndexRange visibleRange, IReadOnlyList<ItemIndexRange> trackedItems)
         {
-            int firstVisible = visibleRange.FirstIndex;
-            int lastVisible = visibleRange.LastIndex;
-            int lengthVisible = (int)visibleRange.Length;
-            logger.LogWarning("VisibleRange First: {0} Length: {1}", firstVisible, lengthVisible);
+            var firstVisible = visibleRange.FirstIndex;
+            var lastVisible = visibleRange.LastIndex;
+            var lengthVisible = (int)visibleRange.Length;
+            logger.LogInformation("VisibleRange: {0} - {1}", firstVisible, lastVisible);
 
             // se visibleRangeLength è minore di 2 esci
             if (lengthVisible < 2) return;
@@ -147,28 +187,29 @@ namespace Inventory.Uwp.Library.Common
             if (firstVisible < FirstIndex || lastVisible > LastIndex)
             {
                 // trovo la lunghezza totale di righe da estrarre
-                int lengthToFetch = lengthVisible + (lengthVisible * cacheLength) * 2;
+                var lengthToFetch = lengthVisible * 3;
 
                 // prima riga da estrarre
                 int firstToFetch;
 
-                // se mi trovo all'inizio della collezione e trovo firstToFetch
-                if (firstVisible < lengthVisible * cacheLength)
+                // il range si trova all'inizio
+                if (firstVisible < lengthVisible * 1)
                     firstToFetch = 0;
 
-                // se mi trovo alla fine della collezione e trovo firstToFetch
-                else if (firstVisible > count - (lengthVisible + lengthVisible * cacheLength))
+                // il range si trova alla fine
+                else if (firstVisible >= count - lengthVisible * 2)
                     firstToFetch = count - lengthToFetch;
 
-                // se mi trovo nel mezzo della collezione e trovo firstToFetch
+                // il range si trova nel mezzo
                 else
-                    firstToFetch = firstVisible - lengthVisible * cacheLength;
+                    firstToFetch = firstVisible - lengthVisible * 1;
 
                 //valorizzo variabli globali firstindex e lastindex;
                 FirstIndex = firstToFetch;
                 LastIndex = firstToFetch + lengthToFetch - 1;
-
-                Task.Run(async () => await FetchRange(firstToFetch, lengthToFetch, NewToken()));
+                Length = lengthVisible;
+                var token = NewToken();
+                Task.Run(async () => await FetchRange(firstToFetch, lengthToFetch, token), token);
             }
         }
 
@@ -178,12 +219,12 @@ namespace Inventory.Uwp.Library.Common
             {
                 if (items.ContainsKey(index))
                 {
-                    //logger.LogWarning("Indexer get real: {0}", index);
+                    //logger.LogInformation("Indexer get real: {0}", index);
                     return items[index];
                 }
                 else
                 {
-                    //logger.LogWarning("Indexer get dummy: {0}", index);
+                    //logger.LogInformation("Indexer get dummy: {0}", index);
                     return dummyObject;
                 }
             }
@@ -196,25 +237,14 @@ namespace Inventory.Uwp.Library.Common
             set => throw new NotImplementedException();
         }
 
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-        }
-
-        public int IndexOf(T item) => -1;
-
-        int IList.IndexOf(object value) => -1;
-
-        public IEnumerator<T> GetEnumerator() => fakelist.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => ((IList)fakelist).GetEnumerator();
+        public int Count => count;
 
         public bool IsReadOnly => true;
 
-        bool IList.IsFixedSize => false;
+        public bool IsFixedSize => false;
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void Dispose()
         {
@@ -222,6 +252,11 @@ namespace Inventory.Uwp.Library.Common
                 cancellationTokenSource.Cancel();
             cancellationTokenSource.Dispose();
         }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => fakelist.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IList)fakelist).GetEnumerator();
+        int IList<T>.IndexOf(T item) => -1;
+        int IList.IndexOf(object value) => -1;
 
         #endregion
 
@@ -232,29 +267,20 @@ namespace Inventory.Uwp.Library.Common
 
         object ICollection.SyncRoot => throw new NotImplementedException();
 
-        int IList.Add(object value) => throw new NotImplementedException();
-
-        public void Clear() => throw new NotImplementedException();
-
-        bool IList.Contains(object value) => throw new NotImplementedException();
-
-        void ICollection.CopyTo(Array array, int index) => throw new NotImplementedException();
-
-        void IList.Insert(int index, object value) => throw new NotImplementedException();
-
-        void IList.Remove(object value) => throw new NotImplementedException();
-
-        public void RemoveAt(int index) => throw new NotImplementedException();
-
-        void IList<T>.Insert(int index, T item) => throw new NotImplementedException();
-
         void ICollection<T>.Add(T item) => throw new NotImplementedException();
-
+        int IList.Add(object value) => throw new NotImplementedException();
+        void ICollection<T>.Clear() => throw new NotImplementedException();
+        void IList.Clear() => throw new NotImplementedException();
         bool ICollection<T>.Contains(T item) => throw new NotImplementedException();
-
+        bool IList.Contains(object value) => throw new NotImplementedException();
         void ICollection<T>.CopyTo(T[] array, int arrayIndex) => throw new NotImplementedException();
-
+        void ICollection.CopyTo(Array array, int index) => throw new NotImplementedException();
+        void IList<T>.Insert(int index, T item) => throw new NotImplementedException();
+        void IList.Insert(int index, object value) => throw new NotImplementedException();
         bool ICollection<T>.Remove(T item) => throw new NotImplementedException();
+        void IList.Remove(object value) => throw new NotImplementedException();
+        void IList<T>.RemoveAt(int index) => throw new NotImplementedException();
+        void IList.RemoveAt(int index) => throw new NotImplementedException();
 
         #endregion
     }

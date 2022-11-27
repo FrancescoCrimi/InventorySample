@@ -29,10 +29,10 @@
 
     <i:Interaction.Behaviors>
         <ic:EventTriggerBehavior EventName="Loaded">
-            <ic:InvokeCommandAction Command="{Binding LoadedCommand}" />
+            <ic:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </ic:EventTriggerBehavior>
         <ic:EventTriggerBehavior EventName="UnLoaded">
-            <ic:InvokeCommandAction Command="{Binding UnLoadedCommand}" />
+            <ic:InvokeCommandAction Command="{x:Bind ViewModel.UnLoadedCommand}" />
         </ic:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
@@ -58,7 +58,7 @@
 
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="ItemClick">
-                    <ic:InvokeCommandAction Command="{Binding ItemClickCommand}" />
+                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.ItemClickCommand}" />
                 </ic:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             

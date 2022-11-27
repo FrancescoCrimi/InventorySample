@@ -72,7 +72,8 @@ namespace Inventory.Uwp.ViewModels.Common
                     {
                         // Todo: fixare selectedItem.Id = 0
                         ////MessageService.Send(this, "ItemSelected", _selectedItem);
-                        Messenger.Send(new ItemMessage<TModel>(_selectedItem, "ItemSelected"));
+                        var message = new ItemMessage<TModel>(_selectedItem, "ItemSelected");
+                        Messenger.Send(message);
                     }
                 }
             }

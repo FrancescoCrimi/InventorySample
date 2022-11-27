@@ -288,6 +288,18 @@
     <Compile Include="Views\OrderItem\OrderItemDetailsPage.xaml.cs">
       <DependentUpon>OrderItemDetailsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Orders\OrdersCardControl.xaml.cs">
+      <DependentUpon>OrdersCardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Orders\OrdersDetailsControl.xaml.cs">
+      <DependentUpon>OrdersDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Orders\OrdersListControl.xaml.cs">
+      <DependentUpon>OrdersListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Orders\OrdersOrderItemsControl.xaml.cs">
+      <DependentUpon>OrdersOrderItemsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Orders\OrdersPage.xaml.cs">
       <DependentUpon>OrdersPage.xaml</DependentUpon>
     </Compile>
@@ -420,6 +432,22 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OrderItem\OrderItemDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Orders\OrdersCardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Orders\OrdersDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Orders\OrdersListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Orders\OrdersOrderItemsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

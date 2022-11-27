@@ -78,17 +78,15 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
         {
-            //    throw new NotImplementedException();
-            //}
-
-            //private async void OnMessage(OrderListViewModel viewModel, string message, object args)
-            //{
             if (/*recipient == OrderList &&*/ message.Message == "ItemSelected")
             {
-                //await ContextService.RunAsync(() =>
-                //{
-                await OnItemSelected();
-                //});
+                if(message.Value.OrderID != 0)
+                {
+                    //await ContextService.RunAsync(() =>
+                    //{
+                    await OnItemSelected();
+                    //});
+                }
             }
         }
 

@@ -207,12 +207,9 @@ namespace Inventory.Uwp.ViewModels.Customers
          *  Handle external messages
          ****************************************************************/
 
+        //private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
         private async void OnCustomerMessage(object recipient, ItemMessage<CustomerDto> message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
-            //{
             var current = Item;
             if (current != null)
             {

@@ -45,7 +45,7 @@ namespace Inventory.Uwp.Services
             return model;
         }
 
-        public async Task<IList<OrderDto>> GetOrdersAsync(int skip, int take, DataRequest<Order> request, Windows.UI.Core.CoreDispatcher dispatcher = null)
+        public async Task<List<OrderDto>> GetOrdersAsync(int skip, int take, DataRequest<Order> request, Windows.UI.Core.CoreDispatcher dispatcher = null)
         {
             var orders = await orderService.GetOrdersAsync(skip, take, request);
             var models = new List<OrderDto>();

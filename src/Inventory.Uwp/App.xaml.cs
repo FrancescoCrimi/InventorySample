@@ -5,6 +5,7 @@ using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.OrderItems;
 using Inventory.Uwp.ViewModels.Orders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -80,7 +81,7 @@ namespace Inventory.Uwp
                 .AddSingleton<ProductServiceFacade>()
                 .AddSingleton<CustomerServiceFacade>()
                 .AddSingleton<OrderServiceFacade>()
-                //.AddSingleton<OrderItemServiceUwp>()
+                .AddSingleton<OrderItemServiceFacade>()
 
                 ////.AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<FilePickerService, FilePickerService>()
@@ -102,22 +103,22 @@ namespace Inventory.Uwp
                 //.AddTransient<ValidateConnectionViewModel>()
                 //.AddTransient<CreateDatabaseViewModel>()
 
-                .AddTransient<CustomerListViewModel>()
                 .AddTransient<CustomerDetailsViewModel>()
+                .AddTransient<CustomerListViewModel>()
                 .AddTransient<CustomersViewModel>()
 
                 //.AddTransient<ProductListViewModel>()
                 //.AddTransient<ProductDetailsViewModel>()
                 //.AddTransient<ProductsViewModel>()
 
-                //.AddTransient<OrderDetailsViewModel>()
-                //.AddTransient<OrderDetailsWithItemsViewModel>()
+                .AddTransient<OrderDetailsViewModel>()
+                .AddTransient<OrderDetailsWithItemsViewModel>()
                 .AddTransient<OrderListViewModel>()
                 .AddTransient<OrdersViewModel>()
 
-                //.AddTransient<OrderItemListViewModel>()
-                //.AddTransient<OrderItemDetailsViewModel>()
-                //.AddTransient<OrderItemsViewModel>()
+                .AddTransient<OrderItemDetailsViewModel>()
+                .AddTransient<OrderItemListViewModel>()
+                .AddTransient<OrderItemsViewModel>()
 
                 //.AddTransient<LogsViewModel>()
                 //.AddTransient<LogListViewModel>()

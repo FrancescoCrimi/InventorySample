@@ -12,10 +12,17 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class ProductCollection : VirtualRangeCollection<ProductDto>
     {
         private readonly ProductServiceFacade productService;
+        private string searchString = string.Empty;
 
         public ProductCollection(ProductServiceFacade productService)
         {
             this.productService = productService;
+        }
+
+        public async override Task LoadAsync(string searchString = "")
+        {
+            this.searchString = searchString;
+            await LoadAsync();
         }
 
         protected override ProductDto CreateDummyEntity()
@@ -29,7 +36,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             return result;
         }
 
-        protected override async Task<IList<ProductDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected override async Task<List<ProductDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
             var result = await productService.GetProductsAsync(skip, take, new DataRequest<Product>(), dispatcher);
