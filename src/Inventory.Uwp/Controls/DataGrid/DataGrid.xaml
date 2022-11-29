@@ -1,7 +1,9 @@
-﻿<UserControl x:Class="Inventory.Uwp.Library.Controls.DataGrid"
+﻿<UserControl x:Class="Inventory.Uwp.Controls.DataGrid"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:Inventory.Uwp.Library.Controls"
+             xmlns:local="using:Inventory.Uwp.Controls"
+             xmlns:libControls="using:Inventory.Uwp.Library.Controls"
+             xmlns:tkcontrols="using:Microsoft.Toolkit.Uwp.UI.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -16,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <!--Toolbar-->
-        <local:ListToolbar NewLabel="{x:Bind NewLabel, Mode=OneWay}"
+        <libControls:ListToolbar NewLabel="{x:Bind NewLabel, Mode=OneWay}"
                               Query="{x:Bind Query, Mode=TwoWay}"
                               QuerySubmitted="OnQuerySubmitted"
                               ToolbarMode="{x:Bind ToolbarMode, Mode=OneWay}"
@@ -24,10 +26,14 @@
 
         <!--Grid Content-->
         <Grid Grid.Row="2">
-            <local:AdaptiveGridView x:Name="gridview"
+                                       <!--
                                        DesiredWidth="240"
                                        ItemHeight="220"
-                                       StretchContentForSingleRow="False"
+                                       StretchContentForSingleRow="False"-->
+            <tkcontrols:AdaptiveGridView x:Name="gridview"
+                                         DesiredWidth="240"
+                                         ItemHeight="220"
+                                         StretchContentForSingleRow="False"
                                        ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                                        ItemTemplate="{x:Bind ItemTemplate}"
                                        ItemContainerStyle="{StaticResource GridItemStyle}"

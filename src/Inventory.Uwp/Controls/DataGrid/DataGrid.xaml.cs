@@ -17,13 +17,14 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
+using Inventory.Uwp.Library.Controls;
 using Inventory.Uwp.Library.Extensions;
 using Inventory.Uwp.Library.Tools;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Uwp.Library.Controls
+namespace Inventory.Uwp.Controls
 {
     public sealed partial class DataGrid : UserControl, INotifyExpressionChanged
     {
@@ -50,8 +51,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ItemsSource*
         public IEnumerable ItemsSource
         {
-            get { return (IEnumerable)GetValue(ItemsSourceProperty); }
-            set { SetValue(ItemsSourceProperty, value); }
+            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -282,7 +283,16 @@ namespace Inventory.Uwp.Library.Controls
         public bool IsSingleSelection => !IsMultipleSelection;
         static DependencyExpression IsSingleSelectionExpression = DependencyExpressions.Register(nameof(IsSingleSelection), nameof(IsMultipleSelection));
 
-        public bool IsDataAvailable => (ItemsSource?.Cast<object>().Any() ?? false);
+        public bool IsDataAvailable
+        {
+            get
+            {
+                //var rtn = (ItemsSource?.Cast<object>().Any() ?? false);
+                var rtn = ((ICollection)ItemsSource)?.Count != 0;
+                return rtn;
+            }
+        }
+
         static DependencyExpression IsDataAvailableExpression = DependencyExpressions.Register(nameof(IsDataAvailable), nameof(ItemsSource));
 
         public bool IsDataUnavailable => !IsDataAvailable;

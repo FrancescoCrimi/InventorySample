@@ -31,8 +31,8 @@ namespace CiccioSoft.Inventory.Uwp.Views
         #region ViewModel
         public ProductListViewModel ViewModel
         {
-            get { return (ProductListViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (ProductListViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
         public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(ProductListViewModel), typeof(ProductsList), new PropertyMetadata(null));
         #endregion

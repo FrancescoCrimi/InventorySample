@@ -73,14 +73,17 @@ namespace Inventory.Uwp.ViewModels.Products
 
         private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
         {
-            if (/*recipient == ProductList &&*/ message.Message == "ItemSelected")
+            if (message.Message == "ItemSelected")
             {
-                if(message.Value.ProductID != null)
+                if (message.Value != null)
                 {
-                    //await ContextService.RunAsync(() =>
-                    //{
-                    await OnItemSelected();
-                    //});
+                    if (message.Value.ProductID != null)
+                    {
+                        //await ContextService.RunAsync(() =>
+                        //{
+                        await OnItemSelected();
+                        //});
+                    }
                 }
             }
         }

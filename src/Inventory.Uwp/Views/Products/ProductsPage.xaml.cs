@@ -34,6 +34,8 @@ namespace Inventory.Uwp.Views
 {
     public sealed partial class ProductsPage : Page
     {
+        ProductListArgs productListArgs;
+
         public ProductsPage()
         {
             ViewModel = Ioc.Default.GetService<ProductsViewModel>();
@@ -46,7 +48,8 @@ namespace Inventory.Uwp.Views
         {
             base.OnNavigatedTo(e);
             ViewModel.Subscribe();
-            await ViewModel.LoadAsync(e.Parameter as ProductListArgs);
+            //await ViewModel.LoadAsync(e.Parameter as ProductListArgs);
+            productListArgs = e.Parameter as ProductListArgs;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -65,6 +68,11 @@ namespace Inventory.Uwp.Views
         public int GetRowSpan(bool isMultipleSelection)
         {
             return isMultipleSelection ? 2 : 1;
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.LoadAsync(productListArgs);
         }
     }
 }

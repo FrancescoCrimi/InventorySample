@@ -115,13 +115,30 @@ namespace Inventory.Uwp.Dto
                 CreatedOn = source.CreatedOn,
                 LastModifiedOn = source.LastModifiedOn,
                 Thumbnail = source.Thumbnail,
-                ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail)
+                //ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail)
             };
+            if (dispatcher != null)
+            {
+                await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                {
+                    model.ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail);
+                });
+            }
+            else
+                model.ThumbnailSource = await BitmapTools.LoadBitmapAsync(source.Thumbnail);
 
             if (includeAllFields)
             {
                 model.Picture = source.Picture;
-                model.PictureSource = await BitmapTools.LoadBitmapAsync(source.Picture);
+                if (dispatcher != null)
+                {
+                    await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                    {
+                        model.PictureSource = await BitmapTools.LoadBitmapAsync(source.Picture);
+                    });
+                }
+                else
+                    model.PictureSource = await BitmapTools.LoadBitmapAsync(source.Picture);
             }
             return model;
         }

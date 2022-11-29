@@ -52,14 +52,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ItemsSource*
         public IEnumerable ItemsSource
         {
-            get
-            {
-                return (IEnumerable)GetValue(ItemsSourceProperty);
-            }
-            set
-            {
-                SetValue(ItemsSourceProperty, value);
-            }
+            get => (IEnumerable)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

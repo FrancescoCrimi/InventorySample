@@ -20,16 +20,20 @@ namespace Inventory.Uwp.Views
     {
         public ProductsListControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #region ViewModel
         public ProductListViewModel ViewModel
         {
-            get { return (ProductListViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (ProductListViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
-        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(ProductListViewModel), typeof(ProductsListControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel",
+                                        typeof(ProductListViewModel),
+                                        typeof(ProductsListControl),
+                                        new PropertyMetadata(null));
         #endregion
     }
 }
