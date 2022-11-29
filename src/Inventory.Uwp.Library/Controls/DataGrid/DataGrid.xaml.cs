@@ -17,14 +17,13 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using Inventory.Uwp.Library.Controls;
 using Inventory.Uwp.Library.Extensions;
 using Inventory.Uwp.Library.Tools;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Uwp.Controls
+namespace Inventory.Uwp.Library.Controls
 {
     public sealed partial class DataGrid : UserControl, INotifyExpressionChanged
     {
