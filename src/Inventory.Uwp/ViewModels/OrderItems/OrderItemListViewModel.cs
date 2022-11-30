@@ -144,10 +144,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             }
 
             ItemsCount = Items.Count;
-            if (!IsMultipleSelection)
-            {
-                SelectedItem = Items.FirstOrDefault();
-            }
+            //if (!IsMultipleSelection)
+            //{
+            //    SelectedItem = Items.FirstOrDefault();
+            //}
             OnPropertyChanged(nameof(Title));
 
             return isOk;

@@ -31,6 +31,7 @@
             <!--  Converters  -->
             <converters:ObjectToImageConverter x:Key="ObjectToImageConverter" />
             <converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
+            <converters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                                   FalseValue="Collapsed"
@@ -38,6 +39,7 @@
             <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"
                                                   FalseValue="Visible"
                                                   TrueValue="Collapsed" />
+            <converters:Int32Converter x:Key="Int32Converter" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -6,8 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-      Loaded="Page_Loaded">
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <UserControl.Resources>
         <DataTemplate x:Key="ListHeaderTemplate">
@@ -26,6 +25,7 @@
     <Grid Background="WhiteSmoke"
           BorderBrush="LightGray"
           BorderThickness="1,0,0,0">
+
         <!--<controls:WindowTitle Prefix="Products"
                               Title="{x:Bind ViewModel.ProductList.Title, Mode=OneWay}" />-->
 
@@ -38,6 +38,7 @@
                 <local:ProductsListControl ViewModel="{x:Bind ViewModel.ProductList}" />
             </libcontrols:Section>
         </Grid>
+
     </Grid>
 
 </Page>

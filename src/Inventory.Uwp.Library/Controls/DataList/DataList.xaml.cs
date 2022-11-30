@@ -121,11 +121,22 @@ namespace Inventory.Uwp.Library.Controls
         #region SelectedItem
         public object SelectedItem
         {
-            get { return (object)GetValue(SelectedItemProperty); }
-            set { SetValue(SelectedItemProperty, value); }
+            get
+            {
+                return (object)GetValue(SelectedItemProperty);
+            }
+
+            set
+            {
+                SetValue(SelectedItemProperty, value);
+            }
         }
 
-        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(object), typeof(DataList), new PropertyMetadata(null));
+        public static readonly DependencyProperty SelectedItemProperty =
+            DependencyProperty.Register(nameof(SelectedItem),
+                                        typeof(object),
+                                        typeof(DataList),
+                                        new PropertyMetadata(null));
         #endregion
 
         #region IsMultipleSelection*

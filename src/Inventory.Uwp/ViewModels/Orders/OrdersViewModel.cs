@@ -13,14 +13,13 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.OrderItems;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
@@ -38,7 +37,6 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             this.logger = logger;
             this.orderService = orderService;
-
             OrderList = orderListViewModel;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
@@ -52,6 +50,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             await OrderList.LoadAsync(args);
         }
+
         public void Unload()
         {
             OrderDetails.CancelEdit();
@@ -60,7 +59,6 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
             Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
             OrderList.Subscribe();
             OrderDetails.Subscribe();
@@ -69,7 +67,6 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             OrderList.Unsubscribe();
             OrderDetails.Unsubscribe();
@@ -78,9 +75,9 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
         {
-            if (/*recipient == OrderList &&*/ message.Message == "ItemSelected")
+            if (message.Message == "ItemSelected")
             {
-                if(message.Value.OrderID != 0)
+                if (message.Value.OrderID != 0)
                 {
                     //await ContextService.RunAsync(() =>
                     //{

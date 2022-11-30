@@ -19,7 +19,7 @@ using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderDto : ObservableObject
+    public class OrderDto : ObservableObject, IEquatable<OrderDto>
     {
         public static OrderDto CreateEmpty() => new OrderDto { OrderID = -1, CustomerID = -1, IsEmpty = true };
 
@@ -137,6 +137,22 @@ namespace Inventory.Uwp.Dto
         public override string ToString()
         {
             return OrderID.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as OrderDto);
+        }
+
+        public bool Equals(OrderDto other)
+        {
+            return !(other is null) &&
+                   OrderID == other.OrderID;
+        }
+
+        public override int GetHashCode()
+        {
+            return 1651275338 + OrderID.GetHashCode();
         }
     }
 }

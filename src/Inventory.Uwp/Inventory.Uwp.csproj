@@ -159,6 +159,8 @@
     <Compile Include="Common\ValidationConstraint.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
+    <Compile Include="Converters\DateTimeOffsetConverter.cs" />
+    <Compile Include="Converters\Int32Converter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToImageConverter.cs" />
     <Compile Include="Dto\DtoAssembler.cs" />
