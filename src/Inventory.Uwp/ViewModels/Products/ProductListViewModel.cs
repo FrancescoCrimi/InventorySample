@@ -74,6 +74,7 @@ namespace Inventory.Uwp.ViewModels.Products
         public ProductListArgs ViewModelArgs { get; private set; }
 
         public ICommand ItemInvokedCommand => new RelayCommand<ProductDto>(ItemInvoked);
+
         private async void ItemInvoked(ProductDto model)
         {
             await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs { ProductID = model.ProductID });
@@ -90,6 +91,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 EndStatusMessage("Products loaded");
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.Query = Query;
@@ -142,10 +144,10 @@ namespace Inventory.Uwp.ViewModels.Products
             }
 
             ItemsCount = Items.Count;
-            if (!IsMultipleSelection)
-            {
-                SelectedItem = Items.FirstOrDefault();
-            }
+            //if (!IsMultipleSelection)
+            //{
+            //    SelectedItem = Items.FirstOrDefault();
+            //}
             OnPropertyChanged(nameof(Title));
 
             return isOk;

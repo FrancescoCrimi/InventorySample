@@ -24,10 +24,8 @@ namespace Inventory.Uwp.Views
 
         public DashboardPage()
         {
-            this.InitializeComponent();
-            var vm = Ioc.Default.GetService<DashboardViewModel>();
-            DataContext = vm;
-            ViewModel = vm;
+            ViewModel = Ioc.Default.GetService<DashboardViewModel>();
+            InitializeComponent();
         }
     }
 }

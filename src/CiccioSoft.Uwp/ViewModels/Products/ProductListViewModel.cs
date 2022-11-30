@@ -71,6 +71,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
         public ProductListArgs ViewModelArgs { get; private set; }
 
         public ICommand ItemInvokedCommand => new RelayCommand<ProductModel>(ItemInvoked);
+
         private async void ItemInvoked(ProductModel model)
         {
             await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs { ProductID = model.ProductID });

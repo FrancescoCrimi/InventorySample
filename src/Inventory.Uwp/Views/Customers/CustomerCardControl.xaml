@@ -2,10 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Inventory.Uwp.Views.Customers"
+             xmlns:viewmodels="using:Inventory.Uwp.ViewModels.Customers"
+             xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewmodels="using:Inventory.Uwp.ViewModels.Customers"
-             xmlns:libControls="using:Inventory.Uwp.Library.Controls"
              d:DataContext="{d:DesignInstance Type=viewmodels:CustomerDetailsViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="300"
@@ -31,7 +31,7 @@
                                Width="{StaticResource CardPictureRadius}"
                                Height="{StaticResource CardPictureRadius}" />
 
-                <libControls:RoundButton Radius="{StaticResource CardPictureRadius}"
+                <libcontrols:RoundButton Radius="{StaticResource CardPictureRadius}"
                                       BorderThickness="1"
                                       BorderBrush="White"
                                       Background="Transparent"
@@ -53,7 +53,7 @@
                                VerticalAlignment="Center"
                                Visibility="{Binding NewPictureSource, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}" />
                     </Grid>
-                </libControls:RoundButton>
+                </libcontrols:RoundButton>
 
                 <TextBlock Grid.Column="1"
                            Margin="12,0,0,0"

@@ -89,6 +89,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 }
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.Query = Query;

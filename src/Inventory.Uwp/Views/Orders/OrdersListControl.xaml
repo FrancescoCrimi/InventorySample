@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Inventory.Uwp.Views.Orders"
              xmlns:dto="using:Inventory.Uwp.Dto"
-             xmlns:libControls="using:Inventory.Uwp.Library.Controls"
+             xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -93,7 +93,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <libControls:DataList ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+    <libcontrols:DataList ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
                        ItemSecondaryActionInvokedCommand="{x:Bind ViewModel.OpenInNewViewCommand}"
                        NewLabel="New Order"
                        SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"

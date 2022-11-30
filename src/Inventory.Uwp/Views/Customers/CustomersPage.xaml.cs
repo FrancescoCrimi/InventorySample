@@ -1,18 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.ViewModels.Customers;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace Inventory.Uwp.Views.Customers
@@ -21,9 +11,8 @@ namespace Inventory.Uwp.Views.Customers
     {
         public CustomersPage()
         {
-            this.InitializeComponent();
             ViewModel = Ioc.Default.GetService<CustomersViewModel>();
-            //DataContext = ViewModel;
+            InitializeComponent();
         }
 
         public CustomersViewModel ViewModel { get; }
@@ -40,6 +29,8 @@ namespace Inventory.Uwp.Views.Customers
             ViewModel.Unsubscribe();
         }
 
+
+
         private void OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             throw new NotImplementedException();
@@ -53,8 +44,6 @@ namespace Inventory.Uwp.Views.Customers
         {
             throw new System.NotImplementedException();
         }
-
-
 
 
 

@@ -92,6 +92,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 }
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.Query = Query;
@@ -145,10 +146,10 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
 
             ItemsCount = Items.Count;
-            if (!IsMultipleSelection)
-            {
-                SelectedItem = Items.FirstOrDefault();
-            }
+            //if (!IsMultipleSelection)
+            //{
+            //    SelectedItem = Items.FirstOrDefault();
+            //}
             OnPropertyChanged(nameof(Title));
 
             return isOk;
