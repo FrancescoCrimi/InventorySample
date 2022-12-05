@@ -15,16 +15,16 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class CustomerCollection : VirtualRangeCollection<CustomerDto>
     {
         private readonly CustomerServiceFacade customerService;
-        private string searchString = string.Empty;
+        private DataRequest<Customer> dataRequest;
 
         public CustomerCollection(CustomerServiceFacade customerService)
         {
             this.customerService = customerService;
         }
 
-        public override async Task LoadAsync(string searchString = "")
+        public async Task LoadAsync(DataRequest<Customer> dataRequest)
         {
-            this.searchString = searchString;
+            this.dataRequest = dataRequest;
             await LoadAsync();
         }
 
@@ -35,14 +35,14 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override async Task<int> GetCountAsync()
         {
-            int result = await customerService.GetCustomersCountAsync(new DataRequest<Customer>());
+            int result = await customerService.GetCustomersCountAsync(dataRequest);
             return result;
         }
 
         protected override async Task<List<CustomerDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
-            var result = await customerService.GetCustomersAsync(skip, take, new DataRequest<Customer>(), dispatcher);
+            var result = await customerService.GetCustomersAsync(skip, take, dataRequest, dispatcher);
             return result;
         }
     }

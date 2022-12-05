@@ -161,8 +161,8 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 DataRequest<Order> request = BuildDataRequest();
                 var collection = new OrderCollection(orderService);
-                //await collection.LoadAsync(request);
-                await collection.LoadAsync();
+                await collection.LoadAsync(request);
+                //await collection.LoadAsync();
                 return collection;
             }
             return new List<OrderDto>();

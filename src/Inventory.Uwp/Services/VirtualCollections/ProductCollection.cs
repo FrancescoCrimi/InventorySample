@@ -12,16 +12,16 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class ProductCollection : VirtualRangeCollection<ProductDto>
     {
         private readonly ProductServiceFacade productService;
-        private string searchString = string.Empty;
+        private DataRequest<Product> request;
 
         public ProductCollection(ProductServiceFacade productService)
         {
             this.productService = productService;
         }
 
-        public async override Task LoadAsync(string searchString = "")
+        public async  Task LoadAsync(DataRequest<Product> request)
         {
-            this.searchString = searchString;
+            this.request = request;
             await LoadAsync();
         }
 
@@ -32,14 +32,14 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override async Task<int> GetCountAsync()
         {
-            int result = await productService.GetProductsCountAsync(new DataRequest<Product>());
+            int result = await productService.GetProductsCountAsync(request);
             return result;
         }
 
         protected override async Task<List<ProductDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
-            var result = await productService.GetProductsAsync(skip, take, new DataRequest<Product>(), dispatcher);
+            var result = await productService.GetProductsAsync(skip, take, request, dispatcher);
             return result;
         }
     }

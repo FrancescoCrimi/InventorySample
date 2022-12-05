@@ -70,10 +70,14 @@ namespace Inventory.Uwp.ViewModels.Common
                 {
                     if (!IsMultipleSelection)
                     {
-                        // Todo: fixare selectedItem.Id = 0
-                        ////MessageService.Send(this, "ItemSelected", _selectedItem);
-                        var message = new ItemMessage<TModel>(_selectedItem, "ItemSelected");
-                        Messenger.Send(message);
+                        // fix _selectedItem == null
+                        if(_selectedItem != null)
+                        {
+                            // Todo: fixare selectedItem.Id = 0
+                            ////MessageService.Send(this, "ItemSelected", _selectedItem);
+                            var message = new ItemMessage<TModel>(_selectedItem, "ItemSelected");
+                            Messenger.Send(message);
+                        }
                     }
                 }
             }

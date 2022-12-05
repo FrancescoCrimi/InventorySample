@@ -82,10 +82,11 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         private async void OnCustomerMessage(object recipient, ItemMessage<CustomerDto> message)
         {
-            if (/*recipient == CustomerList &&*/ message.Message == "ItemSelected")
+            if (message.Message == "ItemSelected")
             {
                 if (message.Value.CustomerID != 0)
                 {
+                    //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
                 }
             }

@@ -45,11 +45,10 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public string Query { get; set; }
 
-
         //public bool IsMainView { get; set; }
 
-
         public Expression<Func<Customer, object>> OrderBy { get; set; }
+
         public Expression<Func<Customer, object>> OrderByDesc { get; set; }
     }
     #endregion
@@ -60,6 +59,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         private readonly CustomerServiceFacade customerService;
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
+        private readonly CustomerCollection collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
                                      CustomerServiceFacade customerService,
@@ -71,6 +71,8 @@ namespace Inventory.Uwp.ViewModels.Customers
             this.customerService = customerService;
             this.navigationService = navigationService;
             this.windowService = windowService;
+            collection = new CustomerCollection(customerService);
+            Items = collection;
         }
 
         public CustomerListArgs ViewModelArgs { get; private set; }
@@ -121,14 +123,17 @@ namespace Inventory.Uwp.ViewModels.Customers
         public async Task<bool> RefreshAsync()
         {
             bool isOk = true;
-
-            Items = null;
+            //Items = null;
             ItemsCount = 0;
-            SelectedItem = null;
+            //SelectedItem = null;
 
             try
             {
-                Items = await GetItemsAsync();
+                if (!ViewModelArgs.IsEmpty)
+                {
+                    DataRequest<Customer> request = BuildDataRequest();
+                    await collection.LoadAsync(request);
+                }
             }
             catch (Exception ex)
             {
@@ -139,26 +144,8 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
 
             ItemsCount = Items.Count;
-            //if (!IsMultipleSelection)
-            //{
-            //    SelectedItem = Items.FirstOrDefault();
-            //}
             OnPropertyChanged(nameof(Title));
-
             return isOk;
-        }
-
-        private async Task<IList<CustomerDto>> GetItemsAsync()
-        {
-            if (!ViewModelArgs.IsEmpty)
-            {
-                DataRequest<Customer> request = BuildDataRequest();
-                var collection = new CustomerCollection(customerService);
-                //await collection.LoadAsync(request);
-                await collection.LoadAsync();
-                return collection;
-            }
-            return new List<CustomerDto>();
         }
 
         public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);

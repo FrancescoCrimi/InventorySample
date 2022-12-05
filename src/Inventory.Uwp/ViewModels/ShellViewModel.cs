@@ -280,6 +280,7 @@ namespace Inventory.Uwp.ViewModels
 
         private async void Logging_AddLogEvent(object sender, EventArgs e)
         {
+            await Task.CompletedTask;
             //await UpdateAppLogBadge();
         }
     }

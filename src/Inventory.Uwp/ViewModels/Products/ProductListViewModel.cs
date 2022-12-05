@@ -159,8 +159,8 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 DataRequest<Product> request = BuildDataRequest();
                 var collection = new ProductCollection(productService);
-                //await collection.LoadAsync(request);
-                await collection.LoadAsync();
+                await collection.LoadAsync(request);
+                //await collection.LoadAsync();
                 return collection;
             }
             return new List<ProductDto>();

@@ -86,7 +86,7 @@ namespace Inventory.Uwp.Library.Common
 
         #region abstract method
 
-        public abstract Task LoadAsync(string searchString = "");
+        //public abstract Task LoadAsync(string searchString = "");
         protected abstract T CreateDummyEntity();
         protected abstract Task<int> GetCountAsync();
         protected abstract Task<List<T>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken);

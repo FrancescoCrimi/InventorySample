@@ -121,6 +121,7 @@ namespace Inventory.Uwp.ViewModels.Common
             //MessageService.Send(this, "CancelEdit", Item);
             Messenger.Send(new ItemMessage<TModel>(Item, "CancelEdit"));
         }
+
         public virtual void CancelEdit()
         {
             if (ItemIsNew)
@@ -132,7 +133,10 @@ namespace Inventory.Uwp.ViewModels.Common
                 }
                 else
                 {
-                    windowService.CloseViewAsync();
+                    Task.Run(async () =>
+                    {
+                        await windowService.CloseViewAsync();
+                    });
                 }
                 return;
             }

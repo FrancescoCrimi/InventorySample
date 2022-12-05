@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-
 namespace Inventory.Uwp.Models
 {
     public class ObservableObject : CommunityToolkit.Mvvm.ComponentModel.ObservableObject

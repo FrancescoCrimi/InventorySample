@@ -14,6 +14,6 @@ namespace Inventory.Uwp.Library.Common
                                                   INotifyPropertyChanged,
                                                   IItemsRangeInfo where T : class
     {
-        Task LoadAsync(string searchString = "");
+        //Task LoadAsync(string searchString = "");
     }
 }

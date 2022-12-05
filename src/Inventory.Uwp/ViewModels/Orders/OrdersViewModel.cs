@@ -79,10 +79,8 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 if (message.Value.OrderID != 0)
                 {
-                    //await ContextService.RunAsync(() =>
-                    //{
+                    //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
-                    //});
                 }
             }
         }
