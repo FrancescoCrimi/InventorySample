@@ -17,10 +17,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.Views.OrderItem;
-using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -126,14 +126,17 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public async Task<bool> RefreshAsync()
         {
             bool isOk = true;
-
             Items = null;
             ItemsCount = 0;
             SelectedItem = null;
 
             try
             {
-                Items = await GetItemsAsync();
+                if (!ViewModelArgs.IsEmpty)
+                {
+                    DataRequest<OrderItem> request = BuildDataRequest();
+                    Items = await orderItemService.GetOrderItemsAsync(request);
+                }
             }
             catch (Exception ex)
             {
@@ -144,23 +147,8 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             }
 
             ItemsCount = Items.Count;
-            //if (!IsMultipleSelection)
-            //{
-            //    SelectedItem = Items.FirstOrDefault();
-            //}
             OnPropertyChanged(nameof(Title));
-
             return isOk;
-        }
-
-        private async Task<IList<OrderItemDto>> GetItemsAsync()
-        {
-            if (!ViewModelArgs.IsEmpty)
-            {
-                DataRequest<OrderItem> request = BuildDataRequest();
-                return await orderItemService.GetOrderItemsAsync(request);
-            }
-            return new List<OrderItemDto>();
         }
 
         public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);

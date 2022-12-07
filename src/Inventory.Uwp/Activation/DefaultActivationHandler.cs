@@ -1,4 +1,5 @@
 ﻿using Inventory.Uwp.Services;
+using Inventory.Uwp.Views.Dashboard;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
@@ -16,7 +17,7 @@ namespace Inventory.Uwp.Activation
 
         protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args)
         {
-            navigationService.Navigate(typeof(Views.DashboardPage), args.Arguments);
+            navigationService.Navigate(typeof(DashboardPage), args.Arguments);
             await Task.CompletedTask;
         }
 

@@ -12,32 +12,28 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Dto;
-using System.Collections.Generic;
+using Inventory.Uwp.ViewModels.Logs;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Uwp.Views.Dashboard
+namespace Inventory.Uwp.Views.Logs
 {
-    public sealed partial class OrdersPane : UserControl
+    public sealed partial class LogsDetailsControl : UserControl
     {
-        public OrdersPane()
+        public LogsDetailsControl()
         {
             InitializeComponent();
         }
 
-        #region ItemsSource
-        public IList<OrderDto> ItemsSource
+        #region ViewModel
+        public LogDetailsViewModel ViewModel
         {
-            get => (IList<OrderDto>)GetValue(ItemsSourceProperty);
-            set => SetValue(ItemsSourceProperty, value);
+            get { return (LogDetailsViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
 
-        public static readonly DependencyProperty ItemsSourceProperty =
-            DependencyProperty.Register("ItemsSource",
-                                        typeof(IList<OrderDto>),
-                                        typeof(OrdersPane),
-                                        new PropertyMetadata(null));
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(LogDetailsViewModel), typeof(LogsDetailsControl), new PropertyMetadata(null));
         #endregion
     }
 }

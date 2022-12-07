@@ -202,6 +202,7 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
+    <Compile Include="Services\VirtualCollections\LogCollection.cs" />
     <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
     <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
@@ -215,6 +216,9 @@
     <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogDetailsViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogListViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogsViewModel.cs" />
     <Compile Include="ViewModels\Messages.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemListViewModel.cs" />
@@ -247,6 +251,9 @@
     <Compile Include="Views\Customers\CustomersPage.xaml.cs">
       <DependentUpon>CustomersPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dashboard\BlankPage1.xaml.cs">
+      <DependentUpon>BlankPage1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dashboard\CustomersPane.xaml.cs">
       <DependentUpon>CustomersPane.xaml</DependentUpon>
     </Compile>
@@ -258,6 +265,15 @@
     </Compile>
     <Compile Include="Views\Dashboard\ProductsPane.xaml.cs">
       <DependentUpon>ProductsPane.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Logs\LogsDetailsControl.xaml.cs">
+      <DependentUpon>LogsDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Logs\LogsListControl.xaml.cs">
+      <DependentUpon>LogsListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Logs\LogsPage.xaml.cs">
+      <DependentUpon>LogsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OrderItem\OrderItemDetailsPage.xaml.cs">
       <DependentUpon>OrderItemDetailsPage.xaml</DependentUpon>
@@ -356,6 +372,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dashboard\BlankPage1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dashboard\CustomersPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -369,6 +389,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dashboard\ProductsPane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Logs\LogsDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Logs\LogsListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Logs\LogsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -4,8 +4,11 @@
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:helpers="using:Inventory.Uwp.Helpers"
       xmlns:views="using:Inventory.Uwp.Views"
-      xmlns:customersViews="using:Inventory.Uwp.Views.Customers"
-      xmlns:ordersViews="using:Inventory.Uwp.Views.Orders"
+      xmlns:dashboard="using:Inventory.Uwp.Views.Dashboard"
+      xmlns:customers="using:Inventory.Uwp.Views.Customers"
+      xmlns:orders="using:Inventory.Uwp.Views.Orders"
+      xmlns:logs="using:Inventory.Uwp.Views.Logs"
+      xmlns:products="using:Inventory.Uwp.Views.Products"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:viewmodels="using:Inventory.Uwp.ViewModels"
@@ -39,18 +42,18 @@
             <winui:NavigationView.MenuItems>
                 <winui:NavigationViewItem x:Uid="Shell_Dashboard"
                                           Icon="Home"
-                                          helpers:NavHelper.NavigateTo="views:DashboardPage" />
+                                          helpers:NavHelper.NavigateTo="dashboard:DashboardPage" />
 
                 <winui:NavigationViewItem x:Uid="Shell_Customers"
                                           Icon="People"
-                                          helpers:NavHelper.NavigateTo="customersViews:CustomersPage" />
+                                          helpers:NavHelper.NavigateTo="customers:CustomersPage" />
 
                 <winui:NavigationViewItem x:Uid="Shell_Orders"
                                           Icon="PreviewLink"
-                                          helpers:NavHelper.NavigateTo="ordersViews:OrdersPage" />
+                                          helpers:NavHelper.NavigateTo="orders:OrdersPage" />
 
                 <winui:NavigationViewItem x:Uid="Shell_Products"
-                                          helpers:NavHelper.NavigateTo="views:ProductsPage">
+                                          helpers:NavHelper.NavigateTo="products:ProductsPage">
                     <winui:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE781;"
                                   FontFamily="Segoe MDL2 Assets" />
@@ -58,7 +61,7 @@
                 </winui:NavigationViewItem>
 
                 <winui:NavigationViewItem x:Uid="Shell_Logs"
-                                          helpers:NavHelper.NavigateTo="views:DashboardPage">
+                                          helpers:NavHelper.NavigateTo="logs:LogsPage">
                     <winui:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE7BA;"
                                   FontFamily="Segoe MDL2 Assets" />

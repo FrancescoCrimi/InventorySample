@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Uwp.Views
+namespace Inventory.Uwp.Views.Dashboard
 {
     public sealed partial class CustomersPane : UserControl
     {

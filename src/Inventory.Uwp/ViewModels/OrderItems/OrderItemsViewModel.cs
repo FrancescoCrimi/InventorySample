@@ -13,13 +13,12 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.OrderItems
 {

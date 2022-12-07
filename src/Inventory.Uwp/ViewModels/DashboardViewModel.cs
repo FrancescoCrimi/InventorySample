@@ -18,19 +18,18 @@ using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels;
-using Inventory.Uwp.Views;
+using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.Orders;
+using Inventory.Uwp.ViewModels.Products;
 using Inventory.Uwp.Views.Customers;
+using Inventory.Uwp.Views.Orders;
+using Inventory.Uwp.Views.Products;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
-using Inventory.Uwp.ViewModels.Customers;
-using Inventory.Uwp.ViewModels.Orders;
-using Inventory.Uwp.ViewModels.Products;
-using Inventory.Uwp.Views.Orders;
 
 namespace Inventory.Uwp.ViewModels
 {

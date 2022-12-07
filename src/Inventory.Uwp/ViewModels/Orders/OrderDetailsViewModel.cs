@@ -14,18 +14,17 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.ViewModels;
-using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {

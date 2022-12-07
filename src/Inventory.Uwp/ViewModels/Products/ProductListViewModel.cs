@@ -54,10 +54,10 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductListViewModel : GenericListViewModel<ProductDto>
     {
         private readonly ILogger<ProductListViewModel> logger;
-        //private readonly IProductService productService;
         private readonly ProductServiceFacade productService;
         private readonly NavigationService navigationService;
         private readonly WindowService windowService;
+        private readonly ProductCollection collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
                                     ProductServiceFacade productService,
@@ -69,6 +69,8 @@ namespace Inventory.Uwp.ViewModels.Products
             this.productService = productService;
             this.navigationService = navigationService;
             this.windowService = windowService;
+            collection = new ProductCollection(productService);
+            Items = collection;
         }
 
         public ProductListArgs ViewModelArgs { get; private set; }
@@ -126,14 +128,15 @@ namespace Inventory.Uwp.ViewModels.Products
         public async Task<bool> RefreshAsync()
         {
             bool isOk = true;
-
-            Items = null;
             ItemsCount = 0;
-            SelectedItem = null;
 
             try
             {
-                Items = await GetItemsAsync();
+                if (!ViewModelArgs.IsEmpty)
+                {
+                    DataRequest<Product> request = BuildDataRequest();
+                    await collection.LoadAsync(request);
+                }
             }
             catch (Exception ex)
             {
@@ -144,26 +147,8 @@ namespace Inventory.Uwp.ViewModels.Products
             }
 
             ItemsCount = Items.Count;
-            //if (!IsMultipleSelection)
-            //{
-            //    SelectedItem = Items.FirstOrDefault();
-            //}
             OnPropertyChanged(nameof(Title));
-
             return isOk;
-        }
-
-        private async Task<IList<ProductDto>> GetItemsAsync()
-        {
-            if (!ViewModelArgs.IsEmpty)
-            {
-                DataRequest<Product> request = BuildDataRequest();
-                var collection = new ProductCollection(productService);
-                await collection.LoadAsync(request);
-                //await collection.LoadAsync();
-                return collection;
-            }
-            return new List<ProductDto>();
         }
 
         protected override async void OnNew()

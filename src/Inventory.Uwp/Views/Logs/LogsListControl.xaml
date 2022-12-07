@@ -1,15 +1,18 @@
-﻿<UserControl x:Class="CiccioSoft.Inventory.Uwp.Views.LogsListView"
+﻿<UserControl x:Class="Inventory.Uwp.Views.Logs.LogsListControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Inventory.Uwp.Views.Logs"
+             xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
+             xmlns:dto="using:Inventory.Uwp.Dto"
+             xmlns:models="using:Inventory.Uwp.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="using:CiccioSoft.Inventory.Uwp.Models"
-             xmlns:controls="using:CiccioSoft.Inventory.Uwp.Controls"
              mc:Ignorable="d"
-             d:DesignWidth="800"
-             d:DesignHeight="400">
+             d:DesignHeight="300"
+             d:DesignWidth="400">
 
     <UserControl.Resources>
+
         <DataTemplate x:Key="HeaderTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -94,22 +97,24 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+
     </UserControl.Resources>
 
-    <controls:DataList DefaultCommands="select,refresh,search"
-                       ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-                       SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
-                       HeaderTemplate="{StaticResource HeaderTemplate}"
-                       ItemTemplate="{StaticResource ItemTemplate}"
-                       IsMultipleSelection="{x:Bind ViewModel.IsMultipleSelection, Mode=TwoWay}"
-                       ItemsCount="{x:Bind ViewModel.ItemsCount, Mode=OneWay}"
-                       RefreshCommand="{x:Bind ViewModel.RefreshCommand}"
-                       Query="{x:Bind ViewModel.Query, Mode=TwoWay}"
-                       QuerySubmittedCommand="{x:Bind ViewModel.RefreshCommand}"
-                       StartSelectionCommand="{x:Bind ViewModel.StartSelectionCommand}"
-                       CancelSelectionCommand="{x:Bind ViewModel.CancelSelectionCommand}"
-                       SelectItemsCommand="{x:Bind ViewModel.SelectItemsCommand}"
-                       DeselectItemsCommand="{x:Bind ViewModel.DeselectItemsCommand}"
-                       SelectRangesCommand="{x:Bind ViewModel.SelectRangesCommand}"
-                       DeleteCommand="{x:Bind ViewModel.DeleteSelectionCommand}" />
+
+    <libcontrols:DataList DefaultCommands="select,refresh,search"
+                          ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+                          HeaderTemplate="{StaticResource HeaderTemplate}"
+                          ItemTemplate="{StaticResource ItemTemplate}"
+                          IsMultipleSelection="{x:Bind ViewModel.IsMultipleSelection, Mode=TwoWay}"
+                          ItemsCount="{x:Bind ViewModel.ItemsCount, Mode=OneWay}"
+                          RefreshCommand="{x:Bind ViewModel.RefreshCommand}"
+                          Query="{x:Bind ViewModel.Query, Mode=TwoWay}"
+                          QuerySubmittedCommand="{x:Bind ViewModel.RefreshCommand}"
+                          StartSelectionCommand="{x:Bind ViewModel.StartSelectionCommand}"
+                          CancelSelectionCommand="{x:Bind ViewModel.CancelSelectionCommand}"
+                          SelectItemsCommand="{x:Bind ViewModel.SelectItemsCommand}"
+                          DeselectItemsCommand="{x:Bind ViewModel.DeselectItemsCommand}"
+                          SelectRangesCommand="{x:Bind ViewModel.SelectRangesCommand}"
+                          DeleteCommand="{x:Bind ViewModel.DeleteSelectionCommand}" />
 </UserControl>

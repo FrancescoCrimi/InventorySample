@@ -123,9 +123,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         public async Task<bool> RefreshAsync()
         {
             bool isOk = true;
-            //Items = null;
             ItemsCount = 0;
-            //SelectedItem = null;
 
             try
             {

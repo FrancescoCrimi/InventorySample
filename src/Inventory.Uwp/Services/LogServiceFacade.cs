@@ -23,10 +23,10 @@ namespace Inventory.Uwp.Services
             return logService.GetLogsCountAsync(dataRequest);
         }
 
-        internal async Task<IList<LogModel>> GetLogsAsync(int v, int rangeSize, DataRequest<Log> dataRequest)
+        internal async Task<List<LogModel>> GetLogsAsync(int v, int rangeSize, DataRequest<Log> dataRequest)
         {
             var items = await logService.GetLogsAsync(v, rangeSize, dataRequest);
-            IList<LogModel> models = new List<LogModel>();
+            var models = new List<LogModel>();
             foreach (var item in items)
             {
                 var model = CreateLogModel(item);

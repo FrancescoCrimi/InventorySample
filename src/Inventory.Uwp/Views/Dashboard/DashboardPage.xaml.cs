@@ -16,7 +16,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.ViewModels;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Uwp.Views
+namespace Inventory.Uwp.Views.Dashboard
 {
     public sealed partial class DashboardPage : Page
     {

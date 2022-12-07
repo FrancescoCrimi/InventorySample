@@ -13,39 +13,37 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.ViewModels.Products;
+using Inventory.Uwp.ViewModels.Logs;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace Inventory.Uwp.Views.Products
+namespace Inventory.Uwp.Views.Logs
 {
-    public sealed partial class ProductsPage : Page
+    public sealed partial class LogsPage : Page
     {
-        public ProductsPage()
+        public LogsPage()
         {
-            ViewModel = Ioc.Default.GetService<ProductsViewModel>();
+            ViewModel = Ioc.Default.GetService<LogsViewModel>();
             InitializeComponent();
         }
 
-        public ProductsViewModel ViewModel { get; }
+        public LogsViewModel ViewModel { get; }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            ViewModel.Subscribe();
-            await ViewModel.LoadAsync(e.Parameter as ProductListArgs);
+            base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            ViewModel.Unload();
-            ViewModel.Unsubscribe();
+            base.OnNavigatingFrom(e);
         }
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            //await windowService.OpenInNewWindow<ProductsViewModel>(ViewModel.ProductList.CreateArgs());
+            //await windowService.OpenInNewWindow<LogsViewModel>(ViewModel.AppLogList.CreateArgs());
             await Task.CompletedTask;
         }
 

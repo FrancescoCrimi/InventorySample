@@ -57,19 +57,19 @@ namespace Inventory.Uwp.ViewModels.Orders
     {
         private readonly ILogger<OrderListViewModel> logger;
         private readonly OrderServiceFacade orderService;
-        private readonly NavigationService navigationService;
         private readonly WindowService windowService;
+        private readonly OrderCollection collection;
 
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
                                   OrderServiceFacade orderService,
-                                  NavigationService navigationService,
                                   WindowService windowService)
             : base()
         {
             this.logger = logger;
             this.orderService = orderService;
-            this.navigationService = navigationService;
             this.windowService = windowService;
+            collection = new OrderCollection(orderService);
+            Items = collection;
         }
 
         public OrderListArgs ViewModelArgs { get; private set; }
@@ -128,14 +128,15 @@ namespace Inventory.Uwp.ViewModels.Orders
         public async Task<bool> RefreshAsync()
         {
             bool isOk = true;
-
-            Items = null;
             ItemsCount = 0;
-            SelectedItem = null;
 
             try
             {
-                Items = await GetItemsAsync();
+                if (!ViewModelArgs.IsEmpty)
+                {
+                    DataRequest<Order> request = BuildDataRequest();
+                    await collection.LoadAsync(request);
+                }
             }
             catch (Exception ex)
             {
@@ -146,26 +147,8 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
 
             ItemsCount = Items.Count;
-            //if (!IsMultipleSelection)
-            //{
-            //    SelectedItem = Items.FirstOrDefault();
-            //}
             OnPropertyChanged(nameof(Title));
-
             return isOk;
-        }
-
-        private async Task<IList<OrderDto>> GetItemsAsync()
-        {
-            if (!ViewModelArgs.IsEmpty)
-            {
-                DataRequest<Order> request = BuildDataRequest();
-                var collection = new OrderCollection(orderService);
-                await collection.LoadAsync(request);
-                //await collection.LoadAsync();
-                return collection;
-            }
-            return new List<OrderDto>();
         }
 
         public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);

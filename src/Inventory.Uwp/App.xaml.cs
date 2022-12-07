@@ -5,6 +5,7 @@ using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.Logs;
 using Inventory.Uwp.ViewModels.OrderItems;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.ViewModels.Products;
@@ -14,8 +15,6 @@ using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp
 {
@@ -114,9 +113,9 @@ namespace Inventory.Uwp
                 .AddTransient<OrderItemListViewModel>()
                 .AddTransient<OrderItemsViewModel>()
 
-                //.AddTransient<LogsViewModel>()
-                //.AddTransient<LogListViewModel>()
-                //.AddTransient<LogDetailsViewModel>()
+                .AddTransient<LogsViewModel>()
+                .AddTransient<LogListViewModel>()
+                .AddTransient<LogDetailsViewModel>()
 
                 .BuildServiceProvider();
         }

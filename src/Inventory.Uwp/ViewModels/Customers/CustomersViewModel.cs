@@ -12,17 +12,14 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Orders;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {

@@ -12,48 +12,45 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
-    public class ProductCollection : VirtualRangeCollection<ProductDto>
+    public class LogCollection : VirtualRangeCollection<LogModel>
     {
-        private readonly ProductServiceFacade productService;
-        private DataRequest<Product> request;
+        private LogServiceFacade logService;
+        private DataRequest<Log> request;
 
-        public ProductCollection(ProductServiceFacade productService)
+        public LogCollection(LogServiceFacade logService)
         {
-            this.productService = productService;
+            this.logService = logService;
         }
 
-        public async  Task LoadAsync(DataRequest<Product> request)
+        protected override LogModel CreateDummyEntity()
+        {
+            return new LogModel();
+        }
+
+        protected override Task<int> GetCountAsync()
+        {
+            return logService.GetLogsCountAsync(request);
+        }
+
+        protected override Task<List<LogModel>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        {
+            return logService.GetLogsAsync(skip, take, request);
+        }
+
+        public async Task LoadAsync(DataRequest<Log> request)
         {
             this.request = request;
             await LoadAsync();
-        }
-
-        protected override ProductDto CreateDummyEntity()
-        {
-            return new ProductDto() { Name = "Dummy Product" };
-        }
-
-        protected override async Task<int> GetCountAsync()
-        {
-            int result = await productService.GetProductsCountAsync(request);
-            return result;
-        }
-
-        protected override async Task<List<ProductDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
-        {
-            //Todo: fix cancellationToken
-            var result = await productService.GetProductsAsync(skip, take, request, dispatcher);
-            return result;
         }
     }
 }

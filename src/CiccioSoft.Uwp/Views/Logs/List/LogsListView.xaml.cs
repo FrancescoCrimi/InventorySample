@@ -12,12 +12,9 @@
 // ******************************************************************
 #endregion
 
-using System;
-
+using CiccioSoft.Inventory.Uwp.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-using CiccioSoft.Inventory.Uwp.ViewModels;
 
 namespace CiccioSoft.Inventory.Uwp.Views
 {
@@ -34,7 +31,8 @@ namespace CiccioSoft.Inventory.Uwp.Views
             get { return (LogListViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
-        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(LogListViewModel), typeof(LogsListView), new PropertyMetadata(null));
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(LogListViewModel), typeof(LogsListView), new PropertyMetadata(null));
         #endregion
     }
 }
