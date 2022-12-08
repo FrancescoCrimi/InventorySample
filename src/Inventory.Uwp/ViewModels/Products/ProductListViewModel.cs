@@ -26,31 +26,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
-    #region ProductListArgs
-    public class ProductListArgs
-    {
-        public static ProductListArgs CreateEmpty() => new ProductListArgs { IsEmpty = true };
-
-        public ProductListArgs()
-        {
-            OrderBy = r => r.Name;
-        }
-
-        public bool IsEmpty { get; set; }
-
-        public string Query { get; set; }
-
-        public Expression<Func<Product, object>> OrderBy { get; set; }
-        public Expression<Func<Product, object>> OrderByDesc { get; set; }
-    }
-    #endregion
-
     public class ProductListViewModel : GenericListViewModel<ProductDto>
     {
         private readonly ILogger<ProductListViewModel> logger;
@@ -84,7 +64,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
         public async Task LoadAsync(ProductListArgs args)
         {
-            ViewModelArgs = args ?? ProductListArgs.CreateEmpty();
+            ViewModelArgs = args ?? new ProductListArgs();
             Query = ViewModelArgs.Query;
 
             StartStatusMessage("Loading products...");
@@ -132,11 +112,8 @@ namespace Inventory.Uwp.ViewModels.Products
 
             try
             {
-                if (!ViewModelArgs.IsEmpty)
-                {
-                    DataRequest<Product> request = BuildDataRequest();
-                    await collection.LoadAsync(request);
-                }
+                DataRequest<Product> request = BuildDataRequest();
+                await collection.LoadAsync(request);
             }
             catch (Exception ex)
             {

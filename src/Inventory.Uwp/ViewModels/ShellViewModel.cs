@@ -20,6 +20,7 @@ using Inventory.Uwp.Helpers;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.Logs;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.ViewModels.Products;
 using Inventory.Uwp.Views;
@@ -157,11 +158,11 @@ namespace Inventory.Uwp.ViewModels
                         case "ProductsPage":
                             navigationService.Navigate(pageType, new ProductListArgs());
                             break;
-                        //case "LogsViewModel":
-                        //    navigationService.Navigate(viewModel, new LogListArgs());
-                        //    await logService.MarkAllAsReadAsync();
-                        //    await UpdateAppLogBadge();
-                        //    break;
+                        case "LogsPage":
+                            navigationService.Navigate(pageType, new LogListArgs());
+                            //await logService.MarkAllAsReadAsync();
+                            //await UpdateAppLogBadge();
+                            break;
                         //case "SettingsViewModel":
                         //    navigationService.Navigate(viewModel, new SettingsArgs());
                         //    break;

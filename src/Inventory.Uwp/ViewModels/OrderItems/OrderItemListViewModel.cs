@@ -25,33 +25,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.OrderItems
 {
-    #region OrderItemListArgs
-    public class OrderItemListArgs
-    {
-        public static OrderItemListArgs CreateEmpty() => new OrderItemListArgs { IsEmpty = true };
-
-        public OrderItemListArgs()
-        {
-            OrderBy = r => r.OrderLine;
-        }
-
-        public long OrderID { get; set; }
-
-        public bool IsEmpty { get; set; }
-
-        public string Query { get; set; }
-
-        public Expression<Func<OrderItem, object>> OrderBy { get; set; }
-        public Expression<Func<OrderItem, object>> OrderByDesc { get; set; }
-    }
-    #endregion
-
     public class OrderItemListViewModel : GenericListViewModel<OrderItemDto>
     {
         private readonly ILogger<OrderItemListViewModel> logger;
@@ -75,7 +53,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public async Task LoadAsync(OrderItemListArgs args, bool silent = false)
         {
-            ViewModelArgs = args ?? OrderItemListArgs.CreateEmpty();
+            ViewModelArgs = args ?? new OrderItemListArgs();
             Query = ViewModelArgs.Query;
 
             if (silent)
@@ -132,11 +110,8 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
             try
             {
-                if (!ViewModelArgs.IsEmpty)
-                {
-                    DataRequest<OrderItem> request = BuildDataRequest();
-                    Items = await orderItemService.GetOrderItemsAsync(request);
-                }
+                DataRequest<OrderItem> request = BuildDataRequest();
+                Items = await orderItemService.GetOrderItemsAsync(request);
             }
             catch (Exception ex)
             {

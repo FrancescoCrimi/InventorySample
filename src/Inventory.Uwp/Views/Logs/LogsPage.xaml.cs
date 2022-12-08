@@ -31,14 +31,16 @@ namespace Inventory.Uwp.Views.Logs
 
         public LogsViewModel ViewModel { get; }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            ViewModel.Subscribe();
+            await ViewModel.LoadAsync(e.Parameter as LogListArgs);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            base.OnNavigatingFrom(e);
+            ViewModel.Unload();
+            ViewModel.Unsubscribe();
         }
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)

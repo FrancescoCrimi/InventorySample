@@ -46,6 +46,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             await AppLogList.LoadAsync(args);
         }
+
         public void Unload()
         {
             AppLogList.Unload();

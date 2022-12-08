@@ -44,7 +44,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
             else
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { IsEmpty = true }, silent: true);
+                await OrderItemList.LoadAsync(new OrderItemListArgs(), silent: true);
             }
         }
         public void Unload()

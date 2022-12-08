@@ -40,6 +40,7 @@
                                                   FalseValue="Visible"
                                                   TrueValue="Collapsed" />
             <converters:Int32Converter x:Key="Int32Converter" />
+            <converters:LogLevelConverter x:Key="LogLevelConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

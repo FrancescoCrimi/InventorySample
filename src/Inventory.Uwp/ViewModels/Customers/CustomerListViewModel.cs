@@ -25,34 +25,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {
-    #region CustomerListArgs
-    public class CustomerListArgs
-    {
-        public static CustomerListArgs CreateEmpty() => new CustomerListArgs { IsEmpty = true };
-
-        public CustomerListArgs()
-        {
-            OrderBy = r => r.FirstName;
-        }
-
-        public bool IsEmpty { get; set; }
-
-        public string Query { get; set; }
-
-        //public bool IsMainView { get; set; }
-
-        public Expression<Func<Customer, object>> OrderBy { get; set; }
-
-        public Expression<Func<Customer, object>> OrderByDesc { get; set; }
-    }
-    #endregion
-
     public class CustomerListViewModel : GenericListViewModel<CustomerDto>
     {
         private readonly ILogger<CustomerListViewModel> logger;
@@ -79,7 +56,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public async Task LoadAsync(CustomerListArgs args)
         {
-            ViewModelArgs = args ?? CustomerListArgs.CreateEmpty();
+            ViewModelArgs = args ?? new CustomerListArgs();
             Query = ViewModelArgs.Query;
 
             StartStatusMessage("Loading customers...");
@@ -127,11 +104,8 @@ namespace Inventory.Uwp.ViewModels.Customers
 
             try
             {
-                if (!ViewModelArgs.IsEmpty)
-                {
-                    DataRequest<Customer> request = BuildDataRequest();
-                    await collection.LoadAsync(request);
-                }
+                DataRequest<Customer> request = BuildDataRequest();
+                await collection.LoadAsync(request);
             }
             catch (Exception ex)
             {

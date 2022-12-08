@@ -24,30 +24,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Logs
 {
-    #region LogListArgs
-    public class LogListArgs
-    {
-        public static LogListArgs CreateEmpty() => new LogListArgs { IsEmpty = true };
-
-        public LogListArgs()
-        {
-            OrderByDesc = r => r.DateTime;
-        }
-
-        public bool IsEmpty { get; set; }
-
-        public string Query { get; set; }
-
-        public Expression<Func<Log, object>> OrderBy { get; set; }
-        public Expression<Func<Log, object>> OrderByDesc { get; set; }
-    }
-    #endregion
-
     public class LogListViewModel : GenericListViewModel<LogModel>
     {
         private readonly ILogger logger;
@@ -68,7 +48,7 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public async Task LoadAsync(LogListArgs args)
         {
-            ViewModelArgs = args ?? LogListArgs.CreateEmpty();
+            ViewModelArgs = args ?? new LogListArgs();
             Query = ViewModelArgs.Query;
 
             StartStatusMessage("Loading logs...");
@@ -146,11 +126,8 @@ namespace Inventory.Uwp.ViewModels.Logs
 
             try
             {
-                if (!ViewModelArgs.IsEmpty)
-                {
-                    DataRequest<Log> request = BuildDataRequest();
-                    await collection.LoadAsync(request);
-                }
+                DataRequest<Log> request = BuildDataRequest();
+                await collection.LoadAsync(request);
             }
             catch (Exception ex)
             {
