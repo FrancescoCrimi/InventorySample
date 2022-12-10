@@ -157,6 +157,7 @@
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
+    <Compile Include="Converters\BoolNegationConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\DateTimeOffsetConverter.cs" />
@@ -186,28 +187,29 @@
     <Compile Include="Models\ShipperModel.cs" />
     <Compile Include="Models\TabViewItemData.cs" />
     <Compile Include="Models\TaxTypeModel.cs" />
-    <Compile Include="Services\ActivationService.cs" />
+    <Compile Include="Services\Infrastructure\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
     <Compile Include="Services\CustomerServiceFacade.cs" />
-    <Compile Include="Services\DialogService.cs" />
-    <Compile Include="Services\FilePickerService.cs" />
+    <Compile Include="Services\Infrastructure\DialogService.cs" />
+    <Compile Include="Services\Infrastructure\FilePickerService.cs" />
+    <Compile Include="Services\Infrastructure\SettingsService.cs" />
     <Compile Include="Services\LogServiceFacade.cs" />
     <Compile Include="Services\LookupTableServiceFacade.cs" />
-    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\Infrastructure\NavigationService.cs" />
     <Compile Include="Services\OrderItemServiceFacade.cs" />
     <Compile Include="Services\OrderServiceFacade.cs" />
-    <Compile Include="Services\PageService.cs" />
+    <Compile Include="Services\Infrastructure\PageService.cs" />
     <Compile Include="Services\ProductServiceFacade.cs" />
     <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\SqlServerDataService.cs" />
-    <Compile Include="Services\ThemeSelectorService.cs" />
-    <Compile Include="Services\ViewLifetimeControl.cs" />
+    <Compile Include="Services\Infrastructure\ThemeSelectorService.cs" />
+    <Compile Include="Services\Infrastructure\ViewLifetimeControl.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
     <Compile Include="Services\VirtualCollections\LogCollection.cs" />
     <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
     <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
-    <Compile Include="Services\WindowManagerService.cs" />
-    <Compile Include="Services\WindowService.cs" />
+    <Compile Include="Services\Infrastructure\WindowManagerService.cs" />
+    <Compile Include="Services\Infrastructure\WindowService.cs" />
     <Compile Include="StateTriggers\ControlSizeTrigger.cs" />
     <Compile Include="TemplateSelectors\SampleDataTemplateSelector.cs" />
     <Compile Include="Tools\BitmapTools.cs" />
@@ -217,7 +219,7 @@
     <Compile Include="ViewModels\Customers\CustomerListArgs.cs" />
     <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
-    <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\Dashboard\DashboardViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogDetailsViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogListArgs.cs" />
     <Compile Include="ViewModels\Logs\LogListViewModel.cs" />
@@ -236,7 +238,10 @@
     <Compile Include="ViewModels\Products\ProductListArgs.cs" />
     <Compile Include="ViewModels\Products\ProductListViewModel.cs" />
     <Compile Include="ViewModels\Products\ProductsViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\CreateDatabaseViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsArgs.cs" />
+    <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\ValidateConnectionViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\Common\ViewModelBase.cs" />
     <Compile Include="Views\Customers\CustomerCardControl.xaml.cs">
@@ -256,9 +261,6 @@
     </Compile>
     <Compile Include="Views\Customers\CustomersPage.xaml.cs">
       <DependentUpon>CustomersPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Dashboard\BlankPage1.xaml.cs">
-      <DependentUpon>BlankPage1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dashboard\CustomersPane.xaml.cs">
       <DependentUpon>CustomersPane.xaml</DependentUpon>
@@ -308,8 +310,14 @@
     <Compile Include="Views\Products\ProductsPage.xaml.cs">
       <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsPage.xaml.cs">
+    <Compile Include="Views\Settings\CreateDatabaseDialog.xaml.cs">
+      <DependentUpon>CreateDatabaseDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\ValidateConnectionDialog.xaml.cs">
+      <DependentUpon>ValidateConnectionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
@@ -378,10 +386,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\BlankPage1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Dashboard\CustomersPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -446,7 +450,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsPage.xaml">
+    <Page Include="Views\Settings\CreateDatabaseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Settings\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Settings\ValidateConnectionDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -504,6 +516,10 @@
     <ProjectReference Include="..\Inventory.Uwp.Library\Inventory.Uwp.Library.csproj">
       <Project>{eae99947-ca0b-42d9-8f05-ae092aa104d2}</Project>
       <Name>Inventory.Uwp.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Persistence\Inventory.Persistence.csproj">
+      <Project>{665a2311-c34f-4803-b30b-223d74cc7fff}</Project>
+      <Name>Inventory.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

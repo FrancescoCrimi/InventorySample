@@ -12,16 +12,16 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Uwp.ViewModels;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Uwp.ViewModels.Settings;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace CiccioSoft.Inventory.Uwp.Views
+namespace Inventory.Uwp.Views.Settings
 {
-    public sealed partial class SettingsView : Page
+    public sealed partial class SettingsPage : Page
     {
-        public SettingsView()
+        public SettingsPage()
         {
             ViewModel = Ioc.Default.GetService<SettingsViewModel>();
             InitializeComponent();
@@ -29,9 +29,9 @@ namespace CiccioSoft.Inventory.Uwp.Views
 
         public SettingsViewModel ViewModel { get; }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            ViewModel.LoadAsync(e.Parameter as SettingsArgs);
+            await ViewModel.LoadAsync(e.Parameter as SettingsArgs);
         }
     }
 }

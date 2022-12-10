@@ -13,7 +13,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.ViewModels;
+using Inventory.Uwp.ViewModels.Dashboard;
 using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.Views.Dashboard

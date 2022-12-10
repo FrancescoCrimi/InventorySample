@@ -1,20 +1,28 @@
-﻿<Page x:Class="CiccioSoft.Inventory.Uwp.Views.SettingsView"
+﻿<Page x:Class="Inventory.Uwp.Views.Settings.SettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:CiccioSoft.Inventory.Uwp.Controls"
+      xmlns:helper="using:Inventory.Uwp.Helpers"
+      xmlns:xaml="using:Windows.UI.Xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       d:DesignWidth="800"
-      d:DesignHeight="800">
+      d:DesignHeight="800"
+      Style="{StaticResource PageStyle}">
 
+    <Page.Resources>
+        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
+                                       EnumType="ElementTheme" />
+    </Page.Resources>
+
+    <!--<Grid Margin="{StaticResource MediumLeftRightMargin}">-->
     <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   VerticalScrollBarVisibility="Auto">
         <ContentControl IsEnabled="{x:Bind ViewModel.IsBusy, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
-            <StackPanel Margin="24,12"
-                        MaxWidth="620">
 
-                <controls:WindowTitle Title="Settings" />
+            <StackPanel x:Name="ContentArea"
+                        Margin="24,12"
+                        MaxWidth="620">
 
                 <Image Width="320"
                        HorizontalAlignment="Left"
@@ -30,7 +38,7 @@
                 <StackPanel Margin="0,12,0,0">
                     <TextBlock Margin="0,12"
                                Text="Data Providers"
-                               Style="{StaticResource TitleTextBlockStyle}" />
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
                     <TextBlock Text="Select and configure the Data Provider" />
                     <RadioButton Margin="0,12"
                                  GroupName="providers"
@@ -84,13 +92,51 @@
                 <StackPanel Margin="0,12">
                     <TextBlock Margin="0,12"
                                Text="Testing"
-                               Style="{StaticResource TitleTextBlockStyle}" />
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
                     <ToggleSwitch Header="Enable random error generation for testing the Activity Log"
                                   IsOn="{x:Bind ViewModel.IsRandomErrorsEnabled, Mode=TwoWay}" />
                 </StackPanel>
 
+                <TextBlock x:Uid="Settings_Personalization"
+                           Style="{ThemeResource SubtitleTextBlockStyle}" />
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
+                    <TextBlock x:Uid="Settings_Theme" />
+
+                    <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                        <RadioButton x:Uid="Settings_Theme_Light"
+                                     Command="{x:Bind ViewModel.SwitchThemeCommand}"
+                                     IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                                     FontSize="15"
+                                     GroupName="AppTheme">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Light</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton x:Uid="Settings_Theme_Dark"
+                                     Command="{x:Bind ViewModel.SwitchThemeCommand}"
+                                     IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                                     FontSize="15"
+                                     GroupName="AppTheme">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                        <RadioButton x:Uid="Settings_Theme_Default"
+                                     Command="{x:Bind ViewModel.SwitchThemeCommand}"
+                                     IsChecked="{x:Bind ViewModel.ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                                     FontSize="15"
+                                     GroupName="AppTheme">
+                            <RadioButton.CommandParameter>
+                                <xaml:ElementTheme>Default</xaml:ElementTheme>
+                            </RadioButton.CommandParameter>
+                        </RadioButton>
+                    </StackPanel>
+                </StackPanel>
+
             </StackPanel>
+
         </ContentControl>
     </ScrollViewer>
+    <!--</Grid>-->
 
 </Page>

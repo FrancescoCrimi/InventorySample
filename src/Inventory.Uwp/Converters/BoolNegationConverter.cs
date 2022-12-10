@@ -12,26 +12,21 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Uwp.ViewModels;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using System;
+using Windows.UI.Xaml.Data;
 
-namespace CiccioSoft.Inventory.Uwp.Views
+namespace Inventory.Uwp.Converters
 {
-    public sealed partial class SettingsView : Page
+    public sealed class BoolNegationConverter : IValueConverter
     {
-        public SettingsView()
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            ViewModel = Ioc.Default.GetService<SettingsViewModel>();
-            InitializeComponent();
+            return !(value is bool && (bool)value);
         }
 
-        public SettingsViewModel ViewModel { get; }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            ViewModel.LoadAsync(e.Parameter as SettingsArgs);
+            return !(value is bool && (bool)value);
         }
     }
 }

@@ -31,7 +31,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Uwp.ViewModels
+namespace Inventory.Uwp.ViewModels.Dashboard
 {
     public class DashboardViewModel : ViewModelBase
     {

@@ -39,6 +39,7 @@
             <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"
                                                   FalseValue="Visible"
                                                   TrueValue="Collapsed" />
+            <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <converters:Int32Converter x:Key="Int32Converter" />
             <converters:LogLevelConverter x:Key="LogLevelConverter" />
 

@@ -5,10 +5,12 @@ using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.Dashboard;
 using Inventory.Uwp.ViewModels.Logs;
 using Inventory.Uwp.ViewModels.OrderItems;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.ViewModels.Products;
+using Inventory.Uwp.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -86,15 +88,13 @@ namespace Inventory.Uwp
                 ////.AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<FilePickerService, FilePickerService>()
 
-                // Views and ViewModels
-                //.AddTransient<ShellView>()
+                // ViewModels
                 .AddTransient<ShellViewModel>()
-                .AddTransient<SettingsViewModel>()
-
                 .AddTransient<DashboardViewModel>()
-                //.AddTransient<SettingsViewModel>()
-                //.AddTransient<ValidateConnectionViewModel>()
-                //.AddTransient<CreateDatabaseViewModel>()
+
+                .AddTransient<SettingsViewModel>()
+                .AddTransient<ValidateConnectionViewModel>()
+                .AddTransient<CreateDatabaseViewModel>()
 
                 .AddTransient<CustomerDetailsViewModel>()
                 .AddTransient<CustomerListViewModel>()

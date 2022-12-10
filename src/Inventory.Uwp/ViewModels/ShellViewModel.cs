@@ -24,6 +24,7 @@ using Inventory.Uwp.ViewModels.Logs;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.ViewModels.Products;
 using Inventory.Uwp.Views;
+using Inventory.Uwp.Views.Settings;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

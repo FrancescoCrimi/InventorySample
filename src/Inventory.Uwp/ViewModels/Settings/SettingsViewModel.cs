@@ -12,23 +12,56 @@
 // ******************************************************************
 #endregion
 
-using CiccioSoft.Inventory.Uwp.Services.Infrastructure;
-using CiccioSoft.Inventory.Uwp.Views;
 using CommunityToolkit.Mvvm.Input;
 using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.Helpers;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.Views.Settings;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.ApplicationModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CiccioSoft.Inventory.Uwp.ViewModels
+namespace Inventory.Uwp.ViewModels.Settings
 {
     public class SettingsViewModel : ViewModelBase
     {
         public SettingsViewModel()
-            : base()
         {
         }
+
+
+        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+        public ElementTheme ElementTheme
+        {
+            get { return _elementTheme; }
+            set { SetProperty(ref _elementTheme, value); }
+        }
+
+
+        private ICommand _switchThemeCommand;
+        public ICommand SwitchThemeCommand
+        {
+            get
+            {
+                if (_switchThemeCommand == null)
+                {
+                    _switchThemeCommand = new RelayCommand<ElementTheme>(
+                        async (param) =>
+                        {
+                            ElementTheme = param;
+                            await ThemeSelectorService.SetThemeAsync(param);
+                        });
+                }
+                return _switchThemeCommand;
+            }
+        }
+
+
 
         public string Version => $"v{AppSettings.Current.Version}";
 
@@ -124,7 +157,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             IsBusy = true;
             StatusMessage("Validating connection string...");
 
-            var dialog = new ValidateConnectionView(SqlConnectionString);
+            var dialog = new ValidateConnectionDialog(SqlConnectionString);
             var res = await dialog.ShowAsync();
             Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
 
@@ -146,7 +179,7 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
             StatusReady();
             DisableAllViews("Waiting for the database to be created...");
 
-            var dialog = new CreateDatabaseView(SqlConnectionString);
+            var dialog = new CreateDatabaseDialog(SqlConnectionString);
             var res = await dialog.ShowAsync();
             Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
 
@@ -178,5 +211,6 @@ namespace CiccioSoft.Inventory.Uwp.ViewModels
                 AppSettings.Current.DataProvider = DataProviderType.SQLite;
             }
         }
+
     }
 }

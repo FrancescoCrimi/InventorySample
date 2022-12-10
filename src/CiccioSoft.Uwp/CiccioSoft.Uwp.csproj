@@ -219,6 +219,7 @@
     <Compile Include="ViewModels\Products\ProductListViewModel.cs" />
     <Compile Include="ViewModels\Products\ProductsViewModel.cs" />
     <Compile Include="ViewModels\Settings\CreateDatabaseViewModel.cs" />
+    <Compile Include="ViewModels\Settings\SettingsArgs.cs" />
     <Compile Include="ViewModels\Settings\SettingsViewModel.cs" />
     <Compile Include="ViewModels\Settings\ValidateConnectionViewModel.cs" />
     <Compile Include="ViewModels\Shell\ShellViewModel.cs" />
