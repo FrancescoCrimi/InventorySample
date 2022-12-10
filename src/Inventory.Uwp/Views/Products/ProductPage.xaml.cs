@@ -1,30 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Uwp.ViewModels.Products;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Il modello di elemento Pagina vuota è documentato all'indirizzo https://go.microsoft.com/fwlink/?LinkId=234238
-
-namespace Inventory.Uwp.Views
+namespace Inventory.Uwp.Views.Products
 {
-    /// <summary>
-    /// Pagina vuota che può essere usata autonomamente oppure per l'esplorazione all'interno di un frame.
-    /// </summary>
     public sealed partial class ProductPage : Page
     {
         public ProductPage()
         {
-            this.InitializeComponent();
+            ViewModel = Ioc.Default.GetService<ProductDetailsViewModel>();
+            InitializeComponent();
+        }
+
+        public ProductDetailsViewModel ViewModel { get; }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            ViewModel.Unload();
+            ViewModel.Unsubscribe();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            ViewModel.Subscribe();
+            await ViewModel.LoadAsync(e.Parameter as ProductDetailsArgs);
+
+            if (ViewModel.IsEditMode)
+            {
+                await Task.Delay(100);
+                details.SetFocus();
+            }
         }
     }
 }

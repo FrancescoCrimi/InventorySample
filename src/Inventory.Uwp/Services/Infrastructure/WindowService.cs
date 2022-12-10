@@ -25,9 +25,9 @@ namespace Inventory.Uwp.Services
         public Dictionary<UIContext, AppWindow> AppWindows { get; set; }
             = new Dictionary<UIContext, AppWindow>();
 
-        public async Task<int> OpenInNewWindow<TViewModel>(object parameter = null)
+        public async Task<int> OpenInNewWindow<TView>(object parameter = null)
         {
-            return await OpenInNewWindow(typeof(TViewModel), parameter);
+            return await OpenInNewWindow(typeof(TView), parameter);
         }
 
         public async Task<int> OpenInNewWindow(Type viewType, object parameter = null)

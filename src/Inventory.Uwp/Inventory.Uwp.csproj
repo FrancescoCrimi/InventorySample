@@ -153,7 +153,6 @@
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Behaviors\TreeViewCollapseBehavior.cs" />
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
@@ -210,8 +209,6 @@
     <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
     <Compile Include="Services\Infrastructure\WindowManagerService.cs" />
     <Compile Include="Services\Infrastructure\WindowService.cs" />
-    <Compile Include="StateTriggers\ControlSizeTrigger.cs" />
-    <Compile Include="TemplateSelectors\SampleDataTemplateSelector.cs" />
     <Compile Include="Tools\BitmapTools.cs" />
     <Compile Include="ViewModels\Common\GenericDetailsViewModel.cs" />
     <Compile Include="ViewModels\Common\GenericListViewModel.cs" />
@@ -301,6 +298,12 @@
     <Compile Include="Views\Orders\OrdersPage.xaml.cs">
       <DependentUpon>OrdersPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Products\ProductCardControl.xaml.cs">
+      <DependentUpon>ProductCardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Products\ProductDetailsControl.xaml.cs">
+      <DependentUpon>ProductDetailsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Products\ProductPage.xaml.cs">
       <DependentUpon>ProductPage.xaml</DependentUpon>
     </Compile>
@@ -339,6 +342,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\Page.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\Sections.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -435,6 +442,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Orders\OrdersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Products\ProductCardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Products\ProductDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

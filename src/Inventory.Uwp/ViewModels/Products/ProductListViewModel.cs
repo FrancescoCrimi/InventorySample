@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Inventory.Uwp.Views.Products;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
@@ -59,7 +60,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
         private async void ItemInvoked(ProductDto model)
         {
-            await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs { ProductID = model.ProductID });
+            await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.ProductID });
         }
 
         public async Task LoadAsync(ProductListArgs args)

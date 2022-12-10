@@ -73,4 +73,5 @@
             <TextBlock Style="{StaticResource CardText}" Text="{x:Bind Item.SafetyStockLevel, Mode=OneWay}" />
         </StackPanel>
     </ScrollViewer>
+
 </UserControl>
