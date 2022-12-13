@@ -18,11 +18,11 @@ namespace Inventory.Uwp.Services
         private Frame _frame;
         private object _lastParamUsed;
         private bool _canCurrentPageGoBack;
-        private readonly PageService pageService;
+        //private readonly PageService pageService;
 
-        public NavigationService(PageService pageService)
+        public NavigationService(/*PageService pageService*/)
         {
-            this.pageService = pageService;
+            //this.pageService = pageService;
         }
 
         public Frame Frame

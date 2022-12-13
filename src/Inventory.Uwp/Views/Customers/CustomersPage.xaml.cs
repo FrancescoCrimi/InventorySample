@@ -1,6 +1,20 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿#region copyright
+// ******************************************************************
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+// ******************************************************************
+#endregion
+
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Customers;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -9,9 +23,14 @@ namespace Inventory.Uwp.Views.Customers
 {
     public sealed partial class CustomersPage : Page
     {
+        private readonly WindowService windowService;
+        //private readonly NavigationService navigationService;
+
         public CustomersPage()
         {
             ViewModel = Ioc.Default.GetService<CustomersViewModel>();
+            windowService = Ioc.Default.GetService<WindowService>();
+            //navigationService = Ioc.Default.GetService<NavigationService>();
             InitializeComponent();
         }
 
@@ -29,29 +48,24 @@ namespace Inventory.Uwp.Views.Customers
             ViewModel.Unsubscribe();
         }
 
-
-
-        private void OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-        private void OnDoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
-
-        private  void OpenInNewView(object sender, RoutedEventArgs e)
+        private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
             var args = ViewModel.CustomerList.CreateArgs();
-            //args.IsMainView = false;
-            //await windowService.OpenInNewWindow<CustomersViewModel>(args);
+            args.IsMainView = false;
+            await windowService.OpenInNewWindow<CustomersPage>(args);
+        }
+
+        private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CustomerDetails.CancelEdit();
+            if (pivot.SelectedIndex == 0)
+            {
+                await windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerDetails.CreateArgs());
+            }
+            else
+            {
+                await windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerOrders.CreateArgs());
+            }
         }
 
         public int GetRowSpan(bool isMultipleSelection)

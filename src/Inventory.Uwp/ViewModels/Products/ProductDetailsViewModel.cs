@@ -28,17 +28,6 @@ using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
-    #region ProductDetailsArgs
-    public class ProductDetailsArgs
-    {
-        public static ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
-
-        public string ProductID { get; set; }
-
-        public bool IsNew => string.IsNullOrEmpty(ProductID);
-    }
-    #endregion
-
     public class ProductDetailsViewModel : GenericDetailsViewModel<ProductDto>
     {
         private readonly ILogger<ProductDetailsViewModel> logger;

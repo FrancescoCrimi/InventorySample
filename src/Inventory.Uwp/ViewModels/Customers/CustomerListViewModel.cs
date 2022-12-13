@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Inventory.Uwp.Views.Customers;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {
@@ -125,7 +126,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<CustomerDetailsViewModel>(new CustomerDetailsArgs { CustomerID = SelectedItem.CustomerID });
+                await windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerID = SelectedItem.CustomerID });
             }
         }
 
@@ -133,11 +134,11 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<CustomerDetailsViewModel>(new CustomerDetailsArgs());
+                await windowService.OpenInNewWindow<CustomerPage>(new CustomerDetailsArgs());
             }
             else
             {
-                //navigationService.Navigate<CustomerDetailsViewModel>(new CustomerDetailsArgs());
+                navigationService.Navigate<CustomerPage>(new CustomerDetailsArgs());
             }
 
             StatusReady();

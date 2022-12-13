@@ -12,32 +12,40 @@
 // ******************************************************************
 #endregion
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.ViewModels.Customers;
-using Windows.UI.Xaml;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace Inventory.Uwp.Views.Customers
 {
-    public sealed partial class CustomersListControl : UserControl
+    public sealed partial class CustomerPage : Page
     {
-        public CustomersListControl()
+        public CustomerPage()
         {
+            ViewModel = Ioc.Default.GetService<CustomerDetailsViewModel>();
             InitializeComponent();
         }
 
+        public CustomerDetailsViewModel ViewModel { get; }
 
-        #region ViewModel
-        public CustomerListViewModel ViewModel
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            get => (CustomerListViewModel)GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
+            ViewModel.Unload();
+            ViewModel.Unsubscribe();
         }
 
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register("ViewModel",
-                                        typeof(CustomerListViewModel),
-                                        typeof(CustomersListControl),
-                                        new PropertyMetadata(null));
-        #endregion
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            ViewModel.Subscribe();
+            await ViewModel.LoadAsync(e.Parameter as CustomerDetailsArgs);
+
+            if (ViewModel.IsEditMode)
+            {
+                await Task.Delay(100);
+                details.SetFocus();
+            }
+        }
     }
 }

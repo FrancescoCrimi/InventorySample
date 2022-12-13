@@ -29,10 +29,6 @@
                              Color="#F5F5F5" />
 
             <!--  Converters  -->
-            <converters:ObjectToImageConverter x:Key="ObjectToImageConverter" />
-            <converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
-            <converters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
-            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                                   FalseValue="Collapsed"
                                                   TrueValue="Visible" />
@@ -40,8 +36,14 @@
                                                   FalseValue="Visible"
                                                   TrueValue="Collapsed" />
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+            <converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
+            <converters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
+            <converters:DecimalConverter x:Key="DecimalConverter" />
             <converters:Int32Converter x:Key="Int32Converter" />
+
             <converters:LogLevelConverter x:Key="LogLevelConverter" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+            <converters:ObjectToImageConverter x:Key="ObjectToImageConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -21,12 +21,12 @@
                                Width="{StaticResource CardPictureRadius}"
                                Height="{StaticResource CardPictureRadius}" />
                 <libcontrols:RoundButton Radius="{StaticResource CardPictureRadius}"
-                                      BorderThickness="1"
-                                      BorderBrush="White"
-                                      Background="Transparent"
-                                      Command="{x:Bind ViewModel.EditPictureCommand}"
-                                      HorizontalAlignment="Center"
-                                      Visibility="{x:Bind ViewModel.IsEditMode, Mode=OneWay}">
+                                         BorderThickness="1"
+                                         BorderBrush="White"
+                                         Background="Transparent"
+                                         Command="{x:Bind ViewModel.EditPictureCommand}"
+                                         HorizontalAlignment="Center"
+                                         Visibility="{x:Bind ViewModel.IsEditMode, Mode=OneWay}">
                     <Grid Width="{StaticResource CardPictureRadius}"
                           Height="{StaticResource CardPictureRadius}">
                         <Rectangle Fill="White"

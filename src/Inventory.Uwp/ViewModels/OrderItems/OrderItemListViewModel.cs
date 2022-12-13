@@ -131,7 +131,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<OrderItemDetailsViewModel>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderID, OrderLine = SelectedItem.OrderLine });
+                await windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderID, OrderLine = SelectedItem.OrderLine });
             }
         }
 
@@ -139,11 +139,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<OrderItemDetailsViewModel>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                await windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
             else
             {
-                navigationService.Navigate<OrderItemDetailsPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
 
             StatusReady();

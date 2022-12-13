@@ -33,7 +33,11 @@ namespace Inventory.Uwp.Views.Customers
             set { SetValue(ViewModelProperty, value); }
         }
 
-        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(nameof(ViewModel), typeof(CustomerDetailsViewModel), typeof(CustomersCardControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel),
+                                        typeof(CustomerDetailsViewModel),
+                                        typeof(CustomersCardControl),
+                                        new PropertyMetadata(null));
         #endregion
 
         #region Item
@@ -43,7 +47,11 @@ namespace Inventory.Uwp.Views.Customers
             set { SetValue(ItemProperty, value); }
         }
 
-        public static readonly DependencyProperty ItemProperty = DependencyProperty.Register(nameof(Item), typeof(CustomerDto), typeof(CustomersCardControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemProperty =
+            DependencyProperty.Register(nameof(Item),
+                                        typeof(CustomerDto),
+                                        typeof(CustomersCardControl),
+                                        new PropertyMetadata(null));
         #endregion
     }
 }

@@ -18,26 +18,30 @@ using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.Views.Customers
 {
-    public sealed partial class CustomersListControl : UserControl
+    public sealed partial class CustomerDetailsControl : UserControl
     {
-        public CustomersListControl()
+        public CustomerDetailsControl()
         {
             InitializeComponent();
         }
 
-
         #region ViewModel
-        public CustomerListViewModel ViewModel
+        public CustomerDetailsViewModel ViewModel
         {
-            get => (CustomerListViewModel)GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
+            get { return (CustomerDetailsViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
 
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register("ViewModel",
-                                        typeof(CustomerListViewModel),
-                                        typeof(CustomersListControl),
+                                        typeof(CustomerDetailsViewModel),
+                                        typeof(CustomerDetailsControl),
                                         new PropertyMetadata(null));
         #endregion
+
+        public void SetFocus()
+        {
+            details.SetFocus();
+        }
     }
 }

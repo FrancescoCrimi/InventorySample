@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿#region copyright
+// ******************************************************************
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+// ******************************************************************
+#endregion
+
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.ViewModels.Customers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// Il modello di elemento Controllo utente è documentato all'indirizzo https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Inventory.Uwp.Views.Customers
 {
@@ -21,7 +23,35 @@ namespace Inventory.Uwp.Views.Customers
     {
         public CustomerCardControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
+
+        #region ViewModel
+        public CustomerDetailsViewModel ViewModel
+        {
+            get { return (CustomerDetailsViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel),
+                                        typeof(CustomerDetailsViewModel),
+                                        typeof(CustomerCardControl),
+                                        new PropertyMetadata(null));
+        #endregion
+
+        #region Item
+        public CustomerDto Item
+        {
+            get { return (CustomerDto)GetValue(ItemProperty); }
+            set { SetValue(ItemProperty, value); }
+        }
+
+        public static readonly DependencyProperty ItemProperty =
+            DependencyProperty.Register(nameof(Item),
+                                        typeof(CustomerDto),
+                                        typeof(CustomerCardControl),
+                                        new PropertyMetadata(null));
+        #endregion
     }
 }

@@ -12,32 +12,41 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.Orders;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Inventory.Uwp.Views.Customers
+namespace Inventory.Uwp.Views.Orders
 {
-    public sealed partial class CustomersListControl : UserControl
+    public sealed partial class OrderDetailsControl : UserControl
     {
-        public CustomersListControl()
+        public OrderDetailsControl()
         {
             InitializeComponent();
         }
 
-
         #region ViewModel
-        public CustomerListViewModel ViewModel
+        public OrderDetailsWithItemsViewModel ViewModel
         {
-            get => (CustomerListViewModel)GetValue(ViewModelProperty);
-            set => SetValue(ViewModelProperty, value);
+            get { return (OrderDetailsWithItemsViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
 
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register("ViewModel",
-                                        typeof(CustomerListViewModel),
-                                        typeof(CustomersListControl),
+            DependencyProperty.Register(nameof(ViewModel),
+                                        typeof(OrderDetailsWithItemsViewModel),
+                                        typeof(OrderDetailsControl),
                                         new PropertyMetadata(null));
         #endregion
+
+        public void SetFocus()
+        {
+            details.SetFocus();
+        }
+
+        public int GetRowSpan(bool isItemNew)
+        {
+            return isItemNew ? 2 : 1;
+        }
     }
 }

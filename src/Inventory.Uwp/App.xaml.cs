@@ -72,7 +72,7 @@ namespace Inventory.Uwp
                 // Services
                 .AddSingleton<ActivationService>()
                 .AddScoped<NavigationService>()
-                .AddSingleton<PageService>()
+                //.AddSingleton<PageService>()
                 .AddSingleton<WindowService, WindowService>()
 
                 .AddSingleton<IAppSettings, AppSettings>()

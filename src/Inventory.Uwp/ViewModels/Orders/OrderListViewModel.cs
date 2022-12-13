@@ -28,6 +28,7 @@ using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.Services.VirtualCollections;
+using Inventory.Uwp.Views.Orders;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
@@ -36,16 +37,19 @@ namespace Inventory.Uwp.ViewModels.Orders
         private readonly ILogger<OrderListViewModel> logger;
         private readonly OrderServiceFacade orderService;
         private readonly WindowService windowService;
+        private readonly NavigationService navigationService;
         private readonly OrderCollection collection;
 
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
                                   OrderServiceFacade orderService,
-                                  WindowService windowService)
+                                  WindowService windowService,
+                                  NavigationService navigationService)
             : base()
         {
             this.logger = logger;
             this.orderService = orderService;
             this.windowService = windowService;
+            this.navigationService = navigationService;
             collection = new OrderCollection(orderService);
             Items = collection;
         }
@@ -131,7 +135,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<OrderDetailsViewModel>(new OrderDetailsArgs { OrderID = SelectedItem.OrderID });
+                await windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { OrderID = SelectedItem.OrderID });
             }
         }
 
@@ -139,11 +143,11 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<OrderDetailsViewModel>(new OrderDetailsArgs { CustomerID = ViewModelArgs.CustomerID });
+                await windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { CustomerID = ViewModelArgs.CustomerID });
             }
             else
             {
-                //navigationService.Navigate<OrderDetailsViewModel>(new OrderDetailsArgs { CustomerID = ViewModelArgs.CustomerID });
+                navigationService.Navigate<OrderPage>(new OrderDetailsArgs { CustomerID = ViewModelArgs.CustomerID });
             }
 
             StatusReady();

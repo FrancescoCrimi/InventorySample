@@ -12,25 +12,32 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
+using Inventory.Uwp.Dto;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using System;
-using System.Linq.Expressions;
 
-namespace Inventory.Uwp.ViewModels.Customers
+namespace Inventory.Uwp.Views.OrderItem
 {
-    public class CustomerListArgs
+    public sealed partial class OrderItemCardControl : UserControl
     {
-        public CustomerListArgs()
+        public OrderItemCardControl()
         {
-            OrderBy = r => r.FirstName;
+            this.InitializeComponent();
         }
 
-        public string Query { get; set; }
+        #region Item
+        public OrderItemDto Item
+        {
+            get { return (OrderItemDto)GetValue(ItemProperty); }
+            set { SetValue(ItemProperty, value); }
+        }
 
-        public bool IsMainView { get; set; }
-
-        public Expression<Func<Customer, object>> OrderBy { get; set; }
-
-        public Expression<Func<Customer, object>> OrderByDesc { get; set; }
+        public static readonly DependencyProperty ItemProperty =
+            DependencyProperty.Register(nameof(Item),
+                                        typeof(OrderItemDto),
+                                        typeof(OrderItemCardControl),
+                                        new PropertyMetadata(null));
+        #endregion
     }
 }

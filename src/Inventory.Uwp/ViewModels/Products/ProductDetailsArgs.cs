@@ -12,25 +12,14 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
-using System;
-using System.Linq.Expressions;
-
-namespace Inventory.Uwp.ViewModels.Customers
+namespace Inventory.Uwp.ViewModels.Products
 {
-    public class CustomerListArgs
+    public class ProductDetailsArgs
     {
-        public CustomerListArgs()
-        {
-            OrderBy = r => r.FirstName;
-        }
+        public static ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
 
-        public string Query { get; set; }
+        public string ProductID { get; set; }
 
-        public bool IsMainView { get; set; }
-
-        public Expression<Func<Customer, object>> OrderBy { get; set; }
-
-        public Expression<Func<Customer, object>> OrderByDesc { get; set; }
+        public bool IsNew => string.IsNullOrEmpty(ProductID);
     }
 }

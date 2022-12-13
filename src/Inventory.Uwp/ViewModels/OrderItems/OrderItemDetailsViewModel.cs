@@ -28,18 +28,6 @@ using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.OrderItems
 {
-    #region OrderItemDetailsArgs
-    public class OrderItemDetailsArgs
-    {
-        public static OrderItemDetailsArgs CreateDefault() => new OrderItemDetailsArgs();
-
-        public long OrderID { get; set; }
-        public int OrderLine { get; set; }
-
-        public bool IsNew => OrderLine <= 0;
-    }
-    #endregion
-
     public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItemDto>
     {
         private readonly ILogger<OrderItemDetailsViewModel> logger;

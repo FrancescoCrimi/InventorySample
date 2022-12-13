@@ -134,7 +134,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<ProductDetailsViewModel>(new ProductDetailsArgs());
+                await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs());
             }
             else
             {

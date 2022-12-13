@@ -12,25 +12,32 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
 using System;
-using System.Linq.Expressions;
+using Windows.UI.Xaml.Data;
 
-namespace Inventory.Uwp.ViewModels.Customers
+namespace Inventory.Uwp.Converters
 {
-    public class CustomerListArgs
+    public sealed class DecimalConverter : IValueConverter
     {
-        public CustomerListArgs()
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
-            OrderBy = r => r.FirstName;
+            if (value is decimal m)
+            {
+                return m == 0 ? "" : m.ToString();
+            }
+            return "";
         }
 
-        public string Query { get; set; }
-
-        public bool IsMainView { get; set; }
-
-        public Expression<Func<Customer, object>> OrderBy { get; set; }
-
-        public Expression<Func<Customer, object>> OrderByDesc { get; set; }
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if (value != null)
+            {
+                if (Decimal.TryParse(value.ToString(), out decimal m))
+                {
+                    return m;
+                }
+            }
+            return 0m;
+        }
     }
 }
