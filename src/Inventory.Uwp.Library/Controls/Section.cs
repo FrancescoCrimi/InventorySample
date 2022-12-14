@@ -25,7 +25,7 @@ namespace Inventory.Uwp.Library.Controls
 
         private Border _container = null;
         private Grid _content = null;
-        //private IconLabelButton _button = null;
+        private Button _button = null;
 
         public Section()
         {
@@ -204,11 +204,11 @@ namespace Inventory.Uwp.Library.Controls
             _container = base.GetTemplateChild("container") as Border;
             _content = base.GetTemplateChild("content") as Grid;
 
-            //_button = base.GetTemplateChild("button") as IconLabelButton;
-            //if (_button != null)
-            //{
-            //    _button.Click += OnClick;
-            //}
+            _button = base.GetTemplateChild("button") as Button;
+            if (_button != null)
+            {
+                _button.Click += OnClick;
+            }
             IsEnabledChanged += OnIsEnabledChanged;
 
             UpdateControl();

@@ -59,8 +59,7 @@
 
                     <Pivot x:Name="pivot">
                         <PivotItem Header="Customer">
-                            <views:CustomersDetails DataContext="DataContext"
-                                                    ViewModel="{x:Bind ViewModel.CustomerDetails}" />
+                            <views:CustomersDetails ViewModel="{x:Bind ViewModel.CustomerDetails}" />
                         </PivotItem>
                         <PivotItem Header="Orders">
                             <views:CustomersOrders ViewModel="{x:Bind ViewModel.CustomerOrders}" />

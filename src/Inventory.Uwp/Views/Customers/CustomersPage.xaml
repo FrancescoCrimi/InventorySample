@@ -50,21 +50,19 @@
                   BorderBrush="LightGray"
                   BorderThickness="0,1,0,0"
                   Visibility="{x:Bind ViewModel.CustomerList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-
                 <libcontrols:Section IsEnabled="{x:Bind ViewModel.CustomerDetails.IsEnabled, Mode=OneWay}"
                                      HeaderButtonGlyph="&#xE2B4;"
+                                     HeaderButtonClick="OpenDetailsInNewView"
                                      Background="{StaticResource DetailsViewBackgroundColor}"
                                      Visibility="{x:Bind ViewModel.CustomerDetails.IsDataAvailable, Mode=OneWay}">
                     <Pivot x:Name="pivot">
                         <PivotItem Header="Customer">
-                            <local:CustomersDetailsControl DataContext="DataContext"
-                                                           ViewModel="{x:Bind ViewModel.CustomerDetails}" />
+                            <local:CustomersDetailsControl ViewModel="{x:Bind ViewModel.CustomerDetails}" />
                         </PivotItem>
                         <PivotItem Header="Orders">
                             <local:CustomersOrdersControl ViewModel="{x:Bind ViewModel.CustomerOrders}" />
                         </PivotItem>
                     </Pivot>
-
                 </libcontrols:Section>
 
                 <!--Empty Details-->
