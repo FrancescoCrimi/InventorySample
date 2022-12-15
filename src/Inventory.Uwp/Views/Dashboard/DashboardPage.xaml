@@ -1,14 +1,14 @@
 ﻿<Page x:Class="Inventory.Uwp.Views.Dashboard.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:local="using:Inventory.Uwp.Views.Dashboard"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
       xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
       ui:ApplicationViewExtensions.Title="Dashboard"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -69,19 +69,19 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
 
-            <local:CustomersPane Margin="2"
+            <local:CustomersControl Margin="2"
                                  Width="600"
                                  Height="250"
                                  ItemsSource="{x:Bind ViewModel.Customers, Mode=OneWay}"
                                  Tag="Customers" />
 
-            <local:ProductsPane Margin="1"
+            <local:ProductsControl Margin="1"
                                 Width="400"
                                 Height="250"
                                 ItemsSource="{x:Bind ViewModel.Products, Mode=OneWay}"
                                 Tag="Products" />
 
-            <local:OrdersPane Margin="1"
+            <local:OrdersControl Margin="1"
                               Width="400"
                               Height="250"
                               ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"

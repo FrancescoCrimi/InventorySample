@@ -22,7 +22,7 @@ namespace Inventory.Uwp.Views.OrderItem
     {
         public OrderItemDetailsControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #region ViewModel

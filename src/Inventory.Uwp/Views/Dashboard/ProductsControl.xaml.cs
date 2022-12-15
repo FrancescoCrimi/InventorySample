@@ -19,24 +19,24 @@ using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.Views.Dashboard
 {
-    public sealed partial class CustomersPane : UserControl
+    public sealed partial class ProductsControl : UserControl
     {
-        public CustomersPane()
+        public ProductsControl()
         {
             InitializeComponent();
         }
 
         #region ItemsSource
-        public IList<CustomerDto> ItemsSource
+        public IList<ProductDto> ItemsSource
         {
-            get => (IList<CustomerDto>)GetValue(ItemsSourceProperty);
+            get => (IList<ProductDto>)GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
         }
 
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource",
-                                        typeof(IList<CustomerDto>),
-                                        typeof(CustomersPane),
+                                        typeof(IList<ProductDto>),
+                                        typeof(ProductsControl),
                                         new PropertyMetadata(null));
         #endregion
     }

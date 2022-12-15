@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="Inventory.Uwp.Views.Logs.LogsDetailsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:Inventory.Uwp.Views.Logs"
              xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
              xmlns:viewmodels="using:Inventory.Uwp.ViewModels.Logs"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -16,13 +16,13 @@
             <StackPanel Margin="0,12"
                         Spacing="6">
                 <libcontrols:FormTextBox Header="Message"
-                                      Text="{x:Bind Item.Message, Mode=TwoWay}"
-                                      TextWrapping="Wrap"
-                                      Mode="ReadOnly" />
+                                         Text="{x:Bind Item.Message, Mode=TwoWay}"
+                                         TextWrapping="Wrap"
+                                         Mode="ReadOnly" />
                 <libcontrols:FormTextBox Header="Description"
-                                      Text="{x:Bind Item.Description, Mode=TwoWay}"
-                                      TextWrapping="Wrap"
-                                      Mode="ReadOnly" />
+                                         Text="{x:Bind Item.Description, Mode=TwoWay}"
+                                         TextWrapping="Wrap"
+                                         Mode="ReadOnly" />
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>

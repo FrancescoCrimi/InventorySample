@@ -276,17 +276,17 @@
     <Compile Include="Views\Customers\CustomersPage.xaml.cs">
       <DependentUpon>CustomersPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\CustomersPane.xaml.cs">
-      <DependentUpon>CustomersPane.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\CustomersControl.xaml.cs">
+      <DependentUpon>CustomersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dashboard\DashboardPage.xaml.cs">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\OrdersPane.xaml.cs">
-      <DependentUpon>OrdersPane.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\OrdersControl.xaml.cs">
+      <DependentUpon>OrdersControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\ProductsPane.xaml.cs">
-      <DependentUpon>ProductsPane.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\ProductsControl.xaml.cs">
+      <DependentUpon>ProductsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Logs\LogsDetailsControl.xaml.cs">
       <DependentUpon>LogsDetailsControl.xaml</DependentUpon>
@@ -438,7 +438,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\CustomersPane.xaml">
+    <Page Include="Views\Dashboard\CustomersControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -446,11 +446,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\OrdersPane.xaml">
+    <Page Include="Views\Dashboard\OrdersControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\ProductsPane.xaml">
+    <Page Include="Views\Dashboard\ProductsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

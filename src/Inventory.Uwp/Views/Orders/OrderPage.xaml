@@ -12,9 +12,9 @@
         <!--<controls:WindowTitle Title="{x:Bind ViewModel.OrderDetails.Title, Mode=OneWay}" />-->
 
         <libcontrols:Section IsEnabled="{x:Bind ViewModel.OrderDetails.IsEnabled, Mode=OneWay}"
-                          Style="{StaticResource DetailsViewSection}">
+                             Style="{StaticResource DetailsViewSection}">
             <local:OrderDetailsControl x:Name="details"
-                                ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
+                                       ViewModel="{x:Bind ViewModel, Mode=OneWay}" />
         </libcontrols:Section>
     </Grid>
 </Page>

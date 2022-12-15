@@ -33,7 +33,10 @@ namespace Inventory.Uwp.Views.Logs
         }
 
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register("ViewModel", typeof(LogDetailsViewModel), typeof(LogsDetailsControl), new PropertyMetadata(null));
+            DependencyProperty.Register("ViewModel",
+                                        typeof(LogDetailsViewModel),
+                                        typeof(LogsDetailsControl),
+                                        new PropertyMetadata(null));
         #endregion
     }
 }

@@ -19,9 +19,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.Views.Dashboard
 {
-    public sealed partial class OrdersPane : UserControl
+    public sealed partial class OrdersControl : UserControl
     {
-        public OrdersPane()
+        public OrdersControl()
         {
             InitializeComponent();
         }
@@ -36,7 +36,7 @@ namespace Inventory.Uwp.Views.Dashboard
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource",
                                         typeof(IList<OrderDto>),
-                                        typeof(OrdersPane),
+                                        typeof(OrdersControl),
                                         new PropertyMetadata(null));
         #endregion
     }

@@ -59,11 +59,11 @@
                     <Pivot x:Name="pivot">
                         <PivotItem Header="Order">
                             <local:OrdersDetailsControl Grid.Row="1"
-                                                 ViewModel="{x:Bind ViewModel.OrderDetails}" />
+                                                        ViewModel="{x:Bind ViewModel.OrderDetails}" />
                         </PivotItem>
                         <PivotItem Header="Order Items">
                             <local:OrdersOrderItemsControl Grid.Row="1"
-                                                    ViewModel="{x:Bind ViewModel.OrderItemList}" />
+                                                           ViewModel="{x:Bind ViewModel.OrderItemList}" />
                         </PivotItem>
                     </Pivot>
                 </libcontrols:Section>

@@ -23,7 +23,7 @@ namespace Inventory.Uwp.Views.OrderItem
     {
         public OrderItemCardControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         #region Item
