@@ -12,40 +12,36 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.ViewModels.Customers;
-using System.Threading.Tasks;
+using Inventory.Uwp.ViewModels.OrderItems;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
-namespace Inventory.Uwp.Views.Customers
+namespace Inventory.Uwp.Views.OrderItems
 {
-    public sealed partial class CustomerPage : Page
+    public sealed partial class OrderItemDetailsControl : UserControl
     {
-        public CustomerPage()
+        public OrderItemDetailsControl()
         {
-            ViewModel = Ioc.Default.GetService<CustomerDetailsViewModel>();
             InitializeComponent();
         }
 
-        public CustomerDetailsViewModel ViewModel { get; }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        #region ViewModel
+        public OrderItemDetailsViewModel ViewModel
         {
-            ViewModel.Subscribe();
-            await ViewModel.LoadAsync(e.Parameter as CustomerDetailsArgs);
-
-            if (ViewModel.IsEditMode)
-            {
-                await Task.Delay(100);
-                details.SetFocus();
-            }
+            get { return (OrderItemDetailsViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel",
+                                        typeof(OrderItemDetailsViewModel),
+                                        typeof(OrderItemDetailsControl),
+                                        new PropertyMetadata(null));
+        #endregion
+
+        public void SetFocus()
         {
-            ViewModel.Unload();
-            ViewModel.Unsubscribe();
+            details.SetFocus();
         }
     }
 }

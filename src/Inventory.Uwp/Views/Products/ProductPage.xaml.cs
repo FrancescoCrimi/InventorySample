@@ -30,12 +30,6 @@ namespace Inventory.Uwp.Views.Products
 
         public ProductDetailsViewModel ViewModel { get; }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            ViewModel.Unload();
-            ViewModel.Unsubscribe();
-        }
-
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.Subscribe();
@@ -46,6 +40,12 @@ namespace Inventory.Uwp.Views.Products
                 await Task.Delay(100);
                 details.SetFocus();
             }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            ViewModel.Unload();
+            ViewModel.Unsubscribe();
         }
     }
 }

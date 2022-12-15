@@ -13,6 +13,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Products;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -23,9 +24,12 @@ namespace Inventory.Uwp.Views.Products
 {
     public sealed partial class ProductsPage : Page
     {
+        private readonly WindowService windowService;
+
         public ProductsPage()
         {
             ViewModel = Ioc.Default.GetService<ProductsViewModel>();
+            windowService = Ioc.Default.GetService<WindowService>();
             InitializeComponent();
         }
 
@@ -45,8 +49,7 @@ namespace Inventory.Uwp.Views.Products
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            //await windowService.OpenInNewWindow<ProductsViewModel>(ViewModel.ProductList.CreateArgs());
-            await Task.CompletedTask;
+            await windowService.OpenInNewWindow<ProductsPage>(ViewModel.ProductList.CreateArgs());
         }
 
         public int GetRowSpan(bool isMultipleSelection)

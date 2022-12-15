@@ -12,40 +12,31 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.ViewModels.OrderItems;
-using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
-namespace Inventory.Uwp.Views.OrderItem
+namespace Inventory.Uwp.Views.OrderItems
 {
-    public sealed partial class OrderItemPage : Page
+    public sealed partial class OrderItemsListControl : UserControl
     {
-        public OrderItemPage()
+        public OrderItemsListControl()
         {
-            ViewModel = Ioc.Default.GetService<OrderItemDetailsViewModel>();
             InitializeComponent();
         }
 
-        public OrderItemDetailsViewModel ViewModel { get; }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        #region ViewModel
+        public OrderItemListViewModel ViewModel
         {
-            ViewModel.Unload();
-            ViewModel.Unsubscribe();
+            get { return (OrderItemListViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            ViewModel.Subscribe();
-            await ViewModel.LoadAsync(e.Parameter as OrderItemDetailsArgs);
-
-            if (ViewModel.IsEditMode)
-            {
-                await Task.Delay(100);
-                details.SetFocus();
-            }
-        }
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel),
+                                        typeof(OrderItemListViewModel),
+                                        typeof(OrderItemsListControl),
+                                        new PropertyMetadata(null));
+        #endregion
     }
 }

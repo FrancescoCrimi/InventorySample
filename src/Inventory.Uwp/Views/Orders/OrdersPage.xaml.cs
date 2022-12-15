@@ -15,6 +15,7 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Orders;
+using Inventory.Uwp.Views.OrderItems;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -24,15 +25,16 @@ namespace Inventory.Uwp.Views.Orders
 {
     public sealed partial class OrdersPage : Page
     {
+        private readonly WindowService windowService;
+
         public OrdersPage()
         {
             ViewModel = Ioc.Default.GetService<OrdersViewModel>();
-            NavigationService = Ioc.Default.GetService<NavigationService>();
+            windowService = Ioc.Default.GetService<WindowService>();
             InitializeComponent();
         }
 
         public OrdersViewModel ViewModel { get; }
-        public NavigationService NavigationService { get; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -48,8 +50,8 @@ namespace Inventory.Uwp.Views.Orders
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            //await NavigationService.CreateNewViewAsync<OrdersViewModel>(ViewModel.OrderList.CreateArgs());
-            await Task.CompletedTask;
+            var args = ViewModel.OrderList.CreateArgs();
+            await windowService.OpenInNewWindow<OrdersPage>(args);
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
@@ -57,13 +59,12 @@ namespace Inventory.Uwp.Views.Orders
             ViewModel.OrderDetails.CancelEdit();
             if (pivot.SelectedIndex == 0)
             {
-                //await NavigationService.CreateNewViewAsync<OrderDetailsViewModel>(ViewModel.OrderDetails.CreateArgs());
+                await windowService.OpenInNewWindow<OrderPage>(ViewModel.OrderDetails.CreateArgs());
             }
             else
             {
-                ////await NavigationService.CreateNewViewAsync<OrderItemsViewModel>(ViewModel.OrderItemList.CreateArgs());
+                await windowService.OpenInNewWindow<OrderItemsPage>(ViewModel.OrderItemList.CreateArgs());
             }
-            await Task.CompletedTask;
         }
 
         public int GetRowSpan(bool isMultipleSelection)

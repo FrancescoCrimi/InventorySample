@@ -20,7 +20,7 @@ using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Views.OrderItem;
+using Inventory.Uwp.Views.OrderItems;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

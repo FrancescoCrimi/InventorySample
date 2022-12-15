@@ -12,36 +12,40 @@
 // ******************************************************************
 #endregion
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.ViewModels.OrderItems;
-using Windows.UI.Xaml;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
-namespace Inventory.Uwp.Views.OrderItem
+namespace Inventory.Uwp.Views.OrderItems
 {
-    public sealed partial class OrderItemDetailsControl : UserControl
+    public sealed partial class OrderItemPage : Page
     {
-        public OrderItemDetailsControl()
+        public OrderItemPage()
         {
+            ViewModel = Ioc.Default.GetService<OrderItemDetailsViewModel>();
             InitializeComponent();
         }
 
-        #region ViewModel
-        public OrderItemDetailsViewModel ViewModel
+        public OrderItemDetailsViewModel ViewModel { get; }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            get { return (OrderItemDetailsViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            ViewModel.Subscribe();
+            await ViewModel.LoadAsync(e.Parameter as OrderItemDetailsArgs);
+
+            if (ViewModel.IsEditMode)
+            {
+                await Task.Delay(100);
+                details.SetFocus();
+            }
         }
 
-        public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register("ViewModel",
-                                        typeof(OrderItemDetailsViewModel),
-                                        typeof(OrderItemDetailsControl),
-                                        new PropertyMetadata(null));
-        #endregion
-
-        public void SetFocus()
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            details.SetFocus();
+            ViewModel.Unload();
+            ViewModel.Unsubscribe();
         }
     }
 }

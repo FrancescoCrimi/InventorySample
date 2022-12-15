@@ -13,39 +13,53 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.ViewModels.Customers;
-using System.Threading.Tasks;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.OrderItems;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace Inventory.Uwp.Views.Customers
+namespace Inventory.Uwp.Views.OrderItems
 {
-    public sealed partial class CustomerPage : Page
+    public sealed partial class OrderItemsPage : Page
     {
-        public CustomerPage()
+        private readonly WindowService windowService;
+
+        public OrderItemsPage()
         {
-            ViewModel = Ioc.Default.GetService<CustomerDetailsViewModel>();
+            ViewModel = Ioc.Default.GetService<OrderItemsViewModel>();
+            windowService = Ioc.Default.GetService<WindowService>();
             InitializeComponent();
         }
 
-        public CustomerDetailsViewModel ViewModel { get; }
+        public OrderItemsViewModel ViewModel { get; }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.Subscribe();
-            await ViewModel.LoadAsync(e.Parameter as CustomerDetailsArgs);
-
-            if (ViewModel.IsEditMode)
-            {
-                await Task.Delay(100);
-                details.SetFocus();
-            }
+            await ViewModel.LoadAsync(e.Parameter as OrderItemListArgs);
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             ViewModel.Unload();
             ViewModel.Unsubscribe();
+        }
+
+        private async void OpenInNewView(object sender, RoutedEventArgs e)
+        {
+            await windowService.OpenInNewWindow<OrderItemsPage>(ViewModel.OrderItemList.CreateArgs());
+        }
+
+        private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OrderItemDetails.CancelEdit();
+            await windowService.OpenInNewWindow<OrderItemDetailsControl>(ViewModel.OrderItemDetails.CreateArgs());
+        }
+
+        public int GetRowSpan(bool isMultipleSelection)
+        {
+            return isMultipleSelection ? 2 : 1;
         }
     }
 }

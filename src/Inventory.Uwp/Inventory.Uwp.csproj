@@ -297,14 +297,26 @@
     <Compile Include="Views\Logs\LogsPage.xaml.cs">
       <DependentUpon>LogsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItem\OrderItemCardControl.xaml.cs">
+    <Compile Include="Views\OrderItems\OrderItemCardControl.xaml.cs">
       <DependentUpon>OrderItemCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItem\OrderItemDetailsControl.xaml.cs">
+    <Compile Include="Views\OrderItems\OrderItemDetailsControl.xaml.cs">
       <DependentUpon>OrderItemDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItem\OrderItemPage.xaml.cs">
+    <Compile Include="Views\OrderItems\OrderItemPage.xaml.cs">
       <DependentUpon>OrderItemPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderItems\OrderItemsCardControl.xaml.cs">
+      <DependentUpon>OrderItemsCardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderItems\OrderItemsDetailsControl.xaml.cs">
+      <DependentUpon>OrderItemsDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderItems\OrderItemsListControl.xaml.cs">
+      <DependentUpon>OrderItemsListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrderItems\OrderItemsPage.xaml.cs">
+      <DependentUpon>OrderItemsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Orders\OrderDetailsControl.xaml.cs">
       <DependentUpon>OrderDetailsControl.xaml</DependentUpon>
@@ -466,15 +478,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItem\OrderItemCardControl.xaml">
+    <Page Include="Views\OrderItems\OrderItemCardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItem\OrderItemDetailsControl.xaml">
+    <Page Include="Views\OrderItems\OrderItemDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItem\OrderItemPage.xaml">
+    <Page Include="Views\OrderItems\OrderItemPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderItems\OrderItemsCardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderItems\OrderItemsDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderItems\OrderItemsListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OrderItems\OrderItemsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
