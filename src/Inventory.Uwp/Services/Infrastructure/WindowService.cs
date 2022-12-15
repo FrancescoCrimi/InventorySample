@@ -12,14 +12,10 @@ namespace Inventory.Uwp.Services
     public class WindowService
     {
         private readonly ILogger<WindowService> logger;
-        //private readonly PageService pageService;
 
-        public WindowService(ILogger<WindowService> logger
-            //,PageService pageService
-            )
+        public WindowService(ILogger<WindowService> logger            )
         {
             this.logger = logger;
-            //this.pageService = pageService;
         }
 
         public Dictionary<UIContext, AppWindow> AppWindows { get; set; }
