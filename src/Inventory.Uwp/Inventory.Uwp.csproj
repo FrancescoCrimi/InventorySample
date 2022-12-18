@@ -182,11 +182,7 @@
     <Compile Include="Models\OrderStatusModel.cs" />
     <Compile Include="Models\PaymentTypeModel.cs" />
     <Compile Include="Dto\ProductDto.cs" />
-    <Compile Include="Models\SampleCompany.cs" />
-    <Compile Include="Models\SampleOrder.cs" />
-    <Compile Include="Models\SampleOrderDetail.cs" />
     <Compile Include="Models\ShipperModel.cs" />
-    <Compile Include="Models\TabViewItemData.cs" />
     <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Services\Infrastructure\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
@@ -200,8 +196,6 @@
     <Compile Include="Services\OrderItemServiceFacade.cs" />
     <Compile Include="Services\OrderServiceFacade.cs" />
     <Compile Include="Services\ProductServiceFacade.cs" />
-    <Compile Include="Services\SampleDataService.cs" />
-    <Compile Include="Services\SqlServerDataService.cs" />
     <Compile Include="Services\Infrastructure\ThemeSelectorService.cs" />
     <Compile Include="Services\Infrastructure\ViewLifetimeControl.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />

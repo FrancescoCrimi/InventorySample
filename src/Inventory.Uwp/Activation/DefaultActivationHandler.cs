@@ -6,7 +6,7 @@ using Windows.ApplicationModel.Activation;
 
 namespace Inventory.Uwp.Activation
 {
-    internal class DefaultActivationHandler : ActivationHandler<LaunchActivatedEventArgs>
+    internal class DefaultActivationHandler : ActivationHandler<IActivatedEventArgs>
     {
         private readonly NavigationService navigationService;
 
@@ -15,13 +15,20 @@ namespace Inventory.Uwp.Activation
             this.navigationService = navigationService;
         }
 
-        protected override async Task HandleInternalAsync(LaunchActivatedEventArgs args)
+        protected override async Task HandleInternalAsync(IActivatedEventArgs args)
         {
-            navigationService.Navigate(typeof(DashboardPage), args.Arguments);
+            // When the navigation stack isn't restored, navigate to the first page and configure
+            // the new page by passing required information in the navigation parameter
+            object arguments = null;
+            if (args is LaunchActivatedEventArgs launchArgs)
+            {
+                arguments = launchArgs.Arguments;
+            }
+            navigationService.Navigate(typeof(DashboardPage), arguments);
             await Task.CompletedTask;
         }
 
-        protected override bool CanHandleInternal(LaunchActivatedEventArgs args)
+        protected override bool CanHandleInternal(IActivatedEventArgs args)
         {
             // None of the ActivationHandlers has handled the app activation
             return navigationService.Frame.Content == null;

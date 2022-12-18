@@ -14,9 +14,7 @@ using Inventory.Uwp.ViewModels.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
-using Windows.Storage;
 
 namespace Inventory.Uwp
 {
@@ -28,17 +26,14 @@ namespace Inventory.Uwp
             Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
             Ioc.Default.ConfigureServices(ConfigureServices());
-            Task.Run(async () =>
-            {
-                await EnsureLogDbAsync();
-                await EnsureDatabaseAsync();
-            });
         }
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
-            base.OnLaunched(args);
-            await Ioc.Default.GetService<ActivationService>().ActivateAsync(args);
+            if (!args.PrelaunchActivated)
+            {
+                await Ioc.Default.GetService<ActivationService>().ActivateAsync(args);
+            }
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
@@ -65,17 +60,18 @@ namespace Inventory.Uwp
             return new ServiceCollection()
 
                 // Default Activation Handler
-                .AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>()
+                .AddTransient<ActivationHandler<IActivatedEventArgs>, DefaultActivationHandler>()
 
                 // Other Activation Handlers
 
                 // Services
                 .AddSingleton<ActivationService>()
                 .AddScoped<NavigationService>()
-                //.AddSingleton<PageService>()
                 .AddSingleton<WindowService, WindowService>()
 
                 .AddSingleton<IAppSettings, AppSettings>()
+
+                // Core Services
                 .AddInventoryApplication()
 
                 .AddTransient<LogServiceFacade>()
@@ -118,36 +114,6 @@ namespace Inventory.Uwp
                 .AddTransient<LogDetailsViewModel>()
 
                 .BuildServiceProvider();
-        }
-
-        private async Task EnsureLogDbAsync()
-        {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var appLogFolder = await localFolder.CreateFolderAsync(AppSettings.AppLogPath, CreationCollisionOption.OpenIfExists);
-            if (await appLogFolder.TryGetItemAsync(AppSettings.AppLogName) == null)
-            {
-                var sourceLogFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/AppLog/AppLog.db"));
-                var targetLogFile = await appLogFolder.CreateFileAsync(AppSettings.AppLogName, CreationCollisionOption.ReplaceExisting);
-                await sourceLogFile.CopyAndReplaceAsync(targetLogFile);
-                //CreateSqliteLogDb();
-            }
-        }
-
-        private async Task EnsureDatabaseAsync()
-        {
-            await EnsureSQLiteDatabaseAsync();
-        }
-
-        private async Task EnsureSQLiteDatabaseAsync()
-        {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
-            if (await databaseFolder.TryGetItemAsync(AppSettings.DatabaseName) == null)
-            {
-                var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Database/VanArsdel.1.01.db"));
-                var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
-                await sourceFile.CopyAndReplaceAsync(targetFile);
-            }
         }
     }
 }

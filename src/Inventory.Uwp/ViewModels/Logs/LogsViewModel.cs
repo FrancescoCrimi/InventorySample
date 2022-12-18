@@ -44,6 +44,7 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public async Task LoadAsync(LogListArgs args)
         {
+            await logService.MarkAllAsReadAsync();
             await AppLogList.LoadAsync(args);
         }
 

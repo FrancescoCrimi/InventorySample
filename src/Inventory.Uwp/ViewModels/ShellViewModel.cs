@@ -41,13 +41,19 @@ namespace Inventory.Uwp.ViewModels
 {
     public class ShellViewModel : ViewModelBase
     {
-        private readonly KeyboardAccelerator _altLeftKeyboardAccelerator;
-        private readonly KeyboardAccelerator _backKeyboardAccelerator;
         private readonly ILogger<ShellViewModel> logger;
         private readonly NavigationService navigationService;
         private readonly LogService logService;
-        private IList<KeyboardAccelerator> _keyboardAccelerators;
         private readonly CoreDispatcher dispatcher;
+        private bool _isEnabled = true;
+        private bool _isError = false;
+        private string _message = "Ready";
+        private int logCount = 10;
+        private bool _isBackEnabled;
+        private AsyncRelayCommand _loadedCommand;
+        private RelayCommand unloadedCommand;
+        private AsyncRelayCommand<WinUI.NavigationViewItemInvokedEventArgs> _itemInvokedCommand;
+        private RelayCommand backRequestedCommand;
 
         public ShellViewModel(ILogger<ShellViewModel> logger,
                               NavigationService navigationService,
@@ -56,138 +62,80 @@ namespace Inventory.Uwp.ViewModels
             this.logger = logger;
             this.navigationService = navigationService;
             this.logService = logService;
-            _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
-            _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
         }
 
-
-        private bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
         }
 
-
-        private bool _isError = false;
         public bool IsError
         {
             get => _isError;
             set => SetProperty(ref _isError, value);
         }
 
-
-        private string _message = "Ready";
         public string Message
         {
             get => _message;
             set => SetProperty(ref _message, value);
         }
 
-
-        private int logNewCount = 10;
-        public int LogNewCount
+        public int LogCount
         {
-            get => logNewCount;
-            set => SetProperty(ref logNewCount, value);
+            get => logCount;
+            set => SetProperty(ref logCount, value);
         }
 
-
-        private bool _isBackEnabled;
         public bool IsBackEnabled
         {
             get { return _isBackEnabled; }
             set { SetProperty(ref _isBackEnabled, value); }
         }
 
-
-        private ICommand _loadedCommand;
-        public ICommand LoadedCommand => _loadedCommand ??
-            (_loadedCommand = new RelayCommand(OnLoaded));
-        private async void OnLoaded()
-        {
-            // Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the page.
-            // More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-            _keyboardAccelerators.Add(_altLeftKeyboardAccelerator);
-            _keyboardAccelerators.Add(_backKeyboardAccelerator);
-
-            await UpdateAppLogBadge();
-            LogService.AddLogEvent += Logging_AddLogEvent;
-            Messenger.Register<StatusMessage>(this, OnStatusMessage);
-        }
-
-
-        private RelayCommand unloadedCommand;
-        public ICommand UnloadedCommand => unloadedCommand ??
-                    (unloadedCommand = new RelayCommand(Unloaded));
-        private void Unloaded()
-        {
-            //MessageService.Unsubscribe(this);
-            LogService.AddLogEvent -= Logging_AddLogEvent;
-            Messenger.UnregisterAll(this);
-        }
-
-
-        private ICommand _itemInvokedCommand;
-        public ICommand ItemInvokedCommand => _itemInvokedCommand ??
-            (_itemInvokedCommand = new RelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(OnItemInvoked));
-        private void OnItemInvoked(WinUI.NavigationViewItemInvokedEventArgs args)
-        {
-            if (args.IsSettingsInvoked)
+        public IAsyncRelayCommand LoadedCommand => _loadedCommand
+            ?? (_loadedCommand = new AsyncRelayCommand(async () =>
             {
-                navigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
-            }
-            else
-            {
-                var selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
-                var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
+                await UpdateAppLogBadge();
+                LogService.AddLogEvent += Logging_AddLogEvent;
+                Messenger.Register<StatusMessage>(this, OnStatusMessage);
+            }));
 
-                if (pageType != null)
+        public ICommand UnloadedCommand => unloadedCommand
+            ?? (unloadedCommand = new RelayCommand(() =>
+            {
+                //MessageService.Unsubscribe(this);
+                LogService.AddLogEvent -= Logging_AddLogEvent;
+                Messenger.UnregisterAll(this);
+            }));
+
+        public IAsyncRelayCommand ItemInvokedCommand => _itemInvokedCommand
+            ?? (_itemInvokedCommand = new AsyncRelayCommand<WinUI.NavigationViewItemInvokedEventArgs>(async (args) =>
+            {
+                if (args.IsSettingsInvoked)
                 {
-                    switch (pageType.Name)
+                    navigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
+                }
+                else
+                {
+                    var selectedItem = args.InvokedItemContainer as WinUI.NavigationViewItem;
+                    var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
+                    if (pageType != null)
                     {
-                        case "DashboardPage":
-                            navigationService.Navigate(pageType);
-                            break;
-                        case "CustomersPage":
-                            navigationService.Navigate(pageType, new CustomerListArgs());
-                            break;
-                        case "OrdersPage":
-                            navigationService.Navigate(pageType, new OrderListArgs());
-                            break;
-                        case "ProductsPage":
-                            navigationService.Navigate(pageType, new ProductListArgs());
-                            break;
-                        case "LogsPage":
-                            navigationService.Navigate(pageType, new LogListArgs());
-                            //await logService.MarkAllAsReadAsync();
-                            //await UpdateAppLogBadge();
-                            break;
-                        //case "SettingsViewModel":
-                        //    navigationService.Navigate(viewModel, new SettingsArgs());
-                        //    break;
-                        default:
-                            navigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
-                            break;
+                        navigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
                     }
                 }
-            }
-        }
+                await UpdateAppLogBadge();
+            }));
+
+        public ICommand BackRequestedCommand => backRequestedCommand
+            ?? (backRequestedCommand = new RelayCommand(() => navigationService.GoBack()));
 
 
-        private RelayCommand backRequestedCommand;
-        public ICommand BackRequestedCommand => backRequestedCommand ??
-            (backRequestedCommand = new RelayCommand(OnBackRequested));
-        private void OnBackRequested()
+        public void Initialize(Frame frame)
         {
-            navigationService.GoBack();
-        }
-
-
-        public void Initialize(Frame frame, IList<KeyboardAccelerator> keyboardAccelerators)
-        {
-            _keyboardAccelerators = keyboardAccelerators;
             navigationService.Frame = frame;
             navigationService.NavigationFailed += Frame_NavigationFailed;
             navigationService.Navigated += Frame_Navigated;
@@ -205,24 +153,6 @@ namespace Inventory.Uwp.ViewModels
         private void Frame_Navigated(object sender, NavigationEventArgs e)
         {
             IsBackEnabled = navigationService.CanGoBack;
-        }
-
-        private KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, VirtualKeyModifiers? modifiers = null)
-        {
-            var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
-            if (modifiers.HasValue)
-            {
-                keyboardAccelerator.Modifiers = modifiers.Value;
-            }
-
-            keyboardAccelerator.Invoked += OnKeyboardAcceleratorInvoked;
-            return keyboardAccelerator;
-        }
-
-        private void OnKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            var result = navigationService.GoBack();
-            args.Handled = result;
         }
 
         private void SetStatus(string message)
@@ -276,7 +206,7 @@ namespace Inventory.Uwp.ViewModels
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var result = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
-                LogNewCount = result;
+                LogCount = result;
             });
         }
 

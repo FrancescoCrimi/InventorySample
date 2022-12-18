@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.Activation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace Inventory.Uwp.Services
@@ -12,13 +14,12 @@ namespace Inventory.Uwp.Services
     // https://github.com/microsoft/TemplateStudio/blob/main/docs/UWP/activation.md
     internal class ActivationService
     {
-        private readonly ActivationHandler<LaunchActivatedEventArgs> _defaultHandler;
+        private readonly ActivationHandler<IActivatedEventArgs> _defaultHandler;
         private readonly IEnumerable<ActivationHandler> _activationHandlers;
-        //private Lazy<UIElement> _shell;
 
         private object _lastActivationArgs;
 
-        public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler,
+        public ActivationService(ActivationHandler<IActivatedEventArgs> defaultHandler,
                                  IEnumerable<ActivationHandler> activationHandlers)
         {
             _defaultHandler = defaultHandler;
@@ -38,8 +39,7 @@ namespace Inventory.Uwp.Services
                 if (Window.Current.Content == null)
                 {
                     // Create a Shell or Frame to act as the navigation context
-                    //_shell = Ioc.Default.GetService<Views.ShellPage>();
-                    Window.Current.Content = new Views.ShellPage() /*?? new Frame()*/;
+                    Window.Current.Content = new Views.ShellPage();
                 }
             }
 
@@ -62,6 +62,10 @@ namespace Inventory.Uwp.Services
         {
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
             await WindowManagerService.Current.InitializeAsync();
+
+            await EnsureLogDbAsync();
+            await EnsureDatabaseAsync();
+            await ConfigureLookupTables();
         }
 
         private async Task HandleActivationAsync(object activationArgs)
@@ -86,24 +90,49 @@ namespace Inventory.Uwp.Services
         private async Task StartupAsync()
         {
             await ThemeSelectorService.SetRequestedThemeAsync();
-            await ConfigureLookupTables();
         }
-
-        //private IEnumerable<ActivationHandler> GetActivationHandlers()
-        //{
-        //    yield break;
-        //}
 
         private bool IsInteractive(object args)
         {
             return args is IActivatedEventArgs;
         }
 
+
         private async Task ConfigureLookupTables()
         {
             var lookupTables = Ioc.Default.GetService<LookupTableServiceFacade>();
             await lookupTables.InitializeAsync();
             //LookupTablesProxy.Instance = lookupTables;
+        }
+
+        private async Task EnsureLogDbAsync()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var appLogFolder = await localFolder.CreateFolderAsync(AppSettings.AppLogPath, CreationCollisionOption.OpenIfExists);
+            if (await appLogFolder.TryGetItemAsync(AppSettings.AppLogName) == null)
+            {
+                var sourceLogFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/AppLog/AppLog.db"));
+                var targetLogFile = await appLogFolder.CreateFileAsync(AppSettings.AppLogName, CreationCollisionOption.ReplaceExisting);
+                await sourceLogFile.CopyAndReplaceAsync(targetLogFile);
+                //CreateSqliteLogDb();
+            }
+        }
+
+        private async Task EnsureDatabaseAsync()
+        {
+            await EnsureSQLiteDatabaseAsync();
+        }
+
+        private async Task EnsureSQLiteDatabaseAsync()
+        {
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
+            if (await databaseFolder.TryGetItemAsync(AppSettings.DatabaseName) == null)
+            {
+                var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Database/VanArsdel.1.01.db"));
+                var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
+                await sourceFile.CopyAndReplaceAsync(targetFile);
+            }
         }
     }
 }

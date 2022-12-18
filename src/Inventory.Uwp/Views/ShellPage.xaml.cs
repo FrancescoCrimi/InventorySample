@@ -23,10 +23,11 @@ namespace Inventory.Uwp.Views
     {
         public ShellPage()
         {
+            ViewModel = Ioc.Default.GetService<ShellViewModel>();
             InitializeComponent();
-            ShellViewModel viewModel = Ioc.Default.GetService<ShellViewModel>();
-            DataContext = viewModel;
-            viewModel.Initialize(shellFrame, KeyboardAccelerators);
+            ViewModel.Initialize(shellFrame);
         }
+
+        public ShellViewModel ViewModel { get; private set; }
     }
 }

@@ -5,7 +5,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:helpers="using:Inventory.Uwp.Helpers"
-      xmlns:views="using:Inventory.Uwp.Views"
       xmlns:dashboard="using:Inventory.Uwp.Views.Dashboard"
       xmlns:customers="using:Inventory.Uwp.Views.Customers"
       xmlns:orders="using:Inventory.Uwp.Views.Orders"
@@ -13,16 +12,14 @@
       xmlns:products="using:Inventory.Uwp.Views.Products"
       xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
       xmlns:i="using:Microsoft.Xaml.Interactivity"
-      xmlns:viewmodels="using:Inventory.Uwp.ViewModels"
-      d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
       mc:Ignorable="d">
 
     <i:Interaction.Behaviors>
         <ic:EventTriggerBehavior EventName="Loaded">
-            <ic:InvokeCommandAction Command="{Binding LoadedCommand}" />
+            <ic:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </ic:EventTriggerBehavior>
         <ic:EventTriggerBehavior EventName="Unloaded">
-            <ic:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+            <ic:InvokeCommandAction Command="{x:Bind ViewModel.UnloadedCommand}" />
         </ic:EventTriggerBehavior>
     </i:Interaction.Behaviors>
 
@@ -34,7 +31,7 @@
 
         <winui:NavigationView x:Name="navigationView"
                               IsBackButtonVisible="Visible"
-                              IsBackEnabled="{Binding IsBackEnabled, Mode=OneWay}"
+                              IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
                               IsSettingsVisible="True"
                               ExpandedModeThresholdWidth="1280"
                               Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
@@ -62,6 +59,9 @@
 
                 <winui:NavigationViewItem x:Uid="Shell_Logs"
                                           helpers:NavHelper.NavigateTo="logs:LogsPage">
+                    <winui:NavigationViewItem.InfoBadge>
+                        <winui:InfoBadge Value="{x:Bind ViewModel.LogCount, Mode=OneWay}" />
+                    </winui:NavigationViewItem.InfoBadge>
                     <winui:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE7BA;"
                                   FontFamily="Segoe MDL2 Assets" />
@@ -72,10 +72,10 @@
 
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="ItemInvoked">
-                    <ic:InvokeCommandAction Command="{Binding ItemInvokedCommand}" />
+                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.ItemInvokedCommand}" />
                 </ic:EventTriggerBehavior>
                 <ic:EventTriggerBehavior EventName="BackRequested">
-                    <ic:InvokeCommandAction Command="{Binding BackRequestedCommand}" />
+                    <ic:InvokeCommandAction Command="{x:Bind ViewModel.BackRequestedCommand}" />
                 </ic:EventTriggerBehavior>
             </i:Interaction.Behaviors>
 
@@ -88,9 +88,9 @@
         <Grid Grid.Row="1"
               Background="DarkGray">
             <Rectangle Fill="#ce0e0e"
-                       Visibility="{Binding IsError, Mode=OneWay}" />
+                       Visibility="{x:Bind ViewModel.IsError, Mode=OneWay}" />
             <TextBlock Margin="6,4"
-                       Text="{Binding Message, Mode=OneWay}"
+                       Text="{x:Bind ViewModel.Message, Mode=OneWay}"
                        Foreground="White"
                        FontSize="12" />
         </Grid>

@@ -12,14 +12,13 @@ namespace Inventory.Uwp.Services
     public class WindowService
     {
         private readonly ILogger<WindowService> logger;
+        private readonly Dictionary<UIContext, AppWindow> appWindows;
 
-        public WindowService(ILogger<WindowService> logger            )
+        public WindowService(ILogger<WindowService> logger)
         {
             this.logger = logger;
+            appWindows = new Dictionary<UIContext, AppWindow>();
         }
-
-        public Dictionary<UIContext, AppWindow> AppWindows { get; set; }
-            = new Dictionary<UIContext, AppWindow>();
 
         public async Task<int> OpenInNewWindow<TView>(object parameter = null)
         {
@@ -33,10 +32,10 @@ namespace Inventory.Uwp.Services
             //var view = pageService.GetView(viewModelType);
             appWindowFrame.Navigate(viewType, parameter);
             ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowFrame);
-            AppWindows.Add(appWindowFrame.UIContext, appWindow);
+            appWindows.Add(appWindowFrame.UIContext, appWindow);
             appWindow.Closed += delegate
             {
-                AppWindows.Remove(appWindowFrame.UIContext);
+                appWindows.Remove(appWindowFrame.UIContext);
                 appWindowFrame.Content = null;
                 appWindow = null;
             };
