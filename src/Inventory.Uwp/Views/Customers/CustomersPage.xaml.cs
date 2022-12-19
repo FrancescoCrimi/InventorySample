@@ -23,12 +23,12 @@ namespace Inventory.Uwp.Views.Customers
 {
     public sealed partial class CustomersPage : Page
     {
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
 
         public CustomersPage()
         {
             ViewModel = Ioc.Default.GetService<CustomersViewModel>();
-            windowService = Ioc.Default.GetService<WindowService>();
+            windowService = Ioc.Default.GetService<WindowManagerService>();
             InitializeComponent();
         }
 

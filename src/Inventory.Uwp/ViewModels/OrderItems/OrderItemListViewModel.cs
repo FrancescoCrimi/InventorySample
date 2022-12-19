@@ -35,12 +35,12 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         private readonly ILogger<OrderItemListViewModel> logger;
         private readonly OrderItemServiceFacade orderItemService;
         private readonly NavigationService navigationService;
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
                                       OrderItemServiceFacade orderItemService,
                                       NavigationService navigationService,
-                                      WindowService windowService)
+                                      WindowManagerService windowService)
             : base()
         {
             this.logger = logger;

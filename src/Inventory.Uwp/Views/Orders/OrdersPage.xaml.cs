@@ -25,12 +25,12 @@ namespace Inventory.Uwp.Views.Orders
 {
     public sealed partial class OrdersPage : Page
     {
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
 
         public OrdersPage()
         {
             ViewModel = Ioc.Default.GetService<OrdersViewModel>();
-            windowService = Ioc.Default.GetService<WindowService>();
+            windowService = Ioc.Default.GetService<WindowManagerService>();
             InitializeComponent();
         }
 

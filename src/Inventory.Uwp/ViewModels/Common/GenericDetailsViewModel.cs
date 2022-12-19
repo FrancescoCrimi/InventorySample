@@ -29,13 +29,13 @@ namespace Inventory.Uwp.ViewModels.Common
     public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
     {
         private readonly NavigationService navigationService;
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
 
         public GenericDetailsViewModel()
             : base()
         {
             navigationService = Ioc.Default.GetService<NavigationService>();
-            windowService = Ioc.Default.GetService<WindowService>();
+            windowService = Ioc.Default.GetService<WindowManagerService>();
         }
 
         public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();

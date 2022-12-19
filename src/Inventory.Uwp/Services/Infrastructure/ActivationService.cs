@@ -61,7 +61,7 @@ namespace Inventory.Uwp.Services
         private async Task InitializeAsync()
         {
             await ThemeSelectorService.InitializeAsync().ConfigureAwait(false);
-            await WindowManagerService.Current.InitializeAsync();
+            //await WindowManagerService.Current.InitializeAsync();
 
             await EnsureLogDbAsync();
             await EnsureDatabaseAsync();

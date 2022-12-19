@@ -36,13 +36,13 @@ namespace Inventory.Uwp.ViewModels.Orders
     {
         private readonly ILogger<OrderListViewModel> logger;
         private readonly OrderServiceFacade orderService;
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
         private readonly NavigationService navigationService;
         private readonly OrderCollection collection;
 
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
                                   OrderServiceFacade orderService,
-                                  WindowService windowService,
+                                  WindowManagerService windowService,
                                   NavigationService navigationService)
             : base()
         {

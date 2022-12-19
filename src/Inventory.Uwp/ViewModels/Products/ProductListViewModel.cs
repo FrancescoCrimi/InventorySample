@@ -37,13 +37,13 @@ namespace Inventory.Uwp.ViewModels.Products
         private readonly ILogger<ProductListViewModel> logger;
         private readonly ProductServiceFacade productService;
         private readonly NavigationService navigationService;
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
         private readonly ProductCollection collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
                                     ProductServiceFacade productService,
                                     NavigationService navigationService,
-                                    WindowService windowService)
+                                    WindowManagerService windowService)
             : base()
         {
             this.logger = logger;

@@ -36,13 +36,13 @@ namespace Inventory.Uwp.ViewModels.Customers
         private readonly ILogger<CustomerListViewModel> logger;
         private readonly CustomerServiceFacade customerService;
         private readonly NavigationService navigationService;
-        private readonly WindowService windowService;
+        private readonly WindowManagerService windowService;
         private readonly CustomerCollection collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
                                      CustomerServiceFacade customerService,
                                      NavigationService navigationService,
-                                     WindowService windowService)
+                                     WindowManagerService windowService)
             : base()
         {
             this.logger = logger;
