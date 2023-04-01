@@ -122,5 +122,14 @@ namespace Inventory.Domain.Model
         }
 
         public string BuildSearchTerms() => $"{ProductID} {Name} {Color}".ToLower();
+
+
+
+        [NotMapped]
+        public bool IsNew => string.IsNullOrEmpty(ProductID);
+        //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
+        [NotMapped]
+        public string CategoryName => "Fake Category";
+
     }
 }

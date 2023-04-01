@@ -121,5 +121,31 @@ namespace Inventory.Domain.Model
         }
 
         public string BuildSearchTerms() => $"{OrderID} {CustomerID} {ShipCity} {ShipRegion}".ToLower();
+
+
+
+
+
+
+
+        [NotMapped]
+        public bool IsNew => OrderID <= 0;
+
+        [NotMapped]
+        public bool CanEditPayment => Status > 0;
+        [NotMapped]
+        public bool CanEditShipping => Status > 1;
+        [NotMapped]
+        public bool CanEditDelivery => Status > 2;
+
+        [NotMapped]
+        public string StatusDesc => "Fake Status Desc";
+        [NotMapped]
+        public string PaymentTypeDesc => "Fake Payment Type Desc";
+        [NotMapped]
+        public string ShipViaDesc => "Fake Ship Via Desc";
+        [NotMapped]
+        public string ShipCountryName => "Fake Ship Country Name";
+
     }
 }

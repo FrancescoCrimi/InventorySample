@@ -13,17 +13,9 @@ namespace Inventory.Infrastructure
         {
             get; set;
         }
-        string UserName
-        {
-            get; set;
-        }
         string Version
         {
             get;
-        }
-        string WindowsHelloPublicKeyHint
-        {
-            get; set;
         }
 
         DataProviderType DataProvider
@@ -38,10 +30,10 @@ namespace Inventory.Infrastructure
         {
             get; set;
         }
-        string LogConnectionString
-        {
-            get;
-        }
+        //string LogConnectionString
+        //{
+        //    get;
+        //}
         string AppLogConnectionString
         {
             get;

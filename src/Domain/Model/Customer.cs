@@ -179,5 +179,27 @@ namespace Inventory.Domain.Model
         }
 
         public string BuildSearchTerms() => $"{CustomerID} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
+
+
+
+        [NotMapped]
+        public bool IsNew => CustomerID <= 0;
+        [NotMapped]
+        public string FullName => $"{FirstName} {LastName}";
+        [NotMapped]
+        public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
+        //public string CountryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCountry(CountryCode);
+        [NotMapped]
+        public string CountryName => "Fake Country";
+        [NotMapped]
+        public string FullAddress
+        {
+            get
+            {
+                return $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
+
+            }
+        }
+
     }
 }

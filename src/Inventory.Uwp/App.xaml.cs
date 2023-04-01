@@ -44,7 +44,7 @@ namespace Inventory.Uwp
         private void OnSuspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
             var logger = Ioc.Default.GetService<ILogger<App>>();
-            logger.LogInformation($"Application ended by '{AppSettings.Current.UserName}'.");
+            logger.LogInformation($"Application ended.");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)

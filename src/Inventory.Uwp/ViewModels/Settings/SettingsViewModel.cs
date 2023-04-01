@@ -23,6 +23,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.ApplicationModel;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -132,7 +133,7 @@ namespace Inventory.Uwp.ViewModels.Settings
         {
             IsBusy = true;
             StatusMessage("Waiting database reset...");
-            var result = await SettingsService.ResetLocalDataProviderAsync();
+            var result = await ResetLocalDataProviderAsync();
             IsBusy = false;
             if (result.IsOk)
             {
@@ -212,5 +213,23 @@ namespace Inventory.Uwp.ViewModels.Settings
             }
         }
 
+        private async Task<Result> ResetLocalDataProviderAsync()
+        {
+            Result result;
+            try
+            {
+                var localFolder = ApplicationData.Current.LocalFolder;
+                var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
+                var sourceFile = await databaseFolder.GetFileAsync(AppSettings.DatabasePattern);
+                var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
+                await sourceFile.CopyAndReplaceAsync(targetFile);
+                result = Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                result = Result.Error(ex);
+            }
+            return result;
+        }
     }
 }
