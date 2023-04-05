@@ -35,7 +35,7 @@ namespace Inventory.Persistence.Repository
 
         public async Task<Order> GetOrderAsync(long id)
         {
-            return await _dataSource.Orders.Where(r => r.OrderID == id)
+            return await _dataSource.Orders.Where(r => r.Id == id)
                 .Include(r => r.Customer)
                 .FirstOrDefaultAsync();
         }
@@ -60,7 +60,7 @@ namespace Inventory.Persistence.Repository
             var records = await items.Skip(skip).Take(take)
                 .Select(r => new Order
                 {
-                    OrderID = r.OrderID,
+                    Id = r.Id,
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -118,13 +118,13 @@ namespace Inventory.Persistence.Repository
 
         public async Task<int> UpdateOrderAsync(Order order)
         {
-            if (order.OrderID > 0)
+            if (order.Id > 0)
             {
                 _dataSource.Entry(order).State = EntityState.Modified;
             }
             else
             {
-                order.OrderID = UIDGenerator.Next(4);
+                order.Id = UIDGenerator.Next(4);
                 order.OrderDate = DateTime.UtcNow;
                 _dataSource.Entry(order).State = EntityState.Added;
             }

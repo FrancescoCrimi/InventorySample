@@ -91,8 +91,8 @@ namespace Inventory.Uwp.ViewModels
 
         public bool IsBackEnabled
         {
-            get { return _isBackEnabled; }
-            set { SetProperty(ref _isBackEnabled, value); }
+            get => _isBackEnabled;
+            set => SetProperty(ref _isBackEnabled, value);
         }
 
         public IAsyncRelayCommand LoadedCommand => _loadedCommand

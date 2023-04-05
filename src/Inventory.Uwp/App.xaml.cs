@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Application;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
+using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels;
@@ -34,6 +36,14 @@ namespace Inventory.Uwp
             {
                 await Ioc.Default.GetService<ActivationService>().ActivateAsync(args);
             }
+
+            //var repo = Ioc.Default.GetRequiredService<IOrderItemRepository>();
+            //var list = await repo.GetOrderItemsAsync(0, 100000, new Infrastructure.Common.DataRequest<Domain.Model.OrderItem>());
+            //foreach (var item in list)
+            //{
+            //    item.Id = UIDGenerator.Next();
+            //    await repo.UpdateOrderItemAsync(item);
+            //}
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)

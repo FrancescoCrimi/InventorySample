@@ -42,7 +42,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             return logService.GetLogsCountAsync(request);
         }
 
-        protected override Task<List<LogModel>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected override Task<IList<LogModel>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             return logService.GetLogsAsync(skip, take, request);
         }

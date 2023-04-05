@@ -89,7 +89,7 @@ namespace Inventory.Uwp.Library.Common
         //public abstract Task LoadAsync(string searchString = "");
         protected abstract T CreateDummyEntity();
         protected abstract Task<int> GetCountAsync();
-        protected abstract Task<List<T>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken);
+        protected abstract Task<IList<T>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken);
 
         #endregion
 

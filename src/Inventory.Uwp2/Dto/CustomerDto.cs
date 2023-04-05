@@ -19,7 +19,7 @@ using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class CustomerDto : ObservableObject
+    public class CustomerDto : Inventory.Domain.Common.ObservableObject<CustomerDto>
     {
         public static CustomerDto CreateEmpty() => new CustomerDto { CustomerID = -1, IsEmpty = true };
 
@@ -64,25 +64,18 @@ namespace Inventory.Uwp.Dto
         public string FullName => $"{FirstName} {LastName}";
         public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
         //public string CountryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCountry(CountryCode);
-        public string CountryName => "Fake Country"; 
-        public string FullAddress
-        {
-            get
-            {
-                return $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
+        public string CountryName => "Fake Country";
+        public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
 
-            }
-        }
+        //public override void Merge(Inventory.Domain.Common.ObservableObject source)
+        //{
+        //    if (source is CustomerDto model)
+        //    {
+        //        Merge(model);
+        //    }
+        //}
 
-        public override void Merge(ObservableObject source)
-        {
-            if (source is CustomerDto model)
-            {
-                Merge(model);
-            }
-        }
-
-        public void Merge(CustomerDto source)
+        public override void Merge(CustomerDto source)
         {
             if (source != null)
             {

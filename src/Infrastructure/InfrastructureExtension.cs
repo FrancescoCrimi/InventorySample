@@ -19,22 +19,24 @@ namespace Inventory.Infrastructure
             settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
 
             serviceCollection
+
+                // Aggiungi DbContext per LogService
                 .AddDbContext<LogDbContext>(option =>
                 {
                     option.UseSqlite(settings.AppLogConnectionString);
                     //option.UseMySql(settings.LogMySqlConnectionString);
                     //option.UseSqlServer(AppSettings.Current.MsLogConnectionString);
-                }, ServiceLifetime.Transient);
+                }, ServiceLifetime.Transient)
 
-
-            serviceCollection
-                //.AddTransient<ILogRepository, LogRepository>()
+                // Aggiungi LogService
                 .AddSingleton<LogService>()
+
+                // Aggiungi Logging
                 .AddLogging(AddLogging);
 
-            // Aggiungi Custom Logger
-            serviceCollection.TryAddEnumerable(
-                ServiceDescriptor.Singleton<ILoggerProvider, CustomLoggerProvider>());
+                //// Aggiungi Custom Logger            
+                //.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, CustomLoggerProvider>());
+
             return serviceCollection;
         }
 
@@ -51,8 +53,8 @@ namespace Inventory.Infrastructure
             //// Add NLog
             //loggingBuilder.AddNLog(ConfigureNLog(settings));
 
-            // Add filter
-            loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore", Microsoft.Extensions.Logging.LogLevel.None);
+            //// Add filter
+            //loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore", Microsoft.Extensions.Logging.LogLevel.None);
 
         }
 

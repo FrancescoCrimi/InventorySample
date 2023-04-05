@@ -49,7 +49,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             return result;
         }
 
-        protected override async Task<List<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected override async Task<IList<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
             var result = await orderService.GetOrdersAsync(skip, take, request, dispatcher);

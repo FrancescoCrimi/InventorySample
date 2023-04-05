@@ -16,18 +16,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
     [Table("Customers")]
-    public partial class Customer
+    public partial class Customer : ObservableObject<Customer>
     {
-        [Key]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public long CustomerID
-        {
-            get; set;
-        }
+        //[Key]
+        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        //public long Id
+        //{
+        //    get; set;
+        //}
 
         [MaxLength(8)]
         public string Title
@@ -178,12 +179,12 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{CustomerID} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
+        public string BuildSearchTerms() => $"{Id} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
 
 
 
-        [NotMapped]
-        public bool IsNew => CustomerID <= 0;
+        //[NotMapped]
+        //public bool IsNew => Id <= 0;
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";
         [NotMapped]
@@ -192,14 +193,54 @@ namespace Inventory.Domain.Model
         [NotMapped]
         public string CountryName => "Fake Country";
         [NotMapped]
-        public string FullAddress
+        public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
+
+
+
+        //public override void Merge(Inventory.Domain.Common.ObservableObject source)
+        //{
+        //    if (source is Customer model)
+        //    {
+        //        Merge(model);
+        //    }
+        //}
+
+        public override void Merge(Customer source)
         {
-            get
+            if (source != null)
             {
-                return $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
-
+                //CustomerID = source.CustomerID;
+                Title = source.Title;
+                FirstName = source.FirstName;
+                MiddleName = source.MiddleName;
+                LastName = source.LastName;
+                Suffix = source.Suffix;
+                Gender = source.Gender;
+                EmailAddress = source.EmailAddress;
+                AddressLine1 = source.AddressLine1;
+                AddressLine2 = source.AddressLine2;
+                City = source.City;
+                Region = source.Region;
+                CountryCode = source.CountryCode;
+                PostalCode = source.PostalCode;
+                Phone = source.Phone;
+                BirthDate = source.BirthDate;
+                Education = source.Education;
+                Occupation = source.Occupation;
+                YearlyIncome = source.YearlyIncome;
+                MaritalStatus = source.MaritalStatus;
+                TotalChildren = source.TotalChildren;
+                ChildrenAtHome = source.ChildrenAtHome;
+                IsHouseOwner = source.IsHouseOwner;
+                NumberCarsOwned = source.NumberCarsOwned;
+                CreatedOn = source.CreatedOn;
+                LastModifiedOn = source.LastModifiedOn;
+                Thumbnail = source.Thumbnail;
+                //ThumbnailSource = source.ThumbnailSource;
+                Picture = source.Picture;
+                //PictureSource = source.PictureSource;
             }
-        }
 
+        }
     }
 }

@@ -18,9 +18,9 @@ namespace Inventory.Uwp.Services
             this.customerService = customerService;
         }
 
-        public Task<int> DeleteCustomerAsync(CustomerDto model)
+        public Task<int> DeleteCustomerAsync(Customer model)
         {
-            var customer = new Customer { CustomerID = model.CustomerID };
+            var customer = new Customer { Id = model.Id };
             return customerService.DeleteCustomerAsync(customer);
         }
 

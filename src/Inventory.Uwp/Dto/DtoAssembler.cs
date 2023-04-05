@@ -14,7 +14,7 @@ namespace Inventory.Uwp.Dto
         {
             var model = new CustomerDto()
             {
-                CustomerID = source.CustomerID,
+                CustomerID = source.Id,
                 Title = source.Title,
                 FirstName = source.FirstName,
                 MiddleName = source.MiddleName,
@@ -98,7 +98,7 @@ namespace Inventory.Uwp.Dto
         {
             var model = new ProductDto()
             {
-                ProductID = source.ProductID,
+                ProductID = source.Id,
                 CategoryID = source.CategoryID,
                 Name = source.Name,
                 Description = source.Description,
@@ -169,7 +169,7 @@ namespace Inventory.Uwp.Dto
         {
             var model = new OrderDto()
             {
-                OrderID = source.OrderID,
+                OrderID = source.Id,
                 CustomerID = source.CustomerID,
                 OrderDate = source.OrderDate,
                 ShippedDate = source.ShippedDate,

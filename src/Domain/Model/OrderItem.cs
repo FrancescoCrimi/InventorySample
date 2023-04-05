@@ -15,11 +15,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
     [Table("OrderItems")]
-    public partial class OrderItem
+    public partial class OrderItem : ObservableObject<OrderItem>
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
@@ -36,8 +37,7 @@ namespace Inventory.Domain.Model
         }
 
         [Required]
-        [MaxLength(16)]
-        public string ProductID
+        public long ProductID
         {
             get; set;
         }
@@ -66,6 +66,11 @@ namespace Inventory.Domain.Model
         public virtual Product Product
         {
             get; set;
+        }
+
+        public override void Merge(OrderItem source)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

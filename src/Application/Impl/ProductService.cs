@@ -33,7 +33,7 @@ namespace Inventory.Application.Impl
             this.serviceProvider = serviceProvider;
         }
 
-        public async Task<Product> GetProductAsync(string id)
+        public async Task<Product> GetProductAsync(long id)
         {
             using (var repo = serviceProvider.GetService<IProductRepository>())
             {

@@ -41,11 +41,11 @@
                                           Icon="Home"
                                           helpers:NavHelper.NavigateTo="dashboard:DashboardPage" />
 
-                <!--<winui:NavigationViewItem x:Uid="Shell_Customers"
+                <winui:NavigationViewItem x:Uid="Shell_Customers"
                                           Icon="People"
                                           helpers:NavHelper.NavigateTo="customers:CustomersPage" />
 
-                <winui:NavigationViewItem x:Uid="Shell_Orders"
+                <!--<winui:NavigationViewItem x:Uid="Shell_Orders"
                                           Icon="PreviewLink"
                                           helpers:NavHelper.NavigateTo="orders:OrdersPage" />
 

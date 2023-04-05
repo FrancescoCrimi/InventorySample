@@ -21,9 +21,9 @@ namespace Inventory.Uwp.Dto
 {
     public class ProductDto : ObservableObject
     {
-        public static ProductDto CreateEmpty() => new ProductDto { ProductID = "", IsEmpty = true };
+        public static ProductDto CreateEmpty() => new ProductDto { ProductID = -1, IsEmpty = true };
 
-        public string ProductID { get; set; }
+        public long ProductID { get; set; }
 
         public int CategoryID { get; set; }
 
@@ -52,7 +52,7 @@ namespace Inventory.Uwp.Dto
         public byte[] Thumbnail { get; set; }
         public object ThumbnailSource { get; set; }
 
-        public bool IsNew => string.IsNullOrEmpty(ProductID);
+        public bool IsNew => ProductID <= 0;
         public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
 
         public override void Merge(ObservableObject source)

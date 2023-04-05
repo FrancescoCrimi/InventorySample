@@ -1045,6 +1045,7 @@
                                     Padding="8,5"
                                     FontSize="18"
                                     Background="Transparent"
+                                    BorderThickness="0"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top">
                                 <FontIcon Glyph="&#xE2B4;"

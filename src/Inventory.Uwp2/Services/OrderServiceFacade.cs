@@ -27,7 +27,7 @@ namespace Inventory.Uwp.Services
 
         public Task<int> DeleteOrderAsync(OrderDto model)
         {
-            var order = new Order { OrderID = model.OrderID };
+            var order = new Order { Id = model.OrderID };
             return orderService.DeleteOrderAsync(order);
         }
 

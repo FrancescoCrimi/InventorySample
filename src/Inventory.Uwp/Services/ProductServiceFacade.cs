@@ -20,7 +20,7 @@ namespace Inventory.Uwp.Services
 
         public Task<int> DeleteProductAsync(ProductDto model)
         {
-            var product = new Product { ProductID = model.ProductID };
+            var product = new Product { Id = model.ProductID };
             return productService.DeleteProductAsync(product);
         }
 
@@ -29,7 +29,7 @@ namespace Inventory.Uwp.Services
             return productService.DeleteProductRangeAsync(index, length, request);
         }
 
-        public async Task<ProductDto> GetProductAsync(string id)
+        public async Task<ProductDto> GetProductAsync(long id)
         {
             var product = await productService.GetProductAsync(id);
             var model = await DtoAssembler.CreateProductModelAsync(product, includeAllFields: true, null);
@@ -55,9 +55,9 @@ namespace Inventory.Uwp.Services
 
         public async Task<int> UpdateProductAsync(ProductDto model)
         {
-            string id = model.ProductID;
+            long id = model.ProductID;
             int rtn = 0;
-            Product product = !string.IsNullOrEmpty(id) ? await productService.GetProductAsync(model.ProductID) : new Product();
+            Product product = id > 0 ? await productService.GetProductAsync(model.ProductID) : new Product();
             if (product != null)
             {
                 DtoAssembler.UpdateProductFromModel(product, model);

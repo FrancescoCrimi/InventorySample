@@ -47,8 +47,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Header
         public string Header
         {
-            get { return (string)GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
+            get => (string)GetValue(HeaderProperty);
+            set => SetValue(HeaderProperty, value);
         }
 
         public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -57,8 +57,8 @@ namespace Inventory.Uwp.Library.Controls
         #region HeaderTemplate
         public DataTemplate HeaderTemplate
         {
-            get { return (DataTemplate)GetValue(HeaderTemplateProperty); }
-            set { SetValue(HeaderTemplateProperty, value); }
+            get => (DataTemplate)GetValue(HeaderTemplateProperty);
+            set => SetValue(HeaderTemplateProperty, value);
         }
 
         public static readonly DependencyProperty HeaderTemplateProperty = DependencyProperty.Register(nameof(HeaderTemplate), typeof(DataTemplate), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -67,8 +67,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Text
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -77,8 +77,8 @@ namespace Inventory.Uwp.Library.Controls
         #region TextMemberPath
         public string TextMemberPath
         {
-            get { return (string)GetValue(TextMemberPathProperty); }
-            set { SetValue(TextMemberPathProperty, value); }
+            get => (string)GetValue(TextMemberPathProperty);
+            set => SetValue(TextMemberPathProperty, value);
         }
 
         public static readonly DependencyProperty TextMemberPathProperty = DependencyProperty.Register(nameof(TextMemberPath), typeof(string), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -87,8 +87,8 @@ namespace Inventory.Uwp.Library.Controls
         #region DisplayText
         public string DisplayText
         {
-            get { return (string)GetValue(DisplayTextProperty); }
-            set { SetValue(DisplayTextProperty, value); }
+            get => (string)GetValue(DisplayTextProperty);
+            set => SetValue(DisplayTextProperty, value);
         }
 
         public static readonly DependencyProperty DisplayTextProperty = DependencyProperty.Register(nameof(DisplayText), typeof(string), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -97,8 +97,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ItemsSource
         public object ItemsSource
         {
-            get { return (object)GetValue(ItemsSourceProperty); }
-            set { SetValue(ItemsSourceProperty, value); }
+            get => (object)GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(nameof(ItemsSource), typeof(object), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -107,8 +107,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ItemTemplate
         public DataTemplate ItemTemplate
         {
-            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
-            set { SetValue(ItemTemplateProperty, value); }
+            get => (DataTemplate)GetValue(ItemTemplateProperty);
+            set => SetValue(ItemTemplateProperty, value);
         }
 
         public static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register(nameof(ItemTemplate), typeof(DataTemplate), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -117,8 +117,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ItemContainerStyle
         public Style ItemContainerStyle
         {
-            get { return (Style)GetValue(ItemContainerStyleProperty); }
-            set { SetValue(ItemContainerStyleProperty, value); }
+            get => (Style)GetValue(ItemContainerStyleProperty);
+            set => SetValue(ItemContainerStyleProperty, value);
         }
 
         public static readonly DependencyProperty ItemContainerStyleProperty = DependencyProperty.Register(nameof(ItemContainerStyle), typeof(Style), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -127,8 +127,8 @@ namespace Inventory.Uwp.Library.Controls
         #region PlaceholderText
         public string PlaceholderText
         {
-            get { return (string)GetValue(PlaceholderTextProperty); }
-            set { SetValue(PlaceholderTextProperty, value); }
+            get => (string)GetValue(PlaceholderTextProperty);
+            set => SetValue(PlaceholderTextProperty, value);
         }
 
         public static readonly DependencyProperty PlaceholderTextProperty = DependencyProperty.Register(nameof(PlaceholderText), typeof(string), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -137,8 +137,8 @@ namespace Inventory.Uwp.Library.Controls
         #region AutoMaximizeSuggestionArea
         public bool AutoMaximizeSuggestionArea
         {
-            get { return (bool)GetValue(AutoMaximizeSuggestionAreaProperty); }
-            set { SetValue(AutoMaximizeSuggestionAreaProperty, value); }
+            get => (bool)GetValue(AutoMaximizeSuggestionAreaProperty);
+            set => SetValue(AutoMaximizeSuggestionAreaProperty, value);
         }
 
         public static readonly DependencyProperty AutoMaximizeSuggestionAreaProperty = DependencyProperty.Register(nameof(AutoMaximizeSuggestionArea), typeof(bool), typeof(FormAutoSuggestBox), new PropertyMetadata(null));
@@ -147,8 +147,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Mode*
         public FormEditMode Mode
         {
-            get { return (FormEditMode)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get => (FormEditMode)GetValue(ModeProperty);
+            set => SetValue(ModeProperty, value);
         }
 
         private static void ModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -22,6 +22,7 @@ namespace Inventory.Domain.Model
     public partial class PaymentType
     {
         [Key]
+        [Column("PaymentTypeID")]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public int PaymentTypeID
         {

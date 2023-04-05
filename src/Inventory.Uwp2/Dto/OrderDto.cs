@@ -19,7 +19,7 @@ using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderDto : ObservableObject, IEquatable<OrderDto>
+    public class OrderDto : Inventory.Domain.Common.ObservableObject<OrderDto>, IEquatable<OrderDto>
     {
         public static OrderDto CreateEmpty() => new OrderDto { OrderID = -1, CustomerID = -1, IsEmpty = true };
 
@@ -107,15 +107,15 @@ namespace Inventory.Uwp.Dto
             OnPropertyChanged(nameof(CanEditDelivery));
         }
 
-        public override void Merge(ObservableObject source)
-        {
-            if (source is OrderDto model)
-            {
-                Merge(model);
-            }
-        }
+        //public override void Merge(Inventory.Domain.Common.ObservableObject source)
+        //{
+        //    if (source is OrderDto model)
+        //    {
+        //        Merge(model);
+        //    }
+        //}
 
-        public void Merge(OrderDto source)
+        public override void Merge(OrderDto source)
         {
             if (source != null)
             {

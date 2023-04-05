@@ -12,59 +12,41 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using Inventory.Application;
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-//using Inventory.Uwp.ViewModels.Customers;
-//using Inventory.Uwp.ViewModels.Orders;
-//using Inventory.Uwp.ViewModels.Products;
-//using Inventory.Uwp.Views.Customers;
-//using Inventory.Uwp.Views.Orders;
-//using Inventory.Uwp.Views.Products;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.ViewModels.Common;
+using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.ViewModels.Dashboard
 {
     public class DashboardViewModel : ViewModelBase
     {
-        private readonly ILogger<DashboardViewModel> logger;
+        private readonly ILogger<DashboardViewModel> _logger;
         //private readonly NavigationService navigationService;
-        private readonly CustomerServiceFacade customerService;
         private readonly ICustomerService _customerService;
-
-        private readonly OrderServiceFacade orderService;
         private readonly IOrderService _orderService;
-        private readonly ProductServiceFacade productService;
         private readonly IProductService _productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   //NavigationService navigationService,
-                                  CustomerServiceFacade customerService,
-                                  ICustomerService customerService1,
-                                  OrderServiceFacade orderService,
-                                  IOrderService orderService1,
-                                  ProductServiceFacade productService,
-                                  IProductService productService1
+                                  ICustomerService customerService,
+                                  IOrderService orderService,
+                                  IProductService productService
             )
             : base()
         {
-            this.logger = logger;
+            _logger = logger;
             //this.navigationService = navigationService;
-            this.customerService = customerService;
-            this._customerService = customerService1;
-            this.orderService = orderService;
-            this._orderService = orderService1;
-            this.productService = productService;
-            this._productService = productService1;
+            _customerService = customerService;
+            _orderService = orderService;
+            _productService = productService;
         }
 
         private AsyncRelayCommand loadedCommand = null;
@@ -127,7 +109,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Customers");
+                _logger.LogError(ex, "Load Customers");
             }
         }
 
@@ -143,7 +125,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Orders");
+                _logger.LogError(ex, "Load Orders");
             }
         }
 
@@ -159,7 +141,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Products");
+                _logger.LogError(ex, "Load Products");
             }
         }
 

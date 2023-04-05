@@ -19,11 +19,11 @@ using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class ProductDto : ObservableObject
+    public class ProductDto : Inventory.Domain.Common.ObservableObject<ProductDto>
     {
-        public static ProductDto CreateEmpty() => new ProductDto { ProductID = "", IsEmpty = true };
+        public static ProductDto CreateEmpty() => new ProductDto { ProductID = -1, IsEmpty = true };
 
-        public string ProductID { get; set; }
+        public long ProductID { get; set; }
 
         public int CategoryID { get; set; }
 
@@ -52,18 +52,18 @@ namespace Inventory.Uwp.Dto
         public byte[] Thumbnail { get; set; }
         public object ThumbnailSource { get; set; }
 
-        public bool IsNew => string.IsNullOrEmpty(ProductID);
+        public bool IsNew => ProductID <= 0;
         //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         public string CategoryName => "Fake Category";
-        public override void Merge(ObservableObject source)
-        {
-            if (source is ProductDto model)
-            {
-                Merge(model);
-            }
-        }
+        //public override void Merge(Inventory.Domain.Common.ObservableObject source)
+        //{
+        //    if (source is ProductDto model)
+        //    {
+        //        Merge(model);
+        //    }
+        //}
 
-        public void Merge(ProductDto source)
+        public override void Merge(ProductDto source)
         {
             if (source != null)
             {

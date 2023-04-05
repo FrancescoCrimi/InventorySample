@@ -29,6 +29,7 @@
                              Color="#F5F5F5" />
 
             <!--  Converters  -->
+            <converters:BindingTypeConverter x:Key="BindingTypeConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                                   FalseValue="Collapsed"
                                                   TrueValue="Visible" />

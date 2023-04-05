@@ -16,18 +16,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
     [Table("Orders")]
-    public partial class Order
+    public partial class Order : ObservableObject<Order>
     {
-        [Key]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public long OrderID
-        {
-            get; set;
-        }
+        //[Key]
+        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        //public long Id
+        //{
+        //    get; set;
+        //}
 
         [Required]
         public long CustomerID
@@ -120,7 +121,7 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{OrderID} {CustomerID} {ShipCity} {ShipRegion}".ToLower();
+        public string BuildSearchTerms() => $"{Id} {CustomerID} {ShipCity} {ShipRegion}".ToLower();
 
 
 
@@ -128,8 +129,8 @@ namespace Inventory.Domain.Model
 
 
 
-        [NotMapped]
-        public bool IsNew => OrderID <= 0;
+        //[NotMapped]
+        //public bool IsNew => Id <= 0;
 
         [NotMapped]
         public bool CanEditPayment => Status > 0;
@@ -147,5 +148,9 @@ namespace Inventory.Domain.Model
         [NotMapped]
         public string ShipCountryName => "Fake Ship Country Name";
 
+        public override void Merge(Order source)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace Inventory.Domain.Model
     public partial class Category
     {
         [Key]
+        [Column("CategoryID")]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public int CategoryID
         {

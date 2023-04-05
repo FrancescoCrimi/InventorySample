@@ -54,7 +54,7 @@
                            VerticalAlignment="Center" />
                 </Border>
                 <TextBlock Grid.Column="1"
-                           Text="{x:Bind ProductID}"
+                           Text="{x:Bind Id}"
                            Style="{StaticResource ColumnValueStyle}" />
                 <TextBlock Grid.Column="2"
                            Text="{x:Bind Name}"

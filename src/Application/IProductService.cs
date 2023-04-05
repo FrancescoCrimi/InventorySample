@@ -21,7 +21,7 @@ namespace Inventory.Application
 {
     public interface IProductService
     {
-        Task<Product> GetProductAsync(string id);
+        Task<Product> GetProductAsync(long id);
         Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request);
         Task<int> GetProductsCountAsync(DataRequest<Product> request);
         Task<int> UpdateProductAsync(Product model);

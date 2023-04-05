@@ -75,7 +75,7 @@ namespace Inventory.Uwp.ViewModels.Products
         }
         public void Unload()
         {
-            ViewModelArgs.ProductID = Item?.ProductID;
+            ViewModelArgs.ProductID = Item.ProductID;
         }
 
         public void Subscribe()
@@ -98,7 +98,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             return new ProductDetailsArgs
             {
-                ProductID = Item?.ProductID
+                ProductID = Item.ProductID
             };
         }
 

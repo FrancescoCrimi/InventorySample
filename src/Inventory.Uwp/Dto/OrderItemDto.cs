@@ -23,7 +23,7 @@ namespace Inventory.Uwp.Dto
         public long OrderID { get; set; }
         public int OrderLine { get; set; }
 
-        public string ProductID { get; set; }
+        public long ProductID { get; set; }
 
         private int _quantity;
         public int Quantity

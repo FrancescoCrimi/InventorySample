@@ -35,7 +35,7 @@ namespace Inventory.Persistence.Repository
 
         public async Task<Customer> GetCustomerAsync(long id)
         {
-            return await _dataSource.Customers.Where(r => r.CustomerID == id).FirstOrDefaultAsync();
+            return await _dataSource.Customers.Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IList<Customer>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
@@ -46,7 +46,7 @@ namespace Inventory.Persistence.Repository
             var records = await items.Skip(skip).Take(take)
                 .Select(r => new Customer
                 {
-                    CustomerID = r.CustomerID,
+                    Id = r.Id,
                     Title = r.Title,
                     FirstName = r.FirstName,
                     MiddleName = r.MiddleName,
@@ -79,7 +79,7 @@ namespace Inventory.Persistence.Repository
             var records = await items.Skip(skip).Take(take)
                 .Select(r => new Customer
                 {
-                    CustomerID = r.CustomerID,
+                    Id = r.Id,
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -137,13 +137,13 @@ namespace Inventory.Persistence.Repository
 
         public async Task<int> UpdateCustomerAsync(Customer customer)
         {
-            if (customer.CustomerID > 0)
+            if (customer.Id > 0)
             {
                 _dataSource.Entry(customer).State = EntityState.Modified;
             }
             else
             {
-                customer.CustomerID = UIDGenerator.Next();
+                customer.Id = UIDGenerator.Next();
                 customer.CreatedOn = DateTime.UtcNow;
                 _dataSource.Entry(customer).State = EntityState.Added;
             }

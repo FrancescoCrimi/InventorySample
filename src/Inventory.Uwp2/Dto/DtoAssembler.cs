@@ -14,7 +14,7 @@ namespace Inventory.Uwp.Dto
         {
             var model = new CustomerDto()
             {
-                CustomerID = source.CustomerID,
+                CustomerID = source.Id,
                 Title = source.Title,
                 FirstName = source.FirstName,
                 MiddleName = source.MiddleName,
@@ -98,7 +98,7 @@ namespace Inventory.Uwp.Dto
         {
             var model = new ProductDto()
             {
-                ProductID = source.ProductID,
+                ProductID = source.Id,
                 CategoryID = source.CategoryID,
                 Name = source.Name,
                 Description = source.Description,
@@ -169,7 +169,7 @@ namespace Inventory.Uwp.Dto
         {
             var model = new OrderDto()
             {
-                OrderID = source.OrderID,
+                OrderID = source.Id,
                 CustomerID = source.CustomerID,
                 OrderDate = source.OrderDate,
                 ShippedDate = source.ShippedDate,
@@ -211,31 +211,31 @@ namespace Inventory.Uwp.Dto
         }
 
 
-        //public static async Task<OrderItemDto> CreateOrderItemModelAsync(OrderItem source, bool includeAllFields)
-        //{
-        //    var model = new OrderItemDto()
-        //    {
-        //        OrderID = source.OrderID,
-        //        OrderLine = source.OrderLine,
-        //        ProductID = source.ProductID,
-        //        Quantity = source.Quantity,
-        //        UnitPrice = source.UnitPrice,
-        //        Discount = source.Discount,
-        //        TaxType = source.TaxType,
-        //        Product = await CreateProductModelAsync(source.Product, includeAllFields, null)
-        //    };
-        //    return model;
-        //}
+        public static async Task<OrderItemDto> CreateOrderItemModelAsync(OrderItem source, bool includeAllFields)
+        {
+            var model = new OrderItemDto()
+            {
+                OrderID = source.OrderID,
+                OrderLine = source.OrderLine,
+                ProductID = source.ProductID,
+                Quantity = source.Quantity,
+                UnitPrice = source.UnitPrice,
+                Discount = source.Discount,
+                TaxType = source.TaxType,
+                Product = await CreateProductModelAsync(source.Product, includeAllFields, null)
+            };
+            return model;
+        }
 
-        //public static void UpdateOrderItemFromModel(OrderItem target, OrderItemDto source)
-        //{
-        //    target.OrderID = source.OrderID;
-        //    target.OrderLine = source.OrderLine;
-        //    target.ProductID = source.ProductID;
-        //    target.Quantity = source.Quantity;
-        //    target.UnitPrice = source.UnitPrice;
-        //    target.Discount = source.Discount;
-        //    target.TaxType = source.TaxType;
-        //}
+        public static void UpdateOrderItemFromModel(OrderItem target, OrderItemDto source)
+        {
+            target.OrderID = source.OrderID;
+            target.OrderLine = source.OrderLine;
+            target.ProductID = source.ProductID;
+            target.Quantity = source.Quantity;
+            target.UnitPrice = source.UnitPrice;
+            target.Discount = source.Discount;
+            target.TaxType = source.TaxType;
+        }
     }
 }

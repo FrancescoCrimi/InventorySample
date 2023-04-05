@@ -33,9 +33,9 @@ namespace Inventory.Persistence.Repository
             _dataSource = dataSource;
         }
 
-        public async Task<Product> GetProductAsync(string id)
+        public async Task<Product> GetProductAsync(long id)
         {
-            return await _dataSource.Products.Where(r => r.ProductID == id).FirstOrDefaultAsync();
+            return await _dataSource.Products.Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
@@ -58,7 +58,7 @@ namespace Inventory.Persistence.Repository
             var records = await items.Skip(skip).Take(take)
                 .Select(r => new Product
                 {
-                    ProductID = r.ProductID,
+                    Id = r.Id,
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -116,13 +116,13 @@ namespace Inventory.Persistence.Repository
 
         public async Task<int> UpdateProductAsync(Product product)
         {
-            if (!string.IsNullOrEmpty(product.ProductID))
+            if (product.Id > 0)
             {
                 _dataSource.Entry(product).State = EntityState.Modified;
             }
             else
             {
-                product.ProductID = UIDGenerator.Next(6).ToString();
+                product.Id = UIDGenerator.Next(6);
                 product.CreatedOn = DateTime.UtcNow;
                 _dataSource.Entry(product).State = EntityState.Added;
             }

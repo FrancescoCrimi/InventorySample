@@ -15,18 +15,19 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
     [Table("Products")]
-    public partial class Product
+    public partial class Product : ObservableObject<Product>
     {
-        [MaxLength(16)]
-        [Key, Column(Order = 0)]
-        public string ProductID
-        {
-            get; set;
-        }
+        //[Key]
+        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        //public long Id
+        //{
+        //    get; set;
+        //}
 
         [Required]
         public int CategoryID
@@ -121,15 +122,20 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{ProductID} {Name} {Color}".ToLower();
+        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
 
 
 
-        [NotMapped]
-        public bool IsNew => string.IsNullOrEmpty(ProductID);
+        //[NotMapped]
+        //public bool IsNew => Id <= 0;
+
         //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         [NotMapped]
         public string CategoryName => "Fake Category";
 
+        public override void Merge(Product source)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

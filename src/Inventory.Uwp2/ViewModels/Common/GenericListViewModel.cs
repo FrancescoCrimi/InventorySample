@@ -12,21 +12,17 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Models;
+using CommunityToolkit.Mvvm.Input;
+using Inventory.Domain.Common;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Services;
+using Inventory.Uwp.Library.Common;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableObject
+    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableObject<TModel>
     {
         public GenericListViewModel()
             : base()
@@ -40,14 +36,8 @@ namespace Inventory.Uwp.ViewModels.Common
         private IList<TModel> _items = null;
         public IList<TModel> Items
         {
-            get
-            {
-                return _items;
-            }
-            set
-            {
-                SetProperty(ref _items, value);
-            }
+            get => _items;
+            set => SetProperty(ref _items, value);
         }
 
         private int _itemsCount = 0;
@@ -60,10 +50,7 @@ namespace Inventory.Uwp.ViewModels.Common
         private TModel _selectedItem = default;
         public TModel SelectedItem
         {
-            get
-            {
-                return _selectedItem;
-            }
+            get => _selectedItem;
             set
             {
                 if (SetProperty(ref _selectedItem, value))
@@ -71,17 +58,17 @@ namespace Inventory.Uwp.ViewModels.Common
                     if (!IsMultipleSelection)
                     {
                         // fix _selectedItem == null
-                        if(_selectedItem != null)
+                        if (_selectedItem != null)
                         {
-                            // Todo: fixare selectedItem.Id = 0
-                            ////MessageService.Send(this, "ItemSelected", _selectedItem);
-                            var message = new ItemMessage<TModel>(_selectedItem, "ItemSelected");
-                            Messenger.Send(message);
+                            //MessageService.Send(this, "ItemSelected", _selectedItem);
+                            SendItemChangedMessage("ItemSelected", _selectedItem.Id);
                         }
                     }
                 }
             }
         }
+
+        protected abstract void SendItemChangedMessage(string message, long itemId);
 
         private string _query = null;
         public string Query

@@ -23,10 +23,11 @@ using System.Windows.Input;
 using Inventory.Uwp.Models;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Message;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
+    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : Inventory.Domain.Common.ObservableObject<TModel>, new()
     {
         private readonly NavigationService navigationService;
         private readonly WindowManagerService windowService;
@@ -38,7 +39,7 @@ namespace Inventory.Uwp.ViewModels.Common
             windowService = Ioc.Default.GetService<WindowManagerService>();
         }
 
-        //public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
+        public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
 
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;
@@ -99,8 +100,11 @@ namespace Inventory.Uwp.ViewModels.Common
             StatusReady();
             BeginEdit();
             //MessageService.Send(this, "BeginEdit", Item);
-            Messenger.Send(new ItemMessage<TModel>(Item, "BeginEdit"));
+            SendItemChangedMessage("BeginEdit", Item.Id);
         }
+
+        protected abstract void SendItemChangedMessage(string message, long itemId);
+
         public virtual void BeginEdit()
         {
             if (!IsEditMode)
@@ -119,7 +123,7 @@ namespace Inventory.Uwp.ViewModels.Common
             StatusReady();
             CancelEdit();
             //MessageService.Send(this, "CancelEdit", Item);
-            Messenger.Send(new ItemMessage<TModel>(Item, "CancelEdit"));
+            SendItemChangedMessage("CancelEdit", Item.Id);
         }
 
         public virtual void CancelEdit()
@@ -150,7 +154,7 @@ namespace Inventory.Uwp.ViewModels.Common
         }
 
         public ICommand SaveCommand => new RelayCommand(OnSave);
-        protected virtual async void OnSave()
+        protected async virtual void OnSave()
         {
             StatusReady();
             var result = Validate(EditableItem);
@@ -163,7 +167,7 @@ namespace Inventory.Uwp.ViewModels.Common
                 await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
             }
         }
-        public virtual async Task SaveAsync()
+        public async virtual Task SaveAsync()
         {
             IsEnabled = false;
             bool isNew = ItemIsNew;
@@ -177,12 +181,12 @@ namespace Inventory.Uwp.ViewModels.Common
                 if (isNew)
                 {
                     //MessageService.Send(this, "NewItemSaved", Item);
-                    Messenger.Send(new ItemMessage<TModel>(Item, "NewItemSaved"));
+                    SendItemChangedMessage("NewItemSaved", Item.Id);
                 }
                 else
                 {
                     //MessageService.Send(this, "ItemChanged", Item);
-                    Messenger.Send(new ItemMessage<TModel>(Item, "ItemChanged"));
+                    SendItemChangedMessage("ItemChanged", Item.Id);
                 }
                 IsEditMode = false;
 
@@ -192,7 +196,7 @@ namespace Inventory.Uwp.ViewModels.Common
         }
 
         public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        protected virtual async void OnDelete()
+        protected async virtual void OnDelete()
         {
             StatusReady();
             if (await ConfirmDeleteAsync())
@@ -200,7 +204,7 @@ namespace Inventory.Uwp.ViewModels.Common
                 await DeleteAsync();
             }
         }
-        public virtual async Task DeleteAsync()
+        public async virtual Task DeleteAsync()
         {
             var model = Item;
             if (model != null)
@@ -208,8 +212,9 @@ namespace Inventory.Uwp.ViewModels.Common
                 IsEnabled = false;
                 if (await DeleteItemAsync(model))
                 {
+                    // TODO: fix send entity id
                     //MessageService.Send(this, "ItemDeleted", model);
-                    Messenger.Send(new ItemMessage<TModel>(model, "ItemDeleted"));
+                    SendItemChangedMessage("ItemDeleted", model.Id);
                 }
                 else
                 {
