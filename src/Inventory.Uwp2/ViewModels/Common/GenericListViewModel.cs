@@ -150,7 +150,7 @@ namespace Inventory.Uwp.ViewModels.Common
         protected virtual void OnSelectRanges(IndexRange[] indexRanges)
         {
             SelectedIndexRanges = indexRanges;
-            int count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
+            var count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
             StatusMessage($"{count} items selected");
         }
 

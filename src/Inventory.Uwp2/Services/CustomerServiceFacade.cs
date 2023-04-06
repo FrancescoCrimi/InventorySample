@@ -55,8 +55,8 @@ namespace Inventory.Uwp.Services
 
         public async Task<int> UpdateCustomerAsync(CustomerDto model)
         {
-            int rtn = 0;
-            long id = model.CustomerID;
+            var rtn = 0;
+            var id = model.CustomerID;
             Customer customer = id > 0 ? await customerService.GetCustomerAsync(model.CustomerID) : new Customer();
             if (customer != null)
             {

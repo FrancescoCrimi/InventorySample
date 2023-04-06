@@ -12,36 +12,43 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductsViewModel : ViewModelBase
     {
-        private readonly ILogger<ProductsViewModel> logger;
-        private readonly ProductServiceFacade productService;
+        private readonly ILogger<ProductsViewModel> _logger;
+        private readonly IProductService _productService;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
-                                 ProductServiceFacade productService,
+                                 IProductService productService,
                                  ProductListViewModel productListViewModel,
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()
         {
-            this.logger = logger;
-            this.productService = productService;
-
+            _logger = logger;
+            _productService = productService;
             ProductList = productListViewModel;
             ProductDetails = productDetailsViewModel;
         }
 
-        public ProductListViewModel ProductList { get; set; }
-        public ProductDetailsViewModel ProductDetails { get; set; }
+        public ProductListViewModel ProductList
+        {
+            get; set;
+        }
+
+        public ProductDetailsViewModel ProductDetails
+        {
+            get; set;
+        }
 
         public async Task LoadAsync(ProductListArgs args)
         {
@@ -56,7 +63,7 @@ namespace Inventory.Uwp.ViewModels.Products
         public void Subscribe()
         {
             //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
+            Messenger.Register<ProductChangeMessage>(this, OnMessage);
             ProductList.Subscribe();
             ProductDetails.Subscribe();
         }
@@ -69,11 +76,11 @@ namespace Inventory.Uwp.ViewModels.Products
             ProductDetails.Unsubscribe();
         }
 
-        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
+        private async void OnMessage(object recipient, ProductChangeMessage message)
         {
-            if (message.Message == "ItemSelected")
+            if (message.Value == "ItemSelected")
             {
-                if (message.Value.ProductID != null)
+                if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
@@ -99,16 +106,16 @@ namespace Inventory.Uwp.ViewModels.Products
             ProductDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(ProductDto selected)
+        private async Task PopulateDetails(Product selected)
         {
             try
             {
-                var model = await productService.GetProductAsync(selected.ProductID);
+                var model = await _productService.GetProductAsync(selected.Id);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Details");
+                _logger.LogError(ex, "Load Details");
             }
         }
     }

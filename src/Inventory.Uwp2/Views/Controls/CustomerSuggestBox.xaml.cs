@@ -40,13 +40,16 @@ namespace Inventory.Uwp.Controls
             InitializeComponent();
         }
 
-        private CustomerServiceFacade CustomerService { get; }
+        private CustomerServiceFacade CustomerService
+        {
+            get;
+        }
 
         #region Items
         public IList<CustomerDto> Items
         {
-            get { return (IList<CustomerDto>)GetValue(ItemsProperty); }
-            set { SetValue(ItemsProperty, value); }
+            get => (IList<CustomerDto>)GetValue(ItemsProperty);
+            set => SetValue(ItemsProperty, value);
         }
 
         public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(nameof(Items), typeof(IList<CustomerDto>), typeof(CustomerSuggestBox), new PropertyMetadata(null));
@@ -55,8 +58,8 @@ namespace Inventory.Uwp.Controls
         #region DisplayText
         public string DisplayText
         {
-            get { return (string)GetValue(DisplayTextProperty); }
-            set { SetValue(DisplayTextProperty, value); }
+            get => (string)GetValue(DisplayTextProperty);
+            set => SetValue(DisplayTextProperty, value);
         }
 
         public static readonly DependencyProperty DisplayTextProperty = DependencyProperty.Register(nameof(DisplayText), typeof(string), typeof(CustomerSuggestBox), new PropertyMetadata(null));
@@ -65,8 +68,8 @@ namespace Inventory.Uwp.Controls
         #region IsReadOnly*
         public bool IsReadOnly
         {
-            get { return (bool)GetValue(IsReadOnlyProperty); }
-            set { SetValue(IsReadOnlyProperty, value); }
+            get => (bool)GetValue(IsReadOnlyProperty);
+            set => SetValue(IsReadOnlyProperty, value);
         }
 
         private static void IsReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -81,8 +84,8 @@ namespace Inventory.Uwp.Controls
         #region CustomerSelectedCommand
         public ICommand CustomerSelectedCommand
         {
-            get { return (ICommand)GetValue(CustomerSelectedCommandProperty); }
-            set { SetValue(CustomerSelectedCommandProperty, value); }
+            get => (ICommand)GetValue(CustomerSelectedCommandProperty);
+            set => SetValue(CustomerSelectedCommandProperty, value);
         }
 
         public static readonly DependencyProperty CustomerSelectedCommandProperty = DependencyProperty.Register(nameof(CustomerSelectedCommand), typeof(ICommand), typeof(CustomerSuggestBox), new PropertyMetadata(null));

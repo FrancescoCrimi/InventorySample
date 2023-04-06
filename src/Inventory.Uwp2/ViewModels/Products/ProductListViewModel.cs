@@ -12,55 +12,60 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.Services.VirtualCollections;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Views;
-using Inventory.Uwp.Library.Common;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.Services.VirtualCollections;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.Views.Products;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
-    public class ProductListViewModel : GenericListViewModel<ProductDto>
+    public class ProductListViewModel : GenericListViewModel<Product>
     {
-        private readonly ILogger<ProductListViewModel> logger;
-        private readonly ProductServiceFacade productService;
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
-        private readonly ProductCollection collection;
+        private readonly ILogger<ProductListViewModel> _logger;
+        private readonly IProductService _productService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
+        private readonly ProductCollection _collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
-                                    ProductServiceFacade productService,
+                                    IProductService productService,
                                     NavigationService navigationService,
                                     WindowManagerService windowService)
             : base()
         {
-            this.logger = logger;
-            this.productService = productService;
-            this.navigationService = navigationService;
-            this.windowService = windowService;
-            collection = new ProductCollection(productService);
-            Items = collection;
+            _logger = logger;
+            _productService = productService;
+            _navigationService = navigationService;
+            _windowService = windowService;
+            _collection = new ProductCollection(productService);
+            Items = _collection;
         }
 
-        public ProductListArgs ViewModelArgs { get; private set; }
-
-        public ICommand ItemInvokedCommand => new RelayCommand<ProductDto>(ItemInvoked);
-
-        private async void ItemInvoked(ProductDto model)
+        public ProductListArgs ViewModelArgs
         {
-            await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.ProductID });
+            get; private set;
+        }
+
+        public ICommand ItemInvokedCommand => new RelayCommand<Product>(ItemInvoked);
+
+        private async void ItemInvoked(Product model)
+        {
+            await _windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.Id });
         }
 
         public async Task LoadAsync(ProductListArgs args)
@@ -83,11 +88,8 @@ namespace Inventory.Uwp.ViewModels.Products
         public void Subscribe()
         {
             //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<IList<ProductDto>>>(this, OnProductListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
-
             //MessageService.Subscribe<ProductDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
+            Messenger.Register<ProductChangeMessage>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -108,19 +110,19 @@ namespace Inventory.Uwp.ViewModels.Products
 
         public async Task<bool> RefreshAsync()
         {
-            bool isOk = true;
+            var isOk = true;
             ItemsCount = 0;
 
             try
             {
                 DataRequest<Product> request = BuildDataRequest();
-                await collection.LoadAsync(request);
+                await _collection.LoadAsync(request);
             }
             catch (Exception ex)
             {
-                Items = new List<ProductDto>();
+                Items = new List<Product>();
                 StatusError($"Error loading Products: {ex.Message}");
-                logger.LogError(ex, "Refresh");
+                _logger.LogError(ex, "Refresh");
                 isOk = false;
             }
 
@@ -134,11 +136,11 @@ namespace Inventory.Uwp.ViewModels.Products
 
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs());
+                await _windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs());
             }
             else
             {
-                navigationService.Navigate<ProductPage>(new ProductDetailsArgs());
+                _navigationService.Navigate<ProductPage>(new ProductDetailsArgs());
             }
 
             StatusReady();
@@ -158,7 +160,7 @@ namespace Inventory.Uwp.ViewModels.Products
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected products?", "Ok", "Cancel"))
             {
-                int count = 0;
+                var count = 0;
                 try
                 {
                     if (SelectedIndexRanges != null)
@@ -167,7 +169,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new ItemMessage<IList<IndexRange>>(SelectedIndexRanges, "ItemRangesDeleted"));
+                        Messenger.Send(new ProductChangeMessage("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
@@ -175,13 +177,13 @@ namespace Inventory.Uwp.ViewModels.Products
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<ProductDto>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ProductChangeMessage("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Products: {ex.Message}");
-                    logger.LogError(ex, "Delete");
+                    _logger.LogError(ex, "Delete");
                     count = 0;
                 }
                 await RefreshAsync();
@@ -194,11 +196,11 @@ namespace Inventory.Uwp.ViewModels.Products
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<ProductDto> models)
+        private async Task DeleteItemsAsync(IEnumerable<Product> models)
         {
             foreach (var model in models)
             {
-                await productService.DeleteProductAsync(model);
+                await _productService.DeleteProductAsync(model);
             }
         }
 
@@ -207,7 +209,7 @@ namespace Inventory.Uwp.ViewModels.Products
             DataRequest<Product> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await productService.DeleteProductRangeAsync(range.Index, range.Length, request);
+                await _productService.DeleteProductRangeAsync(range.Index, range.Length, request);
             }
         }
 
@@ -219,6 +221,19 @@ namespace Inventory.Uwp.ViewModels.Products
                 OrderBy = ViewModelArgs.OrderBy,
                 OrderByDesc = ViewModelArgs.OrderByDesc
             };
+        }
+
+        private async void OnMessage(object recipient, ProductChangeMessage message)
+        {
+            switch (message.Value)
+            {
+                case "NewItemSaved":
+                case "ItemDeleted":
+                case "ItemsDeleted":
+                case "ItemRangesDeleted":
+                    await RefreshAsync();
+                    break;
+            }
         }
 
         //private async void OnMessage(ViewModelBase sender, string message, object args)
@@ -236,52 +251,8 @@ namespace Inventory.Uwp.ViewModels.Products
         //            break;
         //    }
         //}
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
-        {
-            switch (message.Message)
-            {
-                //case "NewItemSaved":
-                //case "ItemDeleted":
-                //case "ItemsDeleted":
-                case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
-        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductDto>> message)
-        {
-            switch (message.Message)
-            {
-                //case "NewItemSaved":
-                //case "ItemDeleted":
-                case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
-        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
-        {
-            switch (message.Message)
-            {
-                case "NewItemSaved":
-                case "ItemDeleted":
-                    //case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
 
-        protected override void SendItemChangedMessage(string message, long itemId) => throw new NotImplementedException();
+        protected override void SendItemChangedMessage(string message, long itemId)
+            => Messenger.Send(new ProductChangeMessage(message, itemId));
     }
 }

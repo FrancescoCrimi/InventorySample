@@ -77,7 +77,7 @@ namespace Inventory.Uwp
                 .AddSingleton<ProductServiceFacade>()
                 //.AddSingleton<CustomerServiceFacade>()
                 .AddSingleton<OrderServiceFacade>()
-                //.AddSingleton<OrderItemServiceFacade>()
+                .AddSingleton<OrderItemServiceFacade>()
 
                 ////.AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<FilePickerService, FilePickerService>()

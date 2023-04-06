@@ -173,8 +173,8 @@
     <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
     <Compile Include="ViewModels\Dashboard\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\Message\CustomerDetailsViewModelMessage.cs" />
-    <Compile Include="ViewModels\Message\CustomerListViewModelMessage.cs" />
+    <Compile Include="ViewModels\Message\OrderChangedMessage.cs" />
+    <Compile Include="ViewModels\Message\ProductChangeMessage.cs" />
     <Compile Include="ViewModels\Message\ItemMessage.cs" />
     <Compile Include="ViewModels\Message\CustomerChangedMessage.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsArgs.cs" />
@@ -201,29 +201,29 @@
     <Compile Include="Views\Controls\ProductSuggestBox.xaml.cs">
       <DependentUpon>ProductSuggestBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomerCardControl.xaml.cs">
+    <Compile Include="Views\Customer\Details\CustomerCardControl.xaml.cs">
       <DependentUpon>CustomerCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomerDetailsControl.xaml.cs">
+    <Compile Include="Views\Customer\Details\CustomerDetailsControl.xaml.cs">
       <DependentUpon>CustomerDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomerPage.xaml.cs">
-      <DependentUpon>CustomerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Customers\CustomersCardControl.xaml.cs">
+    <Compile Include="Views\Customers\Details\CustomersCardControl.xaml.cs">
       <DependentUpon>CustomersCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersDetailsControl.xaml.cs">
+    <Compile Include="Views\Customers\Details\CustomersDetailsControl.xaml.cs">
       <DependentUpon>CustomersDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersListControl.xaml.cs">
+    <Compile Include="Views\Customers\List\CustomersListControl.xaml.cs">
       <DependentUpon>CustomersListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersOrdersControl.xaml.cs">
+    <Compile Include="Views\Customers\Details\CustomersOrdersControl.xaml.cs">
       <DependentUpon>CustomersOrdersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Customers\CustomersPage.xaml.cs">
       <DependentUpon>CustomersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Customer\CustomerPage.xaml.cs">
+      <DependentUpon>CustomerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dashboard\CustomersControl.xaml.cs">
       <DependentUpon>CustomersControl.xaml</DependentUpon>
@@ -258,37 +258,37 @@
     <Compile Include="Views\OrderItems\OrderItemsPage.xaml.cs">
       <DependentUpon>OrderItemsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\OrderDetailsControl.xaml.cs">
-      <DependentUpon>OrderDetailsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Orders\OrderPage.xaml.cs">
-      <DependentUpon>OrderPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Orders\OrdersCardControl.xaml.cs">
+    <Compile Include="Views\Orders\Details\OrdersCardControl.xaml.cs">
       <DependentUpon>OrdersCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\OrdersDetailsControl.xaml.cs">
+    <Compile Include="Views\Order\Details\OrderDetailsControl.xaml.cs">
+      <DependentUpon>OrderDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Order\OrderPage.xaml.cs">
+      <DependentUpon>OrderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Orders\Details\OrdersDetailsControl.xaml.cs">
       <DependentUpon>OrdersDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\OrdersListControl.xaml.cs">
+    <Compile Include="Views\Orders\List\OrdersListControl.xaml.cs">
       <DependentUpon>OrdersListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\OrdersOrderItemsControl.xaml.cs">
+    <Compile Include="Views\Orders\Details\OrdersOrderItemsControl.xaml.cs">
       <DependentUpon>OrdersOrderItemsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Orders\OrdersPage.xaml.cs">
       <DependentUpon>OrdersPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Products\ProductCardControl.xaml.cs">
+    <Compile Include="Views\Product\Details\ProductCardControl.xaml.cs">
       <DependentUpon>ProductCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Products\ProductDetailsControl.xaml.cs">
+    <Compile Include="Views\Product\Details\ProductDetailsControl.xaml.cs">
       <DependentUpon>ProductDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Products\ProductPage.xaml.cs">
+    <Compile Include="Views\Product\ProductPage.xaml.cs">
       <DependentUpon>ProductPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Products\ProductsListControl.xaml.cs">
+    <Compile Include="Views\Products\List\ProductsListControl.xaml.cs">
       <DependentUpon>ProductsListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Products\ProductsPage.xaml.cs">
@@ -362,35 +362,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomerCardControl.xaml">
+    <Page Include="Views\Customer\Details\CustomerCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomerDetailsControl.xaml">
+    <Page Include="Views\Customer\Details\CustomerDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomerPage.xaml">
+    <Page Include="Views\Customers\Details\CustomersCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomersCardControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomersDetailsControl.xaml">
+    <Page Include="Views\Customers\List\CustomersListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomersListControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Customers\CustomersOrdersControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersOrdersControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Customers\CustomersPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Customer\CustomerPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -438,27 +438,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Orders\OrderDetailsControl.xaml">
+    <Page Include="Views\Orders\Details\OrdersCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Orders\OrderPage.xaml">
+    <Page Include="Views\Order\Details\OrderDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Orders\OrdersCardControl.xaml">
+    <Page Include="Views\Order\OrderPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Orders\OrdersDetailsControl.xaml">
+    <Page Include="Views\Orders\Details\OrdersDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Orders\OrdersListControl.xaml">
+    <Page Include="Views\Orders\List\OrdersListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Orders\OrdersOrderItemsControl.xaml">
+    <Page Include="Views\Orders\Details\OrdersOrderItemsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -466,19 +466,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Products\ProductCardControl.xaml">
+    <Page Include="Views\Product\Details\ProductCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Products\ProductDetailsControl.xaml">
+    <Page Include="Views\Product\Details\ProductDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Products\ProductPage.xaml">
+    <Page Include="Views\Product\ProductPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Products\ProductsListControl.xaml">
+    <Page Include="Views\Products\List\ProductsListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -5,31 +5,31 @@ using Inventory.Uwp.Library.Common;
 
 namespace Inventory.Uwp.ViewModels.Message
 {
-    public class CustomerChangedMessage : ValueChangedMessage<string>
+    public class OrderChangedMessage : ValueChangedMessage<string>
     {
         private readonly long _id;
         private readonly IndexRange[] _selectedIndexRanges;
-        private readonly IList<Customer> _selectedItems;
+        private readonly IList<Order> _selectedItems;
 
-        public CustomerChangedMessage(string value) : base(value) { }
+        public OrderChangedMessage(string value) : base(value) { }
 
-        public CustomerChangedMessage(string value, long id) : base(value)
+        public OrderChangedMessage(string value, long id) : base(value)
         {
             _id = id;
         }
 
-        public CustomerChangedMessage(string value, IndexRange[] selectedIndexRanges) : base(value)
+        public OrderChangedMessage(string value, IndexRange[] selectedIndexRanges) : base(value)
         {
             _selectedIndexRanges = selectedIndexRanges;
         }
 
-        public CustomerChangedMessage(string value, IList<Customer> selectedItems) : base(value)
+        public OrderChangedMessage(string value, IList<Order> selectedItems) : base(value)
         {
             _selectedItems = selectedItems;
         }
 
         public long Id => _id;
-        public IList<Customer> SelectedItems => _selectedItems;
+        public IList<Order> SelectedItems => _selectedItems;
         public IndexRange[] SelectedIndexRanges => _selectedIndexRanges;
     }
 }

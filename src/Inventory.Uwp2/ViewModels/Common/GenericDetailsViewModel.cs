@@ -170,7 +170,7 @@ namespace Inventory.Uwp.ViewModels.Common
         public async virtual Task SaveAsync()
         {
             IsEnabled = false;
-            bool isNew = ItemIsNew;
+            var isNew = ItemIsNew;
             if (await SaveItemAsync(EditableItem))
             {
                 Item.Merge(EditableItem);

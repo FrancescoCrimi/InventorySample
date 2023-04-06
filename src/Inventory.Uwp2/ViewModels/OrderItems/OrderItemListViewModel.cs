@@ -103,7 +103,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public async Task<bool> RefreshAsync()
         {
-            bool isOk = true;
+            var isOk = true;
             Items = null;
             ItemsCount = 0;
             SelectedItem = null;
@@ -163,7 +163,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected order items?", "Ok", "Cancel"))
             {
-                int count = 0;
+                var count = 0;
                 try
                 {
                     if (SelectedIndexRanges != null)

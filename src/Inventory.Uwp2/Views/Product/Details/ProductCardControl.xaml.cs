@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Dto;
+using Inventory.Domain.Model;
 using Inventory.Uwp.ViewModels.Products;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -41,15 +41,15 @@ namespace Inventory.Uwp.Views.Products
         #endregion
 
         #region Item
-        public ProductDto Item
+        public Product Item
         {
-            get => (ProductDto)GetValue(ItemProperty);
+            get => (Product)GetValue(ItemProperty);
             set => SetValue(ItemProperty, value);
         }
 
         public static readonly DependencyProperty ItemProperty =
             DependencyProperty.Register(nameof(Item),
-                                        typeof(ProductDto),
+                                        typeof(Product),
                                         typeof(ProductCardControl),
                                         new PropertyMetadata(null));
         #endregion

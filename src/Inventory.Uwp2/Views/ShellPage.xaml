@@ -45,7 +45,7 @@
                                           Icon="People"
                                           helpers:NavHelper.NavigateTo="customers:CustomersPage" />
 
-                <!--<winui:NavigationViewItem x:Uid="Shell_Orders"
+                <winui:NavigationViewItem x:Uid="Shell_Orders"
                                           Icon="PreviewLink"
                                           helpers:NavHelper.NavigateTo="orders:OrdersPage" />
 
@@ -57,7 +57,7 @@
                     </winui:NavigationViewItem.Icon>
                 </winui:NavigationViewItem>
 
-                <winui:NavigationViewItem x:Uid="Shell_Logs"
+                <!--<winui:NavigationViewItem x:Uid="Shell_Logs"
                                           helpers:NavHelper.NavigateTo="logs:LogsPage">
                     <winui:NavigationViewItem.InfoBadge>
                         <winui:InfoBadge Value="{x:Bind ViewModel.LogCount, Mode=OneWay}" />

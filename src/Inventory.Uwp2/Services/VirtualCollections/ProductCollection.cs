@@ -12,24 +12,24 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Library.Common;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
-    public class ProductCollection : VirtualRangeCollection<ProductDto>
+    public class ProductCollection : VirtualRangeCollection<Product>
     {
-        private readonly ProductServiceFacade productService;
+        private readonly IProductService _productService;
         private DataRequest<Product> request;
 
-        public ProductCollection(ProductServiceFacade productService)
+        public ProductCollection(IProductService productService)
         {
-            this.productService = productService;
+            _productService = productService;
         }
 
         public async  Task LoadAsync(DataRequest<Product> request)
@@ -38,21 +38,21 @@ namespace Inventory.Uwp.Services.VirtualCollections
             await LoadAsync();
         }
 
-        protected override ProductDto CreateDummyEntity()
+        protected override Product CreateDummyEntity()
         {
-            return new ProductDto() { Name = "Dummy Product" };
+            return new Product() { Name = "Dummy Product" };
         }
 
         protected async override Task<int> GetCountAsync()
         {
-            int result = await productService.GetProductsCountAsync(request);
+            var result = await _productService.GetProductsCountAsync(request);
             return result;
         }
 
-        protected async override Task<IList<ProductDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected async override Task<IList<Product>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
-            var result = await productService.GetProductsAsync(skip, take, request, dispatcher);
+            var result = await _productService.GetProductsAsync(skip, take, request);
             return result;
         }
     }

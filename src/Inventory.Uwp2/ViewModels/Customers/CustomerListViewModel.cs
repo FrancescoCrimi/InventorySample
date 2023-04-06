@@ -102,7 +102,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public async Task<bool> RefreshAsync()
         {
-            bool isOk = true;
+            var isOk = true;
             ItemsCount = 0;
 
             try
@@ -160,7 +160,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected customers?", "Ok", "Cancel"))
             {
-                int count = 0;
+                var count = 0;
                 try
                 {
                     if (SelectedIndexRanges != null)
