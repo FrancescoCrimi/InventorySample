@@ -18,24 +18,24 @@ using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.Views.OrderItems
 {
-    public sealed partial class OrderItemsListControl : UserControl
+    public sealed partial class OrderItemsDetailsControl : UserControl
     {
-        public OrderItemsListControl()
+        public OrderItemsDetailsControl()
         {
             InitializeComponent();
         }
 
         #region ViewModel
-        public OrderItemListViewModel ViewModel
+        public OrderItemDetailsViewModel ViewModel
         {
-            get { return (OrderItemListViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (OrderItemDetailsViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         public static readonly DependencyProperty ViewModelProperty =
-            DependencyProperty.Register(nameof(ViewModel),
-                                        typeof(OrderItemListViewModel),
-                                        typeof(OrderItemsListControl),
+            DependencyProperty.Register("ViewModel",
+                                        typeof(OrderItemDetailsViewModel),
+                                        typeof(OrderItemsDetailsControl),
                                         new PropertyMetadata(null));
         #endregion
     }

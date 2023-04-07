@@ -12,47 +12,47 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
-    public class OrderDetailsViewModel : GenericDetailsViewModel<OrderDto>
+    public class OrderDetailsViewModel : GenericDetailsViewModel<Order>
     {
-        private readonly ILogger<OrderDetailsViewModel> logger;
-        private readonly OrderServiceFacade orderService;
+        private readonly ILogger<OrderDetailsViewModel> _logger;
+        private readonly IOrderService _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderServiceFacade orderService)
+                                     IOrderService orderService)
             : base()
         {
-            this.logger = logger;
-            this.orderService = orderService;
+            _logger = logger;
+            _orderService = orderService;
         }
 
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
         public string TitleNew => Item?.Customer == null ? "New Order" : $"New Order, {Item?.Customer?.FullName}";
-        public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.OrderID}";
+        public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.Id}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
 
         public bool CanEditCustomer => Item?.CustomerID <= 0;
 
-        public ICommand CustomerSelectedCommand => new RelayCommand<CustomerDto>(CustomerSelected);
-        private void CustomerSelected(CustomerDto customer)
+        public ICommand CustomerSelectedCommand => new RelayCommand<Customer>(CustomerSelected);
+        private void CustomerSelected(Customer customer)
         {
-            EditableItem.CustomerID = customer.CustomerID;
+            EditableItem.CustomerID = customer.Id;
             EditableItem.ShipAddress = customer.AddressLine1;
             EditableItem.ShipCity = customer.City;
             EditableItem.ShipRegion = customer.Region;
@@ -63,7 +63,10 @@ namespace Inventory.Uwp.ViewModels.Orders
             EditableItem.NotifyChanges();
         }
 
-        public OrderDetailsArgs ViewModelArgs { get; private set; }
+        public OrderDetailsArgs ViewModelArgs
+        {
+            get; private set;
+        }
 
         public async Task LoadAsync(OrderDetailsArgs args)
         {
@@ -71,19 +74,19 @@ namespace Inventory.Uwp.ViewModels.Orders
 
             if (ViewModelArgs.IsNew)
             {
-                Item = await orderService.CreateNewOrderAsync(ViewModelArgs.CustomerID);
+                Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerID);
                 IsEditMode = true;
             }
             else
             {
                 try
                 {
-                    var item = await orderService.GetOrderAsync(ViewModelArgs.OrderID);
-                    Item = item ?? new OrderDto { OrderID = ViewModelArgs.OrderID, IsEmpty = true };
+                    var item = await _orderService.GetOrderAsync(ViewModelArgs.OrderID);
+                    Item = item ?? new Order { Id = ViewModelArgs.OrderID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load");
+                    _logger.LogError(ex, "Load");
                 }
             }
             OnPropertyChanged(nameof(ItemIsNew));
@@ -91,17 +94,14 @@ namespace Inventory.Uwp.ViewModels.Orders
         public void Unload()
         {
             ViewModelArgs.CustomerID = Item?.CustomerID ?? 0;
-            ViewModelArgs.OrderID = Item?.OrderID ?? 0;
+            ViewModelArgs.OrderID = Item?.Id ?? 0;
         }
 
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
-
             //MessageService.Subscribe<OrderListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<OrderDto>>>(this, OnOrderListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
+            Messenger.Register<OrderChangedMessage>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -115,45 +115,45 @@ namespace Inventory.Uwp.ViewModels.Orders
             return new OrderDetailsArgs
             {
                 CustomerID = Item?.CustomerID ?? 0,
-                OrderID = Item?.OrderID ?? 0
+                OrderID = Item?.Id ?? 0
             };
         }
 
-        protected async override Task<bool> SaveItemAsync(OrderDto model)
+        protected async override Task<bool> SaveItemAsync(Order model)
         {
             try
             {
                 StartStatusMessage("Saving order...");
                 await Task.Delay(100);
-                await orderService.UpdateOrderAsync(model);
+                await _orderService.UpdateOrderAsync(model);
                 EndStatusMessage("Order saved");
-                logger.LogInformation($"Order #{model.OrderID} was saved successfully.");
+                _logger.LogInformation($"Order #{model.Id} was saved successfully.");
                 OnPropertyChanged(nameof(CanEditCustomer));
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Order: {ex.Message}");
-                logger.LogError(ex, "Save");
+                _logger.LogError(ex, "Save");
                 return false;
             }
         }
 
-        protected async override Task<bool> DeleteItemAsync(OrderDto model)
+        protected async override Task<bool> DeleteItemAsync(Order model)
         {
             try
             {
                 StartStatusMessage("Deleting order...");
                 await Task.Delay(100);
-                await orderService.DeleteOrderAsync(model);
+                await _orderService.DeleteOrderAsync(model);
                 EndStatusMessage("Order deleted");
-                logger.LogWarning($"Order #{model.OrderID} was deleted.");
+                _logger.LogWarning($"Order #{model.Id} was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Order: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(ex, "Delete");
                 return false;
             }
         }
@@ -163,17 +163,17 @@ namespace Inventory.Uwp.ViewModels.Orders
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
         }
 
-        protected override IEnumerable<IValidationConstraint<OrderDto>> GetValidationConstraints(OrderDto model)
+        protected override IEnumerable<IValidationConstraint<Order>> GetValidationConstraints(Order model)
         {
-            yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Customer", m => m.CustomerID);
+            yield return new RequiredGreaterThanZeroConstraint<Order>("Customer", m => m.CustomerID);
             if (model.Status > 0)
             {
-                yield return new RequiredConstraint<OrderDto>("Payment Type", m => m.PaymentType);
-                yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Payment Type", m => m.PaymentType);
+                yield return new RequiredConstraint<Order>("Payment Type", m => m.PaymentType);
+                yield return new RequiredGreaterThanZeroConstraint<Order>("Payment Type", m => m.PaymentType);
                 if (model.Status > 1)
                 {
-                    yield return new RequiredConstraint<OrderDto>("Shipper", m => m.ShipVia);
-                    yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Shipper", m => m.ShipVia);
+                    yield return new RequiredConstraint<Order>("Shipper", m => m.ShipVia);
+                    yield return new RequiredGreaterThanZeroConstraint<Order>("Shipper", m => m.ShipVia);
                 }
             }
         }
@@ -182,26 +182,21 @@ namespace Inventory.Uwp.ViewModels.Orders
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
+
+        private async void OnMessage(object recipient, OrderChangedMessage message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnDetailsMessage(OrderDetailsViewModel sender, string message, OrderModel changed)
-            //{
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.OrderID == current?.OrderID)
+                switch (message.Value)
                 {
-                    switch (message.Message)
-                    {
-                        case "ItemChanged":
-                            //await ContextService.RunAsync(async () =>
-                            //{
+                    case "ItemChanged":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
                             try
                             {
-                                var item = await orderService.GetOrderAsync(current.OrderID);
-                                item = item ?? new OrderDto { OrderID = current.OrderID, IsEmpty = true };
+                                var item = await _orderService.GetOrderAsync(current.Id);
+                                item = item ?? new Order { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -212,29 +207,23 @@ namespace Inventory.Uwp.ViewModels.Orders
                             }
                             catch (Exception ex)
                             {
-                                logger.LogError(ex, "Handle Changes");
+                                //LogException("Order", "Handle Changes", ex);
+                                _logger.LogError(ex, "Handle Changes");
                             }
-                            //});
-                            break;
-                        case "ItemDeleted":
-                            await OnItemDeletedExternally();
-                            break;
-                    }
-                }
-            }
-        }
+                        }
+                        break;
 
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
+                    case "ItemDeleted":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
+                            await OnItemDeletedExternally();
+                        }
+                        break;
+
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await orderService.GetOrderAsync(current.OrderID);
+                            var model = await _orderService.GetOrderAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -242,23 +231,15 @@ namespace Inventory.Uwp.ViewModels.Orders
                         }
                         catch (Exception ex)
                         {
-                            logger.LogError(ex, "Handle Ranges Deleted");
+                            //LogException("Order", "Handle Ranges Deleted", ex);
+                            _logger.LogError(ex, "Handle Ranges Deleted");
                         }
                         break;
-                }
-            }
-        }
-        private async void OnOrderListMessage(object recipient, ItemMessage<IList<OrderDto>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
+
                     case "ItemsDeleted":
-                        if (message.Value is IList<OrderDto> deletedModels)
+                        if (message.SelectedItems != null)
                         {
-                            if (deletedModels.Any(r => r.OrderID == current.OrderID))
+                            if (message.SelectedItems.Any(r => r.Id == current.Id))
                             {
                                 await OnItemDeletedExternally();
                             }
@@ -267,6 +248,45 @@ namespace Inventory.Uwp.ViewModels.Orders
                 }
             }
         }
+
+        //private async void OnDetailsMessage(OrderDetailsViewModel sender, string message, OrderModel changed)
+        //{
+        //    var current = Item;
+        //    if (current != null)
+        //    {
+        //        if (changed != null && changed.OrderID == current?.OrderID)
+        //        {
+        //            switch (message)
+        //            {
+        //                case "ItemChanged":
+        //                    await ContextService.RunAsync(async () =>
+        //                    {
+        //                        try
+        //                        {
+        //                            var item = await OrderService.GetOrderAsync(current.OrderID);
+        //                            item = item ?? new OrderModel { OrderID = current.OrderID, IsEmpty = true };
+        //                            current.Merge(item);
+        //                            current.NotifyChanges();
+        //                            NotifyPropertyChanged(nameof(Title));
+        //                            if (IsEditMode)
+        //                            {
+        //                                StatusMessage("WARNING: This order has been modified externally");
+        //                            }
+        //                        }
+        //                        catch (Exception ex)
+        //                        {
+        //                            LogException("Order", "Handle Changes", ex);
+        //                        }
+        //                    });
+        //                    break;
+        //                case "ItemDeleted":
+        //                    await OnItemDeletedExternally();
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //}
+
         //private async void OnListMessage(OrderListViewModel sender, string message, object args)
         //{
         //    var current = Item;
@@ -286,7 +306,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         //            case "ItemRangesDeleted":
         //                try
         //                {
-        //                    var model = await orderService.GetOrderAsync(current.OrderID);
+        //                    var model = await OrderService.GetOrderAsync(current.OrderID);
         //                    if (model == null)
         //                    {
         //                        await OnItemDeletedExternally();
@@ -294,12 +314,13 @@ namespace Inventory.Uwp.ViewModels.Orders
         //                }
         //                catch (Exception ex)
         //                {
-        //                    logger.LogError(ex, "Handle Ranges Deleted");
+        //                    LogException("Order", "Handle Ranges Deleted", ex);
         //                }
         //                break;
         //        }
         //    }
         //}
+
 
         private async Task OnItemDeletedExternally()
         {
@@ -314,6 +335,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             //});
         }
 
-        protected override void SendItemChangedMessage(string message, long itemId) => throw new NotImplementedException();
+        protected override void SendItemChangedMessage(string message, long itemId)
+            => Messenger.Send(message, itemId);
     }
 }

@@ -13,7 +13,6 @@
 #endregion
 
 using Inventory.Domain.Model;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.ViewModels.Customers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

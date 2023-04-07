@@ -15,6 +15,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
@@ -72,5 +73,13 @@ namespace Inventory.Domain.Model
         {
             //throw new NotImplementedException();
         }
+
+
+
+        public decimal Subtotal => Quantity * UnitPrice;
+
+        public decimal Total => 0;
+            //=> (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
+
     }
 }

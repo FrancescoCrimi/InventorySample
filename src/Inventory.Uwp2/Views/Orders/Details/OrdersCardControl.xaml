@@ -13,7 +13,7 @@
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Order ID" />
             <TextBlock Style="{StaticResource CardText}"
-                       Text="{x:Bind Item.OrderID, Mode=OneWay}" />
+                       Text="{x:Bind Item.Id, Mode=OneWay}" />
 
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Status" />
@@ -31,7 +31,7 @@
 
             <StackPanel Orientation="Horizontal"
                         Margin="0,3,0,9">
-                <PersonPicture ProfilePicture="{x:Bind Item.Customer.PictureSource, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
+                <PersonPicture ProfilePicture="{x:Bind Item.Customer.Picture, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
                                Initials="{x:Bind Item.Customer.Initials, Mode=OneWay}"
                                Width="{StaticResource CardPictureRadius}"
                                Height="{StaticResource CardPictureRadius}" />

@@ -12,44 +12,48 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Views.OrderItems;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Inventory.Uwp.Views.OrderItems;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.OrderItems
 {
-    public class OrderItemListViewModel : GenericListViewModel<OrderItemDto>
+    public class OrderItemListViewModel : GenericListViewModel<OrderItem>
     {
-        private readonly ILogger<OrderItemListViewModel> logger;
-        private readonly OrderItemServiceFacade orderItemService;
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
+        private readonly ILogger<OrderItemListViewModel> _logger;
+        private readonly IOrderItemService _orderItemService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
-                                      OrderItemServiceFacade orderItemService,
+                                      IOrderItemService orderItemService,
                                       NavigationService navigationService,
                                       WindowManagerService windowService)
             : base()
         {
-            this.logger = logger;
-            this.orderItemService = orderItemService;
-            this.navigationService = navigationService;
-            this.windowService = windowService;
+            _logger = logger;
+            _orderItemService = orderItemService;
+            _navigationService = navigationService;
+            _windowService = windowService;
         }
 
-        public OrderItemListArgs ViewModelArgs { get; private set; }
+        public OrderItemListArgs ViewModelArgs
+        {
+            get; private set;
+        }
 
         public async Task LoadAsync(OrderItemListArgs args, bool silent = false)
         {
@@ -77,11 +81,8 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<IList<OrderItemDto>>>(this, OnOrderItemListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
-
             //MessageService.Subscribe<OrderItemDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
+            Messenger.Register<OrderItemChangeMessage>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -111,13 +112,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             try
             {
                 DataRequest<OrderItem> request = BuildDataRequest();
-                Items = await orderItemService.GetOrderItemsAsync(request);
+                Items = await _orderItemService.GetOrderItemsAsync(request);
             }
             catch (Exception ex)
             {
-                Items = new List<OrderItemDto>();
+                Items = new List<OrderItem>();
                 StatusError($"Error loading Order items: {ex.Message}");
-                logger.LogError(ex, "Refresh");
+                _logger.LogError(ex, "Refresh");
                 isOk = false;
             }
 
@@ -131,7 +132,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderID, OrderLine = SelectedItem.OrderLine });
+                await _windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderID, OrderLine = SelectedItem.OrderLine });
             }
         }
 
@@ -139,11 +140,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                await _windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
             else
             {
-                navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                _navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
 
             StatusReady();
@@ -172,7 +173,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         StartStatusMessage($"Deleting {count} order items...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new ItemMessage<IList<IndexRange>>(SelectedIndexRanges, "ItemRangesDeleted"));
+                        Messenger.Send(new OrderItemChangeMessage("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
@@ -180,13 +181,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         StartStatusMessage($"Deleting {count} order items...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<OrderItemDto>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new OrderItemChangeMessage("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} order items: {ex.Message}");
-                    logger.LogError(ex, "Delete");
+                    _logger.LogError(ex, "Delete");
                     count = 0;
                 }
                 await RefreshAsync();
@@ -199,11 +200,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<OrderItemDto> models)
+        private async Task DeleteItemsAsync(IEnumerable<OrderItem> models)
         {
             foreach (var model in models)
             {
-                await orderItemService.DeleteOrderItemAsync(model);
+                await _orderItemService.DeleteOrderItemAsync(model);
             }
         }
 
@@ -212,7 +213,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             DataRequest<OrderItem> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await orderItemService.DeleteOrderItemRangeAsync(range.Index, range.Length, request);
+                await _orderItemService.DeleteOrderItemRangeAsync(range.Index, range.Length, request);
             }
         }
 
@@ -246,52 +247,21 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         //            break;
         //    }
         //}
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
+
+        private async void OnMessage(object recipient, OrderItemChangeMessage message)
         {
-            switch (message.Message)
-            {
-                //case "NewItemSaved":
-                //case "ItemDeleted":
-                //case "ItemsDeleted":
-                case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
-        private async void OnOrderItemListMessage(object recipient, ItemMessage<IList<OrderItemDto>> message)
-        {
-            switch (message.Message)
-            {
-                //case "NewItemSaved":
-                //case "ItemDeleted":
-                case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
-        private async void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
-        {
-            switch (message.Message)
+            switch (message.Value)
             {
                 case "NewItemSaved":
                 case "ItemDeleted":
-                    //case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
+                case "ItemsDeleted":
+                case "ItemRangesDeleted":
                     await RefreshAsync();
-                    //});
                     break;
             }
         }
 
-        protected override void SendItemChangedMessage(string message, long itemId) => throw new NotImplementedException();
+        protected override void SendItemChangedMessage(string message, long itemId)
+            => Messenger.Send(new OrderItemChangeMessage(message, itemId));
     }
 }

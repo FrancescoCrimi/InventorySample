@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Inventory.Uwp.Views.Customers"
              xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
-             xmlns:dto="using:Inventory.Uwp.Dto"
+             xmlns:models="using:Inventory.Domain.Model"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -12,7 +12,7 @@
 
     <UserControl.Resources>
         <DataTemplate x:Key="HeaderTemplate"
-                      x:DataType="dto:OrderDto">
+                      x:DataType="models:Order">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*" />
@@ -44,7 +44,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ItemTemplate"
-                      x:DataType="dto:OrderDto">
+                      x:DataType="models:Order">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*" />
@@ -55,7 +55,7 @@
                     <ColumnDefinition Width="10*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           Text="{x:Bind OrderID}"
+                           Text="{x:Bind Id}"
                            Style="{StaticResource ColumnValueStyle}" />
                 <TextBlock Grid.Column="1"
                            Text="{x:Bind OrderDate, Mode=OneWay, Converter={StaticResource DateTimeFormatConverter}}"

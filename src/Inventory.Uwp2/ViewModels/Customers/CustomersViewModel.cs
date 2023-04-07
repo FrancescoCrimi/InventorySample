@@ -12,18 +12,13 @@
 // ******************************************************************
 #endregion
 
+using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
-using Inventory.Domain.Model;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.Orders;
 using Microsoft.Extensions.Logging;
-using System;
-using System.ServiceModel.Channels;
-using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {
@@ -82,7 +77,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         public void Unsubscribe()
         {
             //MessageService.Unsubscribe(this);
-            Messenger.Unregister<ItemMessage<Customer>>(this);
+            Messenger.Unregister<CustomerChangedMessage>(this);
             CustomerList.Unsubscribe();
             CustomerDetails.Unsubscribe();
             CustomerOrders.Unsubscribe();

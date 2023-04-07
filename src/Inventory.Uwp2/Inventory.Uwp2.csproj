@@ -135,11 +135,6 @@
     <Compile Include="Converters\LogLevelConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToImageConverter.cs" />
-    <Compile Include="Dto\CustomerDto.cs" />
-    <Compile Include="Dto\DtoAssembler.cs" />
-    <Compile Include="Dto\OrderDto.cs" />
-    <Compile Include="Dto\OrderItemDto.cs" />
-    <Compile Include="Dto\ProductDto.cs" />
     <Compile Include="Helpers\IBackNavigationHandler.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Models\CategoryModel.cs" />
@@ -151,14 +146,10 @@
     <Compile Include="Models\TaxTypeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActivationService.cs" />
-    <Compile Include="Services\CustomerServiceFacade.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\LookupTableServiceFacade.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\OrderItemServiceFacade.cs" />
-    <Compile Include="Services\OrderServiceFacade.cs" />
-    <Compile Include="Services\ProductServiceFacade.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
     <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
     <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
@@ -174,8 +165,8 @@
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
     <Compile Include="ViewModels\Dashboard\DashboardViewModel.cs" />
     <Compile Include="ViewModels\Message\OrderChangedMessage.cs" />
+    <Compile Include="ViewModels\Message\OrderItemChangeMessage.cs" />
     <Compile Include="ViewModels\Message\ProductChangeMessage.cs" />
-    <Compile Include="ViewModels\Message\ItemMessage.cs" />
     <Compile Include="ViewModels\Message\CustomerChangedMessage.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsArgs.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsViewModel.cs" />
@@ -237,22 +228,22 @@
     <Compile Include="Views\Dashboard\ProductsControl.xaml.cs">
       <DependentUpon>ProductsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemCardControl.xaml.cs">
+    <Compile Include="Views\OrderItem\Details\OrderItemCardControl.xaml.cs">
       <DependentUpon>OrderItemCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemDetailsControl.xaml.cs">
+    <Compile Include="Views\OrderItem\Details\OrderItemDetailsControl.xaml.cs">
       <DependentUpon>OrderItemDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemPage.xaml.cs">
+    <Compile Include="Views\OrderItem\OrderItemPage.xaml.cs">
       <DependentUpon>OrderItemPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsCardControl.xaml.cs">
+    <Compile Include="Views\OrderItems\Details\OrderItemsCardControl.xaml.cs">
       <DependentUpon>OrderItemsCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsDetailsControl.xaml.cs">
+    <Compile Include="Views\OrderItems\Details\OrderItemsDetailsControl.xaml.cs">
       <DependentUpon>OrderItemsDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsListControl.xaml.cs">
+    <Compile Include="Views\OrderItems\List\OrderItemsListControl.xaml.cs">
       <DependentUpon>OrderItemsListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OrderItems\OrderItemsPage.xaml.cs">
@@ -410,27 +401,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemCardControl.xaml">
+    <Page Include="Views\OrderItem\Details\OrderItemCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemDetailsControl.xaml">
+    <Page Include="Views\OrderItem\Details\OrderItemDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemPage.xaml">
+    <Page Include="Views\OrderItem\OrderItemPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsCardControl.xaml">
+    <Page Include="Views\OrderItems\Details\OrderItemsCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsDetailsControl.xaml">
+    <Page Include="Views\OrderItems\Details\OrderItemsDetailsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsListControl.xaml">
+    <Page Include="Views\OrderItems\List\OrderItemsListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

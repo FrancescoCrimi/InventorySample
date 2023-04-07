@@ -12,31 +12,32 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels.OrderItems;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Inventory.Uwp.ViewModels.OrderItems;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrdersViewModel : ViewModelBase
     {
-        private readonly ILogger<OrdersViewModel> logger;
-        private readonly OrderServiceFacade orderService;
+        private readonly ILogger<OrdersViewModel> _logger;
+        private readonly IOrderService _orderService;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
-                               OrderServiceFacade orderService,
+                               IOrderService orderService,
                                OrderListViewModel orderListViewModel,
                                OrderDetailsViewModel orderDetailsViewModel,
                                OrderItemListViewModel orderItemListViewModel)
             : base()
         {
-            this.logger = logger;
-            this.orderService = orderService;
+            _logger = logger;
+            _orderService = orderService;
             OrderList = orderListViewModel;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
@@ -59,7 +60,8 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Subscribe()
         {
-            Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
+            //MessageService.Subscribe<OrderListViewModel>(this, OnMessage);
+            Messenger.Register<OrderChangedMessage>(this, OnMessage);
             OrderList.Subscribe();
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
@@ -73,17 +75,28 @@ namespace Inventory.Uwp.ViewModels.Orders
             OrderItemList.Unsubscribe();
         }
 
-        private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
+        private async void OnMessage(object recipient, OrderChangedMessage message)
         {
-            if (message.Message == "ItemSelected")
+            if (message.Value == "ItemSelected")
             {
-                if (message.Value.OrderID != 0)
+                if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
                 }
             }
         }
+
+        //private async void OnMessage(OrderListViewModel viewModel, string message, object args)
+        //{
+        //    if (viewModel == OrderList && message == "ItemSelected")
+        //    {
+        //        await ContextService.RunAsync(() =>
+        //        {
+        //            OnItemSelected();
+        //        });
+        //    }
+        //}
 
         private async Task OnItemSelected()
         {
@@ -105,31 +118,31 @@ namespace Inventory.Uwp.ViewModels.Orders
             OrderDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(OrderDto selected)
+        private async Task PopulateDetails(Order selected)
         {
             try
             {
-                var model = await orderService.GetOrderAsync(selected.OrderID);
+                var model = await _orderService.GetOrderAsync(selected.Id);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Details");
+                _logger.LogError(ex, "Load Details");
             }
         }
 
-        private async Task PopulateOrderItems(OrderDto selectedItem)
+        private async Task PopulateOrderItems(Order selectedItem)
         {
             try
             {
                 if (selectedItem != null)
                 {
-                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = selectedItem.OrderID }, silent: true);
+                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = selectedItem.Id }, silent: true);
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load OrderItems");
+                _logger.LogError(ex, "Load OrderItems");
             }
         }
     }

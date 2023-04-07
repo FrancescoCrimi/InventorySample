@@ -16,7 +16,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.Views.OrderItems;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -25,12 +24,12 @@ namespace Inventory.Uwp.Views.Orders
 {
     public sealed partial class OrdersPage : Page
     {
-        private readonly WindowManagerService windowService;
+        private readonly WindowManagerService _windowService;
 
         public OrdersPage()
         {
             ViewModel = Ioc.Default.GetService<OrdersViewModel>();
-            windowService = Ioc.Default.GetService<WindowManagerService>();
+            _windowService = Ioc.Default.GetService<WindowManagerService>();
             InitializeComponent();
         }
 
@@ -51,7 +50,7 @@ namespace Inventory.Uwp.Views.Orders
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
             var args = ViewModel.OrderList.CreateArgs();
-            await windowService.OpenInNewWindow<OrdersPage>(args);
+            await _windowService.OpenInNewWindow<OrdersPage>(args);
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
@@ -59,11 +58,11 @@ namespace Inventory.Uwp.Views.Orders
             ViewModel.OrderDetails.CancelEdit();
             if (pivot.SelectedIndex == 0)
             {
-                await windowService.OpenInNewWindow<OrderPage>(ViewModel.OrderDetails.CreateArgs());
+                await _windowService.OpenInNewWindow<OrderPage>(ViewModel.OrderDetails.CreateArgs());
             }
             else
             {
-                await windowService.OpenInNewWindow<OrderItemsPage>(ViewModel.OrderItemList.CreateArgs());
+                await _windowService.OpenInNewWindow<OrderItemsPage>(ViewModel.OrderItemList.CreateArgs());
             }
         }
 

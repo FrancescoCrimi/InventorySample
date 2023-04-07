@@ -12,21 +12,19 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Models;
-using Inventory.Uwp.Services;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Library.Controls;
+using Inventory.Uwp.Library.Extensions;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Controls;
-using Inventory.Uwp.Library.Extensions;
 
 namespace Inventory.Uwp.Controls
 {
@@ -36,38 +34,46 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                ProductService = Ioc.Default.GetService<ProductServiceFacade>();
+                ProductService = Ioc.Default.GetService<IProductService>();
             }
             InitializeComponent();
         }
 
-        private ProductServiceFacade ProductService { get; }
+        private IProductService ProductService { get; }
 
         #region Items
-        public IList<ProductDto> Items
+        public IList<Product> Items
         {
-            get { return (IList<ProductDto>)GetValue(ItemsProperty); }
-            set { SetValue(ItemsProperty, value); }
+            get => (IList<Product>)GetValue(ItemsProperty);
+            set => SetValue(ItemsProperty, value);
         }
 
-        public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(nameof(Items), typeof(IList<ProductDto>), typeof(ProductSuggestBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemsProperty =
+            DependencyProperty.Register(nameof(Items),
+                                        typeof(IList<Product>),
+                                        typeof(ProductSuggestBox),
+                                        new PropertyMetadata(null));
         #endregion
 
         #region DisplayText
         public string DisplayText
         {
-            get { return (string)GetValue(DisplayTextProperty); }
-            set { SetValue(DisplayTextProperty, value); }
+            get => (string)GetValue(DisplayTextProperty);
+            set => SetValue(DisplayTextProperty, value);
         }
 
-        public static readonly DependencyProperty DisplayTextProperty = DependencyProperty.Register(nameof(DisplayText), typeof(string), typeof(ProductSuggestBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty DisplayTextProperty =
+            DependencyProperty.Register(nameof(DisplayText),
+                                        typeof(string),
+                                        typeof(ProductSuggestBox),
+                                        new PropertyMetadata(null));
         #endregion
 
         #region IsReadOnly*
         public bool IsReadOnly
         {
-            get { return (bool)GetValue(IsReadOnlyProperty); }
-            set { SetValue(IsReadOnlyProperty, value); }
+            get => (bool)GetValue(IsReadOnlyProperty);
+            set => SetValue(IsReadOnlyProperty, value);
         }
 
         private static void IsReadOnlyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -76,17 +82,25 @@ namespace Inventory.Uwp.Controls
             control.suggestBox.Mode = ((bool)e.NewValue == true) ? FormEditMode.ReadOnly : FormEditMode.Auto;
         }
 
-        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(nameof(IsReadOnly), typeof(bool), typeof(ProductSuggestBox), new PropertyMetadata(false, IsReadOnlyChanged));
+        public static readonly DependencyProperty IsReadOnlyProperty =
+            DependencyProperty.Register(nameof(IsReadOnly),
+                                        typeof(bool),
+                                        typeof(ProductSuggestBox),
+                                        new PropertyMetadata(false, IsReadOnlyChanged));
         #endregion
 
         #region ProductSelectedCommand
         public ICommand ProductSelectedCommand
         {
-            get { return (ICommand)GetValue(ProductSelectedCommandProperty); }
-            set { SetValue(ProductSelectedCommandProperty, value); }
+            get => (ICommand)GetValue(ProductSelectedCommandProperty);
+            set => SetValue(ProductSelectedCommandProperty, value);
         }
 
-        public static readonly DependencyProperty ProductSelectedCommandProperty = DependencyProperty.Register(nameof(ProductSelectedCommand), typeof(ICommand), typeof(ProductSuggestBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty ProductSelectedCommandProperty =
+            DependencyProperty.Register(nameof(ProductSelectedCommand),
+                                        typeof(ICommand),
+                                        typeof(ProductSuggestBox),
+                                        new PropertyMetadata(null));
         #endregion
 
         private async void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -100,7 +114,7 @@ namespace Inventory.Uwp.Controls
             }
         }
 
-        private async Task<IList<ProductDto>> GetItems(string query)
+        private async Task<IList<Product>> GetItems(string query)
         {
             var request = new DataRequest<Product>()
             {

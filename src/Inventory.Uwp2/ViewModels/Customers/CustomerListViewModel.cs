@@ -12,24 +12,23 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.Services.VirtualCollections;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Library.Common;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Views.Customers;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.Services.VirtualCollections;
+using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
+using Inventory.Uwp.Views.Customers;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {

@@ -29,7 +29,7 @@
 
             <StackPanel Orientation="Horizontal"
                         Margin="0,0">
-                <Image Source="{x:Bind Item.Product.ThumbnailSource, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
+                <Image Source="{x:Bind Item.Product.Thumbnail, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
                        Margin="0,3,9,12"
                        Height="56"
                        Stretch="Uniform"

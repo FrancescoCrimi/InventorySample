@@ -12,30 +12,30 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Dto;
+using Inventory.Domain.Model;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Inventory.Uwp.Views.OrderItems
 {
-    public sealed partial class OrderItemsCardControl : UserControl
+    public sealed partial class OrderItemCardControl : UserControl
     {
-        public OrderItemsCardControl()
+        public OrderItemCardControl()
         {
             InitializeComponent();
         }
 
         #region Item
-        public OrderItemDto Item
+        public OrderItem Item
         {
-            get => (OrderItemDto)GetValue(ItemProperty);
+            get => (OrderItem)GetValue(ItemProperty);
             set => SetValue(ItemProperty, value);
         }
 
         public static readonly DependencyProperty ItemProperty =
             DependencyProperty.Register(nameof(Item),
-                                        typeof(OrderItemDto),
-                                        typeof(OrderItemsCardControl),
+                                        typeof(OrderItem),
+                                        typeof(OrderItemCardControl),
                                         new PropertyMetadata(null));
         #endregion
     }

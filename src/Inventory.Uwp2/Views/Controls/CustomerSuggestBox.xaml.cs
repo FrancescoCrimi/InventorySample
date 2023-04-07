@@ -12,17 +12,16 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Domain.Model;
-using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Controls;
-using Inventory.Uwp.Library.Extensions;
-using Inventory.Uwp.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Library.Controls;
+using Inventory.Uwp.Library.Extensions;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,24 +34,28 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                CustomerService = Ioc.Default.GetService<CustomerServiceFacade>();
+                CustomerService = Ioc.Default.GetService<ICustomerService>();
             }
             InitializeComponent();
         }
 
-        private CustomerServiceFacade CustomerService
+        private ICustomerService CustomerService
         {
             get;
         }
 
         #region Items
-        public IList<CustomerDto> Items
+        public IList<Customer> Items
         {
-            get => (IList<CustomerDto>)GetValue(ItemsProperty);
+            get => (IList<Customer>)GetValue(ItemsProperty);
             set => SetValue(ItemsProperty, value);
         }
 
-        public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(nameof(Items), typeof(IList<CustomerDto>), typeof(CustomerSuggestBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemsProperty =
+            DependencyProperty.Register(nameof(Items),
+                                        typeof(IList<Customer>),
+                                        typeof(CustomerSuggestBox),
+                                        new PropertyMetadata(null));
         #endregion
 
         #region DisplayText
@@ -62,7 +65,11 @@ namespace Inventory.Uwp.Controls
             set => SetValue(DisplayTextProperty, value);
         }
 
-        public static readonly DependencyProperty DisplayTextProperty = DependencyProperty.Register(nameof(DisplayText), typeof(string), typeof(CustomerSuggestBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty DisplayTextProperty =
+            DependencyProperty.Register(nameof(DisplayText),
+                                        typeof(string),
+                                        typeof(CustomerSuggestBox),
+                                        new PropertyMetadata(null));
         #endregion
 
         #region IsReadOnly*
@@ -78,7 +85,11 @@ namespace Inventory.Uwp.Controls
             control.suggestBox.Mode = ((bool)e.NewValue == true) ? FormEditMode.ReadOnly : FormEditMode.Auto;
         }
 
-        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(nameof(IsReadOnly), typeof(bool), typeof(CustomerSuggestBox), new PropertyMetadata(false, IsReadOnlyChanged));
+        public static readonly DependencyProperty IsReadOnlyProperty =
+            DependencyProperty.Register(nameof(IsReadOnly),
+                                        typeof(bool),
+                                        typeof(CustomerSuggestBox),
+                                        new PropertyMetadata(false, IsReadOnlyChanged));
         #endregion
 
         #region CustomerSelectedCommand
@@ -88,7 +99,11 @@ namespace Inventory.Uwp.Controls
             set => SetValue(CustomerSelectedCommandProperty, value);
         }
 
-        public static readonly DependencyProperty CustomerSelectedCommandProperty = DependencyProperty.Register(nameof(CustomerSelectedCommand), typeof(ICommand), typeof(CustomerSuggestBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty CustomerSelectedCommandProperty =
+            DependencyProperty.Register(nameof(CustomerSelectedCommand),
+                                        typeof(ICommand),
+                                        typeof(CustomerSuggestBox),
+                                        new PropertyMetadata(null));
         #endregion
 
         private async void OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -102,7 +117,7 @@ namespace Inventory.Uwp.Controls
             }
         }
 
-        private async Task<IList<CustomerDto>> GetItems(string query)
+        private async Task<IList<Customer>> GetItems(string query)
         {
             var request = new DataRequest<Customer>()
             {

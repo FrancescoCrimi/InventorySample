@@ -12,9 +12,8 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
-using Inventory.Uwp.Dto;
 using System.Collections.Generic;
+using Inventory.Domain.Model;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

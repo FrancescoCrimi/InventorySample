@@ -12,40 +12,37 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
-using Inventory.Application.Impl;
-using Inventory.Domain.Model;
-using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels.Message;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductDetailsViewModel : GenericDetailsViewModel<Product>
     {
-        private readonly ILogger<ProductDetailsViewModel> logger;
-        private readonly IProductService productService;
-        private readonly FilePickerService filePickerService;
+        private readonly ILogger<ProductDetailsViewModel> _logger;
+        private readonly IProductService _productService;
+        private readonly FilePickerService _filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
                                        IProductService productService,
                                        FilePickerService filePickerService)
             : base()
         {
-            this.logger = logger;
-            this.productService = productService;
-            this.filePickerService = filePickerService;
+            _logger = logger;
+            _productService = productService;
+            _filePickerService = filePickerService;
         }
 
         public override string Title => Item?.IsNew ?? true ? "New Product" : TitleEdit;
@@ -71,12 +68,12 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 try
                 {
-                    var item = await productService.GetProductAsync(ViewModelArgs.ProductID);
+                    var item = await _productService.GetProductAsync(ViewModelArgs.ProductID);
                     Item = item ?? new Product { Id = ViewModelArgs.ProductID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load");
+                    _logger.LogError(ex, "Load");
                 }
             }
         }
@@ -123,7 +120,7 @@ namespace Inventory.Uwp.ViewModels.Products
         private async void OnEditPicture()
         {
             NewPictureSource = null;
-            var result = await filePickerService.OpenImagePickerAsync();
+            var result = await _filePickerService.OpenImagePickerAsync();
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
@@ -144,15 +141,15 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 StartStatusMessage("Saving product...");
                 await Task.Delay(100);
-                await productService.UpdateProductAsync(model);
+                await _productService.UpdateProductAsync(model);
                 EndStatusMessage("Product saved");
-                logger.LogInformation($"Product {model.Id} '{model.Name}' was saved successfully.");
+                _logger.LogInformation($"Product {model.Id} '{model.Name}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Product: {ex.Message}");
-                logger.LogError(ex, "Save");
+                _logger.LogError(ex, "Save");
                 return false;
             }
         }
@@ -163,15 +160,15 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 StartStatusMessage("Deleting product...");
                 await Task.Delay(100);
-                await productService.DeleteProductAsync(model);
+                await _productService.DeleteProductAsync(model);
                 EndStatusMessage("Product deleted");
-                logger.LogWarning($"Product {model.Id} '{model.Name}' was deleted.");
+                _logger.LogWarning($"Product {model.Id} '{model.Name}' was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Product: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(ex, "Delete");
                 return false;
             }
         }
@@ -203,7 +200,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         {
                             try
                             {
-                                var item = await productService.GetProductAsync(current.Id);
+                                var item = await _productService.GetProductAsync(current.Id);
                                 item = item ?? new Product { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -215,7 +212,7 @@ namespace Inventory.Uwp.ViewModels.Products
                             }
                             catch (Exception ex)
                             {
-                                logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(ex, "Handle Changes");
                             }
                         }
                         break;
@@ -241,7 +238,7 @@ namespace Inventory.Uwp.ViewModels.Products
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await productService.GetProductAsync(current.Id);
+                            var model = await _productService.GetProductAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -249,7 +246,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         }
                         catch (Exception ex)
                         {
-                            logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(ex, "Handle Ranges Deleted");
                         }
                         break;
                 }

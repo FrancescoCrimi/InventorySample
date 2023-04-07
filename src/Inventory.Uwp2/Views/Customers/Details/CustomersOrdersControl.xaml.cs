@@ -26,11 +26,10 @@ namespace Inventory.Uwp.Views.Customers
         }
 
         #region ViewModel
-
         public OrderListViewModel ViewModel
         {
-            get { return (OrderListViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (OrderListViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         public static readonly DependencyProperty ViewModelProperty =
@@ -38,7 +37,6 @@ namespace Inventory.Uwp.Views.Customers
                                         typeof(OrderListViewModel),
                                         typeof(CustomersOrdersControl),
                                         new PropertyMetadata(null));
-
         #endregion
     }
 }

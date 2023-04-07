@@ -12,29 +12,30 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemsViewModel : ViewModelBase
     {
-        private readonly ILogger<OrderItemsViewModel> logger;
-        private readonly OrderItemServiceFacade orderItemService;
+        private readonly ILogger<OrderItemsViewModel> _logger;
+        private readonly IOrderItemService _orderItemService;
 
         public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
-                                   OrderItemServiceFacade orderItemService,
+                                   IOrderItemService orderItemService,
                                    OrderItemListViewModel orderItemListViewModel,
                                    OrderItemDetailsViewModel orderItemDetailsViewModel)
             : base()
         {
-            this.logger = logger;
-            this.orderItemService = orderItemService;
+            _logger = logger;
+            _orderItemService = orderItemService;
             OrderItemList = orderItemListViewModel;
             OrderItemDetails = orderItemDetailsViewModel;
         }
@@ -55,7 +56,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
+            Messenger.Register<OrderItemChangeMessage>(this, OnMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
         }
@@ -68,20 +69,25 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             OrderItemDetails.Unsubscribe();
         }
 
-        private void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
+
+        private void OnMessage(object recipient, OrderItemChangeMessage message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnMessage(OrderItemListViewModel viewModel, string message, object args)
-            //{
-            if (recipient == OrderItemList && message.Message == "ItemSelected")
+            if (message.Id != 0 && message.Value == "ItemSelected")
             {
-                //await ContextService.RunAsync(() =>
-                //{
                 OnItemSelected();
-                //});
             }
         }
+
+        //private async void OnMessage(OrderItemListViewModel viewModel, string message, object args)
+        //{
+        //    if (viewModel == OrderItemList && message == "ItemSelected")
+        //    {
+        //        await ContextService.RunAsync(() =>
+        //        {
+        //            OnItemSelected();
+        //        });
+        //    }
+        //}
 
         private async void OnItemSelected()
         {
@@ -101,16 +107,16 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             OrderItemDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(OrderItemDto selected)
+        private async Task PopulateDetails(OrderItem selected)
         {
             try
             {
-                var model = await orderItemService.GetOrderItemAsync(selected.OrderID, selected.OrderLine);
+                var model = await _orderItemService.GetOrderItemAsync(selected.OrderID, selected.OrderLine);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Details");
+                _logger.LogError(ex, "Load Details");
             }
         }
     }

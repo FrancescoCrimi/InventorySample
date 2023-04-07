@@ -12,9 +12,9 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,37 +22,37 @@ using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
-    public class OrderCollection : VirtualRangeCollection<OrderDto>
+    public class OrderCollection : VirtualRangeCollection<Order>
     {
-        private readonly OrderServiceFacade orderService;
-        private DataRequest<Order> request;
+        private readonly IOrderService _orderService;
+        private DataRequest<Order> _request;
 
-        public OrderCollection(OrderServiceFacade orderService)
+        public OrderCollection(IOrderService orderService)
         {
-            this.orderService = orderService;
+            _orderService = orderService;
         }
 
         public async Task LoadAsync(DataRequest<Order> request)
         {
-            this.request = request;
+            this._request = request;
             await LoadAsync();
         }
 
-        protected override OrderDto CreateDummyEntity()
+        protected override Order CreateDummyEntity()
         {
-            return new OrderDto() { };
+            return new Order() { };
         }
 
         protected async override Task<int> GetCountAsync()
         {
-            int result = await orderService.GetOrdersCountAsync(request);
+            var result = await _orderService.GetOrdersCountAsync(_request);
             return result;
         }
 
-        protected async override Task<IList<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected async override Task<IList<Order>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
-            var result = await orderService.GetOrdersAsync(skip, take, request, dispatcher);
+            var result = await _orderService.GetOrdersAsync(skip, take, _request);
             return result;
         }
     }

@@ -12,42 +12,37 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
-using Inventory.Domain.Model;
-using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels.Message;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Application;
+using Inventory.Domain.Model;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomerDetailsViewModel : GenericDetailsViewModel<Customer>
     {
-        private readonly ILogger<CustomerDetailsViewModel> logger;
-        //private readonly CustomerServiceFacade customerService;
+        private readonly ILogger<CustomerDetailsViewModel> _logger;
         private readonly ICustomerService _customerService;
-        private readonly FilePickerService filePickerService;
+        private readonly FilePickerService _filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
-                                        //CustomerServiceFacade customerService,
                                         ICustomerService customerService,
                                         FilePickerService filePickerService)
             : base()
         {
-            this.logger = logger;
-            //this.customerService = customerService;
+            _logger = logger;
             _customerService = customerService;
-            this.filePickerService = filePickerService;
+            _filePickerService = filePickerService;
         }
 
 
@@ -80,7 +75,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load");
+                    _logger.LogError(ex, "Load");
                 }
             }
         }
@@ -128,7 +123,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         private async void OnEditPicture()
         {
             NewPictureSource = null;
-            var result = await filePickerService.OpenImagePickerAsync();
+            var result = await _filePickerService.OpenImagePickerAsync();
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
@@ -151,13 +146,13 @@ namespace Inventory.Uwp.ViewModels.Customers
                 await Task.Delay(100);
                 await _customerService.UpdateCustomerAsync(model);
                 EndStatusMessage("Customer saved");
-                logger.LogInformation($"Customer {model.Id} '{model.FullName}' was saved successfully.");
+                _logger.LogInformation($"Customer {model.Id} '{model.FullName}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Customer: {ex.Message}");
-                logger.LogError(ex, "Save");
+                _logger.LogError(ex, "Save");
                 return false;
             }
         }
@@ -170,13 +165,13 @@ namespace Inventory.Uwp.ViewModels.Customers
                 await Task.Delay(100);
                 await _customerService.DeleteCustomerAsync(model);
                 EndStatusMessage("Customer deleted");
-                logger.LogWarning($"Customer {model.Id} '{model.FullName}' was deleted.");
+                _logger.LogWarning($"Customer {model.Id} '{model.FullName}' was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Customer: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(ex, "Delete");
                 return false;
             }
         }
@@ -227,7 +222,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                             catch (Exception ex)
                             {
                                 //LogException("Customer", "Handle Changes", ex);
-                                logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(ex, "Handle Changes");
                             }
                         }
                         break;
@@ -263,7 +258,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                         catch (Exception ex)
                         {
                             //LogException("Customer", "Handle Ranges Deleted", ex);
-                            logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(ex, "Handle Ranges Deleted");
                         }
                         break;
                 }
