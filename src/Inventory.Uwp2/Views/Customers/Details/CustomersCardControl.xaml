@@ -10,16 +10,19 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
+
             <Grid Margin="0,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+
                 <PersonPicture Margin="1"
                                ProfilePicture="{x:Bind Item.Picture, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
                                Initials="{x:Bind Item.Initials, Mode=OneWay}"
                                Width="{StaticResource CardPictureRadius}"
                                Height="{StaticResource CardPictureRadius}" />
+                
                 <libcontrols:RoundButton Radius="{StaticResource CardPictureRadius}"
                                          BorderThickness="1"
                                          BorderBrush="White"

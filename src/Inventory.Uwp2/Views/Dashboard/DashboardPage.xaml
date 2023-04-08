@@ -70,22 +70,22 @@
             </GridView.ItemsPanel>
 
             <local:CustomersControl Margin="2"
-                                 Width="600"
-                                 Height="250"
-                                 ItemsSource="{x:Bind ViewModel.Customers, Mode=OneWay}"
-                                 Tag="Customers" />
+                                    Width="600"
+                                    Height="250"
+                                    ItemsSource="{x:Bind ViewModel.Customers, Mode=OneWay}"
+                                    Tag="Customers" />
 
             <local:ProductsControl Margin="1"
-                                Width="400"
-                                Height="250"
-                                ItemsSource="{x:Bind ViewModel.Products, Mode=OneWay}"
-                                Tag="Products" />
+                                   Width="400"
+                                   Height="250"
+                                   ItemsSource="{x:Bind ViewModel.Products, Mode=OneWay}"
+                                   Tag="Products" />
 
             <local:OrdersControl Margin="1"
-                              Width="400"
-                              Height="250"
-                              ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
-                              Tag="Orders" />
+                                 Width="400"
+                                 Height="250"
+                                 ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
+                                 Tag="Orders" />
 
         </GridView>
 

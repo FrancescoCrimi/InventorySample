@@ -20,7 +20,14 @@ using CommunityToolkit.Mvvm.Input;
 using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Customers;
+using Inventory.Uwp.ViewModels.Orders;
+using Inventory.Uwp.ViewModels.Products;
+using Inventory.Uwp.Views.Customers;
+using Inventory.Uwp.Views.Orders;
+using Inventory.Uwp.Views.Products;
 using Microsoft.Extensions.Logging;
 using Windows.UI.Xaml.Controls;
 
@@ -29,13 +36,19 @@ namespace Inventory.Uwp.ViewModels.Dashboard
     public class DashboardViewModel : ViewModelBase
     {
         private readonly ILogger<DashboardViewModel> _logger;
-        //private readonly NavigationService navigationService;
+        private readonly NavigationService _navigationService;
         private readonly ICustomerService _customerService;
         private readonly IOrderService _orderService;
         private readonly IProductService _productService;
+        private readonly AsyncRelayCommand _loadedCommand;
+        private readonly RelayCommand _unLoadedCommand;
+        private readonly RelayCommand<ItemClickEventArgs> _itemClickCommand;
+        private IList<Customer> _customers;
+        private IList<Product> _products;
+        private IList<Order> _orders;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
-                                  //NavigationService navigationService,
+                                  NavigationService navigationService,
                                   ICustomerService customerService,
                                   IOrderService orderService,
                                   IProductService productService
@@ -43,39 +56,33 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             : base()
         {
             _logger = logger;
-            //this.navigationService = navigationService;
+            _navigationService = navigationService;
             _customerService = customerService;
             _orderService = orderService;
             _productService = productService;
+            _loadedCommand = new AsyncRelayCommand(LoadAsync);
+            _unLoadedCommand = new RelayCommand(Unload);
+            _itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
         }
 
-        private AsyncRelayCommand loadedCommand = null;
-        public IAsyncRelayCommand LoadedCommand => loadedCommand ??
-            (loadedCommand = new AsyncRelayCommand(LoadAsync));
+        public IAsyncRelayCommand LoadedCommand => _loadedCommand;
 
-        private RelayCommand unLoadedCommand = null;
-        public ICommand UnLoadedCommand => unLoadedCommand ??
-            (unLoadedCommand = new RelayCommand(Unload));
+        public ICommand UnLoadedCommand => _unLoadedCommand;
 
-        private RelayCommand<ItemClickEventArgs> itemClickCommand = null;
-        public ICommand ItemClickCommand => itemClickCommand ??
-                (itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick));
+        public ICommand ItemClickCommand => _itemClickCommand;
 
-        private IList<Customer> _customers = null;
         public IList<Customer> Customers
         {
             get => _customers;
             set => SetProperty(ref _customers, value);
         }
 
-        private IList<Product> _products = null;
         public IList<Product> Products
         {
             get => _products;
             set => SetProperty(ref _products, value);
         }
 
-        private IList<Order> _orders = null;
         public IList<Order> Orders
         {
             get => _orders;
@@ -93,8 +100,8 @@ namespace Inventory.Uwp.ViewModels.Dashboard
         public void Unload()
         {
             Customers = null;
-            //Products = null;
-            //Orders = null;
+            Products = null;
+            Orders = null;
         }
 
         private async Task LoadCustomersAsync()
@@ -151,17 +158,17 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             {
                 switch (control.Tag as string)
                 {
-                    //case "Customers":
-                    //    navigationService.Navigate<CustomersPage>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
-                    //    break;
-                    //case "Orders":
-                    //    navigationService.Navigate<OrdersPage>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
-                    //    break;
-                    //case "Products":
-                    //    navigationService.Navigate<ProductsPage>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
-                    //    break;
-                    //default:
-                    //    break;
+                    case "Customers":
+                        _navigationService.Navigate<CustomersPage>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
+                        break;
+                    case "Orders":
+                        _navigationService.Navigate<OrdersPage>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
+                        break;
+                    case "Products":
+                        _navigationService.Navigate<ProductsPage>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
+                        break;
+                    default:
+                        break;
                 }
             }
         }
