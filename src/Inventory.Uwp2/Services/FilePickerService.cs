@@ -12,10 +12,10 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Tools;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Inventory.Uwp.Tools;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 

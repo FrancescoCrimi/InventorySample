@@ -18,7 +18,7 @@ namespace Inventory.Infrastructure.Common
 {
     public static class UIDGenerator
     {
-        private static readonly DateTime DateSeed = DateTime.Parse("2015/01/01");
+        private static readonly DateTime DateSeed = DateTime.Parse("2022/01/01");
 
         public static long Next(int prefix = 1)
         {

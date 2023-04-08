@@ -23,15 +23,15 @@ namespace Inventory.Domain.Model
     [Table("OrderItems")]
     public partial class OrderItem : ObservableObject<OrderItem>
     {
-        [Key]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        //[Key]
+        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public long OrderID
         {
             get; set;
         }
 
-        [Key, Column(Order = 1)]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        //[Key, Column(Order = 1)]
+        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public int OrderLine
         {
             get; set;

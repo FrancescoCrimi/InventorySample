@@ -115,15 +115,16 @@ namespace Inventory.Uwp.ViewModels.Orders
                     await PopulateOrderItems(selected);
                 }
             }
-            OrderDetails.Item = selected;
+            //OrderDetails.Item = selected;
         }
 
         private async Task PopulateDetails(Order selected)
         {
             try
             {
-                var model = await _orderService.GetOrderAsync(selected.Id);
-                selected.Merge(model);
+                //var model = await _orderService.GetOrderAsync(selected.Id);
+                //selected.Merge(model);
+                await OrderDetails.LoadAsync(new OrderDetailsArgs { OrderID = selected.Id });
             }
             catch (Exception ex)
             {

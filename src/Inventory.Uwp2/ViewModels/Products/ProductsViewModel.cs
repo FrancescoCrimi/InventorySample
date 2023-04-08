@@ -103,15 +103,16 @@ namespace Inventory.Uwp.ViewModels.Products
                     await PopulateDetails(selected);
                 }
             }
-            ProductDetails.Item = selected;
+            //ProductDetails.Item = selected;
         }
 
         private async Task PopulateDetails(Product selected)
         {
             try
             {
-                var model = await _productService.GetProductAsync(selected.Id);
-                selected.Merge(model);
+                //var model = await _productService.GetProductAsync(selected.Id);
+                //selected.Merge(model);
+                await ProductDetails.LoadAsync(new ProductDetailsArgs { ProductID = selected.Id });
             }
             catch (Exception ex)
             {

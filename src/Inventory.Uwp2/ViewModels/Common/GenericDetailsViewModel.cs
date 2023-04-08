@@ -12,18 +12,14 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Models;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Message;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
@@ -39,7 +35,7 @@ namespace Inventory.Uwp.ViewModels.Common
             windowService = Ioc.Default.GetService<WindowManagerService>();
         }
 
-        public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
+        public LookupTableService LookupTables => Ioc.Default.GetRequiredService<LookupTableService>();
 
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;

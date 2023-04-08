@@ -29,7 +29,8 @@ namespace Inventory.Persistence.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderItem>().HasKey(e => new { e.OrderID, e.OrderLine });
+            //modelBuilder.Entity<OrderItem>().HasKey(e => new { e.OrderID, e.OrderLine });
+            modelBuilder.Entity<OrderItem>().HasIndex(e => new { e.OrderID, e.OrderLine }).IsUnique();
 
             //modelBuilder.Entity<Order>()
             //    .Property(e => e.OrderDate)

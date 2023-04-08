@@ -3,6 +3,7 @@ using Inventory.Application;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
+using Inventory.Persistence.DbContexts;
 using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels;
@@ -13,9 +14,12 @@ using Inventory.Uwp.ViewModels.OrderItems;
 using Inventory.Uwp.ViewModels.Orders;
 using Inventory.Uwp.ViewModels.Products;
 using Inventory.Uwp.ViewModels.Settings;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 
 namespace Inventory.Uwp
@@ -30,20 +34,22 @@ namespace Inventory.Uwp
             Ioc.Default.ConfigureServices(ConfigureServices());
         }
 
-        protected override async void OnLaunched(LaunchActivatedEventArgs args)
+        protected async override void OnLaunched(LaunchActivatedEventArgs args)
         {
             if (!args.PrelaunchActivated)
             {
                 await Ioc.Default.GetService<ActivationService>().ActivateAsync(args);
             }
 
-            //var repo = Ioc.Default.GetRequiredService<IOrderItemRepository>();
-            //var list = await repo.GetOrderItemsAsync(0, 100000, new Infrastructure.Common.DataRequest<Domain.Model.OrderItem>());
+            //var db = Ioc.Default.GetRequiredService<AppDbContext>();
+            //var list = db.OrderItems.ToList();
             //foreach (var item in list)
             //{
             //    item.Id = UIDGenerator.Next();
-            //    await repo.UpdateOrderItemAsync(item);
+            //    System.Threading.Thread.Sleep(10);
             //}
+            //db.SaveChanges();
+            //db.Dispose();
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)
