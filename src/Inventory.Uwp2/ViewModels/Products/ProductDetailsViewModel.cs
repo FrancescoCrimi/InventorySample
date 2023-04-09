@@ -339,6 +339,7 @@ namespace Inventory.Uwp.ViewModels.Products
             //});
         }
 
-        protected override void SendItemChangedMessage(string message, long itemId) => throw new NotImplementedException();
+        protected override void SendItemChangedMessage(string message, long itemId)
+            => Messenger.Send(new ProductChangeMessage(message, itemId));
     }
 }

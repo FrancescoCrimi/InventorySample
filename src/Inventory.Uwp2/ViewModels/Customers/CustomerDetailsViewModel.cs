@@ -88,7 +88,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
             //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
-            Messenger.Register<CustomerChangedMessage>(this, OnDetailsMessage);
+            Messenger.Register<CustomerChangedMessage>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -197,7 +197,7 @@ namespace Inventory.Uwp.ViewModels.Customers
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnDetailsMessage(object recipient, CustomerChangedMessage message)
+        private async void OnMessage(object recipient, CustomerChangedMessage message)
         {
             var current = Item;
             if (current != null)
@@ -264,10 +264,6 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
             }
         }
-
-
-
-
 
         //private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
         //{

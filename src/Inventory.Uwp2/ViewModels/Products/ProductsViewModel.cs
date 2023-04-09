@@ -54,6 +54,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             await ProductList.LoadAsync(args);
         }
+
         public void Unload()
         {
             ProductDetails.CancelEdit();
