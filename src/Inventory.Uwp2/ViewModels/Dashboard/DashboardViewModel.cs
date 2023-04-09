@@ -51,8 +51,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                                   NavigationService navigationService,
                                   ICustomerService customerService,
                                   IOrderService orderService,
-                                  IProductService productService
-            )
+                                  IProductService productService)
             : base()
         {
             _logger = logger;

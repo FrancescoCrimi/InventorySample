@@ -22,13 +22,6 @@ namespace Inventory.Domain.Model
     [Table("Products")]
     public partial class Product : ObservableObject<Product>
     {
-        //[Key]
-        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        //public long Id
-        //{
-        //    get; set;
-        //}
-
         [Required]
         public int CategoryID
         {
@@ -124,10 +117,6 @@ namespace Inventory.Domain.Model
 
         public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
 
-
-
-        //[NotMapped]
-        //public bool IsNew => Id <= 0;
 
         //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         [NotMapped]

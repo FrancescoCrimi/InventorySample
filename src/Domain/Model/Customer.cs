@@ -23,13 +23,6 @@ namespace Inventory.Domain.Model
     [Table("Customers")]
     public partial class Customer : ObservableObject<Customer>
     {
-        //[Key]
-        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        //public long Id
-        //{
-        //    get; set;
-        //}
-
         [MaxLength(8)]
         public string Title
         {
@@ -183,8 +176,6 @@ namespace Inventory.Domain.Model
 
 
 
-        //[NotMapped]
-        //public bool IsNew => Id <= 0;
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";
         [NotMapped]
@@ -194,16 +185,6 @@ namespace Inventory.Domain.Model
         public string CountryName => "Fake Country";
         [NotMapped]
         public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
-
-
-
-        //public override void Merge(Inventory.Domain.Common.ObservableObject source)
-        //{
-        //    if (source is Customer model)
-        //    {
-        //        Merge(model);
-        //    }
-        //}
 
         public override void Merge(Customer source)
         {

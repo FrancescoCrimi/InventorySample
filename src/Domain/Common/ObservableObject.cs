@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Inventory.Domain.Common
 {
@@ -26,9 +23,9 @@ namespace Inventory.Domain.Common
 
         public abstract void Merge(T source);
 
+        // Notify all properties
         public void NotifyChanges()
         {
-            // Notify all properties
             OnPropertyChanged("");
         }
     }

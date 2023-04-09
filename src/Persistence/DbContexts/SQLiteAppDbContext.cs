@@ -36,6 +36,30 @@ namespace Inventory.Persistence.DbContexts
             //    .Property(e => e.OrderDate)
             //    .HasConversion(new DateTimeOffsetToBinaryConverter());
 
+            modelBuilder.Entity<Customer>(t =>
+            {
+                t.Property(p => p.BirthDate).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.CreatedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.LastModifiedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+            });
+            modelBuilder.Entity<Order>(t =>
+            {
+                t.Property(p => p.DeliveredDate).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.LastModifiedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.OrderDate).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.ShippedDate).HasConversion(new DateTimeOffsetToBinaryConverter());
+            });
+            modelBuilder.Entity<Product>(t =>
+            {
+                t.Property(p => p.CreatedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.DiscountEndDate).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.DiscountStartDate).HasConversion(new DateTimeOffsetToBinaryConverter());
+                t.Property(p => p.LastModifiedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+            });
+
+
+
+
             // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations
             // here: https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations#query-limitations
             // To work around this, when the Sqlite database provider is used, all model properties of type DateTimeOffset
@@ -44,15 +68,15 @@ namespace Inventory.Persistence.DbContexts
             // This only supports millisecond precision, but should be sufficient for most use cases.
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(DateTimeOffset)
-                                                                            || p.PropertyType == typeof(DateTimeOffset?));
-                foreach (var property in properties)
-                {
-                    modelBuilder
-                        .Entity(entityType.Name)
-                        .Property(property.Name)
-                        .HasConversion(new DateTimeOffsetToBinaryConverter());
-                }
+                //var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(DateTimeOffset)
+                //                                                            || p.PropertyType == typeof(DateTimeOffset?));
+                //foreach (var property in properties)
+                //{
+                //    modelBuilder
+                //        .Entity(entityType.Name)
+                //        .Property(property.Name)
+                //        .HasConversion(new DateTimeOffsetToBinaryConverter());
+                //}
 
                 //    var properties2 = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal)
                 //                                                                || p.PropertyType == typeof(decimal?));

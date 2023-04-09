@@ -23,13 +23,6 @@ namespace Inventory.Domain.Model
     [Table("Orders")]
     public partial class Order : ObservableObject<Order>
     {
-        //[Key]
-        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        //public long Id
-        //{
-        //    get; set;
-        //}
-
         [Required]
         public long CustomerID
         {
@@ -124,13 +117,6 @@ namespace Inventory.Domain.Model
         public string BuildSearchTerms() => $"{Id} {CustomerID} {ShipCity} {ShipRegion}".ToLower();
 
 
-
-
-
-
-
-        //[NotMapped]
-        //public bool IsNew => Id <= 0;
 
         [NotMapped]
         public bool CanEditPayment => Status > 0;

@@ -233,25 +233,25 @@
     <Compile Include="Views\Controls\ProductSuggestBox.xaml.cs">
       <DependentUpon>ProductSuggestBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomerCardControl.xaml.cs">
+    <Compile Include="Views\Customer\Details\CustomerCardControl.xaml.cs">
       <DependentUpon>CustomerCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomerDetailsControl.xaml.cs">
+    <Compile Include="Views\Customer\Details\CustomerDetailsControl.xaml.cs">
       <DependentUpon>CustomerDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomerPage.xaml.cs">
+    <Compile Include="Views\Customer\CustomerPage.xaml.cs">
       <DependentUpon>CustomerPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersCardControl.xaml.cs">
+    <Compile Include="Views\Customers\Details\CustomersCardControl.xaml.cs">
       <DependentUpon>CustomersCardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersDetailsControl.xaml.cs">
+    <Compile Include="Views\Customers\Details\CustomersDetailsControl.xaml.cs">
       <DependentUpon>CustomersDetailsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersListControl.xaml.cs">
+    <Compile Include="Views\Customers\List\CustomersListControl.xaml.cs">
       <DependentUpon>CustomersListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersOrdersControl.xaml.cs">
+    <Compile Include="Views\Customers\Details\CustomersOrdersControl.xaml.cs">
       <DependentUpon>CustomersOrdersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Customers\CustomersPage.xaml.cs">
@@ -399,31 +399,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomerCardControl.xaml">
+    <Page Include="Views\Customer\Details\CustomerCardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomerDetailsControl.xaml">
+    <Page Include="Views\Customer\Details\CustomerDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomerPage.xaml">
+    <Page Include="Views\Customer\CustomerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomersCardControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersCardControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\CustomersDetailsControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomersListControl.xaml">
+    <Page Include="Views\Customers\List\CustomersListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomersOrdersControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersOrdersControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
