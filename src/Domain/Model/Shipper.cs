@@ -22,9 +22,9 @@ namespace Inventory.Domain.Model
     public partial class Shipper
     {
         [Key]
-        [Column("ShipperID")]
+        //[Column("ShipperID")]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int ShipperID
+        public int Id
         {
             get; set;
         }

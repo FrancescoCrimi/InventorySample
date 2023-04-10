@@ -17,10 +17,13 @@
                                    Columns="2"
                                    ColumnSpacing="12"
                                    RowSpacing="12">
+
                 <libcontrols:FormTextBox Header="Ship Address"
                                          Text="{x:Bind EditableItem.ShipAddress, Mode=TwoWay}" />
+
                 <libcontrols:FormTextBox Header="Ship City"
                                          Text="{x:Bind EditableItem.ShipCity, Mode=TwoWay}" />
+
                 <libcontrols:FluidGrid Columns="2"
                                        ColumnSpacing="6"
                                        RowSpacing="12"
@@ -30,6 +33,7 @@
                     <libcontrols:FormTextBox Header="Ship Region"
                                              Text="{x:Bind EditableItem.ShipRegion, Mode=TwoWay}" />
                 </libcontrols:FluidGrid>
+
                 <libcontrols:FormComboBox Header="Ship Country"
                                           ItemsSource="{x:Bind LookupTables.CountryCodes}"
                                           VerticalAlignment="Top"
@@ -42,6 +46,7 @@
                                           SelectedValue="{x:Bind EditableItem.Status, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
                                           SelectedValuePath="Status"
                                           DisplayMemberPath="Name" />
+
                 <libcontrols:FormComboBox Header="Payment Type"
                                           ItemsSource="{x:Bind LookupTables.PaymentTypes}"
                                           SelectedValue="{x:Bind EditableItem.PaymentType, Mode=TwoWay, Converter={StaticResource Int32Converter}}"

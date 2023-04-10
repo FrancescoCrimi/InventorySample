@@ -21,8 +21,16 @@ namespace Inventory.Domain.Model
     [Table("CountryCodes")]
     public partial class CountryCode
     {
-        [MaxLength(2)]
         [Key]
+        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        public long Id
+        {
+            get; set;
+        }
+
+        [Required]
+        [MaxLength(2)]
+        //[Key]
         public string CountryCodeID
         {
             get; set;

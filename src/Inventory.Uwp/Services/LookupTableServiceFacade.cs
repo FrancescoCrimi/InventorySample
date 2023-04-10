@@ -86,7 +86,7 @@ namespace Inventory.Uwp.Services
                 var items = await lookupTableRepository.GetCategoriesAsync();
                 return items.Select(r => new CategoryModel
                 {
-                    CategoryID = r.CategoryID,
+                    CategoryID = r.Id,
                     Name = r.Name
                 })
                 .ToList();
@@ -130,7 +130,7 @@ namespace Inventory.Uwp.Services
                 var items = await lookupTableRepository.GetOrderStatusAsync();
                 return items.Select(r => new OrderStatusModel
                 {
-                    Status = r.Status,
+                    Status = r.Id,
                     Name = r.Name
                 })
                 .ToList();
@@ -152,7 +152,7 @@ namespace Inventory.Uwp.Services
                 var items = await lookupTableRepository.GetPaymentTypesAsync();
                 return items.Select(r => new PaymentTypeModel
                 {
-                    PaymentTypeID = r.PaymentTypeID,
+                    PaymentTypeID = r.Id,
                     Name = r.Name
                 })
                 .ToList();
@@ -174,7 +174,7 @@ namespace Inventory.Uwp.Services
                 var items = await lookupTableRepository.GetShippersAsync();
                 return items.Select(r => new ShipperModel
                 {
-                    ShipperID = r.ShipperID,
+                    ShipperID = r.Id,
                     Name = r.Name,
                     Phone = r.Phone
                 })
@@ -197,7 +197,7 @@ namespace Inventory.Uwp.Services
                 var items = await lookupTableRepository.GetTaxTypesAsync();
                 return items.Select(r => new TaxTypeModel
                 {
-                    TaxTypeID = r.TaxTypeID,
+                    TaxTypeID = r.Id,
                     Name = r.Name,
                     Rate = r.Rate
                 })

@@ -73,7 +73,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             if (message.Message == "ItemSelected")
             {
-                if (message.Value.ProductID != null)
+                if (message.Value.ProductID != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();

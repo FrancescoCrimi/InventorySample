@@ -22,9 +22,9 @@ namespace Inventory.Domain.Model
     public partial class Category
     {
         [Key]
-        [Column("CategoryID")]
+        //[Column("CategoryID")]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int CategoryID
+        public int Id
         {
             get; set;
         }

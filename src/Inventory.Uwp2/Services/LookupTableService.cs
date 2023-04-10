@@ -52,7 +52,7 @@ namespace Inventory.Uwp.Services
 
         public string GetCategory(int id)
         {
-            return Categories.Where(r => r.CategoryID == id).Select(r => r.Name).FirstOrDefault();
+            return Categories.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetCountry(string id)
@@ -62,27 +62,27 @@ namespace Inventory.Uwp.Services
 
         public string GetOrderStatus(int id)
         {
-            return OrderStatus.Where(r => r.Status == id).Select(r => r.Name).FirstOrDefault();
+            return OrderStatus.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetPaymentType(int? id)
         {
-            return id == null ? "" : PaymentTypes.Where(r => r.PaymentTypeID == id).Select(r => r.Name).FirstOrDefault();
+            return id == null ? "" : PaymentTypes.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetShipper(int? id)
         {
-            return id == null ? "" : Shippers.Where(r => r.ShipperID == id).Select(r => r.Name).FirstOrDefault();
+            return id == null ? "" : Shippers.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetTaxDesc(int id)
         {
-            return TaxTypes.Where(r => r.TaxTypeID == id).Select(r => $"{r.Rate} %").FirstOrDefault();
+            return TaxTypes.Where(r => r.Id == id).Select(r => $"{r.Rate} %").FirstOrDefault();
         }
 
         public decimal GetTaxRate(int id)
         {
-            return TaxTypes.Where(r => r.TaxTypeID == id).Select(r => r.Rate).FirstOrDefault();
+            return TaxTypes.Where(r => r.Id == id).Select(r => r.Rate).FirstOrDefault();
         }
 
         public async Task InitializeAsync()

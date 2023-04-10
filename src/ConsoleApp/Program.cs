@@ -20,6 +20,7 @@ namespace ConsoleApp
         {
             //CreateEmptyDatabase();
             //ProvaDateTime();
+            //FixCountryCodeTable();
         }
 
         private void CreateEmptyDatabase()
@@ -31,6 +32,22 @@ namespace ConsoleApp
             var db = new SQLiteAppDbContext(optionsBuilder.Options);
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+            db.Dispose();
+        }
+
+        private void FixCountryCodeTable()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>();
+            optionsBuilder.UseSqlite("Data Source=VanArsdel.1.01.db");
+            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
+            var db = new SQLiteAppDbContext(optionsBuilder.Options);
+            var listCountry = db.CountryCodes.ToList();
+            for (var i = 0; i < listCountry.Count; i++)
+            {
+                var country = listCountry[i];
+                country.Id = i + 1;
+            }
+            db.SaveChanges();
             db.Dispose();
         }
 

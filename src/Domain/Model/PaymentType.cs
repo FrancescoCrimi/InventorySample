@@ -22,9 +22,9 @@ namespace Inventory.Domain.Model
     public partial class PaymentType
     {
         [Key]
-        [Column("PaymentTypeID")]
+        //[Column("PaymentTypeID")]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int PaymentTypeID
+        public int Id
         {
             get; set;
         }

@@ -22,9 +22,9 @@ namespace Inventory.Domain.Model
     public partial class TaxType
     {
         [Key]
-        [Column("TaxTypeID")]
+        //[Column("TaxTypeID")]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int TaxTypeID
+        public int Id
         {
             get; set;
         }
