@@ -23,7 +23,7 @@ namespace Inventory.Domain.Model
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int Id
+        public int Id   // ex Status
         {
             get; set;
         }

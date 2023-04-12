@@ -28,28 +28,33 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         [MaxLength(50)]
         public string FirstName
         {
             get; set;
         }
+
         [MaxLength(50)]
         public string MiddleName
         {
             get; set;
         }
+
         [Required]
         [MaxLength(50)]
         public string LastName
         {
             get; set;
         }
+
         [MaxLength(10)]
         public string Suffix
         {
             get; set;
         }
+
         [MaxLength(1)]
         public string Gender
         {
@@ -62,41 +67,41 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         [MaxLength(120)]
         public string AddressLine1
         {
             get; set;
         }
+
         [MaxLength(120)]
         public string AddressLine2
         {
             get; set;
         }
+
         [Required]
         [MaxLength(30)]
         public string City
         {
             get; set;
         }
+
         [Required]
         [MaxLength(50)]
         public string Region
         {
             get; set;
         }
-        [Required]
-        [MaxLength(2)]
-        public string CountryCode
-        {
-            get; set;
-        }
+
         [Required]
         [MaxLength(15)]
         public string PostalCode
         {
             get; set;
         }
+
         [MaxLength(20)]
         public string Phone
         {
@@ -107,37 +112,45 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [MaxLength(40)]
         public string Education
         {
             get; set;
         }
+
         [MaxLength(100)]
         public string Occupation
         {
             get; set;
         }
+
         public decimal? YearlyIncome
         {
             get; set;
         }
+
         [MaxLength(1)]
         public string MaritalStatus
         {
             get; set;
         }
+
         public int? TotalChildren
         {
             get; set;
         }
+
         public int? ChildrenAtHome
         {
             get; set;
         }
+
         public bool? IsHouseOwner
         {
             get; set;
         }
+
         public int? NumberCarsOwned
         {
             get; set;
@@ -148,11 +161,13 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         public DateTimeOffset? LastModifiedOn
         {
             get; set;
         }
+
         public string SearchTerms
         {
             get; set;
@@ -162,7 +177,13 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         public byte[] Thumbnail
+        {
+            get; set;
+        }
+
+        public long CountryId
         {
             get; set;
         }
@@ -172,8 +193,17 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{Id} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
+        //public string CountryCode
+        //{
+        //    get; set;
+        //}
+        public virtual Country Country
+        {
+            get; set;
+        }
 
+
+        public string BuildSearchTerms() => $"{Id} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
 
 
         [NotMapped]
@@ -202,7 +232,7 @@ namespace Inventory.Domain.Model
                 AddressLine2 = source.AddressLine2;
                 City = source.City;
                 Region = source.Region;
-                CountryCode = source.CountryCode;
+                Country = source.Country;
                 PostalCode = source.PostalCode;
                 Phone = source.Phone;
                 BirthDate = source.BirthDate;

@@ -26,7 +26,7 @@ namespace Inventory.Uwp.Dto
                 AddressLine2 = source.AddressLine2,
                 City = source.City,
                 Region = source.Region,
-                CountryCode = source.CountryCode,
+                CountryCode = source.Country.Code,
                 PostalCode = source.PostalCode,
                 Phone = source.Phone,
                 CreatedOn = source.CreatedOn,
@@ -75,7 +75,7 @@ namespace Inventory.Uwp.Dto
             target.AddressLine2 = source.AddressLine2;
             target.City = source.City;
             target.Region = source.Region;
-            target.CountryCode = source.CountryCode;
+            //target.CountryCode = source.CountryCode;
             target.PostalCode = source.PostalCode;
             target.Phone = source.Phone;
             target.BirthDate = source.BirthDate;
@@ -99,14 +99,14 @@ namespace Inventory.Uwp.Dto
             var model = new ProductDto()
             {
                 ProductID = source.Id,
-                CategoryID = source.CategoryID,
+                CategoryID = source.CategoryId,
                 Name = source.Name,
                 Description = source.Description,
                 Size = source.Size,
                 Color = source.Color,
                 ListPrice = source.ListPrice,
                 DealerPrice = source.DealerPrice,
-                TaxType = source.TaxType,
+                TaxType = source.TaxTypeId,
                 Discount = source.Discount,
                 DiscountStartDate = source.DiscountStartDate,
                 DiscountEndDate = source.DiscountEndDate,
@@ -145,14 +145,14 @@ namespace Inventory.Uwp.Dto
 
         public static void UpdateProductFromModel(Product target, ProductDto source)
         {
-            target.CategoryID = source.CategoryID;
+            target.CategoryId = source.CategoryID;
             target.Name = source.Name;
             target.Description = source.Description;
             target.Size = source.Size;
             target.Color = source.Color;
             target.ListPrice = source.ListPrice;
             target.DealerPrice = source.DealerPrice;
-            target.TaxType = source.TaxType;
+            target.TaxTypeId = source.TaxType;
             target.Discount = source.Discount;
             target.DiscountStartDate = source.DiscountStartDate;
             target.DiscountEndDate = source.DiscountEndDate;
@@ -170,14 +170,14 @@ namespace Inventory.Uwp.Dto
             var model = new OrderDto()
             {
                 OrderID = source.Id,
-                CustomerID = source.CustomerID,
+                CustomerID = source.CustomerId,
                 OrderDate = source.OrderDate,
                 ShippedDate = source.ShippedDate,
                 DeliveredDate = source.DeliveredDate,
-                Status = source.Status,
-                PaymentType = source.PaymentType,
+                Status = source.StatusId,
+                PaymentType = source.PaymentTypeId,
                 TrackingNumber = source.TrackingNumber,
-                ShipVia = source.ShipVia,
+                ShipVia = source.ShipperId,
                 ShipAddress = source.ShipAddress,
                 ShipCity = source.ShipCity,
                 ShipRegion = source.ShipRegion,
@@ -194,14 +194,14 @@ namespace Inventory.Uwp.Dto
 
         public static void UpdateOrderFromModel(Order target, OrderDto source)
         {
-            target.CustomerID = source.CustomerID;
+            target.CustomerId = source.CustomerID;
             target.OrderDate = source.OrderDate;
             target.ShippedDate = source.ShippedDate;
             target.DeliveredDate = source.DeliveredDate;
-            target.Status = source.Status;
-            target.PaymentType = source.PaymentType;
+            target.StatusId = source.Status;
+            target.PaymentTypeId = source.PaymentType;
             target.TrackingNumber = source.TrackingNumber;
-            target.ShipVia = source.ShipVia;
+            target.ShipperId = source.ShipVia;
             target.ShipAddress = source.ShipAddress;
             target.ShipCity = source.ShipCity;
             target.ShipRegion = source.ShipRegion;
@@ -215,13 +215,13 @@ namespace Inventory.Uwp.Dto
         {
             var model = new OrderItemDto()
             {
-                OrderID = source.OrderID,
+                OrderID = source.OrderId,
                 OrderLine = source.OrderLine,
-                ProductID = source.ProductID,
+                ProductID = source.ProductId,
                 Quantity = source.Quantity,
                 UnitPrice = source.UnitPrice,
                 Discount = source.Discount,
-                TaxType = source.TaxType,
+                //TaxType = source.TaxType,
                 Product = await CreateProductModelAsync(source.Product, includeAllFields, null)
             };
             return model;
@@ -229,13 +229,13 @@ namespace Inventory.Uwp.Dto
 
         public static void UpdateOrderItemFromModel(OrderItem target, OrderItemDto source)
         {
-            target.OrderID = source.OrderID;
+            target.OrderId = source.OrderID;
             target.OrderLine = source.OrderLine;
-            target.ProductID = source.ProductID;
+            target.ProductId = source.ProductID;
             target.Quantity = source.Quantity;
             target.UnitPrice = source.UnitPrice;
             target.Discount = source.Discount;
-            target.TaxType = source.TaxType;
+            //target.TaxType = source.TaxType;
         }
     }
 }

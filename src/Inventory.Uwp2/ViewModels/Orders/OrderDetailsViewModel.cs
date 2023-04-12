@@ -47,16 +47,16 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
 
-        public bool CanEditCustomer => Item?.CustomerID <= 0;
+        public bool CanEditCustomer => Item?.CustomerId <= 0;
 
         public ICommand CustomerSelectedCommand => new RelayCommand<Customer>(CustomerSelected);
         private void CustomerSelected(Customer customer)
         {
-            EditableItem.CustomerID = customer.Id;
+            EditableItem.CustomerId = customer.Id;
             EditableItem.ShipAddress = customer.AddressLine1;
             EditableItem.ShipCity = customer.City;
             EditableItem.ShipRegion = customer.Region;
-            EditableItem.ShipCountryCode = customer.CountryCode;
+            EditableItem.ShipCountryCode = customer.Country.Code;
             EditableItem.ShipPostalCode = customer.PostalCode;
             EditableItem.Customer = customer;
 
@@ -93,7 +93,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         }
         public void Unload()
         {
-            ViewModelArgs.CustomerID = Item?.CustomerID ?? 0;
+            ViewModelArgs.CustomerID = Item?.CustomerId ?? 0;
             ViewModelArgs.OrderID = Item?.Id ?? 0;
         }
 
@@ -114,7 +114,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             return new OrderDetailsArgs
             {
-                CustomerID = Item?.CustomerID ?? 0,
+                CustomerID = Item?.CustomerId ?? 0,
                 OrderID = Item?.Id ?? 0
             };
         }
@@ -165,15 +165,15 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         protected override IEnumerable<IValidationConstraint<Order>> GetValidationConstraints(Order model)
         {
-            yield return new RequiredGreaterThanZeroConstraint<Order>("Customer", m => m.CustomerID);
-            if (model.Status > 0)
+            yield return new RequiredGreaterThanZeroConstraint<Order>("Customer", m => m.CustomerId);
+            if (model.StatusId > 0)
             {
-                yield return new RequiredConstraint<Order>("Payment Type", m => m.PaymentType);
-                yield return new RequiredGreaterThanZeroConstraint<Order>("Payment Type", m => m.PaymentType);
-                if (model.Status > 1)
+                yield return new RequiredConstraint<Order>("Payment Type", m => m.PaymentTypeId);
+                yield return new RequiredGreaterThanZeroConstraint<Order>("Payment Type", m => m.PaymentTypeId);
+                if (model.StatusId > 1)
                 {
-                    yield return new RequiredConstraint<Order>("Shipper", m => m.ShipVia);
-                    yield return new RequiredGreaterThanZeroConstraint<Order>("Shipper", m => m.ShipVia);
+                    yield return new RequiredConstraint<Order>("Shipper", m => m.ShipperId);
+                    yield return new RequiredGreaterThanZeroConstraint<Order>("Shipper", m => m.ShipperId);
                 }
             }
         }

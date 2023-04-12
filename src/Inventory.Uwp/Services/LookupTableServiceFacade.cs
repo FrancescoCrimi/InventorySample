@@ -108,7 +108,7 @@ namespace Inventory.Uwp.Services
                 var items = await lookupTableRepository.GetCountryCodesAsync();
                 return items.OrderBy(r => r.Name).Select(r => new CountryCodeModel
                 {
-                    CountryCodeID = r.CountryCodeID,
+                    CountryCodeID = r.Code,
                     Name = r.Name
                 })
                 .ToList();

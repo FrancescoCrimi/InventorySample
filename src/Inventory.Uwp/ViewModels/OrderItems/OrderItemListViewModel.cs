@@ -226,7 +226,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             };
             if (ViewModelArgs.OrderID > 0)
             {
-                request.Where = (r) => r.OrderID == ViewModelArgs.OrderID;
+                request.Where = (r) => r.OrderId == ViewModelArgs.OrderID;
             }
             return request;
         }

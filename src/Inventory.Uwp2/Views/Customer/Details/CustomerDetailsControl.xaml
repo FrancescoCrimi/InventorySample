@@ -57,9 +57,15 @@
                                          Text="{x:Bind EditableItem.PostalCode, Mode=TwoWay}" />
                 <libcontrols:FormComboBox Header="Country"
                                           ItemsSource="{x:Bind LookupTables.CountryCodes}"
+                                          SelectedItem="{x:Bind EditableItem.Country, Mode=TwoWay}"
+                                          DisplayMemberPath="Name" />
+                <!-- 
+                                          ItemsSource="{x:Bind LookupTables.CountryCodes}"
                                           SelectedValue="{x:Bind EditableItem.CountryCode, Mode=TwoWay}"
                                           SelectedValuePath="CountryCodeID"
-                                          DisplayMemberPath="Name" />
+                                          SelectedItem="{x:Bind EditableItem.CountryCode, Mode=TwoWay}"
+                                          DisplayMemberPath="Name"
+                -->
 
                 <TextBlock  Style="{StaticResource FormsSection}"
                             libcontrols:FluidGrid.ColumnSpan="2"

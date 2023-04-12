@@ -36,14 +36,14 @@ namespace Inventory.Persistence.Repository
             return await _dataSource.Categories.ToListAsync();
         }
 
-        public async Task<IList<CountryCode>> GetCountryCodesAsync()
+        public async Task<IList<Country>> GetCountryCodesAsync()
         {
-            return await _dataSource.CountryCodes.ToListAsync();
+            return await _dataSource.Countries.ToListAsync();
         }
 
         public async Task<IList<OrderStatus>> GetOrderStatusAsync()
         {
-            return await _dataSource.OrderStatus.ToListAsync();
+            return await _dataSource.OrderStatuses.ToListAsync();
         }
 
         public async Task<IList<PaymentType>> GetPaymentTypesAsync()

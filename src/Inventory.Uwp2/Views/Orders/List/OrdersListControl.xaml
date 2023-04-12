@@ -65,7 +65,7 @@
                         <ColumnDefinition Width="10*" />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0"
-                               Text="{x:Bind CustomerID}"
+                               Text="{x:Bind CustomerId}"
                                Style="{StaticResource ColumnValueStyle}" />
                     <TextBlock Grid.Column="1"
                                Text="{x:Bind Id}"

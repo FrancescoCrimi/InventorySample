@@ -24,7 +24,7 @@ namespace Inventory.Domain.Model
     public partial class Order : ObservableObject<Order>
     {
         [Required]
-        public long CustomerID
+        public long CustomerId
         {
             get; set;
         }
@@ -44,12 +44,12 @@ namespace Inventory.Domain.Model
         }
 
         [Required]
-        public int Status
+        public int StatusId
         {
             get; set;
         }
 
-        public int? PaymentType
+        public int? PaymentTypeId
         {
             get; set;
         }
@@ -60,35 +60,41 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public int? ShipVia
+        public int? ShipperId
         {
             get; set;
         }
+
         [MaxLength(120)]
         public string ShipAddress
         {
             get; set;
         }
+
         [MaxLength(30)]
         public string ShipCity
         {
             get; set;
         }
+
         [MaxLength(50)]
         public string ShipRegion
         {
             get; set;
         }
+
         [MaxLength(2)]
         public string ShipCountryCode
         {
             get; set;
         }
+
         [MaxLength(15)]
         public string ShipPostalCode
         {
             get; set;
         }
+
         [MaxLength(20)]
         public string ShipPhone
         {
@@ -100,30 +106,51 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         public string SearchTerms
         {
             get; set;
         }
 
+
+
         public virtual Customer Customer
         {
             get; set;
         }
+
         public virtual ICollection<OrderItem> OrderItems
         {
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{Id} {CustomerID} {ShipCity} {ShipRegion}".ToLower();
+        public virtual OrderStatus Status
+        {
+            get; set;
+        }
+
+        public virtual PaymentType PaymentType
+        {
+            get; set;
+        }
+
+        public virtual Shipper Shipper
+        {
+            get; set;
+        }
+
+
+
+        public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
 
 
 
         [NotMapped]
-        public bool CanEditPayment => Status > 0;
+        public bool CanEditPayment => StatusId > 0;
         [NotMapped]
-        public bool CanEditShipping => Status > 1;
+        public bool CanEditShipping => StatusId > 1;
         [NotMapped]
-        public bool CanEditDelivery => Status > 2;
+        public bool CanEditDelivery => StatusId > 2;
 
         [NotMapped]
         public string StatusDesc => "Fake Status Desc";

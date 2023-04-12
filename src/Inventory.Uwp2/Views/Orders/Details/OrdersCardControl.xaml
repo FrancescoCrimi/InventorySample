@@ -44,7 +44,7 @@
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Customer ID" />
             <TextBlock Style="{StaticResource CardText}"
-                       Text="{x:Bind Item.CustomerID, Mode=OneWay}" />
+                       Text="{x:Bind Item.CustomerId, Mode=OneWay}" />
 
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Email" />

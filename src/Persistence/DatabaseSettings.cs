@@ -71,17 +71,17 @@ namespace Inventory.Persistence
                 setValue(3);
 
                 setStatus("Creating table CountryCodes...");
-                foreach (var item in sourceDb.CountryCodes.AsNoTracking())
+                foreach (var item in sourceDb.Countries.AsNoTracking())
                 {
-                    await dbContext.CountryCodes.AddAsync(item);
+                    await dbContext.Countries.AddAsync(item);
                 }
                 await dbContext.SaveChangesAsync();
                 setValue(4);
 
                 setStatus("Creating table OrderStatus...");
-                foreach (var item in sourceDb.OrderStatus.AsNoTracking())
+                foreach (var item in sourceDb.OrderStatuses.AsNoTracking())
                 {
-                    await dbContext.OrderStatus.AddAsync(item);
+                    await dbContext.OrderStatuses.AddAsync(item);
                 }
                 await dbContext.SaveChangesAsync();
                 setValue(5);

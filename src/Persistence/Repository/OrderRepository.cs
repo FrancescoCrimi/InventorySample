@@ -26,7 +26,7 @@ namespace Inventory.Persistence.Repository
 {
     internal class OrderRepository : IOrderRepository
     {
-        private AppDbContext _dataSource = null;
+        private readonly AppDbContext _dataSource = null;
 
         public OrderRepository(AppDbContext dataSource)
         {

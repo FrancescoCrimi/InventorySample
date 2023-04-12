@@ -44,7 +44,7 @@
                 <libcontrols:FormComboBox Header="Status"
                                           ItemsSource="{x:Bind LookupTables.OrderStatus}"
                                           SelectedValue="{x:Bind EditableItem.Status, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
-                                          SelectedValuePath="Status"
+                                          SelectedValuePath="Id"
                                           DisplayMemberPath="Name" />
 
                 <libcontrols:FormComboBox Header="Payment Type"
@@ -64,7 +64,7 @@
                                                         Visibility="{x:Bind EditableItem.CanEditShipping, Mode=OneWay}" />
                     <libcontrols:FormComboBox Header="Ship Via"
                                               ItemsSource="{x:Bind LookupTables.Shippers}"
-                                              SelectedValue="{x:Bind EditableItem.ShipVia, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                              SelectedValue="{x:Bind EditableItem.Shipper, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
                                               SelectedValuePath="ShipperID"
                                               DisplayMemberPath="Name"
                                               Visibility="{x:Bind EditableItem.CanEditShipping, Mode=OneWay}" />

@@ -19,7 +19,7 @@ namespace Inventory.Uwp.Activation
         // Override this method to add the activation logic in your activation handler
         protected abstract Task HandleInternalAsync(T args);
 
-        public override async Task HandleAsync(object args)
+        public async override Task HandleAsync(object args)
         {
             await HandleInternalAsync(args as T);
         }

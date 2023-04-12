@@ -24,7 +24,7 @@
                                          Text="{x:Bind EditableItem.Name, Mode=TwoWay}" />
                 <libcontrols:FormComboBox Header="Category"
                                           ItemsSource="{x:Bind LookupTables.Categories}"
-                                          SelectedValue="{x:Bind EditableItem.CategoryID, Mode=TwoWay}"
+                                          SelectedValue="{x:Bind EditableItem.CategoryId, Mode=TwoWay}"
                                           SelectedValuePath="CategoryID"
                                           DisplayMemberPath="Name" />
 

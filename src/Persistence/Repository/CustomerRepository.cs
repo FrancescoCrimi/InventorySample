@@ -26,7 +26,7 @@ namespace Inventory.Persistence.Repository
 {
     internal class CustomerRepository : ICustomerRepository
     {
-        private AppDbContext _dataSource = null;
+        private readonly AppDbContext _dataSource = null;
 
         public CustomerRepository(AppDbContext dataSource)
         {
@@ -35,7 +35,11 @@ namespace Inventory.Persistence.Repository
 
         public async Task<Customer> GetCustomerAsync(long id)
         {
-            return await _dataSource.Customers.Where(r => r.Id == id).FirstOrDefaultAsync();
+            var cust = await _dataSource.Customers
+                .Where(r => r.Id == id)
+                .Include(c => c.Country)
+                .FirstOrDefaultAsync();
+            return cust;
         }
 
         public async Task<IList<Customer>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
@@ -58,7 +62,7 @@ namespace Inventory.Persistence.Repository
                     AddressLine2 = r.AddressLine2,
                     City = r.City,
                     Region = r.Region,
-                    CountryCode = r.CountryCode,
+                    Country = r.Country,
                     PostalCode = r.PostalCode,
                     Phone = r.Phone,
                     CreatedOn = r.CreatedOn,

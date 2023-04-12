@@ -10,14 +10,15 @@ namespace Inventory.Uwp.Services
 {
     public class LookupTableService /*: ILookupTableService*/
     {
-        private readonly ILogger<LookupTableService> logger;
-        private readonly ILookupTableRepository lookupTableRepository;
+        private readonly ILogger<LookupTableService> _logger;
+        private readonly ILookupTableRepository _repository;
 
         public LookupTableService(ILogger<LookupTableService> logger,
-            ILookupTableRepository lookupTableRepository)
+                                  ILookupTableRepository lookupTableRepository)
         {
-            this.logger = logger;
-            this.lookupTableRepository = lookupTableRepository;
+            _logger = logger;
+            _repository = lookupTableRepository;
+            Task.Run(async () => await InitializeAsync());
         }
 
         public IList<Category> Categories
@@ -25,7 +26,7 @@ namespace Inventory.Uwp.Services
             get; private set;
         }
 
-        public IList<CountryCode> CountryCodes
+        public IList<Country> CountryCodes
         {
             get; private set;
         }
@@ -57,7 +58,7 @@ namespace Inventory.Uwp.Services
 
         public string GetCountry(string id)
         {
-            return CountryCodes.Where(r => r.CountryCodeID == id).Select(r => r.Name).FirstOrDefault();
+            return CountryCodes.Where(r => r.Code == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetOrderStatus(int id)
@@ -99,40 +100,40 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                var items = await lookupTableRepository.GetCategoriesAsync();
+                var items = await _repository.GetCategoriesAsync();
                 return items.ToList();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Categories");
+                _logger.LogError(ex, "Load Categories");
             }
             return new List<Category>();
         }
 
-        private async Task<IList<CountryCode>> GetCountryCodesAsync()
+        private async Task<IList<Country>> GetCountryCodesAsync()
         {
             try
             {
-                var items = await lookupTableRepository.GetCountryCodesAsync();
+                var items = await _repository.GetCountryCodesAsync();
                 return items.ToList();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load CountryCodes");
+                _logger.LogError(ex, "Load CountryCodes");
             }
-            return new List<CountryCode>();
+            return new List<Country>();
         }
 
         private async Task<IList<OrderStatus>> GetOrderStatusAsync()
         {
             try
             {
-                var items = await lookupTableRepository.GetOrderStatusAsync();
+                var items = await _repository.GetOrderStatusAsync();
                 return items.ToList();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load OrderStatus");
+                _logger.LogError(ex, "Load OrderStatus");
             }
             return new List<OrderStatus>();
         }
@@ -141,12 +142,12 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                var items = await lookupTableRepository.GetPaymentTypesAsync();
+                var items = await _repository.GetPaymentTypesAsync();
                 return items.ToList();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load PaymentTypes");
+                _logger.LogError(ex, "Load PaymentTypes");
             }
             return new List<PaymentType>();
         }
@@ -155,12 +156,12 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                var items = await lookupTableRepository.GetShippersAsync();
+                var items = await _repository.GetShippersAsync();
                 return items.ToList();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Shippers");
+                _logger.LogError(ex, "Load Shippers");
             }
             return new List<Shipper>();
         }
@@ -169,12 +170,12 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                var items = await lookupTableRepository.GetTaxTypesAsync();
+                var items = await _repository.GetTaxTypesAsync();
                 return items.ToList();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load TaxTypes");
+                _logger.LogError(ex, "Load TaxTypes");
             }
             return new List<TaxType>();
         }

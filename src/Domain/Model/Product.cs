@@ -23,7 +23,7 @@ namespace Inventory.Domain.Model
     public partial class Product : ObservableObject<Product>
     {
         [Required]
-        public int CategoryID
+        public int CategoryId
         {
             get; set;
         }
@@ -34,6 +34,7 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [MaxLength(1000)]
         public string Description
         {
@@ -45,6 +46,7 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [MaxLength(50)]
         public string Color
         {
@@ -56,25 +58,30 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         public decimal DealerPrice
         {
             get; set;
         }
+
         [Required]
-        public int TaxType
+        public int TaxTypeId
         {
             get; set;
         }
+
         [Required]
         public decimal Discount
         {
             get; set;
         }
+
         public DateTimeOffset? DiscountStartDate
         {
             get; set;
         }
+
         public DateTimeOffset? DiscountEndDate
         {
             get; set;
@@ -85,6 +92,7 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         public int SafetyStockLevel
         {
@@ -96,11 +104,13 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         public DateTimeOffset LastModifiedOn
         {
             get; set;
         }
+
         public string SearchTerms
         {
             get; set;
@@ -110,17 +120,29 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         public byte[] Thumbnail
         {
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
+        public virtual Category Category
+        {
+            get; set;
+        }
 
+        public virtual TaxType TaxType
+        {
+            get; set;
+        }
+
+
+
+        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
 
         //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         [NotMapped]
-        public string CategoryName => "Fake Category";
+        public string CategoryName => Category.Name;
 
         public override void Merge(Product source)
         {

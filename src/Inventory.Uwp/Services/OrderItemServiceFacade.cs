@@ -18,7 +18,7 @@ namespace Inventory.Uwp.Services
 
         public async Task<int> DeleteOrderItemAsync(OrderItemDto model)
         {
-            var orderItem = new OrderItem { OrderID = model.OrderID, OrderLine = model.OrderLine };
+            var orderItem = new OrderItem { OrderId = model.OrderID, OrderLine = model.OrderLine };
             int ret = await orderItemService.DeleteOrderItemAsync(orderItem);
             return ret;
         }
@@ -70,7 +70,7 @@ namespace Inventory.Uwp.Services
             var orderItem = model.OrderLine > 0 ? await orderItemService.GetOrderItemAsync(model.OrderID, model.OrderLine) : new OrderItem();
             DtoAssembler.UpdateOrderItemFromModel(orderItem, model);
             int suca = await orderItemService.UpdateOrderItemAsync(orderItem);
-            var item = await orderItemService.GetOrderItemAsync(orderItem.OrderID, orderItem.OrderLine);
+            var item = await orderItemService.GetOrderItemAsync(orderItem.OrderId, orderItem.OrderLine);
             var aaaaa = await DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: true);
             model.Merge(aaaaa);
             return suca;

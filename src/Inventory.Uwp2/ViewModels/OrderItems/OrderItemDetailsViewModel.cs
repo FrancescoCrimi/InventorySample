@@ -43,7 +43,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
         public string TitleNew => $"New Order Item, Order #{OrderID}";
-        public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderID}" ?? string.Empty;
+        public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderId}" ?? string.Empty;
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
 
@@ -60,7 +60,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public ICommand ProductSelectedCommand => new RelayCommand<Product>(ProductSelected);
         private void ProductSelected(Product product)
         {
-            EditableItem.ProductID = product.Id;
+            EditableItem.ProductId = product.Id;
             EditableItem.UnitPrice = product.ListPrice;
             EditableItem.Product = product;
 
@@ -74,7 +74,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
             if (ViewModelArgs.IsNew)
             {
-                Item = new OrderItem { OrderID = OrderID };
+                Item = new OrderItem { OrderId = OrderID };
                 IsEditMode = true;
             }
             else
@@ -82,7 +82,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 try
                 {
                     var item = await _orderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
-                    Item = item ?? new OrderItem { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                    Item = item ?? new OrderItem { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -92,7 +92,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         }
         public void Unload()
         {
-            ViewModelArgs.OrderID = Item?.OrderID ?? 0;
+            ViewModelArgs.OrderID = Item?.OrderId ?? 0;
         }
 
         public void Unsubscribe()
@@ -105,7 +105,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             return new OrderItemDetailsArgs
             {
-                OrderID = Item?.OrderID ?? 0,
+                OrderID = Item?.OrderId ?? 0,
                 OrderLine = Item?.OrderLine ?? 0
             };
         }
@@ -118,7 +118,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 await Task.Delay(100);
                 await _orderItemService.UpdateOrderItemAsync(model);
                 EndStatusMessage("Order item saved");
-                _logger.LogInformation($"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
+                _logger.LogInformation($"Order item #{model.OrderId}, {model.OrderLine} was saved successfully.");
                 return true;
             }
             catch (Exception ex)
@@ -137,7 +137,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 await Task.Delay(100);
                 await _orderItemService.DeleteOrderItemAsync(model);
                 EndStatusMessage("Order item deleted");
-                _logger.LogWarning($"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
+                _logger.LogWarning($"Order item #{model.OrderId}, {model.OrderLine} was deleted.");
                 return true;
             }
             catch (Exception ex)
@@ -155,7 +155,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         protected override IEnumerable<IValidationConstraint<OrderItem>> GetValidationConstraints(OrderItem model)
         {
-            yield return new RequiredConstraint<OrderItem>("Product", m => m.ProductID);
+            yield return new RequiredConstraint<OrderItem>("Product", m => m.ProductId);
             yield return new NonZeroConstraint<OrderItem>("Quantity", m => m.Quantity);
             yield return new PositiveConstraint<OrderItem>("Quantity", m => m.Quantity);
             yield return new LessThanConstraint<OrderItem>("Quantity", m => m.Quantity, 100);
@@ -182,12 +182,12 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 switch (message.Value)
                 {
                     case "ItemChanged":
-                        if (message.OrderID == current?.OrderID && message.OrderLine == current?.OrderLine)
+                        if (message.OrderID == current?.OrderId && message.OrderLine == current?.OrderLine)
                         {
                             try
                             {
-                                var item = await _orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
-                                item = item ?? new OrderItem { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                                var item = await _orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
+                                item = item ?? new OrderItem { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -204,7 +204,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         break;
 
                     case "ItemDeleted":
-                        if (message.OrderID == current?.OrderID && message.OrderLine == current?.OrderLine)
+                        if (message.OrderID == current?.OrderId && message.OrderLine == current?.OrderLine)
                         {
                             await OnItemDeletedExternally();
                         }
@@ -214,7 +214,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await _orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
+                            var model = await _orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -227,7 +227,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         break;
 
                     case "ItemsDeleted":
-                        if (message.SelectedItems.Any(r => r.OrderID == current.OrderID && r.OrderLine == current.OrderLine))
+                        if (message.SelectedItems.Any(r => r.OrderId == current.OrderId && r.OrderLine == current.OrderLine))
                         {
                             await OnItemDeletedExternally();
                         }
@@ -323,6 +323,6 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         }
 
         protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(new OrderItemChangeMessage(message, Item.OrderID, Item.OrderLine));
+            => Messenger.Send(new OrderItemChangeMessage(message, Item.OrderId, Item.OrderLine));
     }
 }

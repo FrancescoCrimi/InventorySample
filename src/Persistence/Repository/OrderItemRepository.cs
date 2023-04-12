@@ -26,7 +26,7 @@ namespace Inventory.Persistence.Repository
 {
     internal class OrderItemRepository : IOrderItemRepository
     {
-        private AppDbContext _dataSource = null;
+        private readonly AppDbContext _dataSource = null;
 
         public OrderItemRepository(AppDbContext dataSource)
         {
@@ -36,7 +36,7 @@ namespace Inventory.Persistence.Repository
         public async Task<OrderItem> GetOrderItemAsync(long orderID, int orderLine)
         {
             return await _dataSource.OrderItems
-                .Where(r => r.OrderID == orderID && r.OrderLine == orderLine)
+                .Where(r => r.OrderId == orderID && r.OrderLine == orderLine)
                 .Include(r => r.Product)
                 .FirstOrDefaultAsync();
         }
@@ -61,7 +61,7 @@ namespace Inventory.Persistence.Repository
             var records = await items.Skip(skip).Take(take)
                 .Select(r => new OrderItem
                 {
-                    OrderID = r.OrderID,
+                    OrderId = r.OrderId,
                     OrderLine = r.OrderLine
                 })
                 .AsNoTracking()
@@ -128,7 +128,7 @@ namespace Inventory.Persistence.Repository
             }
             else
             {
-                orderItem.OrderLine = _dataSource.OrderItems.Where(r => r.OrderID == orderItem.OrderID).Select(r => r.OrderLine).DefaultIfEmpty(0).Max() + 1;
+                orderItem.OrderLine = _dataSource.OrderItems.Where(r => r.OrderId == orderItem.OrderId).Select(r => r.OrderLine).DefaultIfEmpty(0).Max() + 1;
                 // TODO: 
                 //orderItem.CreateOn = DateTime.UtcNow;
                 _dataSource.Entry(orderItem).State = EntityState.Added;

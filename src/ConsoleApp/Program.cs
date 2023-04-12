@@ -18,18 +18,35 @@ namespace ConsoleApp
         }
         public Program()
         {
-            //CreateEmptyDatabase();
+            CreateEmptyDatabase();
             //ProvaDateTime();
             //FixCountryCodeTable();
         }
 
-        private void CreateEmptyDatabase()
+
+        private SQLServerAppDbContext GetSqlServer()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
+            optionsBuilder.UseSqlServer(@"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI");
+            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
+            var db = new SQLServerAppDbContext(optionsBuilder.Options);
+            return db;
+        }
+
+        private SQLiteAppDbContext GetSQLite()
         {
             var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>();
             optionsBuilder.UseSqlite("Data Source=VanArsdelEmpty.db");
             //optionsBuilder.UseSqlite("Data Source=Database\\Empty.db");
             optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
             var db = new SQLiteAppDbContext(optionsBuilder.Options);
+            return db;
+        }
+
+        private void CreateEmptyDatabase()
+        {
+            //var db = GetSqlServer();
+            var db = GetSQLite();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
             db.Dispose();
@@ -41,7 +58,7 @@ namespace ConsoleApp
             optionsBuilder.UseSqlite("Data Source=VanArsdel.1.01.db");
             optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
             var db = new SQLiteAppDbContext(optionsBuilder.Options);
-            var listCountry = db.CountryCodes.ToList();
+            var listCountry = db.Countries.ToList();
             for (var i = 0; i < listCountry.Count; i++)
             {
                 var country = listCountry[i];
@@ -66,9 +83,10 @@ namespace ConsoleApp
 
         private void ProvaDateTime()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>();
-            optionsBuilder.UseSqlite("Data Source=VanArsdel.db");
-            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
+            var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>()
+                .UseLazyLoadingProxies()
+                .UseSqlite("Data Source=VanArsdel.1.01.db")
+                .UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
             var db = new SQLiteAppDbContext(optionsBuilder.Options);
 
             //var listCust = db.Customers.ToList();
@@ -80,7 +98,7 @@ namespace ConsoleApp
             //}
             //db.SaveChanges();
 
-            //var listOrder = db.Orders.ToList();
+            var listOrder = db.Orders.ToList();
             //foreach (var item in listOrder)
             //{
             //    if (item.DeliveredDate == null) item.DeliveredDate2 = null;

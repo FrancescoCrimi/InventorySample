@@ -22,7 +22,7 @@ namespace Inventory.Domain.Repository
     public interface ILookupTableRepository : IDisposable
     {
         Task<IList<Category>> GetCategoriesAsync();
-        Task<IList<CountryCode>> GetCountryCodesAsync();
+        Task<IList<Country>> GetCountryCodesAsync();
         Task<IList<OrderStatus>> GetOrderStatusAsync();
         Task<IList<PaymentType>> GetPaymentTypesAsync();
         Task<IList<Shipper>> GetShippersAsync();

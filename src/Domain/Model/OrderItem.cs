@@ -23,22 +23,19 @@ namespace Inventory.Domain.Model
     [Table("OrderItems")]
     public partial class OrderItem : ObservableObject<OrderItem>
     {
-        //[Key]
-        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public long OrderID
+        public long OrderId
         {
             get; set;
         }
 
-        //[Key, Column(Order = 1)]
-        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
+        [Required]
         public int OrderLine
         {
             get; set;
         }
 
         [Required]
-        public long ProductID
+        public long ProductId
         {
             get; set;
         }
@@ -48,18 +45,26 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
+
         [Required]
         public decimal UnitPrice
         {
             get; set;
         }
+
         [Required]
         public decimal Discount
         {
             get; set;
         }
+
         [Required]
-        public int TaxType
+        public int TaxTypeId
+        {
+            get; set;
+        }
+
+        public virtual Order Order
         {
             get; set;
         }
@@ -69,17 +74,20 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
+        public virtual TaxType TaxType
+        {
+            get; set;
+        }
+
+
         public override void Merge(OrderItem source)
         {
             //throw new NotImplementedException();
         }
 
-
-
         public decimal Subtotal => Quantity * UnitPrice;
 
         public decimal Total => 0;
             //=> (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
-
     }
 }

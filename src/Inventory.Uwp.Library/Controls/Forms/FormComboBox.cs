@@ -39,8 +39,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Mode*
         public FormEditMode Mode
         {
-            get { return (FormEditMode)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get => (FormEditMode)GetValue(ModeProperty);
+            set => SetValue(ModeProperty, value);
         }
 
         private static void ModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -50,7 +50,11 @@ namespace Inventory.Uwp.Library.Controls
             control.UpdateVisualState();
         }
 
-        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(nameof(Mode), typeof(FormEditMode), typeof(FormComboBox), new PropertyMetadata(FormEditMode.Auto, ModeChanged));
+        public static readonly DependencyProperty ModeProperty
+            = DependencyProperty.Register(nameof(Mode),
+                                          typeof(FormEditMode),
+                                          typeof(FormComboBox),
+                                          new PropertyMetadata(FormEditMode.Auto, ModeChanged));
         #endregion
 
         protected override void OnApplyTemplate()

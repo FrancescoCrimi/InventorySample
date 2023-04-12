@@ -13,13 +13,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inventory.Domain.Model
 {
-    [Table("CountryCodes")]
-    public partial class CountryCode
+    public partial class Country : IEquatable<Country>
     {
         [Key]
         [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
@@ -31,7 +31,7 @@ namespace Inventory.Domain.Model
         [Required]
         [MaxLength(2)]
         //[Key]
-        public string CountryCodeID
+        public string Code
         {
             get; set;
         }
@@ -41,6 +41,20 @@ namespace Inventory.Domain.Model
         public string Name
         {
             get; set;
+        }
+
+        public override bool Equals(object obj) => Equals(obj as Country);
+        public bool Equals(Country other) => !(other is null) && Id == other.Id;
+        public override int GetHashCode() => HashCode.Combine(Id);
+
+        public static bool operator ==(Country left, Country right)
+        {
+            return EqualityComparer<Country>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Country left, Country right)
+        {
+            return !(left == right);
         }
     }
 }

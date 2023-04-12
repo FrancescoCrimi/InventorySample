@@ -181,7 +181,7 @@ namespace Inventory.Uwp.ViewModels.Products
         protected override IEnumerable<IValidationConstraint<Product>> GetValidationConstraints(Product model)
         {
             yield return new RequiredConstraint<Product>("Name", m => m.Name);
-            yield return new RequiredGreaterThanZeroConstraint<Product>("Category", m => m.CategoryID);
+            yield return new RequiredGreaterThanZeroConstraint<Product>("Category", m => m.CategoryId);
         }
 
         /*

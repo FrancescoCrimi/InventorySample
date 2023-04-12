@@ -63,9 +63,9 @@ namespace Inventory.Application.Impl
         {
             var order = new Order
             {
-                CustomerID = customerID,
+                CustomerId = customerID,
                 OrderDate = DateTime.UtcNow,
-                Status = 0
+                StatusId = 0
             };
 
             if (customerID > 0)
@@ -75,11 +75,11 @@ namespace Inventory.Application.Impl
                     var customer = await dataService.GetCustomerAsync(customerID);
                     if (customer != null)
                     {
-                        order.CustomerID = customerID;
+                        order.CustomerId = customerID;
                         order.ShipAddress = customer.AddressLine1;
                         order.ShipCity = customer.City;
                         order.ShipRegion = customer.Region;
-                        order.ShipCountryCode = customer.CountryCode;
+                        order.ShipCountryCode = customer.Country.Code;
                         order.ShipPostalCode = customer.PostalCode;
                         //order.Customer = CustomerService.CreateCustomerModelAsync(customer, includeAllFields: true);
                         order.Customer = customer;

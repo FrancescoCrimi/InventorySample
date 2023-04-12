@@ -190,7 +190,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             yield return new RequiredConstraint<Customer>("City", m => m.City);
             yield return new RequiredConstraint<Customer>("Region", m => m.Region);
             yield return new RequiredConstraint<Customer>("Postal Code", m => m.PostalCode);
-            yield return new RequiredConstraint<Customer>("Country", m => m.CountryCode);
+            yield return new RequiredConstraint<Customer>("Country", m => m.Country);
         }
 
         /*

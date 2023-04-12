@@ -18,7 +18,7 @@
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Order ID" />
             <TextBlock Style="{StaticResource CardText}"
-                       Text="{x:Bind Item.OrderID, Mode=OneWay}" />
+                       Text="{x:Bind Item.OrderId, Mode=OneWay}" />
 
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Order Line" />
@@ -46,7 +46,7 @@
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Product ID" />
             <TextBlock Style="{StaticResource CardText}"
-                       Text="{x:Bind Item.ProductID, Mode=OneWay}" />
+                       Text="{x:Bind Item.ProductId, Mode=OneWay}" />
 
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Price" />

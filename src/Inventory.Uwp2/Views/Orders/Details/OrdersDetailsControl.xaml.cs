@@ -28,8 +28,8 @@ namespace Inventory.Uwp.Views.Orders
         #region ViewModel
         public OrderDetailsViewModel ViewModel
         {
-            get { return (OrderDetailsViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (OrderDetailsViewModel)GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         public static readonly DependencyProperty ViewModelProperty =
