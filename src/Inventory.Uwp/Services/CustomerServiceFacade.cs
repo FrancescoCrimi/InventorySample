@@ -2,8 +2,6 @@
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
-using Inventory.Uwp.Tools;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

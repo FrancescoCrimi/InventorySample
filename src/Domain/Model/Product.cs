@@ -13,124 +13,93 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
-    [Table("Products")]
-    public partial class Product : ObservableObject<Product>
+    public class Product : ObservableObject<Product>
     {
-        [Required]
-        public int CategoryId
-        {
-            get; set;
-        }
-
-        [Required]
-        [MaxLength(50)]
         public string Name
         {
             get; set;
         }
-
-        [MaxLength(1000)]
         public string Description
         {
             get; set;
         }
-
-        [MaxLength(4)]
         public string Size
         {
             get; set;
         }
-
-        [MaxLength(50)]
         public string Color
         {
             get; set;
         }
-
-        [Required]
         public decimal ListPrice
         {
             get; set;
         }
-
-        [Required]
         public decimal DealerPrice
         {
             get; set;
         }
-
-        [Required]
-        public int TaxTypeId
-        {
-            get; set;
-        }
-
-        [Required]
         public decimal Discount
         {
             get; set;
         }
-
         public DateTimeOffset? DiscountStartDate
         {
             get; set;
         }
-
         public DateTimeOffset? DiscountEndDate
         {
             get; set;
         }
-
-        [Required]
         public int StockUnits
         {
             get; set;
         }
-
-        [Required]
         public int SafetyStockLevel
         {
             get; set;
         }
-
-        [Required]
         public DateTimeOffset CreatedOn
         {
             get; set;
         }
-
-        [Required]
         public DateTimeOffset LastModifiedOn
         {
             get; set;
         }
-
         public string SearchTerms
         {
             get; set;
         }
-
         public byte[] Picture
         {
             get; set;
         }
-
         public byte[] Thumbnail
         {
             get; set;
         }
 
-        public virtual Category Category
+
+        public int CategoryId
+        {
+            get; set;
+        }
+        public int TaxTypeId
         {
             get; set;
         }
 
+
+        public virtual Category Category
+        {
+            get; set;
+        }
         public virtual TaxType TaxType
         {
             get; set;
@@ -146,7 +115,24 @@ namespace Inventory.Domain.Model
 
         public override void Merge(Product source)
         {
-            //throw new NotImplementedException();
+            Name = source.Name;
+            Description = source.Description;
+            Size = source.Size;
+            Color = source.Color;
+            ListPrice = source.ListPrice;
+            DealerPrice = source.DealerPrice;
+            Discount = source.Discount;
+            DiscountStartDate = source.DiscountStartDate;
+            DiscountEndDate = source.DiscountEndDate;
+            StockUnits = source.StockUnits;
+            SafetyStockLevel = source.SafetyStockLevel;
+            CreatedOn = source.CreatedOn;
+            LastModifiedOn = source.LastModifiedOn;
+            SearchTerms = source.SearchTerms;
+            Picture = source.Picture;
+            Thumbnail = source.Thumbnail;
+            CategoryId = source.CategoryId;
+            TaxTypeId = source.TaxTypeId;
         }
     }
 }

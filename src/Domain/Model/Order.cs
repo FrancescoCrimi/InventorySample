@@ -135,7 +135,23 @@ namespace Inventory.Domain.Model
 
         public override void Merge(Order source)
         {
-            //throw new NotImplementedException();
+            OrderDate = source.OrderDate;
+            ShippedDate = source.ShippedDate;
+            DeliveredDate = source.DeliveredDate;
+            TrackingNumber = source.TrackingNumber;
+            ShipAddress = source.ShipAddress;
+            ShipCity = source.ShipCity;
+            ShipRegion = source.ShipRegion;
+            ShipPostalCode = source.ShipPostalCode;
+            ShipPhone = source.ShipPhone;
+            LastModifiedOn = source.LastModifiedOn;
+            SearchTerms = source.SearchTerms;
+
+            CustomerId = source.CustomerId;
+            PaymentTypeId = source.PaymentTypeId;
+            ShipCountryId = source.ShipCountryId;
+            ShipperId = source.ShipperId;
+            StatusId = source.StatusId;
         }
     }
 }

@@ -53,13 +53,13 @@
                            Text="Order Status" />
                 <libcontrols:FormComboBox Header="Status"
                                           ItemsSource="{x:Bind LookupTables.OrderStatus}"
-                                          SelectedValue="{x:Bind EditableItem.Status, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
-                                          SelectedValuePath="Status"
+                                          SelectedValue="{x:Bind EditableItem.StatusId, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                          SelectedValuePath="Id"
                                           DisplayMemberPath="Name" />
                 <libcontrols:FormComboBox Header="Payment Type"
                                           ItemsSource="{x:Bind LookupTables.PaymentTypes}"
-                                          SelectedValue="{x:Bind EditableItem.PaymentType, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
-                                          SelectedValuePath="PaymentTypeID"
+                                          SelectedValue="{x:Bind EditableItem.PaymentTypeId, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                          SelectedValuePath="Id"
                                           DisplayMemberPath="Name"
                                           Visibility="{x:Bind EditableItem.CanEditPayment, Mode=OneWay}" />
                 <libcontrols:FluidGrid Columns="2"
@@ -72,8 +72,8 @@
                                                         Visibility="{x:Bind EditableItem.CanEditShipping, Mode=OneWay}" />
                     <libcontrols:FormComboBox Header="Ship Via"
                                               ItemsSource="{x:Bind LookupTables.Shippers}"
-                                              SelectedValue="{x:Bind EditableItem.Shipper, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
-                                              SelectedValuePath="ShipperID"
+                                              SelectedValue="{x:Bind EditableItem.ShipperId, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                              SelectedValuePath="Id"
                                               DisplayMemberPath="Name"
                                               Visibility="{x:Bind EditableItem.CanEditShipping, Mode=OneWay}" />
                 </libcontrols:FluidGrid>

@@ -25,7 +25,7 @@
                 <libcontrols:FormComboBox Header="Category"
                                           ItemsSource="{x:Bind LookupTables.Categories}"
                                           SelectedValue="{x:Bind EditableItem.CategoryId, Mode=TwoWay}"
-                                          SelectedValuePath="CategoryID"
+                                          SelectedValuePath="Id"
                                           DisplayMemberPath="Name" />
 
                 <TextBlock Style="{StaticResource FormsSection}"
