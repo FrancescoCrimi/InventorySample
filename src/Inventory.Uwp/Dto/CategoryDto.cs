@@ -13,18 +13,38 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
-namespace Inventory.Uwp.Models
+namespace Inventory.Uwp.Dto
 {
-    public class CategoryModel : ObservableObject
+    public class CategoryDto : ObservableDto, IEquatable<CategoryDto>
     {
-        public int CategoryID { get; set; }
-
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
         public byte[] Picture { get; set; }
-
         public byte[] Thumbnail { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as CategoryDto);
+        }
+        public bool Equals(CategoryDto other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+        public static bool operator ==(CategoryDto left, CategoryDto right)
+        {
+            return EqualityComparer<CategoryDto>.Default.Equals(left, right);
+        }
+        public static bool operator !=(CategoryDto left, CategoryDto right)
+        {
+            return !(left == right);
+        }
     }
 }

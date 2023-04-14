@@ -12,13 +12,18 @@
 // ******************************************************************
 #endregion
 
-using System;
-
-namespace Inventory.Uwp.Models
+namespace Inventory.Uwp.Dto
 {
-    public class PaymentTypeModel : ObservableObject
+    public class ObservableDto : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
     {
-        public int PaymentTypeID { get; set; }
-        public string Name { get; set; }
+        public bool IsEmpty { get; set; }
+
+        public virtual void Merge(ObservableDto source) { }
+
+        public void NotifyChanges()
+        {
+            // Notify all properties
+            OnPropertyChanged("");
+        }
     }
 }

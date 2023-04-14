@@ -59,9 +59,9 @@
 
                 <winui:NavigationViewItem x:Uid="Shell_Logs"
                                           helpers:NavHelper.NavigateTo="logs:LogsPage">
-                    <winui:NavigationViewItem.InfoBadge>
+                    <!--<winui:NavigationViewItem.InfoBadge>
                         <winui:InfoBadge Value="{x:Bind ViewModel.LogCount, Mode=OneWay}" />
-                    </winui:NavigationViewItem.InfoBadge>
+                    </winui:NavigationViewItem.InfoBadge>-->
                     <winui:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE7BA;"
                                   FontFamily="Segoe MDL2 Assets" />

@@ -18,7 +18,7 @@ namespace Inventory.Uwp.Services
 
         public async Task<int> DeleteOrderItemAsync(OrderItemDto model)
         {
-            var orderItem = new OrderItem { OrderId = model.OrderID, OrderLine = model.OrderLine };
+            var orderItem = new OrderItem { OrderId = model.OrderId, OrderLine = model.OrderLine };
             int ret = await orderItemService.DeleteOrderItemAsync(orderItem);
             return ret;
         }
@@ -31,8 +31,8 @@ namespace Inventory.Uwp.Services
         public async Task<OrderItemDto> GetOrderItemAsync(long orderID, int lineID)
         {
             var orderItem = await orderItemService.GetOrderItemAsync(orderID, lineID);
-            var model = await DtoAssembler.CreateOrderItemModelAsync(orderItem, includeAllFields: true);
-            await DtoAssembler.CreateProductModelAsync(orderItem.Product, true, null);
+            var model = DtoAssembler.CreateOrderItemModelAsync(orderItem, includeAllFields: true);
+            DtoAssembler.DtoFromProduct(orderItem.Product, true);
             return model;
         }
 
@@ -42,8 +42,8 @@ namespace Inventory.Uwp.Services
             var orderItems = await orderItemService.GetOrderItemsAsync(request);
             foreach (var item in orderItems)
             {
-                var model = await DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: false);
-                model.Product = await DtoAssembler.CreateProductModelAsync(item.Product, false, null);
+                var model = DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: false);
+                model.Product = DtoAssembler.DtoFromProduct(item.Product, false);
                 models.Add(model);
             }
             return models;
@@ -55,7 +55,7 @@ namespace Inventory.Uwp.Services
             var items = await orderItemService.GetOrderItemsAsync(skip, take, request);
             foreach (var item in items)
             {
-                models.Add(await DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: false));
+                models.Add(DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: false));
             }
             return models;
         }
@@ -67,11 +67,11 @@ namespace Inventory.Uwp.Services
 
         public async Task<int> UpdateOrderItemAsync(OrderItemDto model)
         {
-            var orderItem = model.OrderLine > 0 ? await orderItemService.GetOrderItemAsync(model.OrderID, model.OrderLine) : new OrderItem();
+            var orderItem = model.OrderLine > 0 ? await orderItemService.GetOrderItemAsync(model.OrderId, model.OrderLine) : new OrderItem();
             DtoAssembler.UpdateOrderItemFromModel(orderItem, model);
             int suca = await orderItemService.UpdateOrderItemAsync(orderItem);
             var item = await orderItemService.GetOrderItemAsync(orderItem.OrderId, orderItem.OrderLine);
-            var aaaaa = await DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: true);
+            var aaaaa = DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: true);
             model.Merge(aaaaa);
             return suca;
         }

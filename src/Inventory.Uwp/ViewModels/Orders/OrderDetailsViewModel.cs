@@ -43,20 +43,20 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
         public string TitleNew => Item?.Customer == null ? "New Order" : $"New Order, {Item?.Customer?.FullName}";
-        public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.OrderID}";
+        public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.Id}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
 
-        public bool CanEditCustomer => Item?.CustomerID <= 0;
+        public bool CanEditCustomer => Item?.CustomerId <= 0;
 
         public ICommand CustomerSelectedCommand => new RelayCommand<CustomerDto>(CustomerSelected);
         private void CustomerSelected(CustomerDto customer)
         {
-            EditableItem.CustomerID = customer.CustomerID;
+            EditableItem.CustomerId = customer.Id;
             EditableItem.ShipAddress = customer.AddressLine1;
             EditableItem.ShipCity = customer.City;
             EditableItem.ShipRegion = customer.Region;
-            EditableItem.ShipCountryCode = customer.CountryCode;
+            //EditableItem.ShipCountryCode = customer.CountryCode;
             EditableItem.ShipPostalCode = customer.PostalCode;
             EditableItem.Customer = customer;
 
@@ -79,7 +79,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 try
                 {
                     var item = await orderService.GetOrderAsync(ViewModelArgs.OrderID);
-                    Item = item ?? new OrderDto { OrderID = ViewModelArgs.OrderID, IsEmpty = true };
+                    Item = item ?? new OrderDto { Id = ViewModelArgs.OrderID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -90,8 +90,8 @@ namespace Inventory.Uwp.ViewModels.Orders
         }
         public void Unload()
         {
-            ViewModelArgs.CustomerID = Item?.CustomerID ?? 0;
-            ViewModelArgs.OrderID = Item?.OrderID ?? 0;
+            ViewModelArgs.CustomerID = Item?.CustomerId ?? 0;
+            ViewModelArgs.OrderID = Item?.Id ?? 0;
         }
 
         public void Subscribe()
@@ -114,8 +114,8 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             return new OrderDetailsArgs
             {
-                CustomerID = Item?.CustomerID ?? 0,
-                OrderID = Item?.OrderID ?? 0
+                CustomerID = Item?.CustomerId ?? 0,
+                OrderID = Item?.Id ?? 0
             };
         }
 
@@ -127,7 +127,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 await Task.Delay(100);
                 await orderService.UpdateOrderAsync(model);
                 EndStatusMessage("Order saved");
-                logger.LogInformation($"Order #{model.OrderID} was saved successfully.");
+                logger.LogInformation($"Order #{model.Id} was saved successfully.");
                 OnPropertyChanged(nameof(CanEditCustomer));
                 return true;
             }
@@ -147,7 +147,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 await Task.Delay(100);
                 await orderService.DeleteOrderAsync(model);
                 EndStatusMessage("Order deleted");
-                logger.LogWarning($"Order #{model.OrderID} was deleted.");
+                logger.LogWarning($"Order #{model.Id} was deleted.");
                 return true;
             }
             catch (Exception ex)
@@ -165,15 +165,15 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         protected override IEnumerable<IValidationConstraint<OrderDto>> GetValidationConstraints(OrderDto model)
         {
-            yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Customer", m => m.CustomerID);
-            if (model.Status > 0)
+            yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Customer", m => m.CustomerId);
+            if (model.StatusId > 0)
             {
-                yield return new RequiredConstraint<OrderDto>("Payment Type", m => m.PaymentType);
-                yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Payment Type", m => m.PaymentType);
-                if (model.Status > 1)
+                yield return new RequiredConstraint<OrderDto>("Payment Type", m => m.PaymentTypeId);
+                yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Payment Type", m => m.PaymentTypeId);
+                if (model.StatusId > 1)
                 {
-                    yield return new RequiredConstraint<OrderDto>("Shipper", m => m.ShipVia);
-                    yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Shipper", m => m.ShipVia);
+                    yield return new RequiredConstraint<OrderDto>("Shipper", m => m.ShipperId);
+                    yield return new RequiredGreaterThanZeroConstraint<OrderDto>("Shipper", m => m.ShipperId);
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.OrderID == current?.OrderID)
+                if (message.Value != null && message.Value.Id == current?.Id)
                 {
                     switch (message.Message)
                     {
@@ -200,8 +200,8 @@ namespace Inventory.Uwp.ViewModels.Orders
                             //{
                             try
                             {
-                                var item = await orderService.GetOrderAsync(current.OrderID);
-                                item = item ?? new OrderDto { OrderID = current.OrderID, IsEmpty = true };
+                                var item = await orderService.GetOrderAsync(current.Id);
+                                item = item ?? new OrderDto { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -234,7 +234,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await orderService.GetOrderAsync(current.OrderID);
+                            var model = await orderService.GetOrderAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -258,7 +258,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                     case "ItemsDeleted":
                         if (message.Value is IList<OrderDto> deletedModels)
                         {
-                            if (deletedModels.Any(r => r.OrderID == current.OrderID))
+                            if (deletedModels.Any(r => r.Id == current.Id))
                             {
                                 await OnItemDeletedExternally();
                             }

@@ -111,6 +111,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 {
                     OrderByDesc = r => r.CreatedOn
                 };
+
                 Customers = await customerService.GetCustomersAsync(0, 5, request);
             }
             catch (Exception ex)

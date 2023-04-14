@@ -60,11 +60,10 @@
                                           SelectedItem="{x:Bind EditableItem.Country, Mode=TwoWay}"
                                           DisplayMemberPath="Name" />
                 <!-- 
-                                          ItemsSource="{x:Bind LookupTables.CountryCodes}"
-                                          SelectedValue="{x:Bind EditableItem.CountryCode, Mode=TwoWay}"
-                                          SelectedValuePath="CountryCodeID"
-                                          SelectedItem="{x:Bind EditableItem.CountryCode, Mode=TwoWay}"
-                                          DisplayMemberPath="Name"
+                                          SelectedValue="{x:Bind EditableItem.CountryId, Mode=TwoWay}"
+                                          SelectedValuePath="Id"
+
+                                          SelectedItem="{x:Bind EditableItem.Country, Mode=TwoWay}"                
                 -->
 
                 <TextBlock  Style="{StaticResource FormsSection}"

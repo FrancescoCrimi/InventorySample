@@ -21,7 +21,7 @@
 
                 <Grid Grid.Column="0"
                       Margin="6,0">
-                    <PersonPicture ProfilePicture="{x:Bind ThumbnailSource, Converter={StaticResource ObjectToImageConverter}}"
+                    <PersonPicture ProfilePicture="{x:Bind Thumbnail, Converter={StaticResource ObjectToImageConverter}}"
                                    Width="34"
                                    Height="34" />
                 </Grid>
@@ -30,7 +30,7 @@
                             Margin="4">
                     <TextBlock Text="{x:Bind FullName}"
                                FontSize="14" />
-                    <TextBlock Text="{x:Bind CustomerID}"
+                    <TextBlock Text="{x:Bind Id}"
                                FontSize="13"
                                Foreground="#666" />
                 </StackPanel>

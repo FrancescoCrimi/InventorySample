@@ -12,75 +12,76 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.Models;
-using Inventory.Uwp.Services;
 using System;
+using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderDto : ObservableObject, IEquatable<OrderDto>
+    public class OrderDto : ObservableDto, IEquatable<OrderDto>
     {
-        public static OrderDto CreateEmpty() => new OrderDto { OrderID = -1, CustomerID = -1, IsEmpty = true };
-
-        public long OrderID { get; set; }
-        public long CustomerID { get; set; }
-
         private DateTimeOffset _orderDate;
+        private DateTimeOffset? _shippedDate;
+        private DateTimeOffset? _deliveredDate;
+        private int _status;
+
+        public static OrderDto CreateEmpty() => new OrderDto { Id = -1, CustomerId = -1, IsEmpty = true };
+
+        public long Id { get; set; }
         public DateTimeOffset OrderDate
         {
             get => _orderDate;
             set => SetProperty(ref _orderDate, value);
         }
-
-        private DateTimeOffset? _shippedDate;
         public DateTimeOffset? ShippedDate
         {
             get => _shippedDate;
             set => SetProperty(ref _shippedDate, value);
         }
-
-        private DateTimeOffset? _deliveredDate;
         public DateTimeOffset? DeliveredDate
         {
             get => _deliveredDate;
             set => SetProperty(ref _deliveredDate, value);
         }
+        public string TrackingNumber { get; set; }
+        public string ShipAddress { get; set; }
+        public string ShipCity { get; set; }
+        public string ShipRegion { get; set; }
+        public string ShipPostalCode { get; set; }
+        public string ShipPhone { get; set; }
 
-        private int _status;
-        public int Status
+
+        public long CustomerId { get; set; }
+        public int? PaymentTypeId { get; set; }
+        public long ShipCountryId { get; set; }
+        public int? ShipperId { get; set; }
+        public int StatusId
         {
             get => _status;
             set { if (SetProperty(ref _status, value)) UpdateStatusDependencies(); }
         }
 
-        public int? PaymentType { get; set; }
-        public string TrackingNumber { get; set; }
-
-        public int? ShipVia { get; set; }
-        public string ShipAddress { get; set; }
-        public string ShipCity { get; set; }
-        public string ShipRegion { get; set; }
-        public string ShipCountryCode { get; set; }
-        public string ShipPostalCode { get; set; }
-        public string ShipPhone { get; set; }
-
         public CustomerDto Customer { get; set; }
+        public PaymentTypeDto PaymentType { get; set; }
+        public CountryDto ShipCountry { get; set; }
+        public ShipperDto Shipper { get; set; }
+        public OrderStatusDto Status { get; set; }
+        public IList<OrderItemDto> OrderItems { get; set; }
 
-        public bool IsNew => OrderID <= 0;
 
-        public bool CanEditPayment => Status > 0;
-        public bool CanEditShipping => Status > 1;
-        public bool CanEditDelivery => Status > 2;
+        public bool IsNew => Id <= 0;
+        public bool CanEditPayment => StatusId > 0;
+        public bool CanEditShipping => StatusId > 1;
+        public bool CanEditDelivery => StatusId > 2;
 
-        public string StatusDesc => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetOrderStatus(Status);
-        public string PaymentTypeDesc => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetPaymentType(PaymentType);
-        public string ShipViaDesc => ShipVia == null ? "" : Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetShipper(ShipVia.Value);
-        public string ShipCountryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCountry(ShipCountryCode);
+        public string StatusDesc { get; set; }
+        public string PaymentTypeDesc { get; set; }
+        public string ShipViaDesc { get; set; }
+        public string ShipCountryName { get; set; }
+
 
         private void UpdateStatusDependencies()
         {
-            switch (Status)
+            switch (StatusId)
             {
                 case 0:
                 case 1:
@@ -103,7 +104,7 @@ namespace Inventory.Uwp.Dto
             OnPropertyChanged(nameof(CanEditDelivery));
         }
 
-        public override void Merge(ObservableObject source)
+        public override void Merge(ObservableDto source)
         {
             if (source is OrderDto model)
             {
@@ -115,44 +116,50 @@ namespace Inventory.Uwp.Dto
         {
             if (source != null)
             {
-                OrderID = source.OrderID;
-                CustomerID = source.CustomerID;
+                Id = source.Id;
                 OrderDate = source.OrderDate;
                 ShippedDate = source.ShippedDate;
                 DeliveredDate = source.DeliveredDate;
-                Status = source.Status;
-                PaymentType = source.PaymentType;
+                PaymentTypeId = source.PaymentTypeId;
                 TrackingNumber = source.TrackingNumber;
-                ShipVia = source.ShipVia;
                 ShipAddress = source.ShipAddress;
                 ShipCity = source.ShipCity;
                 ShipRegion = source.ShipRegion;
-                ShipCountryCode = source.ShipCountryCode;
                 ShipPostalCode = source.ShipPostalCode;
                 ShipPhone = source.ShipPhone;
+
+                CustomerId = source.CustomerId;
+                PaymentTypeId = source?.PaymentTypeId;
+                ShipCountryId = source.ShipCountryId;
+                ShipperId = source.ShipperId;
+                StatusId = source.StatusId;
+
                 Customer = source.Customer;
+                PaymentType = source?.PaymentType;
+                ShipCountry = source?.ShipCountry;
+                Shipper = source?.Shipper;
+                Status = source?.Status;
             }
         }
 
+
+
         public override string ToString()
         {
-            return OrderID.ToString();
+            return Id.ToString();
         }
-
         public override bool Equals(object obj)
         {
             return Equals(obj as OrderDto);
         }
-
         public bool Equals(OrderDto other)
         {
             return !(other is null) &&
-                   OrderID == other.OrderID;
+                   Id == other.Id;
         }
-
         public override int GetHashCode()
         {
-            return 1651275338 + OrderID.GetHashCode();
+            return 1651275338 + Id.GetHashCode();
         }
     }
 }

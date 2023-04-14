@@ -79,7 +79,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             //{
             if (recipient == OrderDetails && message.Message == "ItemChanged")
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = message.Value.OrderID });
+                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = message.Value.Id });
             }
         }
     }

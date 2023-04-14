@@ -18,37 +18,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inventory.Domain.Model
 {
-    [Table("Categories")]
     public partial class Category
     {
-        [Key]
-        //[Column("CategoryID")]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int Id
-        {
-            get; set;
-        }
-
-        [Required]
-        [MaxLength(50)]
-        public string Name
-        {
-            get; set;
-        }
-
-        [MaxLength(400)]
-        public string Description
-        {
-            get; set;
-        }
-
-        public byte[] Picture
-        {
-            get; set;
-        }
-        public byte[] Thumbnail
-        {
-            get; set;
-        }
+        public int Id { get; set; }
+        public string Name { get; set;}
+        public string Description { get; set; }
+        public byte[] Picture { get; set; }
+        public byte[] Thumbnail { get; set; }
     }
 }

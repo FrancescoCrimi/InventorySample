@@ -13,49 +13,41 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.Models;
 using Inventory.Uwp.Services;
 using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class ProductDto : ObservableObject
+    public class ProductDto : ObservableDto
     {
-        public static ProductDto CreateEmpty() => new ProductDto { ProductID = -1, IsEmpty = true };
+        public static ProductDto CreateEmpty() => new ProductDto { Id = -1, IsEmpty = true };
 
-        public long ProductID { get; set; }
-
-        public int CategoryID { get; set; }
-
+        public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-
         public string Size { get; set; }
         public string Color { get; set; }
-
         public decimal ListPrice { get; set; }
         public decimal DealerPrice { get; set; }
-        public int TaxType { get; set; }
         public decimal Discount { get; set; }
         public DateTimeOffset? DiscountStartDate { get; set; }
         public DateTimeOffset? DiscountEndDate { get; set; }
-
         public int StockUnits { get; set; }
         public int SafetyStockLevel { get; set; }
-
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset LastModifiedOn { get; set; }
-
         public byte[] Picture { get; set; }
-        public object PictureSource { get; set; }
-
         public byte[] Thumbnail { get; set; }
-        public object ThumbnailSource { get; set; }
 
-        public bool IsNew => ProductID <= 0;
-        public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
+        public int CategoryId { get; set; }
+        public int TaxTypeId { get; set; }
+        public CategoryDto Category { get; set; }
+        public TaxTypeDto TaxType { get; set; }
 
-        public override void Merge(ObservableObject source)
+        public bool IsNew => Id <= 0;
+        public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryId);
+
+        public override void Merge(ObservableDto source)
         {
             if (source is ProductDto model)
             {
@@ -67,15 +59,13 @@ namespace Inventory.Uwp.Dto
         {
             if (source != null)
             {
-                ProductID = source.ProductID;
-                CategoryID = source.CategoryID;
+                Id = source.Id;
                 Name = source.Name;
                 Description = source.Description;
                 Size = source.Size;
                 Color = source.Color;
                 ListPrice = source.ListPrice;
                 DealerPrice = source.DealerPrice;
-                TaxType = source.TaxType;
                 Discount = source.Discount;
                 DiscountStartDate = source.DiscountStartDate;
                 DiscountEndDate = source.DiscountEndDate;
@@ -84,9 +74,12 @@ namespace Inventory.Uwp.Dto
                 CreatedOn = source.CreatedOn;
                 LastModifiedOn = source.LastModifiedOn;
                 Picture = source.Picture;
-                PictureSource = source.PictureSource;
                 Thumbnail = source.Thumbnail;
-                ThumbnailSource = source.ThumbnailSource;
+
+                CategoryId = source.CategoryId;
+                TaxTypeId = source.TaxTypeId;
+                Category = source.Category;
+                TaxType = source.TaxType;
             }
         }
 

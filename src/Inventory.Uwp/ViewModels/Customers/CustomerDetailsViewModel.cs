@@ -66,7 +66,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 try
                 {
                     var item = await customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
-                    Item = item ?? new CustomerDto { CustomerID = ViewModelArgs.CustomerID, IsEmpty = true };
+                    Item = item ?? new CustomerDto { Id = ViewModelArgs.CustomerID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +76,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         }
         public void Unload()
         {
-            ViewModelArgs.CustomerID = Item?.CustomerID ?? 0;
+            ViewModelArgs.CustomerID = Item?.Id ?? 0;
         }
 
         public void Subscribe()
@@ -99,7 +99,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             return new CustomerDetailsArgs
             {
-                CustomerID = Item?.CustomerID ?? 0
+                CustomerID = Item?.Id ?? 0
             };
         }
 
@@ -125,9 +125,9 @@ namespace Inventory.Uwp.ViewModels.Customers
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
-                EditableItem.PictureSource = result.ImageSource;
+                //EditableItem.PictureSource = result.ImageSource;
                 EditableItem.Thumbnail = result.ImageBytes;
-                EditableItem.ThumbnailSource = result.ImageSource;
+                //EditableItem.ThumbnailSource = result.ImageSource;
                 NewPictureSource = result.ImageSource;
             }
             else
@@ -144,7 +144,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 await Task.Delay(100);
                 await customerService.UpdateCustomerAsync(model);
                 EndStatusMessage("Customer saved");
-                logger.LogInformation($"Customer {model.CustomerID} '{model.FullName}' was saved successfully.");
+                logger.LogInformation($"Customer {model.Id} '{model.FullName}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
@@ -163,7 +163,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 await Task.Delay(100);
                 await customerService.DeleteCustomerAsync(model);
                 EndStatusMessage("Customer deleted");
-                logger.LogWarning($"Customer {model.CustomerID} '{model.FullName}' was deleted.");
+                logger.LogWarning($"Customer {model.Id} '{model.FullName}' was deleted.");
                 return true;
             }
             catch (Exception ex)
@@ -188,7 +188,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             yield return new RequiredConstraint<CustomerDto>("City", m => m.City);
             yield return new RequiredConstraint<CustomerDto>("Region", m => m.Region);
             yield return new RequiredConstraint<CustomerDto>("Postal Code", m => m.PostalCode);
-            yield return new RequiredConstraint<CustomerDto>("Country", m => m.CountryCode);
+            //yield return new RequiredConstraint<CustomerDto>("Country", m => m.CountryCode);
         }
 
         /*
@@ -201,7 +201,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.CustomerID == current?.CustomerID)
+                if (message.Value != null && message.Value.Id == current?.Id)
                 {
                     switch (message.Message)
                     {
@@ -210,8 +210,8 @@ namespace Inventory.Uwp.ViewModels.Customers
                             //{
                             try
                             {
-                                var item = await customerService.GetCustomerAsync(current.CustomerID);
-                                item = item ?? new CustomerDto { CustomerID = current.CustomerID, IsEmpty = true };
+                                var item = await customerService.GetCustomerAsync(current.Id);
+                                item = item ?? new CustomerDto { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -242,7 +242,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 switch (message.Message)
                 {
                     case "ItemsDeleted":
-                        if (message.Value.Any(r => r.CustomerID == current.CustomerID))
+                        if (message.Value.Any(r => r.Id == current.Id))
                         {
                             await OnItemDeletedExternally();
                         }
@@ -261,7 +261,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await customerService.GetCustomerAsync(current.CustomerID);
+                            var model = await customerService.GetCustomerAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();

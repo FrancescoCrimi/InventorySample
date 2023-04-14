@@ -37,8 +37,8 @@
                 <libcontrols:FormComboBox Header="Ship Country"
                                           ItemsSource="{x:Bind LookupTables.CountryCodes}"
                                           VerticalAlignment="Top"
-                                          SelectedValue="{x:Bind EditableItem.ShipCountryCode, Mode=TwoWay}"
-                                          SelectedValuePath="CountryCodeID"
+                                          SelectedValue="{x:Bind EditableItem.ShipCountryId, Mode=TwoWay}"
+                                          SelectedValuePath="Id"
                                           DisplayMemberPath="Name" />
 
                 <libcontrols:FormComboBox Header="Status"

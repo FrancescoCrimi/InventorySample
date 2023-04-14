@@ -142,7 +142,7 @@ namespace Inventory.Domain.Model
 
         //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         [NotMapped]
-        public string CategoryName => Category.Name;
+        public string CategoryName => Category?.Name;
 
         public override void Merge(Product source)
         {

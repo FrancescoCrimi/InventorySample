@@ -12,35 +12,29 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.Models;
-using Inventory.Uwp.Services;
 using System;
+using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class CustomerDto : ObservableObject
+    public class CustomerDto : ObservableDto
     {
-        public static CustomerDto CreateEmpty() => new CustomerDto { CustomerID = -1, IsEmpty = true };
+        public static CustomerDto CreateEmpty() => new CustomerDto { Id = -1, IsEmpty = true };
 
-        public long CustomerID { get; set; }
-
+        public long Id { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Suffix { get; set; }
         public string Gender { get; set; }
-
         public string EmailAddress { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }
         public string Region { get; set; }
-        public string CountryCode { get; set; }
         public string PostalCode { get; set; }
         public string Phone { get; set; }
-
         public DateTimeOffset? BirthDate { get; set; }
         public string Education { get; set; }
         public string Occupation { get; set; }
@@ -50,31 +44,24 @@ namespace Inventory.Uwp.Dto
         public int? ChildrenAtHome { get; set; }
         public bool? IsHouseOwner { get; set; }
         public int? NumberCarsOwned { get; set; }
-
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset? LastModifiedOn { get; set; }
-
         public byte[] Picture { get; set; }
-        public object PictureSource { get; set; }
-
         public byte[] Thumbnail { get; set; }
-        public object ThumbnailSource { get; set; }
 
-        public bool IsNew => CustomerID <= 0;
+        public long CountryId { get; set; }
+
+        public CountryDto Country { get; set; }
+        public IList<OrderItemDto> Items { get; set; }
+
+        public string CountryName { get; set; }
+        public bool IsNew => Id <= 0;
         public string FullName => $"{FirstName} {LastName}";
         public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
-        public string CountryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCountry(CountryCode);
+        public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}\n{CountryName}";
 
-        public string FullAddress
-        {
-            get
-            {
-                return $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}\n{CountryName}";
 
-            }
-        }
-
-        public override void Merge(ObservableObject source)
+        public override void Merge(ObservableDto source)
         {
             if (source is CustomerDto model)
             {
@@ -86,42 +73,41 @@ namespace Inventory.Uwp.Dto
         {
             if (source != null)
             {
-                CustomerID = source.CustomerID;
-                Title = source.Title;
-                FirstName = source.FirstName;
-                MiddleName = source.MiddleName;
-                LastName = source.LastName;
-                Suffix = source.Suffix;
-                Gender = source.Gender;
-                EmailAddress = source.EmailAddress;
                 AddressLine1 = source.AddressLine1;
                 AddressLine2 = source.AddressLine2;
-                City = source.City;
-                Region = source.Region;
-                CountryCode = source.CountryCode;
-                PostalCode = source.PostalCode;
-                Phone = source.Phone;
                 BirthDate = source.BirthDate;
-                Education = source.Education;
-                Occupation = source.Occupation;
-                YearlyIncome = source.YearlyIncome;
-                MaritalStatus = source.MaritalStatus;
-                TotalChildren = source.TotalChildren;
                 ChildrenAtHome = source.ChildrenAtHome;
-                IsHouseOwner = source.IsHouseOwner;
-                NumberCarsOwned = source.NumberCarsOwned;
+                City = source.City;
                 CreatedOn = source.CreatedOn;
+                Id = source.Id;
+                Education = source.Education;
+                EmailAddress = source.EmailAddress;
+                FirstName = source.FirstName;
+                Gender = source.Gender;
+                IsEmpty = source.IsEmpty;
+                IsHouseOwner = source.IsHouseOwner;
                 LastModifiedOn = source.LastModifiedOn;
-                Thumbnail = source.Thumbnail;
-                ThumbnailSource = source.ThumbnailSource;
+                LastName = source.LastName;
+                MaritalStatus = source.MaritalStatus;
+                MiddleName = source.MiddleName;
+                NumberCarsOwned = source.NumberCarsOwned;
+                Occupation = source.Occupation;
+                Phone = source.Phone;
                 Picture = source.Picture;
-                PictureSource = source.PictureSource;
-            }
-        }
+                PostalCode = source.PostalCode;
+                Region = source.Region;
+                Suffix = source.Suffix;
+                Thumbnail = source.Thumbnail;
+                Title = source.Title;
+                TotalChildren = source.TotalChildren;
+                YearlyIncome = source.YearlyIncome;
 
-        public override string ToString()
-        {
-            return IsEmpty ? "Empty" : FullName;
+                CountryId = source.CountryId;
+
+                Country = source.Country;
+
+                CountryName = source.CountryName;
+            }
         }
     }
 }

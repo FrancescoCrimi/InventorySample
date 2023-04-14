@@ -1,5 +1,5 @@
 ﻿using Inventory.Domain.Repository;
-using Inventory.Uwp.Models;
+using Inventory.Uwp.Dto;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,73 +20,73 @@ namespace Inventory.Uwp.Services
             this.lookupTableRepository = lookupTableRepository;
         }
 
-        public IList<CategoryModel> Categories { get; private set; }
+        public IList<CategoryDto> Categories { get; private set; }
 
-        public IList<CountryCodeModel> CountryCodes { get; private set; }
+        public IList<CountryDto> Countries { get; private set; }
 
-        public IList<OrderStatusModel> OrderStatus { get; private set; }
+        public IList<OrderStatusDto> OrderStatus { get; private set; }
 
-        public IList<PaymentTypeModel> PaymentTypes { get; private set; }
+        public IList<PaymentTypeDto> PaymentTypes { get; private set; }
 
-        public IList<ShipperModel> Shippers { get; private set; }
+        public IList<ShipperDto> Shippers { get; private set; }
 
-        public IList<TaxTypeModel> TaxTypes { get; private set; }
+        public IList<TaxTypeDto> TaxTypes { get; private set; }
 
         public string GetCategory(int id)
         {
-            return Categories.Where(r => r.CategoryID == id).Select(r => r.Name).FirstOrDefault();
+            return Categories.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
-        public string GetCountry(string id)
+        public string GetCountry(long id)
         {
-            return CountryCodes.Where(r => r.CountryCodeID == id).Select(r => r.Name).FirstOrDefault();
+            return Countries.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetOrderStatus(int id)
         {
-            return OrderStatus.Where(r => r.Status == id).Select(r => r.Name).FirstOrDefault();
+            return OrderStatus.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetPaymentType(int? id)
         {
-            return id == null ? "" : PaymentTypes.Where(r => r.PaymentTypeID == id).Select(r => r.Name).FirstOrDefault();
+            return id == null ? "" : PaymentTypes.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetShipper(int? id)
         {
-            return id == null ? "" : Shippers.Where(r => r.ShipperID == id).Select(r => r.Name).FirstOrDefault();
+            return id == null ? "" : Shippers.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
         }
 
         public string GetTaxDesc(int id)
         {
-            return TaxTypes.Where(r => r.TaxTypeID == id).Select(r => $"{r.Rate} %").FirstOrDefault();
+            return TaxTypes.Where(r => r.Id == id).Select(r => $"{r.Rate} %").FirstOrDefault();
         }
 
         public decimal GetTaxRate(int id)
         {
-            return TaxTypes.Where(r => r.TaxTypeID == id).Select(r => r.Rate).FirstOrDefault();
+            return TaxTypes.Where(r => r.Id == id).Select(r => r.Rate).FirstOrDefault();
         }
 
         public async Task InitializeAsync()
         {
             Categories = await GetCategoriesAsync();
-            CountryCodes = await GetCountryCodesAsync();
+            Countries = await GetCountryCodesAsync();
             OrderStatus = await GetOrderStatusAsync();
             PaymentTypes = await GetPaymentTypesAsync();
             Shippers = await GetShippersAsync();
             TaxTypes = await GetTaxTypesAsync();
         }
 
-        private async Task<IList<CategoryModel>> GetCategoriesAsync()
+        private async Task<IList<CategoryDto>> GetCategoriesAsync()
         {
             try
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
                 var items = await lookupTableRepository.GetCategoriesAsync();
-                return items.Select(r => new CategoryModel
+                return items.Select(r => new CategoryDto
                 {
-                    CategoryID = r.Id,
+                    Id = r.Id,
                     Name = r.Name
                 })
                 .ToList();
@@ -96,19 +96,20 @@ namespace Inventory.Uwp.Services
             {
                 logger.LogError(ex, "Load Categories");
             }
-            return new List<CategoryModel>();
+            return new List<CategoryDto>();
         }
 
-        private async Task<IList<CountryCodeModel>> GetCountryCodesAsync()
+        private async Task<IList<CountryDto>> GetCountryCodesAsync()
         {
             try
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
                 var items = await lookupTableRepository.GetCountryCodesAsync();
-                return items.OrderBy(r => r.Name).Select(r => new CountryCodeModel
+                return items.OrderBy(r => r.Name).Select(r => new CountryDto
                 {
-                    CountryCodeID = r.Code,
+                    Id = r.Id,
+                    Code = r.Code,
                     Name = r.Name
                 })
                 .ToList();
@@ -118,19 +119,19 @@ namespace Inventory.Uwp.Services
             {
                 logger.LogError(ex, "Load CountryCodes");
             }
-            return new List<CountryCodeModel>();
+            return new List<CountryDto>();
         }
 
-        private async Task<IList<OrderStatusModel>> GetOrderStatusAsync()
+        private async Task<IList<OrderStatusDto>> GetOrderStatusAsync()
         {
             try
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
                 var items = await lookupTableRepository.GetOrderStatusAsync();
-                return items.Select(r => new OrderStatusModel
+                return items.Select(r => new OrderStatusDto
                 {
-                    Status = r.Id,
+                    Id = r.Id,
                     Name = r.Name
                 })
                 .ToList();
@@ -140,19 +141,19 @@ namespace Inventory.Uwp.Services
             {
                 logger.LogError(ex, "Load OrderStatus");
             }
-            return new List<OrderStatusModel>();
+            return new List<OrderStatusDto>();
         }
 
-        private async Task<IList<PaymentTypeModel>> GetPaymentTypesAsync()
+        private async Task<IList<PaymentTypeDto>> GetPaymentTypesAsync()
         {
             try
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
                 var items = await lookupTableRepository.GetPaymentTypesAsync();
-                return items.Select(r => new PaymentTypeModel
+                return items.Select(r => new PaymentTypeDto
                 {
-                    PaymentTypeID = r.Id,
+                    Id = r.Id,
                     Name = r.Name
                 })
                 .ToList();
@@ -162,19 +163,19 @@ namespace Inventory.Uwp.Services
             {
                 logger.LogError(ex, "Load PaymentTypes");
             }
-            return new List<PaymentTypeModel>();
+            return new List<PaymentTypeDto>();
         }
 
-        private async Task<IList<ShipperModel>> GetShippersAsync()
+        private async Task<IList<ShipperDto>> GetShippersAsync()
         {
             try
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
                 var items = await lookupTableRepository.GetShippersAsync();
-                return items.Select(r => new ShipperModel
+                return items.Select(r => new ShipperDto
                 {
-                    ShipperID = r.Id,
+                    Id = r.Id,
                     Name = r.Name,
                     Phone = r.Phone
                 })
@@ -185,19 +186,19 @@ namespace Inventory.Uwp.Services
             {
                 logger.LogError(ex, "Load Shippers");
             }
-            return new List<ShipperModel>();
+            return new List<ShipperDto>();
         }
 
-        private async Task<IList<TaxTypeModel>> GetTaxTypesAsync()
+        private async Task<IList<TaxTypeDto>> GetTaxTypesAsync()
         {
             try
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
                 var items = await lookupTableRepository.GetTaxTypesAsync();
-                return items.Select(r => new TaxTypeModel
+                return items.Select(r => new TaxTypeDto
                 {
-                    TaxTypeID = r.Id,
+                    Id = r.Id,
                     Name = r.Name,
                     Rate = r.Rate
                 })
@@ -208,7 +209,7 @@ namespace Inventory.Uwp.Services
             {
                 logger.LogError(ex, "Load TaxTypes");
             }
-            return new List<TaxTypeModel>();
+            return new List<TaxTypeDto>();
         }
     }
 }

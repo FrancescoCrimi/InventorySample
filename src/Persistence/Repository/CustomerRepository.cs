@@ -48,27 +48,27 @@ namespace Inventory.Persistence.Repository
 
             // Execute
             var records = await items.Skip(skip).Take(take)
-                .Select(r => new Customer
-                {
-                    Id = r.Id,
-                    Title = r.Title,
-                    FirstName = r.FirstName,
-                    MiddleName = r.MiddleName,
-                    LastName = r.LastName,
-                    Suffix = r.Suffix,
-                    Gender = r.Gender,
-                    EmailAddress = r.EmailAddress,
-                    AddressLine1 = r.AddressLine1,
-                    AddressLine2 = r.AddressLine2,
-                    City = r.City,
-                    Region = r.Region,
-                    Country = r.Country,
-                    PostalCode = r.PostalCode,
-                    Phone = r.Phone,
-                    CreatedOn = r.CreatedOn,
-                    LastModifiedOn = r.LastModifiedOn,
-                    Thumbnail = r.Thumbnail
-                })
+                //.Select(r => new Customer
+                //{
+                //    Id = r.Id,
+                //    Title = r.Title,
+                //    FirstName = r.FirstName,
+                //    MiddleName = r.MiddleName,
+                //    LastName = r.LastName,
+                //    Suffix = r.Suffix,
+                //    Gender = r.Gender,
+                //    EmailAddress = r.EmailAddress,
+                //    AddressLine1 = r.AddressLine1,
+                //    AddressLine2 = r.AddressLine2,
+                //    City = r.City,
+                //    Region = r.Region,
+                //    Country = r.Country,
+                //    PostalCode = r.PostalCode,
+                //    Phone = r.Phone,
+                //    CreatedOn = r.CreatedOn,
+                //    LastModifiedOn = r.LastModifiedOn,
+                //    Thumbnail = r.Thumbnail
+                //})
                 .AsNoTracking()
                 .ToListAsync();
 

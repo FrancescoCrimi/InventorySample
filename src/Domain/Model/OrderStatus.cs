@@ -12,24 +12,14 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace Inventory.Domain.Model
 {
-    [Table("OrderStatus")]
     public partial class OrderStatus
     {
-        [Key]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public int Id   // ex Status
         {
             get; set;
         }
-
-        [Required]
-        [MaxLength(50)]
         public string Name
         {
             get; set;

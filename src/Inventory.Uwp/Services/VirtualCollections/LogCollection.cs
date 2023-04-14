@@ -14,8 +14,8 @@
 
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
+using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

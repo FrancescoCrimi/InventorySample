@@ -56,7 +56,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             EditableItem.ShipAddress = customer.AddressLine1;
             EditableItem.ShipCity = customer.City;
             EditableItem.ShipRegion = customer.Region;
-            EditableItem.ShipCountryCode = customer.Country.Code;
+            EditableItem.ShipCountryId = customer.CountryId;
             EditableItem.ShipPostalCode = customer.PostalCode;
             EditableItem.Customer = customer;
 

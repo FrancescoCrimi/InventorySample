@@ -12,11 +12,13 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Models;
-using Inventory.Uwp.Services;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Controls;
+using Inventory.Uwp.Library.Extensions;
+using Inventory.Uwp.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,9 +26,6 @@ using System.Windows.Input;
 using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Controls;
-using Inventory.Uwp.Library.Extensions;
 
 namespace Inventory.Uwp.Controls
 {

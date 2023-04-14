@@ -1,33 +1,39 @@
 ﻿using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.UI.WebUI;
 
 namespace Inventory.Uwp.Services
 {
     public class OrderServiceFacade /*: IOrderService*/
     {
         private readonly IOrderService orderService;
+        private readonly IServiceProvider serviceProvider;
 
-        public OrderServiceFacade(IOrderService orderService)
+        public OrderServiceFacade(IOrderService orderService, IServiceProvider serviceProvider)
         {
             this.orderService = orderService;
+            this.serviceProvider = serviceProvider;
         }
 
         public async Task<OrderDto> CreateNewOrderAsync(long customerID)
         {
             Order order = await orderService.CreateNewOrderAsync(customerID);
-            OrderDto model = await DtoAssembler.CreateOrderModelAsync(order, includeAllFields: true, null);
+            OrderDto model = DtoAssembler.DtoFromOrder(order);
             if (customerID > 0)
-                model.Customer = await DtoAssembler.CreateCustomerModelAsync(order.Customer, includeAllFields: true);
+                model.Customer = DtoAssembler.DtoFromCustomer(order.Customer);
             return model;
         }
 
         public Task<int> DeleteOrderAsync(OrderDto model)
         {
-            var order = new Order { Id = model.OrderID };
+            var order = new Order { Id = model.Id };
             return orderService.DeleteOrderAsync(order);
         }
 
@@ -38,10 +44,17 @@ namespace Inventory.Uwp.Services
 
         public async Task<OrderDto> GetOrderAsync(long id)
         {
+            //var model = new OrderDto();
+            //using(var repo = serviceProvider.GetService<IOrderRepository>())
+            //{
+            //    var item = await repo.GetOrderAsync(id);
+            //}
+
             Order order = await orderService.GetOrderAsync(id);
-            OrderDto model = await DtoAssembler.CreateOrderModelAsync(order, includeAllFields: true, null);
+            OrderDto model = DtoAssembler.DtoFromOrder(order);
             if (order.Customer != null)
-                model.Customer = await DtoAssembler.CreateCustomerModelAsync(order.Customer, true);
+                model.Customer = DtoAssembler.DtoFromCustomer(order.Customer);
+
             return model;
         }
 
@@ -51,9 +64,9 @@ namespace Inventory.Uwp.Services
             var models = new List<OrderDto>();
             foreach (var item in orders)
             {
-                OrderDto dto = await DtoAssembler.CreateOrderModelAsync(item, includeAllFields: false, dispatcher);
+                OrderDto dto = DtoAssembler.DtoFromOrder(item);
                 if (item.Customer != null)
-                    dto.Customer = await DtoAssembler.CreateCustomerModelAsync(item.Customer, false);
+                    dto.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
                 models.Add(dto);
             }
             return models;
@@ -67,15 +80,15 @@ namespace Inventory.Uwp.Services
         public async Task<int> UpdateOrderAsync(OrderDto model)
         {
             int ret = 0;
-            long id = model.OrderID;
-            var order = id > 0 ? await orderService.GetOrderAsync(model.OrderID) : new Order();
+            long id = model.Id;
+            var order = id > 0 ? await orderService.GetOrderAsync(model.Id) : new Order();
             if (order != null)
             {
-                DtoAssembler.UpdateOrderFromModel(order, model);
+                DtoAssembler.UpdateOrderFromDto(order, model);
                 ret = await orderService.UpdateOrderAsync(order);
 
                 var item = await orderService.GetOrderAsync(id);
-                var newmodel = await DtoAssembler.CreateOrderModelAsync(item, includeAllFields: true, null);
+                var newmodel = DtoAssembler.DtoFromOrder(item);
                 model.Merge(newmodel);
             }
             return ret;

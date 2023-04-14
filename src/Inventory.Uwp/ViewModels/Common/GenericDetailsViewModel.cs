@@ -15,18 +15,18 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Models;
-using Inventory.Uwp.Common;
-using Inventory.Uwp.Services;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableObject, new()
+    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableDto, new()
     {
         private readonly NavigationService navigationService;
         private readonly WindowManagerService windowService;
@@ -36,9 +36,10 @@ namespace Inventory.Uwp.ViewModels.Common
         {
             navigationService = Ioc.Default.GetService<NavigationService>();
             windowService = Ioc.Default.GetService<WindowManagerService>();
+            LookupTables = Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
         }
 
-        public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
+        public LookupTableServiceFacade LookupTables { get; }
 
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;

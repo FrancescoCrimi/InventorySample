@@ -15,18 +15,17 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System;
+using Inventory.Uwp.Common;
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Models;
-using Inventory.Uwp.Common;
-using Inventory.Uwp.Services;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableObject
+    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableDto
     {
         public GenericListViewModel()
             : base()

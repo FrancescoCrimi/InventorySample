@@ -13,13 +13,36 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
-namespace Inventory.Uwp.Models
+namespace Inventory.Uwp.Dto
 {
-    public class TaxTypeModel : ObservableObject
+    public class TaxTypeDto : ObservableDto, IEquatable<TaxTypeDto>
     {
-        public int TaxTypeID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public decimal Rate { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as TaxTypeDto);
+        }
+        public bool Equals(TaxTypeDto other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+        public static bool operator ==(TaxTypeDto left, TaxTypeDto right)
+        {
+            return EqualityComparer<TaxTypeDto>.Default.Equals(left, right);
+        }
+        public static bool operator !=(TaxTypeDto left, TaxTypeDto right)
+        {
+            return !(left == right);
+        }
     }
 }

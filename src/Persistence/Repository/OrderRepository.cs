@@ -37,6 +37,7 @@ namespace Inventory.Persistence.Repository
         {
             return await _dataSource.Orders.Where(r => r.Id == id)
                 .Include(r => r.Customer)
+                //.Include(o => o.)
                 .FirstOrDefaultAsync();
         }
 

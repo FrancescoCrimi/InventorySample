@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="Inventory.Uwp.Views.Products.ProductCardControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="using:Inventory.Uwp.Views.Products"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -14,7 +14,7 @@
                 <Grid  Margin="6"
                        Height="180">
                     <Grid Background="LightGray">
-                        <Image Source="{x:Bind Item.PictureSource, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
+                        <Image Source="{x:Bind Item.Picture, Mode=OneWay, Converter={StaticResource ObjectToImageConverter}}"
                                Stretch="UniformToFill"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center" />
@@ -57,7 +57,7 @@
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Product ID" />
             <TextBlock Style="{StaticResource CardText}"
-                       Text="{x:Bind Item.ProductID, Mode=OneWay}" />
+                       Text="{x:Bind Item.Id, Mode=OneWay}" />
 
             <TextBlock Style="{StaticResource CardHeader}"
                        Text="Category" />

@@ -17,18 +17,17 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Views;
-using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Views.Products;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Views.Products;
 
 namespace Inventory.Uwp.ViewModels.Products
 {
@@ -60,7 +59,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
         private async void ItemInvoked(ProductDto model)
         {
-            await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.ProductID });
+            await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.Id });
         }
 
         public async Task LoadAsync(ProductListArgs args)

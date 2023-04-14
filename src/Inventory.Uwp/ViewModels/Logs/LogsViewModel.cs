@@ -14,7 +14,7 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Models;
+using Inventory.Uwp.Dto;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using System;

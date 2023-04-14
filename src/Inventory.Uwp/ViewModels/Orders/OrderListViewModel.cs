@@ -135,7 +135,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { OrderID = SelectedItem.OrderID });
+                await windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { OrderID = SelectedItem.Id });
             }
         }
 

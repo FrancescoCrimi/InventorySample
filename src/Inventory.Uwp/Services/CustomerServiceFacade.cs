@@ -20,7 +20,7 @@ namespace Inventory.Uwp.Services
 
         public Task<int> DeleteCustomerAsync(CustomerDto model)
         {
-            var customer = new Customer { Id = model.CustomerID };
+            var customer = new Customer { Id = model.Id };
             return customerService.DeleteCustomerAsync(customer);
         }
 
@@ -32,7 +32,7 @@ namespace Inventory.Uwp.Services
         public async Task<CustomerDto> GetCustomerAsync(long id)
         {
             Customer customer = await customerService.GetCustomerAsync(id);
-            CustomerDto model = await DtoAssembler.CreateCustomerModelAsync(customer, includeAllFields: true, null);
+            CustomerDto model = DtoAssembler.DtoFromCustomer(customer);
             return model;
         }
 
@@ -42,7 +42,7 @@ namespace Inventory.Uwp.Services
             var customers = await customerService.GetCustomersAsync(skip, take, request);
             foreach (var item in customers)
             {
-                var dto = await DtoAssembler.CreateCustomerModelAsync(item, includeAllFields: false, dispatcher);
+                var dto = DtoAssembler.DtoFromCustomer(item);
                 models.Add(dto);
             }
             return models;
@@ -56,15 +56,15 @@ namespace Inventory.Uwp.Services
         public async Task<int> UpdateCustomerAsync(CustomerDto model)
         {
             int rtn = 0;
-            long id = model.CustomerID;
-            Customer customer = id > 0 ? await customerService.GetCustomerAsync(model.CustomerID) : new Customer();
+            long id = model.Id;
+            Customer customer = id > 0 ? await customerService.GetCustomerAsync(model.Id) : new Customer();
             if (customer != null)
             {
-                DtoAssembler.UpdateCustomerFromModel(customer, model);
+                DtoAssembler.UpdateCustomerFromDto(customer, model);
                 rtn = await customerService.UpdateCustomerAsync(customer);
                 //TODO: fix below
                 var item = await customerService.GetCustomerAsync(id);
-                var newmodel = await DtoAssembler.CreateCustomerModelAsync(item, includeAllFields: true, null);
+                var newmodel = DtoAssembler.DtoFromCustomer(item);
                 model.Merge(newmodel);
             }
             return rtn;

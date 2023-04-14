@@ -43,7 +43,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
         public string TitleNew => $"New Order Item, Order #{OrderID}";
-        public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderID}" ?? string.Empty;
+        public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderId}" ?? string.Empty;
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
 
@@ -54,7 +54,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public ICommand ProductSelectedCommand => new RelayCommand<ProductDto>(ProductSelected);
         private void ProductSelected(ProductDto product)
         {
-            EditableItem.ProductID = product.ProductID;
+            EditableItem.ProductId = product.Id;
             EditableItem.UnitPrice = product.ListPrice;
             EditableItem.Product = product;
 
@@ -68,7 +68,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
             if (ViewModelArgs.IsNew)
             {
-                Item = new OrderItemDto { OrderID = OrderID };
+                Item = new OrderItemDto { OrderId = OrderID };
                 IsEditMode = true;
             }
             else
@@ -76,7 +76,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 try
                 {
                     var item = await orderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
-                    Item = item ?? new OrderItemDto { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                    Item = item ?? new OrderItemDto { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -86,7 +86,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         }
         public void Unload()
         {
-            ViewModelArgs.OrderID = Item?.OrderID ?? 0;
+            ViewModelArgs.OrderID = Item?.OrderId ?? 0;
         }
 
         public void Subscribe()
@@ -109,7 +109,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             return new OrderItemDetailsArgs
             {
-                OrderID = Item?.OrderID ?? 0,
+                OrderID = Item?.OrderId ?? 0,
                 OrderLine = Item?.OrderLine ?? 0
             };
         }
@@ -122,7 +122,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 await Task.Delay(100);
                 await orderItemService.UpdateOrderItemAsync(model);
                 EndStatusMessage("Order item saved");
-                logger.LogInformation($"Order item #{model.OrderID}, {model.OrderLine} was saved successfully.");
+                logger.LogInformation($"Order item #{model.OrderId}, {model.OrderLine} was saved successfully.");
                 return true;
             }
             catch (Exception ex)
@@ -141,7 +141,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 await Task.Delay(100);
                 await orderItemService.DeleteOrderItemAsync(model);
                 EndStatusMessage("Order item deleted");
-                logger.LogWarning($"Order item #{model.OrderID}, {model.OrderLine} was deleted.");
+                logger.LogWarning($"Order item #{model.OrderId}, {model.OrderLine} was deleted.");
                 return true;
             }
             catch (Exception ex)
@@ -159,7 +159,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         protected override IEnumerable<IValidationConstraint<OrderItemDto>> GetValidationConstraints(OrderItemDto model)
         {
-            yield return new RequiredConstraint<OrderItemDto>("Product", m => m.ProductID);
+            yield return new RequiredConstraint<OrderItemDto>("Product", m => m.ProductId);
             yield return new NonZeroConstraint<OrderItemDto>("Quantity", m => m.Quantity);
             yield return new PositiveConstraint<OrderItemDto>("Quantity", m => m.Quantity);
             yield return new LessThanConstraint<OrderItemDto>("Quantity", m => m.Quantity, 100);
@@ -180,7 +180,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.OrderID == current?.OrderID && message.Value.OrderLine == current?.OrderLine)
+                if (message.Value != null && message.Value.OrderId == current?.OrderId && message.Value.OrderLine == current?.OrderLine)
                 {
                     switch (message.Message)
                     {
@@ -189,8 +189,8 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                             //{
                             try
                             {
-                                var item = await orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
-                                item = item ?? new OrderItemDto { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                                var item = await orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
+                                item = item ?? new OrderItemDto { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -224,7 +224,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
+                            var model = await orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -246,7 +246,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 switch (message.Message)
                 {
                     case "ItemsDeleted":
-                        if (message.Value.Any(r => r.OrderID == current.OrderID && r.OrderLine == current.OrderLine))
+                        if (message.Value.Any(r => r.OrderId == current.OrderId && r.OrderLine == current.OrderLine))
                         {
                             await OnItemDeletedExternally();
                         }

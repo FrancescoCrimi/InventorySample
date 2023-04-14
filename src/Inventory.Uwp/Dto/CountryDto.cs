@@ -15,24 +15,32 @@
 using System;
 using System.Collections.Generic;
 
-namespace Inventory.Domain.Model
+namespace Inventory.Uwp.Dto
 {
-    public partial class Country : IEquatable<Country>
+    public class CountryDto : ObservableDto, IEquatable<CountryDto>
     {
         public long Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
 
-        public override bool Equals(object obj) => Equals(obj as Country);
-        public bool Equals(Country other) => !(other is null) && Id == other.Id;
-        public override int GetHashCode() => HashCode.Combine(Id);
-
-        public static bool operator ==(Country left, Country right)
+        public override bool Equals(object obj)
         {
-            return EqualityComparer<Country>.Default.Equals(left, right);
+            return Equals(obj as CountryDto);
         }
-
-        public static bool operator !=(Country left, Country right)
+        public bool Equals(CountryDto other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+        public static bool operator ==(CountryDto left, CountryDto right)
+        {
+            return EqualityComparer<CountryDto>.Default.Equals(left, right);
+        }
+        public static bool operator !=(CountryDto left, CountryDto right)
         {
             return !(left == right);
         }

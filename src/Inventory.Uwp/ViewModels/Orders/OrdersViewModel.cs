@@ -77,7 +77,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (message.Message == "ItemSelected")
             {
-                if (message.Value.OrderID != 0)
+                if (message.Value.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
@@ -109,7 +109,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             try
             {
-                var model = await orderService.GetOrderAsync(selected.OrderID);
+                var model = await orderService.GetOrderAsync(selected.Id);
                 selected.Merge(model);
             }
             catch (Exception ex)
@@ -124,7 +124,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 if (selectedItem != null)
                 {
-                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = selectedItem.OrderID }, silent: true);
+                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = selectedItem.Id }, silent: true);
                 }
             }
             catch (Exception ex)

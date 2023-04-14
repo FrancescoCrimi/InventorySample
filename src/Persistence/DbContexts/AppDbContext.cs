@@ -176,7 +176,6 @@ namespace Inventory.Persistence.DbContexts
             modelBuilder.Entity<Order>().Property(x => x.ShipAddress).HasColumnName(@"ShipAddress").ValueGeneratedNever().HasMaxLength(120);
             modelBuilder.Entity<Order>().Property(x => x.ShipCity).HasColumnName(@"ShipCity").ValueGeneratedNever().HasMaxLength(30);
             modelBuilder.Entity<Order>().Property(x => x.ShipRegion).HasColumnName(@"ShipRegion").ValueGeneratedNever().HasMaxLength(50);
-            modelBuilder.Entity<Order>().Property(x => x.ShipCountryCode).HasColumnName(@"ShipCountryCode").ValueGeneratedNever().HasMaxLength(2);
             modelBuilder.Entity<Order>().Property(x => x.ShipPostalCode).HasColumnName(@"ShipPostalCode").ValueGeneratedNever().HasMaxLength(15);
             modelBuilder.Entity<Order>().Property(x => x.ShipPhone).HasColumnName(@"ShipPhone").ValueGeneratedNever().HasMaxLength(20);
             modelBuilder.Entity<Order>().Property(x => x.LastModifiedOn).HasColumnName(@"LastModifiedOn").IsRequired().ValueGeneratedNever();
@@ -184,12 +183,13 @@ namespace Inventory.Persistence.DbContexts
             modelBuilder.Entity<Order>().Property(x => x.StatusId).HasColumnName(@"StatusId").ValueGeneratedNever();
             modelBuilder.Entity<Order>().Property(x => x.PaymentTypeId).HasColumnName(@"PaymentTypeId").ValueGeneratedNever();
             modelBuilder.Entity<Order>().Property(x => x.ShipperId).HasColumnName(@"ShipperId").ValueGeneratedNever();
+            modelBuilder.Entity<Order>().Property(x => x.ShipCountryId).HasColumnName(@"ShipCountryId").ValueGeneratedNever();
             modelBuilder.Entity<Order>().HasKey(@"Id");
         }
 
         private void OrderStatusMapping(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderStatus>().ToTable(@"OrderStatus");
+            modelBuilder.Entity<OrderStatus>().ToTable(@"OrderStatuses");
             modelBuilder.Entity<OrderStatus>().Property(x => x.Id).HasColumnName(@"Id").IsRequired().ValueGeneratedNever();
             modelBuilder.Entity<OrderStatus>().Property(x => x.Name).HasColumnName(@"Name").IsRequired().ValueGeneratedNever().HasMaxLength(50);
             modelBuilder.Entity<OrderStatus>().HasKey(@"Id");
@@ -261,6 +261,7 @@ namespace Inventory.Persistence.DbContexts
             modelBuilder.Entity<Order>().HasOne(x => x.Status).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"StatusId");
             modelBuilder.Entity<Order>().HasOne(x => x.PaymentType).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"PaymentTypeId");
             modelBuilder.Entity<Order>().HasOne(x => x.Shipper).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"ShipperId");
+            modelBuilder.Entity<Order>().HasOne(x => x.ShipCountry).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"ShipCountryId");
 
             modelBuilder.Entity<Product>().HasOne(x => x.Category).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"CategoryId");
             modelBuilder.Entity<Product>().HasOne(x => x.TaxType).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"TaxTypeId");

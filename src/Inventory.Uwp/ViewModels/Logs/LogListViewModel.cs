@@ -15,8 +15,8 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
+using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Models;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels.Common;

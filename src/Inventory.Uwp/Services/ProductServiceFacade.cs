@@ -20,7 +20,7 @@ namespace Inventory.Uwp.Services
 
         public Task<int> DeleteProductAsync(ProductDto model)
         {
-            var product = new Product { Id = model.ProductID };
+            var product = new Product { Id = model.Id };
             return productService.DeleteProductAsync(product);
         }
 
@@ -32,7 +32,7 @@ namespace Inventory.Uwp.Services
         public async Task<ProductDto> GetProductAsync(long id)
         {
             var product = await productService.GetProductAsync(id);
-            var model = await DtoAssembler.CreateProductModelAsync(product, includeAllFields: true, null);
+            var model = DtoAssembler.DtoFromProduct(product, includeAllFields: true);
             return model;
         }
 
@@ -42,7 +42,7 @@ namespace Inventory.Uwp.Services
             var products = await productService.GetProductsAsync(skip, take, request);
             foreach (var item in products)
             {
-                var dto = await DtoAssembler.CreateProductModelAsync(item, includeAllFields: false, dispatcher);
+                var dto = DtoAssembler.DtoFromProduct(item, includeAllFields: false);
                 models.Add(dto);
             }
             return models;
@@ -55,16 +55,16 @@ namespace Inventory.Uwp.Services
 
         public async Task<int> UpdateProductAsync(ProductDto model)
         {
-            long id = model.ProductID;
+            long id = model.Id;
             int rtn = 0;
-            Product product = id > 0 ? await productService.GetProductAsync(model.ProductID) : new Product();
+            Product product = id > 0 ? await productService.GetProductAsync(model.Id) : new Product();
             if (product != null)
             {
-                DtoAssembler.UpdateProductFromModel(product, model);
+                DtoAssembler.UpdateProductFromDto(product, model);
                 rtn = await productService.UpdateProductAsync(product);
                 // TODO: verificare l'effetiva utilità nel'aggiornare l'oggetto nodel
                 var item = await productService.GetProductAsync(id);
-                var newmodel = await DtoAssembler.CreateProductModelAsync(item, includeAllFields: true, null);
+                var newmodel = DtoAssembler.DtoFromProduct(item, includeAllFields: true);
                 model.Merge(newmodel);
             }
             return rtn;

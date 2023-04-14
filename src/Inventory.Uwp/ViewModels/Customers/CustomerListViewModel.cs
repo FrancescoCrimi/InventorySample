@@ -126,7 +126,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerID = SelectedItem.CustomerID });
+                await windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerID = SelectedItem.Id });
             }
         }
 

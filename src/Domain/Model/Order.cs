@@ -20,16 +20,8 @@ using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
-    [Table("Orders")]
     public partial class Order : ObservableObject<Order>
     {
-        [Required]
-        public long CustomerId
-        {
-            get; set;
-        }
-
-        [Required]
         public DateTimeOffset OrderDate
         {
             get; set;
@@ -42,66 +34,30 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
-
-        [Required]
-        public int StatusId
-        {
-            get; set;
-        }
-
-        public int? PaymentTypeId
-        {
-            get; set;
-        }
-
-        [MaxLength(50)]
         public string TrackingNumber
         {
             get; set;
         }
-
-        public int? ShipperId
-        {
-            get; set;
-        }
-
-        [MaxLength(120)]
         public string ShipAddress
         {
             get; set;
         }
-
-        [MaxLength(30)]
         public string ShipCity
         {
             get; set;
         }
-
-        [MaxLength(50)]
         public string ShipRegion
         {
             get; set;
         }
-
-        [MaxLength(2)]
-        public string ShipCountryCode
-        {
-            get; set;
-        }
-
-        [MaxLength(15)]
         public string ShipPostalCode
         {
             get; set;
         }
-
-        [MaxLength(20)]
         public string ShipPhone
         {
             get; set;
         }
-
-        [Required]
         public DateTimeOffset LastModifiedOn
         {
             get; set;
@@ -112,38 +68,54 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
+        public long CustomerId
+        {
+            get; set;
+        }
+        public int? PaymentTypeId
+        {
+            get; set;
+        }
+        public long ShipCountryId
+        {
+            get; set;
+        }
+        public int? ShipperId
+        {
+            get; set;
+        }
+        public int StatusId
+        {
+            get; set;
+        }
 
 
         public virtual Customer Customer
         {
             get; set;
         }
-
+        public virtual PaymentType PaymentType
+        {
+            get; set;
+        }
+        public virtual Shipper Shipper
+        {
+            get; set;
+        }
+        public virtual Country ShipCountry
+        {
+            get; set;
+        }
+        public virtual OrderStatus Status
+        {
+            get; set;
+        }
         public virtual ICollection<OrderItem> OrderItems
         {
             get; set;
         }
 
-        public virtual OrderStatus Status
-        {
-            get; set;
-        }
-
-        public virtual PaymentType PaymentType
-        {
-            get; set;
-        }
-
-        public virtual Shipper Shipper
-        {
-            get; set;
-        }
-
-
-
         public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
-
-
 
         [NotMapped]
         public bool CanEditPayment => StatusId > 0;

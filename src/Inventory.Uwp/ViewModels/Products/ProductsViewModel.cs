@@ -73,7 +73,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             if (message.Message == "ItemSelected")
             {
-                if (message.Value.ProductID != 0)
+                if (message.Value.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
@@ -103,7 +103,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             try
             {
-                var model = await productService.GetProductAsync(selected.ProductID);
+                var model = await productService.GetProductAsync(selected.Id);
                 selected.Merge(model);
             }
             catch (Exception ex)

@@ -65,7 +65,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 try
                 {
                     var item = await productService.GetProductAsync(ViewModelArgs.ProductID);
-                    Item = item ?? new ProductDto { ProductID = ViewModelArgs.ProductID, IsEmpty = true };
+                    Item = item ?? new ProductDto { Id = ViewModelArgs.ProductID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +75,7 @@ namespace Inventory.Uwp.ViewModels.Products
         }
         public void Unload()
         {
-            ViewModelArgs.ProductID = Item.ProductID;
+            ViewModelArgs.ProductID = Item.Id;
         }
 
         public void Subscribe()
@@ -98,7 +98,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             return new ProductDetailsArgs
             {
-                ProductID = Item.ProductID
+                ProductID = Item.Id
             };
         }
 
@@ -123,9 +123,9 @@ namespace Inventory.Uwp.ViewModels.Products
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
-                EditableItem.PictureSource = result.ImageSource;
+                //EditableItem.PictureSource = result.ImageSource;
                 EditableItem.Thumbnail = result.ImageBytes;
-                EditableItem.ThumbnailSource = result.ImageSource;
+                //EditableItem.ThumbnailSource = result.ImageSource;
                 NewPictureSource = result.ImageSource;
             }
             else
@@ -142,7 +142,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 await Task.Delay(100);
                 await productService.UpdateProductAsync(model);
                 EndStatusMessage("Product saved");
-                logger.LogInformation($"Product {model.ProductID} '{model.Name}' was saved successfully.");
+                logger.LogInformation($"Product {model.Id} '{model.Name}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
@@ -161,7 +161,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 await Task.Delay(100);
                 await productService.DeleteProductAsync(model);
                 EndStatusMessage("Product deleted");
-                logger.LogWarning($"Product {model.ProductID} '{model.Name}' was deleted.");
+                logger.LogWarning($"Product {model.Id} '{model.Name}' was deleted.");
                 return true;
             }
             catch (Exception ex)
@@ -180,7 +180,7 @@ namespace Inventory.Uwp.ViewModels.Products
         protected override IEnumerable<IValidationConstraint<ProductDto>> GetValidationConstraints(ProductDto model)
         {
             yield return new RequiredConstraint<ProductDto>("Name", m => m.Name);
-            yield return new RequiredGreaterThanZeroConstraint<ProductDto>("Category", m => m.CategoryID);
+            yield return new RequiredGreaterThanZeroConstraint<ProductDto>("Category", m => m.CategoryId);
         }
 
         /*
@@ -196,7 +196,7 @@ namespace Inventory.Uwp.ViewModels.Products
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.ProductID == current?.ProductID)
+                if (message.Value != null && message.Value.Id == current?.Id)
                 {
                     switch (message.Message)
                     {
@@ -205,8 +205,8 @@ namespace Inventory.Uwp.ViewModels.Products
                             //{
                             try
                             {
-                                var item = await productService.GetProductAsync(current.ProductID);
-                                item = item ?? new ProductDto { ProductID = current.ProductID, IsEmpty = true };
+                                var item = await productService.GetProductAsync(current.Id);
+                                item = item ?? new ProductDto { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
                                 OnPropertyChanged(nameof(Title));
@@ -240,7 +240,7 @@ namespace Inventory.Uwp.ViewModels.Products
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await productService.GetProductAsync(current.ProductID);
+                            var model = await productService.GetProductAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -265,7 +265,7 @@ namespace Inventory.Uwp.ViewModels.Products
                     case "ItemsDeleted":
                         //if (args is IList<ProductModel> deletedModels)
                         //{
-                        if (message.Value.Any(r => r.ProductID == current.ProductID))
+                        if (message.Value.Any(r => r.Id == current.Id))
                         {
                             await OnItemDeletedExternally();
                         }

@@ -13,47 +13,51 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.Models;
+using Inventory.Domain.Model;
 using Inventory.Uwp.Services;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderItemDto : ObservableObject
+    public class OrderItemDto : ObservableDto
     {
-        public long OrderID { get; set; }
-        public int OrderLine { get; set; }
-
-        public long ProductID { get; set; }
-
         private int _quantity;
+        private int _taxTypeId;
+        private decimal _discount;
+        private TaxTypeDto _taxTypeDto;
+
+        public long Id { get; set; }
+        public int OrderLine { get; set; }
         public int Quantity
         {
             get => _quantity;
             set { if (SetProperty(ref _quantity, value)) UpdateTotals(); }
         }
-
-        private int _taxType;
-        public int TaxType
-        {
-            get => _taxType;
-            set { if (SetProperty(ref _taxType, value)) UpdateTotals(); }
-        }
-
-        private decimal _discount;
+        public decimal UnitPrice { get; set; }
         public decimal Discount
         {
             get => _discount;
             set { if (SetProperty(ref _discount, value)) UpdateTotals(); }
         }
 
-        public decimal UnitPrice { get; set; }
+        public long OrderId { get; set; }
+        public long ProductId { get; set; }
+        public int TaxTypeId
+        {
+            get => _taxTypeId;
+            set { if (SetProperty(ref _taxTypeId, value)) UpdateTotals(); }
+        }
+
+        public OrderDto Order { get; set; }
+        public ProductDto Product { get; set; }
+        public TaxTypeDto TaxType
+        {
+            get => _taxTypeDto;
+            set { if (SetProperty(ref _taxTypeDto, value)) UpdateTotals(); }
+        }
+
 
         public decimal Subtotal => Quantity * UnitPrice;
-
-        public decimal Total => (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
-
-        public ProductDto Product { get; set; }
-
+        public decimal Total => (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxTypeId) / 100m);
         public bool IsNew => OrderLine <= 0;
 
         private void UpdateTotals()
@@ -62,7 +66,7 @@ namespace Inventory.Uwp.Dto
             OnPropertyChanged(nameof(Total));
         }
 
-        public override void Merge(ObservableObject source)
+        public override void Merge(ObservableDto source)
         {
             if (source is OrderItemDto model)
             {
@@ -74,14 +78,19 @@ namespace Inventory.Uwp.Dto
         {
             if (source != null)
             {
-                OrderID = source.OrderID;
+                Id = source.Id;
                 OrderLine = source.OrderLine;
-                ProductID = source.ProductID;
                 Quantity = source.Quantity;
                 UnitPrice = source.UnitPrice;
                 Discount = source.Discount;
-                TaxType = source.TaxType;
+
+                OrderId = source.OrderId;
+                ProductId = source.ProductId;
+                TaxTypeId = source.TaxTypeId;
+
+                Order = source.Order;
                 Product = source.Product;
+                TaxType = source.TaxType;
             }
         }
     }

@@ -81,7 +81,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (message.Message == "ItemSelected")
             {
-                if (message.Value.CustomerID != 0)
+                if (message.Value.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();
@@ -113,38 +113,40 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 if (selected != null && !selected.IsEmpty)
                 {
-                    await PopulateDetails(selected);
-                    await PopulateOrders(selected);
+                    await PopulateDetails(selected.Id);
+                    await PopulateOrders(selected.Id);
                 }
             }
-            CustomerDetails.Item = selected;
+            //CustomerDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(CustomerDto selected)
+        private async Task PopulateDetails(long selectedCustomerId)
         {
-            try
+            if (selectedCustomerId > 0)
             {
-                var model = await customerService.GetCustomerAsync(selected.CustomerID);
-                selected.Merge(model);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Load Details");
-            }
-        }
-
-        private async Task PopulateOrders(CustomerDto selectedItem)
-        {
-            try
-            {
-                if (selectedItem != null)
+                try
                 {
-                    await CustomerOrders.LoadAsync(new OrderListArgs { CustomerID = selectedItem.CustomerID }, silent: true);
+                    await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerID = selectedCustomerId });
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Load Details");
                 }
             }
-            catch (Exception ex)
+        }
+
+        private async Task PopulateOrders(long selectedCustomerId)
+        {
+            if (selectedCustomerId > 0)
             {
-                logger.LogError(ex, "Load Orders");
+                try
+                {
+                    await CustomerOrders.LoadAsync(new OrderListArgs { CustomerID = selectedCustomerId }, silent: true);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Load Orders");
+                }
             }
         }
     }

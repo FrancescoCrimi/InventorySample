@@ -12,14 +12,23 @@
 // ******************************************************************
 #endregion
 
+using Microsoft.Extensions.Logging;
 using System;
 
-namespace Inventory.Uwp.Models
+namespace Inventory.Uwp.Dto
 {
-    public class ShipperModel : ObservableObject
+    public class LogModel : ObservableDto
     {
-        public int ShipperID { get; set; }
-        public string Name { get; set; }
-        public string Phone { get; set; }
+        public static LogModel CreateEmpty() => new LogModel { Id = -1, IsEmpty = true };
+
+        public long Id { get; set; }
+        public bool IsRead { get; set; }
+        public DateTimeOffset DateTime { get; set; }
+        public string User { get; set; }
+        public LogLevel Level { get; set; }
+        public string Source { get; set; }
+        public string Action { get; set; }
+        public string Message { get; set; }
+        public string Description { get; set; }
     }
 }

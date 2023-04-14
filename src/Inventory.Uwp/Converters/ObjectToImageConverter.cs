@@ -13,8 +13,12 @@
 #endregion
 
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Inventory.Uwp.Converters
 {
@@ -22,15 +26,29 @@ namespace Inventory.Uwp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is ImageSource imageSource)
+            switch (value)
             {
-                return imageSource;
+                case byte[] bytearray when bytearray.Length > 0:
+                    {
+                        var bitmap = new BitmapImage();
+                        _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                        {
+                            using (var stream = new InMemoryRandomAccessStream())
+                            {
+                                await stream.WriteAsync(bytearray.AsBuffer());
+                                stream.Seek(0);
+                                await bitmap.SetSourceAsync(stream);
+                            }
+                        });
+                        return bitmap;
+                    }
+                case ImageSource imageSource:
+                    return imageSource;
+                case string url:
+                    return url;
+                default:
+                    return null;
             }
-            if (value is string url)
-            {
-                return url;
-            }
-            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

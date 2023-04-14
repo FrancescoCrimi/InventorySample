@@ -1,10 +1,7 @@
 ﻿using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Models;
-using System;
+using Inventory.Uwp.Dto;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services

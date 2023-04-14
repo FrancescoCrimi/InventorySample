@@ -79,7 +79,7 @@ namespace Inventory.Application.Impl
                         order.ShipAddress = customer.AddressLine1;
                         order.ShipCity = customer.City;
                         order.ShipRegion = customer.Region;
-                        order.ShipCountryCode = customer.Country.Code;
+                        order.ShipCountryId = customer.CountryId;
                         order.ShipPostalCode = customer.PostalCode;
                         //order.Customer = CustomerService.CreateCustomerModelAsync(customer, includeAllFields: true);
                         order.Customer = customer;
