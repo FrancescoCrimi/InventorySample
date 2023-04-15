@@ -35,13 +35,13 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerListViewModel : GenericListViewModel<Customer>
     {
         private readonly ILogger<CustomerListViewModel> _logger;
-        private readonly ICustomerService _customerService;
+        private readonly CustomerService _customerService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly CustomerCollection collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
-                                     ICustomerService customerService,
+                                     CustomerService customerService,
                                      NavigationService navigationService,
                                      WindowManagerService windowService)
             : base()

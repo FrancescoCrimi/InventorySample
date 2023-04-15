@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Inventory.Application.Impl
+namespace Inventory.Application
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService
     {
         private readonly ILogger<CustomerService> logger;
         private readonly IServiceProvider serviceProvider;

@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
@@ -22,9 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Inventory.Application.Impl
+namespace Inventory.Application
 {
-    public class OrderService : IOrderService
+    public class OrderService
     {
         private readonly IServiceProvider serviceProvider;
 

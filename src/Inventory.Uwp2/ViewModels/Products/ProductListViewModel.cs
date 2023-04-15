@@ -35,13 +35,13 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductListViewModel : GenericListViewModel<Product>
     {
         private readonly ILogger<ProductListViewModel> _logger;
-        private readonly IProductService _productService;
+        private readonly ProductService _productService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly ProductCollection _collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
-                                    IProductService productService,
+                                    ProductService productService,
                                     NavigationService navigationService,
                                     WindowManagerService windowService)
             : base()

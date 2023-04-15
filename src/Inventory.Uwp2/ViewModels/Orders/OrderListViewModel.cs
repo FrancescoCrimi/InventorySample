@@ -35,13 +35,13 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrderListViewModel : GenericListViewModel<Order>
     {
         private readonly ILogger<OrderListViewModel> _logger;
-        private readonly IOrderService _orderService;
+        private readonly OrderService _orderService;
         private readonly WindowManagerService _windowService;
         private readonly NavigationService _navigationService;
         private readonly OrderCollection _collection;
 
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
-                                  IOrderService orderService,
+                                  OrderService orderService,
                                   WindowManagerService windowService,
                                   NavigationService navigationService)
             : base()

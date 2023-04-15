@@ -1,5 +1,4 @@
-﻿using Inventory.Application.Impl;
-using Inventory.Infrastructure;
+﻿using Inventory.Infrastructure;
 using Inventory.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -17,10 +16,10 @@ namespace Inventory.Application
                 .AddInventoryPersistence()
                 //.AddSingleton<ILogService, LogService>()
                 //.AddSingleton<ILookupTableService, LookupTableService>()
-                .AddSingleton<ICustomerService, CustomerService>()
-                .AddSingleton<IOrderService, OrderService>()
-                .AddSingleton<IOrderItemService, OrderItemService>()
-                .AddSingleton<IProductService, ProductService>();
+                .AddSingleton<CustomerService>()
+                .AddSingleton<OrderService>()
+                .AddSingleton<OrderItemService>()
+                .AddSingleton<ProductService>();
             return serviceCollection;
         }
     }

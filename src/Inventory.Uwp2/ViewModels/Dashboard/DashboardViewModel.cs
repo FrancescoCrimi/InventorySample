@@ -37,9 +37,9 @@ namespace Inventory.Uwp.ViewModels.Dashboard
     {
         private readonly ILogger<DashboardViewModel> _logger;
         private readonly NavigationService _navigationService;
-        private readonly ICustomerService _customerService;
-        private readonly IOrderService _orderService;
-        private readonly IProductService _productService;
+        private readonly CustomerService _customerService;
+        private readonly OrderService _orderService;
+        private readonly ProductService _productService;
         private readonly AsyncRelayCommand _loadedCommand;
         private readonly RelayCommand _unLoadedCommand;
         private readonly RelayCommand<ItemClickEventArgs> _itemClickCommand;
@@ -49,9 +49,9 @@ namespace Inventory.Uwp.ViewModels.Dashboard
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   NavigationService navigationService,
-                                  ICustomerService customerService,
-                                  IOrderService orderService,
-                                  IProductService productService)
+                                  CustomerService customerService,
+                                  OrderService orderService,
+                                  ProductService productService)
             : base()
         {
             _logger = logger;

@@ -9,9 +9,9 @@ namespace Inventory.Uwp.Services
 {
     public class CustomerServiceFacade /*: ICustomerService*/
     {
-        private readonly ICustomerService customerService;
+        private readonly CustomerService customerService;
 
-        public CustomerServiceFacade(ICustomerService customerService)
+        public CustomerServiceFacade(CustomerService customerService)
         {
             this.customerService = customerService;
         }

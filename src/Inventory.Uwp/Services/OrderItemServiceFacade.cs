@@ -9,9 +9,9 @@ namespace Inventory.Uwp.Services
 {
     public class OrderItemServiceFacade /*: IOrderItemService*/
     {
-        private readonly IOrderItemService orderItemService;
+        private readonly OrderItemService orderItemService;
 
-        public OrderItemServiceFacade(IOrderItemService orderItemService)
+        public OrderItemServiceFacade(OrderItemService orderItemService)
         {
             this.orderItemService = orderItemService;
         }

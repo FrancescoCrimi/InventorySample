@@ -31,10 +31,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItem>
     {
         private readonly ILogger<OrderItemDetailsViewModel> _logger;
-        private readonly IOrderItemService _orderItemService;
+        private readonly OrderItemService _orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
-                                         IOrderItemService orderItemService)
+                                         OrderItemService orderItemService)
             : base()
         {
             _logger = logger;

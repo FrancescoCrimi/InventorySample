@@ -32,11 +32,11 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerDetailsViewModel : GenericDetailsViewModel<Customer>
     {
         private readonly ILogger<CustomerDetailsViewModel> _logger;
-        private readonly ICustomerService _customerService;
+        private readonly CustomerService _customerService;
         private readonly FilePickerService _filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
-                                        ICustomerService customerService,
+                                        CustomerService customerService,
                                         FilePickerService filePickerService)
             : base()
         {

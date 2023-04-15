@@ -24,10 +24,10 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class OrderCollection : VirtualRangeCollection<Order>
     {
-        private readonly IOrderService _orderService;
+        private readonly OrderService _orderService;
         private DataRequest<Order> _request;
 
-        public OrderCollection(IOrderService orderService)
+        public OrderCollection(OrderService orderService)
         {
             _orderService = orderService;
         }

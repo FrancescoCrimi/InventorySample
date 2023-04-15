@@ -24,10 +24,10 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class CustomerCollection : VirtualRangeCollection<Customer>
     {
-        private readonly ICustomerService _customerService;
+        private readonly CustomerService _customerService;
         private DataRequest<Customer> dataRequest;
 
-        public CustomerCollection(ICustomerService customerService)
+        public CustomerCollection(CustomerService customerService)
         {
             _customerService = customerService;
         }

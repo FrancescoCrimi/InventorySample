@@ -34,12 +34,12 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                ProductService = Ioc.Default.GetService<IProductService>();
+                ProductService = Ioc.Default.GetService<ProductService>();
             }
             InitializeComponent();
         }
 
-        private IProductService ProductService { get; }
+        private ProductService ProductService { get; }
 
         #region Items
         public IList<Product> Items

@@ -13,10 +13,10 @@ namespace Inventory.Uwp.Services
 {
     public class OrderServiceFacade /*: IOrderService*/
     {
-        private readonly IOrderService orderService;
+        private readonly OrderService orderService;
         private readonly IServiceProvider serviceProvider;
 
-        public OrderServiceFacade(IOrderService orderService, IServiceProvider serviceProvider)
+        public OrderServiceFacade(OrderService orderService, IServiceProvider serviceProvider)
         {
             this.orderService = orderService;
             this.serviceProvider = serviceProvider;
