@@ -23,28 +23,30 @@
                 <ResourceDictionary Source="/Styles/ToolBar.xaml" />
                 <ResourceDictionary Source="/Styles/Cards.xaml" />
 
+                <ResourceDictionary Source="ms-appx:///Inventory.Uwp.Library/Library.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
 
             <SolidColorBrush x:Key="DetailsViewBackgroundColor"
                              Color="#F5F5F5" />
 
             <!--  Converters  -->
-            <converters:BindingTypeConverter x:Key="BindingTypeConverter" />
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
+            <!--<converters:BindingTypeConverter x:Key="BindingTypeConverter" />-->
+            <!--<converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                                   FalseValue="Collapsed"
                                                   TrueValue="Visible" />
             <converters:BoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"
                                                   FalseValue="Visible"
-                                                  TrueValue="Collapsed" />
-            <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-            <converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
+                                                  TrueValue="Collapsed" />-->
+            <!--<converters:BoolNegationConverter x:Key="BoolNegationConverter" />-->
+            <!--<converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter" />
             <converters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
             <converters:DecimalConverter x:Key="DecimalConverter" />
             <converters:Int32Converter x:Key="Int32Converter" />
 
             <converters:LogLevelConverter x:Key="LogLevelConverter" />
-            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
-            <converters:ObjectToImageConverter x:Key="ObjectToImageConverter" />
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />-->
+            <!--<converters:ObjectToImageConverter x:Key="ObjectToImageConverter" />-->
 
         </ResourceDictionary>
     </Application.Resources>

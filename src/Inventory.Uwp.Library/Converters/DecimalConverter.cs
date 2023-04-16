@@ -15,18 +15,29 @@
 using System;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Uwp.Converters
+namespace Inventory.Uwp.Library.Converters
 {
-    public sealed class BoolNegationConverter : IValueConverter
+    public sealed class DecimalConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return !(value is bool && (bool)value);
+            if (value is decimal m)
+            {
+                return m == 0 ? "" : m.ToString();
+            }
+            return "";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return !(value is bool && (bool)value);
+            if (value != null)
+            {
+                if (Decimal.TryParse(value.ToString(), out decimal m))
+                {
+                    return m;
+                }
+            }
+            return 0m;
         }
     }
 }

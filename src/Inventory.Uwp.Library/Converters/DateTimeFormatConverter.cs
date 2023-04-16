@@ -3,7 +3,7 @@ using Windows.Globalization.DateTimeFormatting;
 using Windows.System.UserProfile;
 using Windows.UI.Xaml.Data;
 
-namespace Inventory.Uwp.Converters
+namespace Inventory.Uwp.Library.Converters
 {
     public class DateTimeFormatConverter : IValueConverter
     {

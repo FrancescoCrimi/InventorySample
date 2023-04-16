@@ -12,7 +12,7 @@
 
     <UserControl.Resources>
 
-        <converters:DateTimeFormatConverter x:Name="dateTimeFormatConverter" />
+        <!--<converters:DateTimeFormatConverter x:Name="dateTimeFormatConverter" />-->
 
         <DataTemplate x:Key="HeaderTemplate"
                       x:DataType="models:Order">
@@ -49,7 +49,7 @@
                            Text="{x:Bind CustomerId}"
                            Style="{StaticResource ColumnValueStyle}" />
                 <TextBlock Grid.Column="2"
-                           Text="{x:Bind OrderDate, Converter={StaticResource dateTimeFormatConverter}, Mode=OneWay}"
+                           Text="{x:Bind OrderDate, Converter={StaticResource DateTimeFormatConverter}, Mode=OneWay}"
                            Style="{StaticResource ColumnValueStyle}" />
             </Grid>
         </DataTemplate>

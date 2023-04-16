@@ -146,16 +146,6 @@
     <Compile Include="Common\Result.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
-    <Compile Include="Converters\BindingTypeConverter.cs" />
-    <Compile Include="Converters\BoolNegationConverter.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\DateTimeFormatConverter.cs" />
-    <Compile Include="Converters\DateTimeOffsetConverter.cs" />
-    <Compile Include="Converters\DecimalConverter.cs" />
-    <Compile Include="Converters\Int32Converter.cs" />
-    <Compile Include="Converters\LogLevelConverter.cs" />
-    <Compile Include="Converters\NullToVisibilityConverter.cs" />
-    <Compile Include="Converters\ObjectToImageConverter.cs" />
     <Compile Include="Dto\Assembler\DtoAssembler.cs" />
     <Compile Include="Dto\Assembler\DtoAssembler.Customer.cs" />
     <Compile Include="Dto\Assembler\DtoAssembler.Order.cs" />
@@ -606,7 +596,9 @@
       <Name>Inventory.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Converters\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

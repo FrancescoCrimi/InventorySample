@@ -4,7 +4,7 @@ using Windows.UI;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
-namespace Inventory.Uwp.Converters
+namespace Inventory.Uwp.Library.Converters
 {
     public sealed class LogLevelConverter : IValueConverter
     {

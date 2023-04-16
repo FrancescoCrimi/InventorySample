@@ -20,41 +20,40 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace Inventory.Uwp.Converters
+namespace Inventory.Uwp.Library.Converters
 {
-    //public sealed class ObjectToImageConverter : IValueConverter
-    //{
-    //    public object Convert(object value, Type targetType, object parameter, string language)
-    //    {
-    //        switch (value)
-    //        {
-    //            case byte[] bytearray when bytearray.Length > 0:
-    //                {
-    //                    var bitmap = new BitmapImage();
-    //                    _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-    //                    {
-    //                        using (var stream = new InMemoryRandomAccessStream())
-    //                        {
-    //                            await stream.WriteAsync(bytearray.AsBuffer());
-    //                            stream.Seek(0);
-    //                            await bitmap.SetSourceAsync(stream);
-    //                        }
-    //                    });
-    //                    return bitmap;
-    //                }
+    public sealed class ObjectToImageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            switch (value)
+            {
+                case byte[] bytearray when bytearray.Length > 0:
+                    {
+                        var bitmap = new BitmapImage();
+                        _ = Window.Current.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                        {
+                            using (var stream = new InMemoryRandomAccessStream())
+                            {
+                                await stream.WriteAsync(bytearray.AsBuffer());
+                                stream.Seek(0);
+                                await bitmap.SetSourceAsync(stream);
+                            }
+                        });
+                        return bitmap;
+                    }
+                case ImageSource imageSource:
+                    return imageSource;
+                case string url:
+                    return url;
+                default:
+                    return null;
+            }
+        }
 
-    //            case ImageSource imageSource:
-    //                return imageSource;
-    //            case string url:
-    //                return url;
-    //            default:
-    //                return null;
-    //        }
-    //    }
-
-    //    public object ConvertBack(object value, Type targetType, object parameter, string language)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
