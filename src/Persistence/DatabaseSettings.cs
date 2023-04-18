@@ -49,7 +49,7 @@ namespace Inventory.Persistence
         public string GetDbVersion()
         {
             var dbv = dbContext.DbVersion.FirstOrDefault();
-            return dbv != null ? dbv.Version : null;
+            return dbv?.Version;
         }
 
         public Task<bool> EnsureCreatedAsync(CancellationToken cancellationToken = default)

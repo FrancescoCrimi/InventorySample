@@ -43,8 +43,8 @@ namespace Inventory.Uwp.Library.Controls
         #region DataType
         public TextDataType DataType
         {
-            get { return (TextDataType)GetValue(DataTypeProperty); }
-            set { SetValue(DataTypeProperty, value); }
+            get => (TextDataType)GetValue(DataTypeProperty);
+            set => SetValue(DataTypeProperty, value);
         }
 
         public static readonly DependencyProperty DataTypeProperty = DependencyProperty.Register(nameof(DataType), typeof(TextDataType), typeof(FormTextBox), new PropertyMetadata(TextDataType.String, OnPropertyChanged));
@@ -53,8 +53,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Format
         public string Format
         {
-            get { return (string)GetValue(FormatProperty); }
-            set { SetValue(FormatProperty, value); }
+            get => (string)GetValue(FormatProperty);
+            set => SetValue(FormatProperty, value);
         }
 
         public static readonly DependencyProperty FormatProperty = DependencyProperty.Register(nameof(Format), typeof(string), typeof(FormTextBox), new PropertyMetadata(null, OnPropertyChanged));
@@ -63,8 +63,8 @@ namespace Inventory.Uwp.Library.Controls
         #region FormattedText
         public string FormattedText
         {
-            get { return (string)GetValue(FormattedTextProperty); }
-            set { SetValue(FormattedTextProperty, value); }
+            get => (string)GetValue(FormattedTextProperty);
+            set => SetValue(FormattedTextProperty, value);
         }
 
         public static readonly DependencyProperty FormattedTextProperty = DependencyProperty.Register(nameof(FormattedText), typeof(string), typeof(FormTextBox), new PropertyMetadata(null, OnPropertyChanged));
@@ -73,8 +73,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Mode*
         public FormEditMode Mode
         {
-            get { return (FormEditMode)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get => (FormEditMode)GetValue(ModeProperty);
+            set => SetValue(ModeProperty, value);
         }
 
         private static void ModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

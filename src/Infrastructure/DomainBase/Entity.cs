@@ -13,14 +13,8 @@ namespace Inventory.Infrastructure.DomainBase
         [DataMember]
         public virtual TId Id
         {
-            get
-            {
-                return id;
-            }
-            protected set
-            {
-                id = value;
-            }
+            get => id;
+            protected set => id = value;
         }
 
         public virtual event PropertyChangedEventHandler PropertyChanged;

@@ -30,8 +30,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Query
         public string Query
         {
-            get { return (string)GetValue(QueryProperty); }
-            set { SetValue(QueryProperty, value); }
+            get => (string)GetValue(QueryProperty);
+            set => SetValue(QueryProperty, value);
         }
 
         public static readonly DependencyProperty QueryProperty = DependencyProperty.Register("Query", typeof(string), typeof(Search), new PropertyMetadata(null));

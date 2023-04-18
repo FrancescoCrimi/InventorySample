@@ -24,8 +24,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Columns
         public int Columns
         {
-            get { return (int)GetValue(ColumnsProperty); }
-            set { SetValue(ColumnsProperty, value); }
+            get => (int)GetValue(ColumnsProperty);
+            set => SetValue(ColumnsProperty, value);
         }
 
         public static readonly DependencyProperty ColumnsProperty = DependencyProperty.Register(nameof(Columns), typeof(int), typeof(FluidGrid), new PropertyMetadata(2));
@@ -34,8 +34,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ColumnWidth
         public double ColumnWidth
         {
-            get { return (double)GetValue(ColumnWidthProperty); }
-            set { SetValue(ColumnWidthProperty, value); }
+            get => (double)GetValue(ColumnWidthProperty);
+            set => SetValue(ColumnWidthProperty, value);
         }
 
         public static readonly DependencyProperty ColumnWidthProperty = DependencyProperty.Register(nameof(ColumnWidth), typeof(double), typeof(FluidGrid), new PropertyMetadata(0.0));
@@ -44,8 +44,8 @@ namespace Inventory.Uwp.Library.Controls
         #region MinColumnWidth
         public double MinColumnWidth
         {
-            get { return (double)GetValue(MinColumnWidthProperty); }
-            set { SetValue(MinColumnWidthProperty, value); }
+            get => (double)GetValue(MinColumnWidthProperty);
+            set => SetValue(MinColumnWidthProperty, value);
         }
 
         public static readonly DependencyProperty MinColumnWidthProperty = DependencyProperty.Register(nameof(MinColumnWidth), typeof(double), typeof(FluidGrid), new PropertyMetadata(180.0));
@@ -54,8 +54,8 @@ namespace Inventory.Uwp.Library.Controls
         #region MaxColumnWidth
         public double MaxColumnWidth
         {
-            get { return (double)GetValue(MaxColumnWidthProperty); }
-            set { SetValue(MaxColumnWidthProperty, value); }
+            get => (double)GetValue(MaxColumnWidthProperty);
+            set => SetValue(MaxColumnWidthProperty, value);
         }
 
         public static readonly DependencyProperty MaxColumnWidthProperty = DependencyProperty.Register(nameof(MaxColumnWidth), typeof(double), typeof(FluidGrid), new PropertyMetadata(360.0));
@@ -78,8 +78,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ColumnSpacing
         public double ColumnSpacing
         {
-            get { return (double)GetValue(ColumnSpacingProperty); }
-            set { SetValue(ColumnSpacingProperty, value); }
+            get => (double)GetValue(ColumnSpacingProperty);
+            set => SetValue(ColumnSpacingProperty, value);
         }
 
         public static readonly DependencyProperty ColumnSpacingProperty = DependencyProperty.Register(nameof(ColumnSpacing), typeof(double), typeof(FluidGrid), new PropertyMetadata(0.0));
@@ -88,8 +88,8 @@ namespace Inventory.Uwp.Library.Controls
         #region RowSpacing
         public double RowSpacing
         {
-            get { return (double)GetValue(RowSpacingProperty); }
-            set { SetValue(RowSpacingProperty, value); }
+            get => (double)GetValue(RowSpacingProperty);
+            set => SetValue(RowSpacingProperty, value);
         }
 
         public static readonly DependencyProperty RowSpacingProperty = DependencyProperty.Register(nameof(RowSpacing), typeof(double), typeof(FluidGrid), new PropertyMetadata(0.0));

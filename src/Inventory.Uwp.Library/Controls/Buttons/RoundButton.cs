@@ -28,7 +28,7 @@ namespace Inventory.Uwp.Library.Controls
 
         public double Radius
         {
-            get { return (double)GetValue(RadiusProperty); }
+            get => (double)GetValue(RadiusProperty);
             set
             {
                 SetValue(CornerRadiusProperty, new CornerRadius(value));
@@ -43,8 +43,8 @@ namespace Inventory.Uwp.Library.Controls
         #region CornerRadius
         public new CornerRadius CornerRadius
         {
-            get { return (CornerRadius)GetValue(CornerRadiusProperty); }
-            set { SetValue(CornerRadiusProperty, value); }
+            get => (CornerRadius)GetValue(CornerRadiusProperty);
+            set => SetValue(CornerRadiusProperty, value);
         }
 
         public static readonly new DependencyProperty CornerRadiusProperty = DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(RoundButton), new PropertyMetadata(new CornerRadius(0)));

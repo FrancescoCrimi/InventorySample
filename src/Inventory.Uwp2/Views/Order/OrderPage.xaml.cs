@@ -30,7 +30,7 @@ namespace Inventory.Uwp.Views.Orders
 
         public OrderDetailsWithItemsViewModel ViewModel { get; }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.Subscribe();
             await ViewModel.LoadAsync(e.Parameter as OrderDetailsArgs);

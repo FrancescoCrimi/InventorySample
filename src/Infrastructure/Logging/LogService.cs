@@ -138,10 +138,7 @@ namespace Inventory.Infrastructure.Logging
 
         public static void RaiseNewEventLog()
         {
-            if (AddLogEvent != null)
-            {
-                AddLogEvent.Invoke(null, new EventArgs());
-            }
+            AddLogEvent?.Invoke(null, new EventArgs());
         }
 
 

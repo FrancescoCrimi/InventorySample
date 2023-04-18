@@ -18,14 +18,14 @@
 
         <!--Toolbar-->
         <local:ListToolbar NewLabel="{x:Bind NewLabel, Mode=OneWay}"
-                              Query="{x:Bind Query, Mode=TwoWay}"
-                              QuerySubmitted="OnQuerySubmitted"
-                              ToolbarMode="{x:Bind ToolbarMode, Mode=OneWay}"
-                              ButtonClick="OnToolbarClick" />
+                           Query="{x:Bind Query, Mode=TwoWay}"
+                           QuerySubmitted="OnQuerySubmitted"
+                           ToolbarMode="{x:Bind ToolbarMode, Mode=OneWay}"
+                           ButtonClick="OnToolbarClick" />
 
         <!--Grid Content-->
         <Grid Grid.Row="2">
-                                       <!--
+            <!--
                                        DesiredWidth="240"
                                        ItemHeight="220"
                                        StretchContentForSingleRow="False"-->
@@ -33,16 +33,16 @@
                                          DesiredWidth="240"
                                          ItemHeight="220"
                                          StretchContentForSingleRow="False"
-                                       ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-                                       ItemTemplate="{x:Bind ItemTemplate}"
-                                       ItemContainerStyle="{StaticResource GridItemStyle}"
-                                       SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
-                                       SelectionMode="{x:Bind SelectionMode, Mode=OneWay}"
-                                       SelectionChanged="OnSelectionChanged"
-                                       IsItemClickEnabled="True"
-                                       DoubleTapped="OnDoubleTapped"
-                                       ItemClick="OnItemClick"
-                                       Visibility="{x:Bind IsDataAvailable, Mode=OneWay}" />
+                                         ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                                         ItemTemplate="{x:Bind ItemTemplate}"
+                                         ItemContainerStyle="{StaticResource GridItemStyle}"
+                                         SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+                                         SelectionMode="{x:Bind SelectionMode, Mode=OneWay}"
+                                         SelectionChanged="OnSelectionChanged"
+                                         IsItemClickEnabled="True"
+                                         DoubleTapped="OnDoubleTapped"
+                                         ItemClick="OnItemClick"
+                                         Visibility="{x:Bind IsDataAvailable, Mode=OneWay}" />
 
             <TextBlock Margin="6"
                        Text="{x:Bind DataUnavailableMessage, Mode=OneWay}"

@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:libControls="using:Inventory.Uwp.Library.Controls">
+                    xmlns:controls="using:Inventory.Uwp.Library.Controls">
 
-    <Style TargetType="libControls:FormAutoSuggestBox">
+    <Style TargetType="controls:FormAutoSuggestBox">
         <Setter Property="Padding"
                 Value="{ThemeResource TextControlThemePadding}" />
         <Setter Property="Background"
@@ -13,7 +13,7 @@
                 Value="1" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="libControls:FormAutoSuggestBox">
+                <ControlTemplate TargetType="controls:FormAutoSuggestBox">
                     <Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

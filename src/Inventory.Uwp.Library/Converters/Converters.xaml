@@ -15,7 +15,6 @@
     <converters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
     <converters:DecimalConverter x:Key="DecimalConverter" />
     <converters:Int32Converter x:Key="Int32Converter" />
-
     <converters:LogLevelConverter x:Key="LogLevelConverter" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
 

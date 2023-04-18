@@ -35,8 +35,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ToolbarMode
         public DetailToolbarMode ToolbarMode
         {
-            get { return (DetailToolbarMode)GetValue(ToolbarModeProperty); }
-            set { SetValue(ToolbarModeProperty, value); }
+            get => (DetailToolbarMode)GetValue(ToolbarModeProperty);
+            set => SetValue(ToolbarModeProperty, value);
         }
 
         private static void ToolbarModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -51,8 +51,8 @@ namespace Inventory.Uwp.Library.Controls
         #region DefaultCommands*
         public string DefaultCommands
         {
-            get { return (string)GetValue(DefaultCommandsProperty); }
-            set { SetValue(DefaultCommandsProperty, value); }
+            get => (string)GetValue(DefaultCommandsProperty);
+            set => SetValue(DefaultCommandsProperty, value);
         }
 
         private static void DefaultCommandsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

@@ -12,7 +12,7 @@ namespace Inventory.Infrastructure
 {
     public static class InfrastructureExtension
     {
-        static IAppSettings settings;
+        private static IAppSettings settings;
 
         public static IServiceCollection AddInventoryInfrastructure(this IServiceCollection serviceCollection)
         {
@@ -111,10 +111,7 @@ namespace Inventory.Infrastructure
 
         private static void Sucaaaaa(LogEventInfo arg1, object[] arg2)
         {
-            if (AddLogEvent != null)
-            {
-                AddLogEvent.Invoke(null, new EventArgs());
-            }
+            AddLogEvent?.Invoke(null, new EventArgs());
         }
 
         public static event EventHandler AddLogEvent;

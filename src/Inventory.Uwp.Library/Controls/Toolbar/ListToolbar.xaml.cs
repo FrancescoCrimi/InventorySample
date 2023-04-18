@@ -37,8 +37,8 @@ namespace Inventory.Uwp.Library.Controls
         #region NewLabel
         public string NewLabel
         {
-            get { return (string)GetValue(NewLabelProperty); }
-            set { SetValue(NewLabelProperty, value); }
+            get => (string)GetValue(NewLabelProperty);
+            set => SetValue(NewLabelProperty, value);
         }
 
         public static readonly DependencyProperty NewLabelProperty = DependencyProperty.Register(nameof(NewLabel), typeof(string), typeof(ListToolbar), new PropertyMetadata("New"));
@@ -47,8 +47,8 @@ namespace Inventory.Uwp.Library.Controls
         #region ToolbarMode
         public ListToolbarMode ToolbarMode
         {
-            get { return (ListToolbarMode)GetValue(ToolbarModeProperty); }
-            set { SetValue(ToolbarModeProperty, value); }
+            get => (ListToolbarMode)GetValue(ToolbarModeProperty);
+            set => SetValue(ToolbarModeProperty, value);
         }
 
         private static void ToolbarModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -63,8 +63,8 @@ namespace Inventory.Uwp.Library.Controls
         #region DefaultCommands*
         public string DefaultCommands
         {
-            get { return (string)GetValue(DefaultCommandsProperty); }
-            set { SetValue(DefaultCommandsProperty, value); }
+            get => (string)GetValue(DefaultCommandsProperty);
+            set => SetValue(DefaultCommandsProperty, value);
         }
 
         private static void DefaultCommandsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -80,8 +80,8 @@ namespace Inventory.Uwp.Library.Controls
         #region Query
         public string Query
         {
-            get { return (string)GetValue(QueryProperty); }
-            set { SetValue(QueryProperty, value); }
+            get => (string)GetValue(QueryProperty);
+            set => SetValue(QueryProperty, value);
         }
 
         public static readonly DependencyProperty QueryProperty = DependencyProperty.Register("Query", typeof(string), typeof(ListToolbar), new PropertyMetadata(null));

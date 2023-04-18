@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/_Colors.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/_FontSizes.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/_Thickness.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/TextBlock.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/Page.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/DataGrid.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/Cards.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/Section.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Styles/ToolBar.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>
