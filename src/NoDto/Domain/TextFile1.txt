@@ -1,0 +1,9 @@
+﻿ICustomerRepository
+IOrderRepository
+IOrderItemRepository
+IProductRepository
+
+ILogRepository
+ILookupTableRepository
+
+Repository

@@ -1,0 +1,69 @@
+﻿<Page x:Class="Inventory.Uwp.Views.Logs.LogsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:local="using:Inventory.Uwp.Views.Logs"
+      xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
+      mc:Ignorable="d"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="ListHeaderTemplate">
+            <StackPanel Margin="6,4,0,0"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <TextBlock Text="Activity Logs"
+                           FontSize="18" />
+                <TextBlock Text="{Binding}"
+                           FontSize="18"
+                           Foreground="Gray" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid Background="WhiteSmoke"
+          BorderBrush="LightGray"
+          BorderThickness="1,0,0,0">
+        <!--<controls:WindowTitle Prefix="Activity Logs"
+                              Title="{x:Bind ViewModel.AppLogList.Title, Mode=OneWay}" />-->
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!--AppLogs-->
+            <Grid Grid.RowSpan="{x:Bind GetRowSpan(ViewModel.AppLogList.IsMultipleSelection), Mode=OneWay}">
+                <libcontrols:Section Header="{x:Bind ViewModel.AppLogList.Title, Mode=OneWay}"
+                                     HeaderTemplate="{StaticResource ListHeaderTemplate}"
+                                     HeaderButtonGlyph="&#xE2B4;"
+                                     HeaderButtonClick="OpenInNewView"
+                                     IsButtonVisible="{x:Bind ViewModel.IsMainView}">
+                    <local:LogsListControl ViewModel="{x:Bind ViewModel.AppLogList}" />
+                </libcontrols:Section>
+            </Grid>
+
+            <!--Details-->
+            <Grid Grid.Row="1"
+                  BorderBrush="LightGray"
+                  BorderThickness="0,1,0,0"
+                  Visibility="{x:Bind ViewModel.AppLogList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                <libcontrols:Section IsEnabled="{x:Bind ViewModel.AppLogDetails.IsEnabled, Mode=OneWay}"
+                                     Background="{StaticResource DetailsViewBackgroundColor}"
+                                     Visibility="{x:Bind ViewModel.AppLogDetails.IsDataAvailable, Mode=OneWay}">
+                    <local:LogsDetailsControl Grid.Row="1"
+                                              ViewModel="{x:Bind ViewModel.AppLogDetails}" />
+                </libcontrols:Section>
+
+                <!--Empty Details-->
+                <libcontrols:Section Header="No item selected"
+                                     Visibility="{x:Bind ViewModel.AppLogDetails.IsDataUnavailable, Mode=OneWay}" />
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</Page>
