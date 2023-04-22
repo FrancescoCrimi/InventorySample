@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Infrastructure.Logging
 {
@@ -19,7 +17,6 @@ namespace Inventory.Infrastructure.Logging
 
         public IDisposable BeginScope<TState>(TState state)
         {
-            //return default!;
             return default;
         }
 
@@ -41,6 +38,7 @@ namespace Inventory.Infrastructure.Logging
             Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
             System.Diagnostics.Debug.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
 
+            // Use EF core
             var appLog = new Log()
             {
                 //User = AppSettings.Current.UserName ?? "App",
@@ -57,7 +55,7 @@ namespace Inventory.Infrastructure.Logging
             };
 
             logDbContext.Logs.Add(appLog);
-            logDbContext.SaveChanges();
+            logDbContext.SaveChanges();     
 
             LogService.RaiseNewEventLog();
         }

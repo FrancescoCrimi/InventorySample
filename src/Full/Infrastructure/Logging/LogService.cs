@@ -131,9 +131,6 @@ namespace Inventory.Infrastructure.Logging
             }
         }
 
-
-
-
         public static event EventHandler AddLogEvent;
 
         public static void RaiseNewEventLog()
