@@ -43,14 +43,15 @@ namespace Inventory.Uwp.ViewModels.Products
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
                                     ProductService productService,
                                     NavigationService navigationService,
-                                    WindowManagerService windowService)
+                                    WindowManagerService windowService,
+                                    ProductCollection collection)
             : base()
         {
             _logger = logger;
             _productService = productService;
             _navigationService = navigationService;
             _windowService = windowService;
-            _collection = new ProductCollection(productService);
+            _collection = collection;
             Items = _collection;
         }
 

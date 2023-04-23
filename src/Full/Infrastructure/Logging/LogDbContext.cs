@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Infrastructure.Logging
 {
@@ -22,32 +24,24 @@ namespace Inventory.Infrastructure.Logging
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Log>()
-                .ToTable(@"logs");
-
-            modelBuilder.Entity<Log>()
-                .Property(x => x.Id)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-
-            //modelBuilder.Entity<Log>()
-            //    .Property(x => x.MachineName)
-            //    .IsRequired();
-
-            //modelBuilder.Entity<Log>()
-            //    .Property(x => x.Logged)
-            //    .IsRequired();
-
-            modelBuilder.Entity<Log>()
-                .Property(x => x.Level)
-                .IsRequired();
-
-            modelBuilder.Entity<Log>()
-                .Property(x => x.Message)
-                .IsRequired();
-
-            modelBuilder.Entity<Log>()
-                .HasKey(@"Id");
+            modelBuilder.Entity<Log>(log =>
+            {
+                log.ToTable(@"logs");
+                log.Property(x => x.Id)
+                    .IsRequired()
+                    .ValueGeneratedOnAdd();
+                log.HasKey(x => x.Id);
+                //log.Property(x => x.MachineName)
+                //    .IsRequired();
+                //log.Property(x => x.Logged)
+                //   .IsRequired();
+                log.Property(x => x.Level)
+                    .IsRequired();
+                log.Property(x => x.Message)
+                    .IsRequired();
+                log.Property(x => x.DateTime)
+                    .HasConversion(new DateTimeOffsetToBinaryConverter());
+            });
         }
     }
 }

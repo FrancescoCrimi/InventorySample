@@ -38,20 +38,21 @@ namespace Inventory.Uwp.ViewModels.Customers
         private readonly CustomerService _customerService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
-        private readonly CustomerCollection collection;
+        private readonly CustomerCollection _collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
                                      CustomerService customerService,
                                      NavigationService navigationService,
-                                     WindowManagerService windowService)
+                                     WindowManagerService windowService,
+                                     CustomerCollection collection)
             : base()
         {
             _logger = logger;
             _customerService = customerService;
             _navigationService = navigationService;
             _windowService = windowService;
-            collection = new CustomerCollection(_customerService);
-            Items = collection;
+            _collection = collection;
+            Items = _collection;
         }
 
         public CustomerListArgs ViewModelArgs
@@ -107,7 +108,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             try
             {
                 DataRequest<Customer> request = BuildDataRequest();
-                await collection.LoadAsync(request);
+                await _collection.LoadAsync(request);
             }
             catch (Exception ex)
             {

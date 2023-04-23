@@ -23,7 +23,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         public LogListArgs()
         {
             // todo: fix datetime order by whit sqlite
-            //OrderByDesc = r => r.DateTime;
+            OrderByDesc = r => r.DateTime;
         }
 
         public string Query { get; set; }

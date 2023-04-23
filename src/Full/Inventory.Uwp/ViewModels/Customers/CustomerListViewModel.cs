@@ -17,40 +17,41 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Views.Customers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Views.Customers;
 
 namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomerListViewModel : GenericListViewModel<CustomerDto>
     {
-        private readonly ILogger<CustomerListViewModel> logger;
-        private readonly CustomerServiceFacade customerService;
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
-        private readonly CustomerCollection collection;
+        private readonly ILogger<CustomerListViewModel> _logger;
+        private readonly CustomerServiceFacade _customerService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
+        private readonly CustomerCollection _collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
                                      CustomerServiceFacade customerService,
                                      NavigationService navigationService,
-                                     WindowManagerService windowService)
+                                     WindowManagerService windowService,
+                                     CustomerCollection collection)
             : base()
         {
-            this.logger = logger;
-            this.customerService = customerService;
-            this.navigationService = navigationService;
-            this.windowService = windowService;
-            collection = new CustomerCollection(customerService);
-            Items = collection;
+            _logger = logger;
+            _customerService = customerService;
+            _navigationService = navigationService;
+            _windowService = windowService;
+            _collection = collection;
+            Items = _collection;
         }
 
         public CustomerListArgs ViewModelArgs { get; private set; }
@@ -106,13 +107,13 @@ namespace Inventory.Uwp.ViewModels.Customers
             try
             {
                 DataRequest<Customer> request = BuildDataRequest();
-                await collection.LoadAsync(request);
+                await _collection.LoadAsync(request);
             }
             catch (Exception ex)
             {
                 Items = new List<CustomerDto>();
                 StatusError($"Error loading Customers: {ex.Message}");
-                logger.LogError(ex, "Refresh");
+                _logger.LogError(ex, "Refresh");
                 isOk = false;
             }
 
@@ -126,7 +127,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerID = SelectedItem.Id });
+                await _windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerID = SelectedItem.Id });
             }
         }
 
@@ -134,11 +135,11 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<CustomerPage>(new CustomerDetailsArgs());
+                await _windowService.OpenInNewWindow<CustomerPage>(new CustomerDetailsArgs());
             }
             else
             {
-                navigationService.Navigate<CustomerPage>(new CustomerDetailsArgs());
+                _navigationService.Navigate<CustomerPage>(new CustomerDetailsArgs());
             }
 
             StatusReady();
@@ -181,7 +182,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Customers: {ex.Message}");
-                    logger.LogError(ex, "Delete");
+                    _logger.LogError(ex, "Delete");
                     count = 0;
                 }
                 await RefreshAsync();
@@ -198,7 +199,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             foreach (var model in models)
             {
-                await customerService.DeleteCustomerAsync(model);
+                await _customerService.DeleteCustomerAsync(model);
             }
         }
 
@@ -207,7 +208,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             DataRequest<Customer> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await customerService.DeleteCustomerRangeAsync(range.Index, range.Length, request);
+                await _customerService.DeleteCustomerRangeAsync(range.Index, range.Length, request);
             }
         }
 

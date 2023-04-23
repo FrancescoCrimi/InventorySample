@@ -16,6 +16,7 @@ using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,12 +25,15 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class LogCollection : VirtualRangeCollection<LogModel>
     {
-        private LogServiceFacade logService;
-        private DataRequest<Log> request;
+        private readonly ILogger<LogCollection> _logger;
+        private LogServiceFacade _logService;
+        private DataRequest<Log> _request;
 
-        public LogCollection(LogServiceFacade logService)
+        public LogCollection(ILogger<LogCollection> logger,
+                             LogServiceFacade logService)
         {
-            this.logService = logService;
+            _logger = logger;
+            _logService = logService;
         }
 
         protected override LogModel CreateDummyEntity()
@@ -39,17 +43,26 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override Task<int> GetCountAsync()
         {
-            return logService.GetLogsCountAsync(request);
+            return _logService.GetLogsCountAsync(_request);
         }
 
-        protected override Task<IList<LogModel>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected async override Task<IList<LogModel>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
-            return logService.GetLogsAsync(skip, take, request);
+            try
+            {
+                var list = await _logService.GetLogsAsync(skip, take, _request);
+                return list;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Load Log Error");
+                throw ex;
+            }
         }
 
         public async Task LoadAsync(DataRequest<Log> request)
         {
-            this.request = request;
+            _request = request;
             await LoadAsync();
         }
     }

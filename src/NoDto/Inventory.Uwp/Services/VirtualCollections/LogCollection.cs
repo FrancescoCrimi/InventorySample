@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class LogCollection : VirtualRangeCollection<Log>
     {
+        private readonly ILogger<LogCollection> _logger;
         private readonly LogService _logService;
         private DataRequest<Log> _request;
 
-        public LogCollection(LogService logService)
+        public LogCollection(ILogger<LogCollection> logger,
+                             LogService logService)
         {
+            _logger = logger;
             _logService = logService;
         }
 
@@ -38,6 +40,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Load logs error");
                 throw ex;
             }
         }

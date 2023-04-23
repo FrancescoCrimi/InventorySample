@@ -43,14 +43,15 @@ namespace Inventory.Uwp.ViewModels.Orders
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
                                   OrderService orderService,
                                   WindowManagerService windowService,
-                                  NavigationService navigationService)
+                                  NavigationService navigationService,
+                                  OrderCollection collection)
             : base()
         {
             _logger = logger;
             _orderService = orderService;
             _windowService = windowService;
             _navigationService = navigationService;
-            _collection = new OrderCollection(orderService);
+            _collection = collection;
             Items = _collection;
         }
 

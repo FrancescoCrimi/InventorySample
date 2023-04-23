@@ -16,6 +16,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,17 +25,20 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class CustomerCollection : VirtualRangeCollection<CustomerDto>
     {
-        private readonly CustomerServiceFacade customerService;
-        private DataRequest<Customer> dataRequest;
+        private readonly ILogger<CustomerCollection> _logger;
+        private readonly CustomerServiceFacade _customerService;
+        private DataRequest<Customer> _dataRequest;
 
-        public CustomerCollection(CustomerServiceFacade customerService)
+        public CustomerCollection(ILogger<CustomerCollection> logger,
+                                  CustomerServiceFacade customerService)
         {
-            this.customerService = customerService;
+            _logger = logger;
+            _customerService = customerService;
         }
 
         public async Task LoadAsync(DataRequest<Customer> dataRequest)
         {
-            this.dataRequest = dataRequest;
+            _dataRequest = dataRequest;
             await LoadAsync();
         }
 
@@ -45,14 +49,14 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override async Task<int> GetCountAsync()
         {
-            int result = await customerService.GetCustomersCountAsync(dataRequest);
+            int result = await _customerService.GetCustomersCountAsync(_dataRequest);
             return result;
         }
 
         protected override async Task<IList<CustomerDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
-            var result = await customerService.GetCustomersAsync(skip, take, dataRequest, dispatcher);
+            var result = await _customerService.GetCustomersAsync(skip, take, _dataRequest, dispatcher);
             return result;
         }
     }

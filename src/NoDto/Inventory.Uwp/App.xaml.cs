@@ -4,6 +4,7 @@ using Inventory.Application;
 using Inventory.Infrastructure;
 using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
+using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels;
 using Inventory.Uwp.ViewModels.Customers;
 using Inventory.Uwp.ViewModels.Dashboard;
@@ -108,6 +109,11 @@ namespace Inventory.Uwp
                 .AddTransient<LogsViewModel>()
                 .AddTransient<LogListViewModel>()
                 .AddTransient<LogDetailsViewModel>()
+
+                .AddTransient<CustomerCollection>()
+                .AddTransient<LogCollection>()
+                .AddTransient<OrderCollection>()
+                .AddTransient<ProductCollection>()
 
                 .BuildServiceProvider();
         }

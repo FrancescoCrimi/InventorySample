@@ -34,9 +34,9 @@ namespace Inventory.Infrastructure.Logging
             {
                 message += formatter(state, exception);
             }
-            // Implement log writter as you want. I am using Console
-            Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
-            System.Diagnostics.Debug.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
+            //// Implement log writter as you want. I am using Console
+            //Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
+            //System.Diagnostics.Debug.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
 
             var appLog = new Log()
             {

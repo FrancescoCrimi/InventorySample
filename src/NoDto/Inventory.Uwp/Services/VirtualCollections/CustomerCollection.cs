@@ -12,23 +12,28 @@
 // ******************************************************************
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Library.Common;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class CustomerCollection : VirtualRangeCollection<Customer>
     {
+        private readonly ILogger<CustomerCollection> _logger;
         private readonly CustomerService _customerService;
         private DataRequest<Customer> _request;
 
-        public CustomerCollection(CustomerService customerService)
+        public CustomerCollection(ILogger<CustomerCollection> logger,
+                                  CustomerService customerService)
         {
+            _logger = logger;
             _customerService = customerService;
         }
 
@@ -52,9 +57,17 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<IList<Customer>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
-            //Todo: fix cancellationToken
-            var result = await _customerService.GetCustomersAsync(skip, take, _request);
-            return result;
+            try
+            {
+                //Todo: fix cancellationToken
+                var result = await _customerService.GetCustomersAsync(skip, take, _request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Load customer error");
+                throw ex;
+            }
         }
     }
 }

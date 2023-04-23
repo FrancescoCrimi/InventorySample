@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,16 +20,20 @@ using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Library.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class ProductCollection : VirtualRangeCollection<Product>
     {
+        private readonly ILogger<ProductCollection> _logger;
         private readonly ProductService _productService;
         private DataRequest<Product> _request;
 
-        public ProductCollection(ProductService productService)
+        public ProductCollection(ILogger<ProductCollection> logger,
+                                 ProductService productService)
         {
+            _logger = logger;
             _productService = productService;
         }
 
@@ -52,9 +57,17 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<IList<Product>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
-            //Todo: fix cancellationToken
-            var result = await _productService.GetProductsAsync(skip, take, _request);
-            return result;
+            try
+            {
+                //Todo: fix cancellationToken
+                var result = await _productService.GetProductsAsync(skip, take, _request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Load product error");
+                throw ex;
+            }
         }
     }
 }

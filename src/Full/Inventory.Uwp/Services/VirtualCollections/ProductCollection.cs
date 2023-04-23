@@ -16,6 +16,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,17 +25,20 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class ProductCollection : VirtualRangeCollection<ProductDto>
     {
-        private readonly ProductServiceFacade productService;
-        private DataRequest<Product> request;
+        private readonly ILogger<ProductCollection> _logger;
+        private readonly ProductServiceFacade _productService;
+        private DataRequest<Product> _request;
 
-        public ProductCollection(ProductServiceFacade productService)
+        public ProductCollection(ILogger<ProductCollection> logger,
+                                 ProductServiceFacade productService)
         {
-            this.productService = productService;
+            _logger = logger;
+            _productService = productService;
         }
 
-        public async  Task LoadAsync(DataRequest<Product> request)
+        public async Task LoadAsync(DataRequest<Product> request)
         {
-            this.request = request;
+            _request = request;
             await LoadAsync();
         }
 
@@ -45,15 +49,23 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override async Task<int> GetCountAsync()
         {
-            int result = await productService.GetProductsCountAsync(request);
+            int result = await _productService.GetProductsCountAsync(_request);
             return result;
         }
 
         protected override async Task<IList<ProductDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
-            //Todo: fix cancellationToken
-            var result = await productService.GetProductsAsync(skip, take, request, dispatcher);
-            return result;
+            try
+            {
+                //Todo: fix cancellationToken
+                var result = await _productService.GetProductsAsync(skip, take, _request, dispatcher);
+                return result;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Load Product error");
+                throw ex;
+            }
         }
     }
 }

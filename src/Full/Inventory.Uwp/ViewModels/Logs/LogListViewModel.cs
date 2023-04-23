@@ -30,18 +30,19 @@ namespace Inventory.Uwp.ViewModels.Logs
 {
     public class LogListViewModel : GenericListViewModel<LogModel>
     {
-        private readonly ILogger logger;
-        private readonly LogServiceFacade logService;
-        private readonly LogCollection collection;
+        private readonly ILogger _logger;
+        private readonly LogServiceFacade _logService;
+        private readonly LogCollection _collection;
 
         public LogListViewModel(ILogger<LogListViewModel> logger,
-                                LogServiceFacade logService)
+                                LogServiceFacade logService,
+                                LogCollection logCollection)
             : base()
         {
-            this.logger = logger;
-            this.logService = logService;
-            collection = new LogCollection(logService);
-            Items = collection;
+            this._logger = logger;
+            this._logService = logService;
+            _collection = logCollection;
+            Items = _collection;
         }
 
         public LogListArgs ViewModelArgs { get; private set; }
@@ -127,13 +128,13 @@ namespace Inventory.Uwp.ViewModels.Logs
             try
             {
                 DataRequest<Log> request = BuildDataRequest();
-                await collection.LoadAsync(request);
+                await _collection.LoadAsync(request);
             }
             catch (Exception ex)
             {
                 Items = new List<LogModel>();
                 StatusError($"Error loading Logs: {ex.Message}");
-                logger.LogError(ex, "Refresh");
+                _logger.LogError(ex, "Refresh");
                 isOk = false;
             }
 
@@ -184,7 +185,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Logs: {ex.Message}");
-                    logger.LogError(ex, "Delete");
+                    _logger.LogError(ex, "Delete");
                     count = 0;
                 }
                 await RefreshAsync();
@@ -201,7 +202,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             foreach (var model in models)
             {
-                await logService.DeleteLogAsync(model);
+                await _logService.DeleteLogAsync(model);
             }
         }
 
@@ -210,7 +211,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             DataRequest<Log> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await logService.DeleteLogRangeAsync(range.Index, range.Length, request);
+                await _logService.DeleteLogRangeAsync(range.Index, range.Length, request);
             }
         }
 

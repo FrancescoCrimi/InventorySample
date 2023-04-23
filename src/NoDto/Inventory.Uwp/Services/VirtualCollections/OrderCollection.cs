@@ -12,23 +12,28 @@
 // ******************************************************************
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Library.Common;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class OrderCollection : VirtualRangeCollection<Order>
     {
+        private readonly ILogger<OrderCollection> _logger;
         private readonly OrderService _orderService;
         private DataRequest<Order> _request;
 
-        public OrderCollection(OrderService orderService)
+        public OrderCollection(ILogger<OrderCollection> logger,
+                               OrderService orderService)
         {
+            _logger = logger;
             _orderService = orderService;
         }
 
@@ -52,9 +57,17 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<IList<Order>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
-            //Todo: fix cancellationToken
-            var result = await _orderService.GetOrdersAsync(skip, take, _request);
-            return result;
+            try
+            {
+                //Todo: fix cancellationToken
+                var result = await _orderService.GetOrdersAsync(skip, take, _request);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Load order Error");
+                throw ex;
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,17 +25,20 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class OrderCollection : VirtualRangeCollection<OrderDto>
     {
-        private readonly OrderServiceFacade orderService;
-        private DataRequest<Order> request;
+        private readonly ILogger<OrderCollection> _logger;
+        private readonly OrderServiceFacade _orderService;
+        private DataRequest<Order> _request;
 
-        public OrderCollection(OrderServiceFacade orderService)
+        public OrderCollection(ILogger<OrderCollection> logger,
+                               OrderServiceFacade orderService)
         {
-            this.orderService = orderService;
+            _logger = logger;
+            _orderService = orderService;
         }
 
         public async Task LoadAsync(DataRequest<Order> request)
         {
-            this.request = request;
+            _request = request;
             await LoadAsync();
         }
 
@@ -45,14 +49,14 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override async Task<int> GetCountAsync()
         {
-            int result = await orderService.GetOrdersCountAsync(request);
+            int result = await _orderService.GetOrdersCountAsync(_request);
             return result;
         }
 
         protected override async Task<IList<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             //Todo: fix cancellationToken
-            var result = await orderService.GetOrdersAsync(skip, take, request, dispatcher);
+            var result = await _orderService.GetOrdersAsync(skip, take, _request, dispatcher);
             return result;
         }
     }

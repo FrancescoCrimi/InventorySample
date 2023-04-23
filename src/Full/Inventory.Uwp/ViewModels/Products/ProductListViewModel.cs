@@ -33,24 +33,25 @@ namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductListViewModel : GenericListViewModel<ProductDto>
     {
-        private readonly ILogger<ProductListViewModel> logger;
-        private readonly ProductServiceFacade productService;
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
-        private readonly ProductCollection collection;
+        private readonly ILogger<ProductListViewModel> _logger;
+        private readonly ProductServiceFacade _productService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
+        private readonly ProductCollection _collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
                                     ProductServiceFacade productService,
                                     NavigationService navigationService,
-                                    WindowManagerService windowService)
+                                    WindowManagerService windowService,
+                                    ProductCollection collection)
             : base()
         {
-            this.logger = logger;
-            this.productService = productService;
-            this.navigationService = navigationService;
-            this.windowService = windowService;
-            collection = new ProductCollection(productService);
-            Items = collection;
+            _logger = logger;
+            _productService = productService;
+            _navigationService = navigationService;
+            _windowService = windowService;
+            _collection = collection;
+            Items = _collection;
         }
 
         public ProductListArgs ViewModelArgs { get; private set; }
@@ -59,7 +60,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
         private async void ItemInvoked(ProductDto model)
         {
-            await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.Id });
+            await _windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.Id });
         }
 
         public async Task LoadAsync(ProductListArgs args)
@@ -113,13 +114,13 @@ namespace Inventory.Uwp.ViewModels.Products
             try
             {
                 DataRequest<Product> request = BuildDataRequest();
-                await collection.LoadAsync(request);
+                await _collection.LoadAsync(request);
             }
             catch (Exception ex)
             {
                 Items = new List<ProductDto>();
                 StatusError($"Error loading Products: {ex.Message}");
-                logger.LogError(ex, "Refresh");
+                _logger.LogError(ex, "Refresh");
                 isOk = false;
             }
 
@@ -133,11 +134,11 @@ namespace Inventory.Uwp.ViewModels.Products
 
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs());
+                await _windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs());
             }
             else
             {
-                navigationService.Navigate<ProductPage>(new ProductDetailsArgs());
+                _navigationService.Navigate<ProductPage>(new ProductDetailsArgs());
             }
 
             StatusReady();
@@ -180,7 +181,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Products: {ex.Message}");
-                    logger.LogError(ex, "Delete");
+                    _logger.LogError(ex, "Delete");
                     count = 0;
                 }
                 await RefreshAsync();
@@ -197,7 +198,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             foreach (var model in models)
             {
-                await productService.DeleteProductAsync(model);
+                await _productService.DeleteProductAsync(model);
             }
         }
 
@@ -206,7 +207,7 @@ namespace Inventory.Uwp.ViewModels.Products
             DataRequest<Product> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await productService.DeleteProductRangeAsync(range.Index, range.Length, request);
+                await _productService.DeleteProductRangeAsync(range.Index, range.Length, request);
             }
         }
 
