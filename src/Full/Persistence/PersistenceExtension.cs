@@ -3,7 +3,6 @@ using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Persistence.DbContexts;
 using Inventory.Persistence.Repository;
-//using CiccioSoft.Inventory.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +19,8 @@ namespace Inventory.Persistence
                 options
                     //.UseLazyLoadingProxies()
                     //.ConfigureWarnings(w => w.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning))
-                    .UseSqlite(settings.SQLiteConnectionString);
+                    .UseSqlite(settings.SQLiteConnectionString)
+                    .EnableSensitiveDataLogging(true);
             }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>

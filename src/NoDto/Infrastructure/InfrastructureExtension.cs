@@ -28,9 +28,10 @@ namespace Inventory.Infrastructure
                 .AddDbContext<LogDbContext>(option =>
                 {
                     option.UseSqlite(settings.AppLogConnectionString);
+                    option.EnableSensitiveDataLogging(true);
                 }, ServiceLifetime.Transient)
-                .AddSingleton<LogService>()
-                .TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, CustomLoggerProvider>());
+                .AddSingleton<LogService>();
+                //.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, CustomLoggerProvider>());
 
             // Add filter
             return loggingBuilder

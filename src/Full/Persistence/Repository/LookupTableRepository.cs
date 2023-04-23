@@ -12,13 +12,13 @@
 // ******************************************************************
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Inventory.Persistence.Repository
 {
@@ -33,32 +33,32 @@ namespace Inventory.Persistence.Repository
 
         public async Task<IList<Category>> GetCategoriesAsync()
         {
-            return await _dataSource.Categories.ToListAsync();
+            return await _dataSource.Categories.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<Country>> GetCountryCodesAsync()
         {
-            return await _dataSource.Countries.ToListAsync();
+            return await _dataSource.Countries.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<OrderStatus>> GetOrderStatusAsync()
         {
-            return await _dataSource.OrderStatuses.ToListAsync();
+            return await _dataSource.OrderStatuses.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<PaymentType>> GetPaymentTypesAsync()
         {
-            return await _dataSource.PaymentTypes.ToListAsync();
+            return await _dataSource.PaymentTypes.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<Shipper>> GetShippersAsync()
         {
-            return await _dataSource.Shippers.ToListAsync();
+            return await _dataSource.Shippers.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<TaxType>> GetTaxTypesAsync()
         {
-            return await _dataSource.TaxTypes.ToListAsync();
+            return await _dataSource.TaxTypes.AsNoTracking().ToListAsync();
         }
 
         #region Dispose

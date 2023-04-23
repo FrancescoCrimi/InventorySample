@@ -8,15 +8,15 @@ namespace Inventory.Infrastructure.Logging
         public Log()
         {
         }
-        public virtual int Id
+        public int Id
         {
             get; set;
         }
-        public virtual bool IsRead
+        public bool IsRead
         {
             get; set;
         }
-        public virtual string Name
+        public string Name
         {
             get; set;
         }
@@ -24,7 +24,7 @@ namespace Inventory.Infrastructure.Logging
         {
             get; set;
         }
-        public virtual string User
+        public string User
         {
             get; set;
         }
@@ -40,7 +40,7 @@ namespace Inventory.Infrastructure.Logging
         {
             get; set;
         }
-        public virtual string Message
+        public string Message
         {
             get; set;
         }
