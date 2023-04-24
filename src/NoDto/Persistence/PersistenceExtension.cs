@@ -18,9 +18,8 @@ namespace Inventory.Persistence
             {
                 options
                     //.UseLazyLoadingProxies()
-                    //.ConfigureWarnings(w => w.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning))
-                    .UseSqlite(settings.SQLiteConnectionString)
-                    .EnableSensitiveDataLogging(true);
+                    //.EnableSensitiveDataLogging(true)
+                    .UseSqlite(settings.SQLiteConnectionString);
             }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>

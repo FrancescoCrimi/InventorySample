@@ -14,12 +14,12 @@ namespace Inventory.Infrastructure
         {
             settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
             return serviceCollection
-
                 .AddLogging(loggingBuilder => loggingBuilder
                     .ClearProviders()
                     .AddDebug()
                     //.AddConsole()
-                    .AddDatabaseLogger(serviceCollection));
+                    .AddDatabaseLogger(serviceCollection)
+                    .AddFilter("", LogLevel.Information));
         }
 
         private static ILoggingBuilder AddDatabaseLogger(this ILoggingBuilder loggingBuilder,
@@ -29,23 +29,13 @@ namespace Inventory.Infrastructure
                 .AddDbContext<LogDbContext>(option =>
                 {
                     option.UseSqlite(settings.AppLogConnectionString);
-                    option.EnableSensitiveDataLogging(true);
+                    //option.EnableSensitiveDataLogging(true);
                 }, ServiceLifetime.Transient)
-                .AddSingleton<LogService>();
-                //.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, CustomLoggerProvider>());
+                .AddSingleton<LogService>()
+                .TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, CustomLoggerProvider>());
 
             return loggingBuilder
-
-                // Add filter
-                //.AddFilter("Microsoft.EntityFrameworkCore", Microsoft.Extensions.Logging.LogLevel.None)
-                .AddFilter((provider, category, logLevel) =>
-                {
-                    if (provider == typeof(CustomLoggerProvider).FullName
-                    && category.Contains("Microsoft.EntityFrameworkCore")
-                    && logLevel <= Microsoft.Extensions.Logging.LogLevel.Information)
-                        return false;
-                    return true;
-                });
+                .AddFilter<CustomLoggerProvider>("Microsoft.EntityFrameworkCore", LogLevel.None);
         }
     }
 }
