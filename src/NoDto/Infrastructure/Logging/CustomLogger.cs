@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -6,13 +7,14 @@ namespace Inventory.Infrastructure.Logging
 {
     public class CustomLogger : ILogger
     {
-        private readonly string categoryName;
-        private readonly IServiceProvider serviceProvider;
+        private readonly string _categoryName;
+        private readonly IServiceProvider _serviceProvider;
 
-        public CustomLogger(string categoryName, IServiceProvider serviceProvider)
+        public CustomLogger(string categoryName,
+                            IServiceProvider serviceProvider)
         {
-            this.categoryName = categoryName;
-            this.serviceProvider = serviceProvider;
+            _categoryName = categoryName;
+            _serviceProvider = serviceProvider;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -27,35 +29,38 @@ namespace Inventory.Infrastructure.Logging
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            var logDbContext = serviceProvider.GetService<LogDbContext>();
-
-            var message = "";
-            if (formatter != null)
+            Task.Run(async () =>
             {
-                message += formatter(state, exception);
-            }
-            //// Implement log writter as you want. I am using Console
-            //Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
-            //System.Diagnostics.Debug.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
+                var logDbContext = _serviceProvider.GetService<LogDbContext>();
 
-            var appLog = new Log()
-            {
-                //User = AppSettings.Current.UserName ?? "App",
-                User = "App",
-                //Type = type,
-                Source = categoryName,
-                Action = "action",
-                Message = message,
-                DateTime = DateTime.Now,
-                IsRead = false,
-                //MachineName = "Suca",
-                Level = logLevel
-                //Description = description,
-            };
+                var message = "";
+                if (formatter != null)
+                {
+                    message += formatter(state, exception);
+                }
 
-            logDbContext.Logs.Add(appLog);
-            logDbContext.SaveChanges();
+                //// Implement log writter as you want. I am using Console
+                //Console.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
+                //System.Diagnostics.Debug.WriteLine($"{logLevel.ToString()} - {eventId.Id} - {categoryName} - {message}");
 
+                var appLog = new Log()
+                {
+                    //User = AppSettings.Current.UserName ?? "App",
+                    User = "App",
+                    DateTime = DateTime.Now,
+                    Level = logLevel,
+                    Source = _categoryName,
+                    Action = eventId.Name,
+                    Message = message + exception?.Message,
+                    Description = exception?.ToString() ?? string.Empty,
+                    IsRead = false,
+                };
+
+                logDbContext.Logs.Add(appLog);
+                await logDbContext.SaveChangesAsync();
+            });
+
+            // Todo: provare ad inserire la chiamata al metodo per scatenare l'evento dentro il task
             LogService.RaiseNewEventLog();
         }
     }

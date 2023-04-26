@@ -3,6 +3,13 @@ using System;
 
 namespace Inventory.Infrastructure.Logging
 {
+    public static class LogEvents
+    {
+        public static EventId UnhandledException = new EventId(1000, "UnhandledException");
+        public static EventId Suspending = new EventId(1001, "Suspending");
+        public static EventId Configuration = new EventId(1002, "Configuration");
+    }
+
     public class Log : Infrastructure.Common.ObservableObject<Log>
     {
         public Log()
@@ -46,8 +53,5 @@ namespace Inventory.Infrastructure.Logging
         }
 
         public override void Merge(Log source) => throw new NotImplementedException();
-
-        //public virtual string Logger { get; set; }
-        //public virtual string Exception { get; set; }
     }
 }

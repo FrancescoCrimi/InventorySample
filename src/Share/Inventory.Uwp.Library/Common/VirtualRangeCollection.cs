@@ -64,7 +64,7 @@ namespace Inventory.Uwp.Library.Common
                 LastIndex = 0 + lengthToFetch - 1;
 
                 // recupero i dati
-                logger.LogInformation("Init: {0} - {1}", 0, lengthToFetch - 1);
+                logger.LogDebug("Init: {0} - {1}", 0, lengthToFetch - 1);
                 var models = await GetRangeAsync(0, lengthToFetch, NewToken());
 
                 // Aggiorno lista interna
@@ -119,7 +119,7 @@ namespace Inventory.Uwp.Library.Common
                     token.ThrowIfCancellationRequested();
 
                 // recupero i dati
-                logger.LogInformation("FetchRange: {0} - {1}", skip, skip + take - 1);
+                logger.LogDebug("FetchRange: {0} - {1}", skip, skip + take - 1);
                 var models = await GetRangeAsync(skip, take, token);
 
                 if (token.IsCancellationRequested)
@@ -154,17 +154,17 @@ namespace Inventory.Uwp.Library.Common
                     }
                     catch (OperationCanceledException ocex)
                     {
-                        logger.LogInformation("NotifyCollectionChanged Replace: {0} - {1} {2}", skip, skip + take - 1, ocex.Message);
+                        logger.LogDebug("NotifyCollectionChanged Replace: {0} - {1} {2}", skip, skip + take - 1, ocex.Message);
                     }
                 });
             }
             catch (TaskCanceledException tcex)
             {
-                logger.LogInformation("FetchRange: {0} - {1} {2} Id:{3}", skip, skip + take - 1, tcex.Message, tcex.Task.Id);
+                logger.LogDebug("FetchRange: {0} - {1} {2} Id:{3}", skip, skip + take - 1, tcex.Message, tcex.Task.Id);
             }
             catch (OperationCanceledException ocex)
             {
-                logger.LogInformation(ocex.Message);
+                logger.LogDebug(ocex.Message);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Inventory.Uwp.Library.Common
             var firstVisible = visibleRange.FirstIndex;
             var lastVisible = visibleRange.LastIndex;
             var lengthVisible = (int)visibleRange.Length;
-            logger.LogInformation("VisibleRange: {0} - {1}", firstVisible, lastVisible);
+            logger.LogDebug("VisibleRange: {0} - {1}", firstVisible, lastVisible);
 
             // se visibleRangeLength è minore di 2 esci
             if (lengthVisible < 2) return;
@@ -219,12 +219,12 @@ namespace Inventory.Uwp.Library.Common
             {
                 if (items.ContainsKey(index))
                 {
-                    //logger.LogInformation("Indexer get real: {0}", index);
+                    //logger.LogDebug("Indexer get real: {0}", index);
                     return items[index];
                 }
                 else
                 {
-                    //logger.LogInformation("Indexer get dummy: {0}", index);
+                    //logger.LogDebug("Indexer get dummy: {0}", index);
                     return dummyObject;
                 }
             }

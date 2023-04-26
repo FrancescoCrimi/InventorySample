@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Application;
 using Inventory.Infrastructure;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
@@ -45,7 +46,8 @@ namespace Inventory.Uwp
         private void OnSuspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
             var logger = Ioc.Default.GetService<ILogger<App>>();
-            logger.LogInformation($"Application ended.");
+            //await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
+            logger.LogInformation(LogEvents.Suspending, $"Application ended.");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
@@ -53,7 +55,8 @@ namespace Inventory.Uwp
             // TODO: Please log and handle the exception as appropriate to your scenario
             // For more info see https://docs.microsoft.com/uwp/api/windows.ui.xaml.application.unhandledexception
             var logger = Ioc.Default.GetService<ILogger<App>>();
-            logger.LogError("UnhandledException: " + e.Message);
+            //logService.WriteAsync(Data.LogType.Error, "App", "UnhandledException", e.Message, e.Exception.ToString());
+            logger.LogError(LogEvents.UnhandledException, e.Exception, "Unhandled Exception");
         }
 
         private IServiceProvider ConfigureServices()

@@ -1,10 +1,10 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Infrastructure;
-using Inventory.Uwp.Activation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inventory.Infrastructure.Logging;
+using Inventory.Uwp.Activation;
+using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -15,14 +15,16 @@ namespace Inventory.Uwp.Services
     // https://github.com/microsoft/TemplateStudio/blob/main/docs/UWP/activation.md
     internal class ActivationService
     {
+        private readonly ILogger<ActivationService> _logger;
         private readonly ActivationHandler<IActivatedEventArgs> _defaultHandler;
         private readonly IEnumerable<ActivationHandler> _activationHandlers;
-
         private object _lastActivationArgs;
 
-        public ActivationService(ActivationHandler<IActivatedEventArgs> defaultHandler,
+        public ActivationService(ILogger<ActivationService> logger,
+                                 ActivationHandler<IActivatedEventArgs> defaultHandler,
                                  IEnumerable<ActivationHandler> activationHandlers)
         {
+            this._logger = logger;
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
         }
@@ -67,6 +69,9 @@ namespace Inventory.Uwp.Services
             await EnsureLogDbAsync();
             await EnsureDatabaseAsync();
             //await ConfigureLookupTables();
+
+            //await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
+            _logger.LogInformation(LogEvents.Configuration, "Application Started");
         }
 
         private async Task HandleActivationAsync(object activationArgs)
