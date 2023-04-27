@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Activation;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ namespace Inventory.Uwp.Services
     // https://github.com/microsoft/TemplateStudio/blob/main/docs/UWP/activation.md
     internal class ActivationService
     {
-        private readonly ILogger<ActivationService> _logger;
+        private readonly ILogger _logger;
         private readonly ActivationHandler<IActivatedEventArgs> _defaultHandler;
         private readonly IEnumerable<ActivationHandler> _activationHandlers;
         private object _lastActivationArgs;
@@ -24,7 +25,7 @@ namespace Inventory.Uwp.Services
                                  ActivationHandler<IActivatedEventArgs> defaultHandler,
                                  IEnumerable<ActivationHandler> activationHandlers)
         {
-            this._logger = logger;
+            _logger = logger;
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
         }
@@ -68,7 +69,7 @@ namespace Inventory.Uwp.Services
 
             await EnsureLogDbAsync();
             await EnsureDatabaseAsync();
-            //await ConfigureLookupTables();
+            await ConfigureLookupTables();
 
             //await logService.WriteAsync(Data.LogType.Information, "Startup", "Configuration", "Application Start", $"Application started.");
             _logger.LogInformation(LogEvents.Configuration, "Application Started");
@@ -119,10 +120,8 @@ namespace Inventory.Uwp.Services
 
         private async Task ConfigureLookupTables()
         {
-            //var lookupTables = Ioc.Default.GetService<LookupTableServiceFacade>();
-            //await lookupTables.InitializeAsync();
-            //LookupTablesProxy.Instance = lookupTables;
-            await Task.CompletedTask;
+            var lookupTables = Ioc.Default.GetService<LookupTablesService>();
+            await lookupTables.InitializeAsync();
         }
 
         private async Task EnsureDatabaseAsync()

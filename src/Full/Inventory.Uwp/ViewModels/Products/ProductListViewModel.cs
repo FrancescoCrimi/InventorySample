@@ -16,6 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
@@ -33,7 +34,7 @@ namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductListViewModel : GenericListViewModel<ProductDto>
     {
-        private readonly ILogger<ProductListViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly ProductServiceFacade _productService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
@@ -120,7 +121,7 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 Items = new List<ProductDto>();
                 StatusError($"Error loading Products: {ex.Message}");
-                _logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Products");
                 isOk = false;
             }
 
@@ -181,7 +182,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Products: {ex.Message}");
-                    _logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, $"Error deleting {count} Products");
                     count = 0;
                 }
                 await RefreshAsync();

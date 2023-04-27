@@ -1,4 +1,19 @@
-﻿using Inventory.Domain.Repository;
+﻿#region copyright
+// ******************************************************************
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+// ******************************************************************
+#endregion
+
+using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,16 +23,16 @@ using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services
 {
-    public class LookupTableServiceFacade /*: ILookupTableService*/
+    public class LookupTablesService
     {
-        private readonly ILogger<LookupTableServiceFacade> logger;
-        private readonly ILookupTableRepository lookupTableRepository;
+        private readonly ILogger _logger;
+        private readonly ILookupTableRepository _repository;
 
-        public LookupTableServiceFacade(ILogger<LookupTableServiceFacade> logger,
-            ILookupTableRepository lookupTableRepository)
+        public LookupTablesService(ILogger<LookupTablesService> logger,
+                                   ILookupTableRepository repository)
         {
-            this.logger = logger;
-            this.lookupTableRepository = lookupTableRepository;
+            _logger = logger;
+            _repository = repository;
         }
 
         public IList<CategoryDto> Categories { get; private set; }
@@ -83,7 +98,7 @@ namespace Inventory.Uwp.Services
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
-                var items = await lookupTableRepository.GetCategoriesAsync();
+                var items = await _repository.GetCategoriesAsync();
                 return items.Select(r => new CategoryDto
                 {
                     Id = r.Id,
@@ -94,7 +109,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Categories");
+                _logger.LogError(LogEvents.LoadCategories, ex, "Load Categories");
             }
             return new List<CategoryDto>();
         }
@@ -105,7 +120,7 @@ namespace Inventory.Uwp.Services
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
-                var items = await lookupTableRepository.GetCountryCodesAsync();
+                var items = await _repository.GetCountryCodesAsync();
                 return items.OrderBy(r => r.Name).Select(r => new CountryDto
                 {
                     Id = r.Id,
@@ -117,7 +132,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load CountryCodes");
+                _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
             }
             return new List<CountryDto>();
         }
@@ -128,7 +143,7 @@ namespace Inventory.Uwp.Services
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
-                var items = await lookupTableRepository.GetOrderStatusAsync();
+                var items = await _repository.GetOrderStatusAsync();
                 return items.Select(r => new OrderStatusDto
                 {
                     Id = r.Id,
@@ -139,7 +154,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load OrderStatus");
+                _logger.LogError(LogEvents.LoadOrderStatus, ex, "Load OrderStatus");
             }
             return new List<OrderStatusDto>();
         }
@@ -150,7 +165,7 @@ namespace Inventory.Uwp.Services
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
-                var items = await lookupTableRepository.GetPaymentTypesAsync();
+                var items = await _repository.GetPaymentTypesAsync();
                 return items.Select(r => new PaymentTypeDto
                 {
                     Id = r.Id,
@@ -161,7 +176,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load PaymentTypes");
+                _logger.LogError(LogEvents.LoadPaymentTypes, ex, "Load PaymentTypes");
             }
             return new List<PaymentTypeDto>();
         }
@@ -172,7 +187,7 @@ namespace Inventory.Uwp.Services
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
-                var items = await lookupTableRepository.GetShippersAsync();
+                var items = await _repository.GetShippersAsync();
                 return items.Select(r => new ShipperDto
                 {
                     Id = r.Id,
@@ -184,7 +199,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Shippers");
+                _logger.LogError(LogEvents.LoadShippers, ex, "Load Shippers");
             }
             return new List<ShipperDto>();
         }
@@ -195,7 +210,7 @@ namespace Inventory.Uwp.Services
             {
                 //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
                 //{
-                var items = await lookupTableRepository.GetTaxTypesAsync();
+                var items = await _repository.GetTaxTypesAsync();
                 return items.Select(r => new TaxTypeDto
                 {
                     Id = r.Id,
@@ -207,7 +222,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load TaxTypes");
+                _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
             }
             return new List<TaxTypeDto>();
         }

@@ -21,6 +21,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -30,7 +31,7 @@ namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrderDetailsViewModel : GenericDetailsViewModel<Order>
     {
-        private readonly ILogger<OrderDetailsViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly OrderService _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
@@ -86,7 +87,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load Order");
                 }
             }
             OnPropertyChanged(nameof(ItemIsNew));
@@ -127,14 +128,14 @@ namespace Inventory.Uwp.ViewModels.Orders
                 await Task.Delay(100);
                 await _orderService.UpdateOrderAsync(model);
                 EndStatusMessage("Order saved");
-                _logger.LogInformation($"Order #{model.Id} was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Order #{model.Id} was saved successfully.");
                 OnPropertyChanged(nameof(CanEditCustomer));
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Order: {ex.Message}");
-                _logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Order");
                 return false;
             }
         }
@@ -147,13 +148,13 @@ namespace Inventory.Uwp.ViewModels.Orders
                 await Task.Delay(100);
                 await _orderService.DeleteOrderAsync(model);
                 EndStatusMessage("Order deleted");
-                _logger.LogWarning($"Order #{model.Id} was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Order #{model.Id} was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Order: {ex.Message}");
-                _logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Order");
                 return false;
             }
         }
@@ -207,8 +208,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                             }
                             catch (Exception ex)
                             {
-                                //LogException("Order", "Handle Changes", ex);
-                                _logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle Order Changes");
                             }
                         }
                         break;
@@ -231,8 +231,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                         }
                         catch (Exception ex)
                         {
-                            //LogException("Order", "Handle Ranges Deleted", ex);
-                            _logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle Order Ranges Deleted");
                         }
                         break;
 

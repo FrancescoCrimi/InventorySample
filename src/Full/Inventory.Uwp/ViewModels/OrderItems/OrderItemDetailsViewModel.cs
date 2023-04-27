@@ -14,6 +14,7 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
@@ -30,15 +31,15 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItemDto>
     {
-        private readonly ILogger<OrderItemDetailsViewModel> logger;
-        private readonly OrderItemServiceFacade orderItemService;
+        private readonly ILogger _logger;
+        private readonly OrderItemServiceFacade _orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
                                          OrderItemServiceFacade orderItemService)
             : base()
         {
-            this.logger = logger;
-            this.orderItemService = orderItemService;
+            _logger = logger;
+            _orderItemService = orderItemService;
         }
 
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
@@ -75,12 +76,12 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             {
                 try
                 {
-                    var item = await orderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
+                    var item = await _orderItemService.GetOrderItemAsync(OrderID, ViewModelArgs.OrderLine);
                     Item = item ?? new OrderItemDto { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load OrderItem");
                 }
             }
         }
@@ -120,15 +121,15 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             {
                 StartStatusMessage("Saving order item...");
                 await Task.Delay(100);
-                await orderItemService.UpdateOrderItemAsync(model);
+                await _orderItemService.UpdateOrderItemAsync(model);
                 EndStatusMessage("Order item saved");
-                logger.LogInformation($"Order item #{model.OrderId}, {model.OrderLine} was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Order item #{model.OrderId}, {model.OrderLine} was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Order item: {ex.Message}");
-                logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Order item");
                 return false;
             }
         }
@@ -139,15 +140,15 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             {
                 StartStatusMessage("Deleting order item...");
                 await Task.Delay(100);
-                await orderItemService.DeleteOrderItemAsync(model);
+                await _orderItemService.DeleteOrderItemAsync(model);
                 EndStatusMessage("Order item deleted");
-                logger.LogWarning($"Order item #{model.OrderId}, {model.OrderLine} was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Order item #{model.OrderId}, {model.OrderLine} was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Order item: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Order item");
                 return false;
             }
         }
@@ -189,7 +190,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                             //{
                             try
                             {
-                                var item = await orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
+                                var item = await _orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
                                 item = item ?? new OrderItemDto { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -201,7 +202,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                             }
                             catch (Exception ex)
                             {
-                                logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle OrderItem Changes");
                             }
                             //});
                             break;
@@ -224,7 +225,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
+                            var model = await _orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -232,7 +233,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         }
                         catch (Exception ex)
                         {
-                            logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle OrderItem Ranges Deleted");
                         }
                         break;
                 }

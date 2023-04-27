@@ -29,7 +29,7 @@ namespace Inventory.Uwp.Library.Common
     /// </summary>
     public abstract class VirtualRangeCollection<T> : IVirtualRangeCollection<T> where T : class
     {
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
         protected readonly CoreDispatcher dispatcher;
         private CancellationTokenSource cancellationTokenSource;
         private readonly IDictionary<int, T> items;
@@ -42,9 +42,9 @@ namespace Inventory.Uwp.Library.Common
         private const string CountString = "Count";
         private const string IndexerName = "Item[]";
 
-        public VirtualRangeCollection()
+        public VirtualRangeCollection(ILogger logger)
         {
-            logger = Ioc.Default.GetRequiredService<ILoggerFactory>().CreateLogger("VirtualRangeSearchCollection");
+            _logger = logger;
             dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
             cancellationTokenSource = new CancellationTokenSource();
             items = new ConcurrentDictionary<int, T>();
@@ -64,7 +64,7 @@ namespace Inventory.Uwp.Library.Common
                 LastIndex = 0 + lengthToFetch - 1;
 
                 // recupero i dati
-                logger.LogDebug("Init: {0} - {1}", 0, lengthToFetch - 1);
+                _logger.LogDebug("Init: {0} - {1}", 0, lengthToFetch - 1);
                 var models = await GetRangeAsync(0, lengthToFetch, NewToken());
 
                 // Aggiorno lista interna
@@ -119,7 +119,7 @@ namespace Inventory.Uwp.Library.Common
                     token.ThrowIfCancellationRequested();
 
                 // recupero i dati
-                logger.LogDebug("FetchRange: {0} - {1}", skip, skip + take - 1);
+                _logger.LogDebug("FetchRange: {0} - {1}", skip, skip + take - 1);
                 var models = await GetRangeAsync(skip, take, token);
 
                 if (token.IsCancellationRequested)
@@ -154,17 +154,17 @@ namespace Inventory.Uwp.Library.Common
                     }
                     catch (OperationCanceledException ocex)
                     {
-                        logger.LogDebug("NotifyCollectionChanged Replace: {0} - {1} {2}", skip, skip + take - 1, ocex.Message);
+                        _logger.LogDebug("NotifyCollectionChanged Replace: {0} - {1} {2}", skip, skip + take - 1, ocex.Message);
                     }
                 });
             }
             catch (TaskCanceledException tcex)
             {
-                logger.LogDebug("FetchRange: {0} - {1} {2} Id:{3}", skip, skip + take - 1, tcex.Message, tcex.Task.Id);
+                _logger.LogDebug("FetchRange: {0} - {1} {2} Id:{3}", skip, skip + take - 1, tcex.Message, tcex.Task.Id);
             }
             catch (OperationCanceledException ocex)
             {
-                logger.LogDebug(ocex.Message);
+                _logger.LogDebug(ocex.Message);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Inventory.Uwp.Library.Common
             var firstVisible = visibleRange.FirstIndex;
             var lastVisible = visibleRange.LastIndex;
             var lengthVisible = (int)visibleRange.Length;
-            logger.LogDebug("VisibleRange: {0} - {1}", firstVisible, lastVisible);
+            _logger.LogDebug("VisibleRange: {0} - {1}", firstVisible, lastVisible);
 
             // se visibleRangeLength è minore di 2 esci
             if (lengthVisible < 2) return;

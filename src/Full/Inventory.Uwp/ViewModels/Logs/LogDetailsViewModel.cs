@@ -37,15 +37,15 @@ namespace Inventory.Uwp.ViewModels.Logs
 
     public class LogDetailsViewModel : GenericDetailsViewModel<LogModel>
     {
-        private readonly ILogger logger;
-        private readonly LogServiceFacade logService;
+        private readonly ILogger _logger;
+        private readonly LogServiceFacade _logService;
 
         public LogDetailsViewModel(ILogger<LogListViewModel> logger,
                                    LogServiceFacade logService)
             : base()
         {
-            this.logger = logger;
-            this.logService = logService;
+            _logger = logger;
+            _logService = logService;
         }
 
         public override string Title => "Activity Logs";
@@ -60,12 +60,12 @@ namespace Inventory.Uwp.ViewModels.Logs
 
             try
             {
-                var item = await logService.GetLogAsync(ViewModelArgs.AppLogID);
+                var item = await _logService.GetLogAsync(ViewModelArgs.AppLogID);
                 Item = item ?? new LogModel { Id = 0, IsEmpty = true };
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load");
+                _logger.LogError(LogEvents.Load, ex, "Load");
             }
         }
 
@@ -108,14 +108,14 @@ namespace Inventory.Uwp.ViewModels.Logs
             {
                 StartStatusMessage("Deleting log...");
                 await Task.Delay(100);
-                await logService.DeleteLogAsync(model);
+                await _logService.DeleteLogAsync(model);
                 EndStatusMessage("Log deleted");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting log: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting log");
                 return false;
             }
         }
@@ -191,7 +191,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                 switch (message.Message)
                 {
                     case "ItemRangesDeleted":
-                        var model = await logService.GetLogAsync(current.Id);
+                        var model = await _logService.GetLogAsync(current.Id);
                         if (model == null)
                         {
                             await OnItemDeletedExternally();

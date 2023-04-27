@@ -20,6 +20,7 @@ using CommunityToolkit.Mvvm.Input;
 using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Customers;
@@ -35,7 +36,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
 {
     public class DashboardViewModel : ViewModelBase
     {
-        private readonly ILogger<DashboardViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly NavigationService _navigationService;
         private readonly CustomerService _customerService;
         private readonly OrderService _orderService;
@@ -115,7 +116,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Customers");
+                _logger.LogError(LogEvents.LoadCustomers, ex, "Load Customers");
             }
         }
 
@@ -131,7 +132,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Orders");
+                _logger.LogError(LogEvents.LoadOrders, ex, "Load Orders");
             }
         }
 
@@ -147,7 +148,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Products");
+                _logger.LogError(LogEvents.LoadProducts, ex, "Load Products");
             }
         }
 

@@ -14,6 +14,7 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
@@ -30,18 +31,18 @@ namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomerDetailsViewModel : GenericDetailsViewModel<CustomerDto>
     {
-        private readonly ILogger<CustomerDetailsViewModel> logger;
-        private readonly CustomerServiceFacade customerService;
-        private readonly FilePickerService filePickerService;
+        private readonly ILogger _logger;
+        private readonly CustomerServiceFacade _customerService;
+        private readonly FilePickerService _filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
                                         CustomerServiceFacade customerService,
                                         FilePickerService filePickerService)
             : base()
         {
-            this.logger = logger;
-            this.customerService = customerService;
-            this.filePickerService = filePickerService;
+            _logger = logger;
+            _customerService = customerService;
+            _filePickerService = filePickerService;
         }
 
 
@@ -65,12 +66,12 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 try
                 {
-                    var item = await customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
+                    var item = await _customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
                     Item = item ?? new CustomerDto { Id = ViewModelArgs.CustomerID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load Customer");
                 }
             }
         }
@@ -121,7 +122,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         private async void OnEditPicture()
         {
             NewPictureSource = null;
-            var result = await filePickerService.OpenImagePickerAsync();
+            var result = await _filePickerService.OpenImagePickerAsync();
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
@@ -142,15 +143,15 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 StartStatusMessage("Saving customer...");
                 await Task.Delay(100);
-                await customerService.UpdateCustomerAsync(model);
+                await _customerService.UpdateCustomerAsync(model);
                 EndStatusMessage("Customer saved");
-                logger.LogInformation($"Customer {model.Id} '{model.FullName}' was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Customer {model.Id} '{model.FullName}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Customer: {ex.Message}");
-                logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Customer");
                 return false;
             }
         }
@@ -161,15 +162,15 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 StartStatusMessage("Deleting customer...");
                 await Task.Delay(100);
-                await customerService.DeleteCustomerAsync(model);
+                await _customerService.DeleteCustomerAsync(model);
                 EndStatusMessage("Customer deleted");
-                logger.LogWarning($"Customer {model.Id} '{model.FullName}' was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Customer {model.Id} '{model.FullName}' was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Customer: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Customer");
                 return false;
             }
         }
@@ -210,7 +211,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                             //{
                             try
                             {
-                                var item = await customerService.GetCustomerAsync(current.Id);
+                                var item = await _customerService.GetCustomerAsync(current.Id);
                                 item = item ?? new CustomerDto { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -222,7 +223,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                             }
                             catch (Exception ex)
                             {
-                                logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle Customer Changes");
                             }
                             //});
                             break;
@@ -261,7 +262,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await customerService.GetCustomerAsync(current.Id);
+                            var model = await _customerService.GetCustomerAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -269,7 +270,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                         }
                         catch (Exception ex)
                         {
-                            logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle Customers Ranges Deleted");
                         }
                         break;
                 }

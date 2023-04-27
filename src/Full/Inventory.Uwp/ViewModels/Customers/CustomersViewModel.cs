@@ -13,6 +13,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -25,18 +26,15 @@ namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomersViewModel : ViewModelBase
     {
-        private readonly ILogger<CustomersViewModel> logger;
-        private readonly CustomerServiceFacade customerService;
+        private readonly ILogger _logger;
 
         public CustomersViewModel(ILogger<CustomersViewModel> logger,
-                                  CustomerServiceFacade customerService,
                                   CustomerListViewModel customerListViewModel,
                                   CustomerDetailsViewModel customerDetailsViewModel,
                                   OrderListViewModel orderListViewModel)
             : base()
         {
-            this.logger = logger;
-            this.customerService = customerService;
+            _logger = logger;
             CustomerList = customerListViewModel;
             CustomerDetails = customerDetailsViewModel;
             CustomerOrders = orderListViewModel;
@@ -130,7 +128,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load Details");
+                    _logger.LogError(LogEvents.LoadDetails, ex, "Load Details");
                 }
             }
         }
@@ -145,7 +143,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load Orders");
+                    _logger.LogError(LogEvents.LoadOrders, ex, "Load Orders");
                 }
             }
         }

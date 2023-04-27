@@ -21,6 +21,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -30,7 +31,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItem>
     {
-        private readonly ILogger<OrderItemDetailsViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly OrderItemService _orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
@@ -86,7 +87,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load OrderItem");
                 }
             }
         }
@@ -118,13 +119,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 await Task.Delay(100);
                 await _orderItemService.UpdateOrderItemAsync(model);
                 EndStatusMessage("Order item saved");
-                _logger.LogInformation($"Order item #{model.OrderId}, {model.OrderLine} was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Order item #{model.OrderId}, {model.OrderLine} was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Order item: {ex.Message}");
-                _logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Order item");
                 return false;
             }
         }
@@ -137,13 +138,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 await Task.Delay(100);
                 await _orderItemService.DeleteOrderItemAsync(model);
                 EndStatusMessage("Order item deleted");
-                _logger.LogWarning($"Order item #{model.OrderId}, {model.OrderLine} was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Order item #{model.OrderId}, {model.OrderLine} was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Order item: {ex.Message}");
-                _logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Order item");
                 return false;
             }
         }
@@ -198,7 +199,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                             }
                             catch (Exception ex)
                             {
-                                _logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle OrderItem Changes");
                             }
                         }
                         break;
@@ -222,7 +223,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle OrderItem Ranges Deleted");
                         }
                         break;
 

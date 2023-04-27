@@ -32,7 +32,7 @@ namespace Inventory.Uwp.ViewModels.Common
         {
         }
 
-        public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
+        public LookupTablesService LookupTables => Ioc.Default.GetRequiredService<LookupTablesService>();
 
         public override string Title => string.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
 

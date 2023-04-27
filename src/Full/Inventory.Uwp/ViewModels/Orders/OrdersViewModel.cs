@@ -13,6 +13,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -25,8 +26,8 @@ namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrdersViewModel : ViewModelBase
     {
-        private readonly ILogger<OrdersViewModel> logger;
-        private readonly OrderServiceFacade orderService;
+        private readonly ILogger _logger;
+        private readonly OrderServiceFacade _orderService;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
                                OrderServiceFacade orderService,
@@ -35,8 +36,8 @@ namespace Inventory.Uwp.ViewModels.Orders
                                OrderItemListViewModel orderItemListViewModel)
             : base()
         {
-            this.logger = logger;
-            this.orderService = orderService;
+            _logger = logger;
+            _orderService = orderService;
             OrderList = orderListViewModel;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
@@ -109,12 +110,12 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             try
             {
-                var model = await orderService.GetOrderAsync(selected.Id);
+                var model = await _orderService.GetOrderAsync(selected.Id);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Details");
             }
         }
 
@@ -129,7 +130,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load OrderItems");
+                _logger.LogError(LogEvents.LoadOrderItems, ex, "Load OrderItems");
             }
         }
     }

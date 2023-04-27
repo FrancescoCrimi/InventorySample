@@ -24,41 +24,41 @@ namespace Inventory.Persistence.Repository
 {
     internal class LookupTableRepository : ILookupTableRepository
     {
-        private AppDbContext _dataSource = null;
+        private AppDbContext _dbContext = null;
 
-        public LookupTableRepository(AppDbContext dataSource)
+        public LookupTableRepository(AppDbContext dbContext)
         {
-            _dataSource = dataSource;
+            _dbContext = dbContext;
         }
 
         public async Task<IList<Category>> GetCategoriesAsync()
         {
-            return await _dataSource.Categories.AsNoTracking().ToListAsync();
+            return await _dbContext.Categories.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<Country>> GetCountryCodesAsync()
         {
-            return await _dataSource.Countries.AsNoTracking().ToListAsync();
+            return await _dbContext.Countries.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<OrderStatus>> GetOrderStatusAsync()
         {
-            return await _dataSource.OrderStatuses.AsNoTracking().ToListAsync();
+            return await _dbContext.OrderStatuses.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<PaymentType>> GetPaymentTypesAsync()
         {
-            return await _dataSource.PaymentTypes.AsNoTracking().ToListAsync();
+            return await _dbContext.PaymentTypes.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<Shipper>> GetShippersAsync()
         {
-            return await _dataSource.Shippers.AsNoTracking().ToListAsync();
+            return await _dbContext.Shippers.AsNoTracking().ToListAsync();
         }
 
         public async Task<IList<TaxType>> GetTaxTypesAsync()
         {
-            return await _dataSource.TaxTypes.AsNoTracking().ToListAsync();
+            return await _dbContext.TaxTypes.AsNoTracking().ToListAsync();
         }
 
         #region Dispose
@@ -72,9 +72,9 @@ namespace Inventory.Persistence.Repository
         {
             if (disposing)
             {
-                if (_dataSource != null)
+                if (_dbContext != null)
                 {
-                    _dataSource.Dispose();
+                    _dbContext.Dispose();
                 }
             }
         }

@@ -14,27 +14,27 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Domain.Model;
+using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
+using Inventory.Uwp.Dto;
+using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.Services;
+using Inventory.Uwp.Services.VirtualCollections;
+using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.Views.Orders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Inventory.Uwp.Library.Common;
-using Inventory.Infrastructure.Common;
-using Inventory.Domain.Model;
-using Inventory.Uwp.ViewModels;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
-using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.Services.VirtualCollections;
-using Inventory.Uwp.Views.Orders;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrderListViewModel : GenericListViewModel<OrderDto>
     {
-        private readonly ILogger<OrderListViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly OrderServiceFacade _orderService;
         private readonly WindowManagerService _windowService;
         private readonly NavigationService _navigationService;
@@ -113,6 +113,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             bool isOk = true;
             ItemsCount = 0;
 
+            //todo: questa try é forse inutile, verificare virtualcollection loadasync
             try
             {
                 DataRequest<Order> request = BuildDataRequest();
@@ -122,7 +123,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 Items = new List<OrderDto>();
                 StatusError($"Error loading Orders: {ex.Message}");
-                _logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Orders");
                 isOk = false;
             }
 
@@ -191,7 +192,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Orders: {ex.Message}");
-                    _logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, $"Error deleting {count} Orders");
                     count = 0;
                 }
                 await RefreshAsync();

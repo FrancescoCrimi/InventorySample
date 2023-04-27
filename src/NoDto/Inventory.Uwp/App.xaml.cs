@@ -78,7 +78,7 @@ namespace Inventory.Uwp
                 .AddInventoryApplication()
 
                 //.AddTransient<LogServiceFacade>()
-                .AddSingleton<LookupTableService>()
+                .AddSingleton<LookupTablesService>()
 
                 ////.AddSingleton<IMessageService, MessageService>()
                 .AddSingleton<FilePickerService>()

@@ -57,7 +57,7 @@ namespace Inventory.Uwp.Dto
 
 
         public decimal Subtotal => Quantity * UnitPrice;
-        public decimal Total => (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxTypeId) / 100m);
+        public decimal Total => (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTablesService>().GetTaxRate(TaxTypeId) / 100m);
         public bool IsNew => OrderLine <= 0;
 
         private void UpdateTotals()

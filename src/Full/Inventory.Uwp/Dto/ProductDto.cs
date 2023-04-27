@@ -45,7 +45,7 @@ namespace Inventory.Uwp.Dto
         public TaxTypeDto TaxType { get; set; }
 
         public bool IsNew => Id <= 0;
-        public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryId);
+        public string CategoryName => Ioc.Default.GetRequiredService<LookupTablesService>().GetCategory(CategoryId);
 
         public override void Merge(ObservableDto source)
         {

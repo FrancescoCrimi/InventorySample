@@ -14,6 +14,7 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
@@ -30,18 +31,18 @@ namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductDetailsViewModel : GenericDetailsViewModel<ProductDto>
     {
-        private readonly ILogger<ProductDetailsViewModel> logger;
-        private readonly ProductServiceFacade productService;
-        private readonly FilePickerService filePickerService;
+        private readonly ILogger _logger;
+        private readonly ProductServiceFacade _productService;
+        private readonly FilePickerService _filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
                                        ProductServiceFacade productService,
                                        FilePickerService filePickerService)
             : base()
         {
-            this.logger = logger;
-            this.productService = productService;
-            this.filePickerService = filePickerService;
+            _logger = logger;
+            _productService = productService;
+            _filePickerService = filePickerService;
         }
 
         public override string Title => Item?.IsNew ?? true ? "New Product" : TitleEdit;
@@ -64,12 +65,12 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 try
                 {
-                    var item = await productService.GetProductAsync(ViewModelArgs.ProductID);
+                    var item = await _productService.GetProductAsync(ViewModelArgs.ProductID);
                     Item = item ?? new ProductDto { Id = ViewModelArgs.ProductID, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load Product");
                 }
             }
         }
@@ -119,7 +120,7 @@ namespace Inventory.Uwp.ViewModels.Products
         private async void OnEditPicture()
         {
             NewPictureSource = null;
-            var result = await filePickerService.OpenImagePickerAsync();
+            var result = await _filePickerService.OpenImagePickerAsync();
             if (result != null)
             {
                 EditableItem.Picture = result.ImageBytes;
@@ -140,15 +141,15 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 StartStatusMessage("Saving product...");
                 await Task.Delay(100);
-                await productService.UpdateProductAsync(model);
+                await _productService.UpdateProductAsync(model);
                 EndStatusMessage("Product saved");
-                logger.LogInformation($"Product {model.Id} '{model.Name}' was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Product {model.Id} '{model.Name}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Product: {ex.Message}");
-                logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Product");
                 return false;
             }
         }
@@ -159,15 +160,15 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 StartStatusMessage("Deleting product...");
                 await Task.Delay(100);
-                await productService.DeleteProductAsync(model);
+                await _productService.DeleteProductAsync(model);
                 EndStatusMessage("Product deleted");
-                logger.LogWarning($"Product {model.Id} '{model.Name}' was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Product {model.Id} '{model.Name}' was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Product: {ex.Message}");
-                logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Product");
                 return false;
             }
         }
@@ -205,7 +206,7 @@ namespace Inventory.Uwp.ViewModels.Products
                             //{
                             try
                             {
-                                var item = await productService.GetProductAsync(current.Id);
+                                var item = await _productService.GetProductAsync(current.Id);
                                 item = item ?? new ProductDto { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -217,7 +218,7 @@ namespace Inventory.Uwp.ViewModels.Products
                             }
                             catch (Exception ex)
                             {
-                                logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle Product Changes");
                             }
                             //});
                             break;
@@ -240,7 +241,7 @@ namespace Inventory.Uwp.ViewModels.Products
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await productService.GetProductAsync(current.Id);
+                            var model = await _productService.GetProductAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -248,7 +249,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         }
                         catch (Exception ex)
                         {
-                            logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle Product Ranges Deleted");
                         }
                         break;
                 }

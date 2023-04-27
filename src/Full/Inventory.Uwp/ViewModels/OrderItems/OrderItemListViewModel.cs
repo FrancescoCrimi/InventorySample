@@ -16,6 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
@@ -32,10 +33,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemListViewModel : GenericListViewModel<OrderItemDto>
     {
-        private readonly ILogger<OrderItemListViewModel> logger;
-        private readonly OrderItemServiceFacade orderItemService;
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
+        private readonly ILogger _logger;
+        private readonly OrderItemServiceFacade _orderItemService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
                                       OrderItemServiceFacade orderItemService,
@@ -43,10 +44,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                                       WindowManagerService windowService)
             : base()
         {
-            this.logger = logger;
-            this.orderItemService = orderItemService;
-            this.navigationService = navigationService;
-            this.windowService = windowService;
+            _logger = logger;
+            _orderItemService = orderItemService;
+            _navigationService = navigationService;
+            _windowService = windowService;
         }
 
         public OrderItemListArgs ViewModelArgs { get; private set; }
@@ -108,16 +109,17 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             ItemsCount = 0;
             SelectedItem = null;
 
+            //todo: questa try é forse inutile, verificare virtualcollection loadasync
             try
             {
                 DataRequest<OrderItem> request = BuildDataRequest();
-                Items = await orderItemService.GetOrderItemsAsync(request);
+                Items = await _orderItemService.GetOrderItemsAsync(request);
             }
             catch (Exception ex)
             {
                 Items = new List<OrderItemDto>();
                 StatusError($"Error loading Order items: {ex.Message}");
-                logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Order items");
                 isOk = false;
             }
 
@@ -131,7 +133,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (SelectedItem != null)
             {
-                await windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderId, OrderLine = SelectedItem.OrderLine });
+                await _windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = SelectedItem.OrderId, OrderLine = SelectedItem.OrderLine });
             }
         }
 
@@ -139,11 +141,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (IsMainView)
             {
-                await windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                await _windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
             else
             {
-                navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                _navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
 
             StatusReady();
@@ -186,7 +188,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} order items: {ex.Message}");
-                    logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, $"Error deleting {count} order items");
                     count = 0;
                 }
                 await RefreshAsync();
@@ -203,7 +205,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             foreach (var model in models)
             {
-                await orderItemService.DeleteOrderItemAsync(model);
+                await _orderItemService.DeleteOrderItemAsync(model);
             }
         }
 
@@ -212,7 +214,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             DataRequest<OrderItem> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await orderItemService.DeleteOrderItemRangeAsync(range.Index, range.Length, request);
+                await _orderItemService.DeleteOrderItemRangeAsync(range.Index, range.Length, request);
             }
         }
 

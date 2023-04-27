@@ -22,6 +22,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -33,7 +34,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemListViewModel : GenericListViewModel<OrderItem>
     {
-        private readonly ILogger<OrderItemListViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly OrderItemService _orderItemService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
@@ -118,7 +119,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             {
                 Items = new List<OrderItem>();
                 StatusError($"Error loading Order items: {ex.Message}");
-                _logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Order items");
                 isOk = false;
             }
 
@@ -187,7 +188,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} order items: {ex.Message}");
-                    _logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, $"Error deleting {count} order items");
                     count = 0;
                 }
                 await RefreshAsync();

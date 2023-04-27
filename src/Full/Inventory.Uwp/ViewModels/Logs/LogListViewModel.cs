@@ -134,7 +134,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             {
                 Items = new List<LogModel>();
                 StatusError($"Error loading Logs: {ex.Message}");
-                _logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Logs");
                 isOk = false;
             }
 
@@ -185,7 +185,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Logs: {ex.Message}");
-                    _logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, "Error deleting {count} Logs");
                     count = 0;
                 }
                 await RefreshAsync();

@@ -60,7 +60,7 @@
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
-    <Compile Include="Services\LookupTableService.cs" />
+    <Compile Include="Services\LookupTablesService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
     <Compile Include="Services\VirtualCollections\LogCollection.cs" />

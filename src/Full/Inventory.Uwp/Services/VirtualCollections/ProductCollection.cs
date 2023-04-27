@@ -14,6 +14,7 @@
 
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
@@ -25,12 +26,13 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class ProductCollection : VirtualRangeCollection<ProductDto>
     {
-        private readonly ILogger<ProductCollection> _logger;
+        private readonly ILogger _logger;
         private readonly ProductServiceFacade _productService;
         private DataRequest<Product> _request;
 
         public ProductCollection(ILogger<ProductCollection> logger,
                                  ProductServiceFacade productService)
+            : base(logger)
         {
             _logger = logger;
             _productService = productService;
@@ -63,9 +65,10 @@ namespace Inventory.Uwp.Services.VirtualCollections
             }
             catch (System.Exception ex)
             {
-                _logger.LogError(ex, "Load Product error");
-                throw ex;
+                //LogException("ProductCollection", "Fetch", ex);
+                _logger.LogError(LogEvents.Fetch, ex, "Load Product Error");
             }
+            return null;
         }
     }
 }

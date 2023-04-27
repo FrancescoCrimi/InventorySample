@@ -24,8 +24,8 @@ namespace Inventory.Uwp.ViewModels.Logs
 {
     public class LogsViewModel : ViewModelBase
     {
-        private readonly ILogger<LogsViewModel> logger;
-        private readonly LogService logService;
+        private readonly ILogger _logger;
+        private readonly LogService _logService;
 
         public LogsViewModel(ILogger<LogsViewModel> logger,
                              LogService logService,
@@ -33,8 +33,8 @@ namespace Inventory.Uwp.ViewModels.Logs
                              LogDetailsViewModel appLogDetailsViewModel)
             : base()
         {
-            this.logger = logger;
-            this.logService = logService;
+            _logger = logger;
+            _logService = logService;
             AppLogList = appLogListViewModel;
             AppLogDetails = appLogDetailsViewModel;
         }
@@ -44,7 +44,7 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public async Task LoadAsync(LogListArgs args)
         {
-            await logService.MarkAllAsReadAsync();
+            await _logService.MarkAllAsReadAsync();
             await AppLogList.LoadAsync(args);
         }
 
@@ -81,7 +81,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             //if (AppLogDetails.IsEditMode)
             //{
-                StatusReady();
+            StatusReady();
             //}
             var selected = AppLogList.SelectedItem;
             if (!AppLogList.IsMultipleSelection)
@@ -98,13 +98,13 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             try
             {
-                var model = await logService.GetLogAsync(selected.Id);
+                var model = await _logService.GetLogAsync(selected.Id);
                 //selected.Merge(model);
                 return model;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Log Details");
                 return null;
             }
         }

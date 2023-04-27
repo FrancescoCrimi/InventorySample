@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
@@ -25,7 +26,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemsViewModel : ViewModelBase
     {
-        private readonly ILogger<OrderItemsViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly OrderItemService _orderItemService;
 
         public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
@@ -116,7 +117,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Details");
             }
         }
     }

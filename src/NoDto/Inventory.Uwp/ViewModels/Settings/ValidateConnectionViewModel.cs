@@ -14,6 +14,7 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
@@ -25,12 +26,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 {
     public class ValidateConnectionViewModel : ViewModelBase
     {
-        private readonly ILogger<ValidateConnectionViewModel> logger;
+        private readonly ILogger _logger;
 
         public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger)
             : base()
         {
-            this.logger = logger;
+            _logger = logger;
             Result = Result.Error("Operation cancelled");
         }
 
@@ -108,7 +109,7 @@ namespace Inventory.Uwp.ViewModels.Settings
             {
                 Result = Result.Error("Error creating database. See details in Activity Log");
                 Message = $"Error validating connection: {ex.Message}";
-                logger.LogError(ex, "Validate Connection");
+                _logger.LogError(LogEvents.Settings, ex, "Validate Connection");
             }
             PrimaryButtonText = "Ok";
             SecondaryButtonText = null;

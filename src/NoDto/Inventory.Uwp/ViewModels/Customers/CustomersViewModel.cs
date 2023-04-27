@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.Orders;
@@ -24,7 +25,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomersViewModel : ViewModelBase
     {
-        private readonly ILogger<CustomersViewModel> _logger;
+        private readonly ILogger _logger;
 
         public CustomersViewModel(ILogger<CustomersViewModel> logger,
                                   CustomerListViewModel customerListViewModel,
@@ -135,7 +136,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Details");
             }
         }
 
@@ -147,7 +148,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Orders");
+                _logger.LogError(LogEvents.LoadOrders, ex, "Load Orders");
             }
         }
     }

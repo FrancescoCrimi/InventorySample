@@ -22,6 +22,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
@@ -34,7 +35,7 @@ namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrderListViewModel : GenericListViewModel<Order>
     {
-        private readonly ILogger<OrderListViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly OrderService _orderService;
         private readonly WindowManagerService _windowService;
         private readonly NavigationService _navigationService;
@@ -110,6 +111,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             var isOk = true;
             ItemsCount = 0;
 
+            //todo: questa try é forse inutile, verificare virtualcollection loadasync
             try
             {
                 DataRequest<Order> request = BuildDataRequest();
@@ -119,7 +121,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 Items = new List<Order>();
                 StatusError($"Error loading Orders: {ex.Message}");
-                _logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Orders");
                 isOk = false;
             }
 
@@ -188,7 +190,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Orders: {ex.Message}");
-                    _logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, $"Error deleting {count} Orders");
                     count = 0;
                 }
                 await RefreshAsync();

@@ -21,6 +21,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -31,7 +32,7 @@ namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductDetailsViewModel : GenericDetailsViewModel<Product>
     {
-        private readonly ILogger<ProductDetailsViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly ProductService _productService;
         private readonly FilePickerService _filePickerService;
 
@@ -73,7 +74,7 @@ namespace Inventory.Uwp.ViewModels.Products
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load Product");
                 }
             }
         }
@@ -143,13 +144,13 @@ namespace Inventory.Uwp.ViewModels.Products
                 await Task.Delay(100);
                 await _productService.UpdateProductAsync(model);
                 EndStatusMessage("Product saved");
-                _logger.LogInformation($"Product {model.Id} '{model.Name}' was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Product {model.Id} '{model.Name}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Product: {ex.Message}");
-                _logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Product");
                 return false;
             }
         }
@@ -162,13 +163,13 @@ namespace Inventory.Uwp.ViewModels.Products
                 await Task.Delay(100);
                 await _productService.DeleteProductAsync(model);
                 EndStatusMessage("Product deleted");
-                _logger.LogWarning($"Product {model.Id} '{model.Name}' was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Product {model.Id} '{model.Name}' was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Product: {ex.Message}");
-                _logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Product");
                 return false;
             }
         }
@@ -212,7 +213,7 @@ namespace Inventory.Uwp.ViewModels.Products
                             }
                             catch (Exception ex)
                             {
-                                _logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle Product Changes");
                             }
                         }
                         break;
@@ -246,7 +247,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle Product Ranges Deleted");
                         }
                         break;
                 }

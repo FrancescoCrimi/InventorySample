@@ -16,7 +16,7 @@ namespace Inventory.Uwp.Services
     // https://github.com/microsoft/TemplateStudio/blob/main/docs/UWP/activation.md
     internal class ActivationService
     {
-        private readonly ILogger<ActivationService> _logger;
+        private readonly ILogger _logger;
         private readonly ActivationHandler<IActivatedEventArgs> _defaultHandler;
         private readonly IEnumerable<ActivationHandler> _activationHandlers;
         private object _lastActivationArgs;
@@ -107,9 +107,8 @@ namespace Inventory.Uwp.Services
 
         private async Task ConfigureLookupTables()
         {
-            var lookupTables = Ioc.Default.GetService<LookupTableServiceFacade>();
+            var lookupTables = Ioc.Default.GetService<LookupTablesService>();
             await lookupTables.InitializeAsync();
-            //LookupTablesProxy.Instance = lookupTables;
         }
 
         private async Task EnsureLogDbAsync()

@@ -1,24 +1,38 @@
-﻿using System;
+﻿#region copyright
+// ******************************************************************
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+// ******************************************************************
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.Services
 {
-    public class LookupTableService /*: ILookupTableService*/
+    public class LookupTablesService
     {
-        private readonly ILogger<LookupTableService> _logger;
+        private readonly ILogger _logger;
         private readonly ILookupTableRepository _repository;
 
-        public LookupTableService(ILogger<LookupTableService> logger,
-                                  ILookupTableRepository lookupTableRepository)
+        public LookupTablesService(ILogger<LookupTablesService> logger,
+                                   ILookupTableRepository repository)
         {
             _logger = logger;
-            _repository = lookupTableRepository;
-            Task.Run(async () => await InitializeAsync());
+            _repository = repository;
         }
 
         public IList<Category> Categories
@@ -105,7 +119,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Categories");
+                _logger.LogError(LogEvents.LoadCategories, ex, "Load Categories");
             }
             return new List<Category>();
         }
@@ -119,7 +133,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load CountryCodes");
+                _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
             }
             return new List<Country>();
         }
@@ -133,7 +147,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load OrderStatus");
+                _logger.LogError(LogEvents.LoadOrderStatus, ex, "Load OrderStatus");
             }
             return new List<OrderStatus>();
         }
@@ -147,7 +161,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load PaymentTypes");
+                _logger.LogError(LogEvents.LoadPaymentTypes, ex, "Load PaymentTypes");
             }
             return new List<PaymentType>();
         }
@@ -161,7 +175,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Shippers");
+                _logger.LogError(LogEvents.LoadShippers, ex, "Load Shippers");
             }
             return new List<Shipper>();
         }
@@ -175,7 +189,7 @@ namespace Inventory.Uwp.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load TaxTypes");
+                _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
             }
             return new List<TaxType>();
         }

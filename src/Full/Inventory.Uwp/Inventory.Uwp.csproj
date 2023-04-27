@@ -169,7 +169,7 @@
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\LogServiceFacade.cs" />
-    <Compile Include="Services\LookupTableServiceFacade.cs" />
+    <Compile Include="Services\LookupTablesService.cs" />
     <Compile Include="Services\Infrastructure\NavigationService.cs" />
     <Compile Include="Services\OrderItemServiceFacade.cs" />
     <Compile Include="Services\OrderServiceFacade.cs" />

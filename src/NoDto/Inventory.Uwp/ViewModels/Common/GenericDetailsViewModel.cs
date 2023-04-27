@@ -33,10 +33,10 @@ namespace Inventory.Uwp.ViewModels.Common
         {
             navigationService = Ioc.Default.GetService<NavigationService>();
             windowService = Ioc.Default.GetService<WindowManagerService>();
-            LookupTables = Ioc.Default.GetRequiredService<LookupTableService>();
+            LookupTables = Ioc.Default.GetRequiredService<LookupTablesService>();
         }
 
-        public LookupTableService LookupTables
+        public LookupTablesService LookupTables
         {
             get;
         }

@@ -21,6 +21,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -31,7 +32,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomerDetailsViewModel : GenericDetailsViewModel<Customer>
     {
-        private readonly ILogger<CustomerDetailsViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly CustomerService _customerService;
         private readonly FilePickerService _filePickerService;
 
@@ -75,7 +76,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Load");
+                    _logger.LogError(LogEvents.Load, ex, "Load Customer");
                 }
             }
         }
@@ -146,13 +147,13 @@ namespace Inventory.Uwp.ViewModels.Customers
                 await Task.Delay(100);
                 await _customerService.UpdateCustomerAsync(model);
                 EndStatusMessage("Customer saved");
-                _logger.LogInformation($"Customer {model.Id} '{model.FullName}' was saved successfully.");
+                _logger.LogInformation(LogEvents.Save, $"Customer {model.Id} '{model.FullName}' was saved successfully.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error saving Customer: {ex.Message}");
-                _logger.LogError(ex, "Save");
+                _logger.LogError(LogEvents.Save, ex, "Error saving Customer");
                 return false;
             }
         }
@@ -165,13 +166,13 @@ namespace Inventory.Uwp.ViewModels.Customers
                 await Task.Delay(100);
                 await _customerService.DeleteCustomerAsync(model);
                 EndStatusMessage("Customer deleted");
-                _logger.LogWarning($"Customer {model.Id} '{model.FullName}' was deleted.");
+                _logger.LogWarning(LogEvents.Delete, $"Customer {model.Id} '{model.FullName}' was deleted.");
                 return true;
             }
             catch (Exception ex)
             {
                 StatusError($"Error deleting Customer: {ex.Message}");
-                _logger.LogError(ex, "Delete");
+                _logger.LogError(LogEvents.Delete, ex, "Error deleting Customer");
                 return false;
             }
         }
@@ -221,8 +222,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                             }
                             catch (Exception ex)
                             {
-                                //LogException("Customer", "Handle Changes", ex);
-                                _logger.LogError(ex, "Handle Changes");
+                                _logger.LogError(LogEvents.HandleChanges, ex, "Handle Customer Changes");
                             }
                         }
                         break;
@@ -257,8 +257,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                         }
                         catch (Exception ex)
                         {
-                            //LogException("Customer", "Handle Ranges Deleted", ex);
-                            _logger.LogError(ex, "Handle Ranges Deleted");
+                            _logger.LogError(LogEvents.HandleRangesDeleted, ex, "Handle Customers Ranges Deleted");
                         }
                         break;
                 }

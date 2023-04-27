@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
@@ -25,17 +26,14 @@ namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductsViewModel : ViewModelBase
     {
-        private readonly ILogger<ProductsViewModel> _logger;
-        private readonly ProductService _productService;
+        private readonly ILogger _logger;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
-                                 ProductService productService,
                                  ProductListViewModel productListViewModel,
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()
         {
             _logger = logger;
-            _productService = productService;
             ProductList = productListViewModel;
             ProductDetails = productDetailsViewModel;
         }
@@ -117,7 +115,7 @@ namespace Inventory.Uwp.ViewModels.Products
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Product Details");
             }
         }
     }

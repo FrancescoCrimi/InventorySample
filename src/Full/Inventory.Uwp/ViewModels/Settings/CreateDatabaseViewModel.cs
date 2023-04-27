@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
@@ -25,12 +26,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 {
     public class CreateDatabaseViewModel : ViewModelBase
     {
-        private readonly ILogger<CreateDatabaseViewModel> logger;
+        private readonly ILogger _logger;
 
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger)
             : base()
         {
-            this.logger = logger;
+            this._logger = logger;
             Result = Result.Error("Operation cancelled");
         }
 
@@ -121,7 +122,7 @@ namespace Inventory.Uwp.ViewModels.Settings
             {
                 Result = Result.Error("Error creating database. See details in Activity Log");
                 Message = $"Error creating database: {ex.Message}";
-                logger.LogError(ex, "Create Database");
+                _logger.LogError(LogEvents.Settings, ex, "Create Database");
             }
             PrimaryButtonText = "Ok";
             SecondaryButtonText = null;

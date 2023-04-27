@@ -11,12 +11,13 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class LogCollection : VirtualRangeCollection<Log>
     {
-        private readonly ILogger<LogCollection> _logger;
+        private readonly ILogger _logger;
         private readonly LogService _logService;
         private DataRequest<Log> _request;
 
         public LogCollection(ILogger<LogCollection> logger,
                              LogService logService)
+            : base(logger)
         {
             _logger = logger;
             _logService = logService;
@@ -40,9 +41,10 @@ namespace Inventory.Uwp.Services.VirtualCollections
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load logs error");
-                throw ex;
+                //LogException("LogCollection", "Fetch", ex);
+                _logger.LogError(LogEvents.Fetch, ex, "Load Log Error");
             }
+            return null;
         }
     }
 }

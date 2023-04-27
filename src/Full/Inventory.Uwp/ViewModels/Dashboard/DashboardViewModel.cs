@@ -15,6 +15,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -35,11 +36,11 @@ namespace Inventory.Uwp.ViewModels.Dashboard
 {
     public class DashboardViewModel : ViewModelBase
     {
-        private readonly ILogger<DashboardViewModel> logger;
-        private readonly NavigationService navigationService;
-        private readonly CustomerServiceFacade customerService;
-        private readonly OrderServiceFacade orderService;
-        private readonly ProductServiceFacade productService;
+        private readonly ILogger _logger;
+        private readonly NavigationService _navigationService;
+        private readonly CustomerServiceFacade _customerService;
+        private readonly OrderServiceFacade _orderService;
+        private readonly ProductServiceFacade _productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   NavigationService navigationService,
@@ -48,11 +49,11 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                                   ProductServiceFacade productService)
             : base()
         {
-            this.logger = logger;
-            this.navigationService = navigationService;
-            this.customerService = customerService;
-            this.orderService = orderService;
-            this.productService = productService;
+            _logger = logger;
+            _navigationService = navigationService;
+            _customerService = customerService;
+            _orderService = orderService;
+            _productService = productService;
         }
 
         private AsyncRelayCommand loadedCommand = null;
@@ -112,11 +113,11 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                     OrderByDesc = r => r.CreatedOn
                 };
 
-                Customers = await customerService.GetCustomersAsync(0, 5, request);
+                Customers = await _customerService.GetCustomersAsync(0, 5, request);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Customers");
+                _logger.LogError(LogEvents.LoadCustomers, ex, "Load Customers");
             }
         }
 
@@ -128,11 +129,11 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 {
                     OrderByDesc = r => r.OrderDate
                 };
-                Orders = await orderService.GetOrdersAsync(0, 5, request);
+                Orders = await _orderService.GetOrdersAsync(0, 5, request);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Orders");
+                _logger.LogError(LogEvents.LoadOrders, ex, "Load Orders");
             }
         }
 
@@ -144,11 +145,11 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 {
                     OrderByDesc = r => r.CreatedOn
                 };
-                Products = await productService.GetProductsAsync(0, 5, request);
+                Products = await _productService.GetProductsAsync(0, 5, request);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Products");
+                _logger.LogError(LogEvents.LoadOrders, ex, "Load Products");
             }
         }
 
@@ -159,13 +160,13 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 switch (control.Tag as string)
                 {
                     case "Customers":
-                        navigationService.Navigate<CustomersPage>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
+                        _navigationService.Navigate<CustomersPage>(new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
                         break;
                     case "Orders":
-                        navigationService.Navigate<OrdersPage>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
+                        _navigationService.Navigate<OrdersPage>(new OrderListArgs { OrderByDesc = r => r.OrderDate });
                         break;
                     case "Products":
-                        navigationService.Navigate<ProductsPage>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
+                        _navigationService.Navigate<ProductsPage>(new ProductListArgs { OrderByDesc = r => r.ListPrice });
                         break;
                     default:
                         break;

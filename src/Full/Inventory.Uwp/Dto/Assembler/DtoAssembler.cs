@@ -6,11 +6,11 @@ namespace Inventory.Uwp.Dto
 {
     public static partial class DtoAssembler
     {
-        static readonly LookupTableServiceFacade _lookupTable;
+        static readonly LookupTablesService _lookupTable;
 
         static DtoAssembler()
         {
-            _lookupTable = Ioc.Default.GetService<LookupTableServiceFacade>();
+            _lookupTable = Ioc.Default.GetService<LookupTablesService>();
         }
 
 

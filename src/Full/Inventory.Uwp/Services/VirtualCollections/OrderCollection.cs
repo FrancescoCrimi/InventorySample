@@ -14,9 +14,11 @@
 
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,12 +27,13 @@ namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class OrderCollection : VirtualRangeCollection<OrderDto>
     {
-        private readonly ILogger<OrderCollection> _logger;
+        private readonly ILogger _logger;
         private readonly OrderServiceFacade _orderService;
         private DataRequest<Order> _request;
 
         public OrderCollection(ILogger<OrderCollection> logger,
                                OrderServiceFacade orderService)
+            : base(logger)
         {
             _logger = logger;
             _orderService = orderService;
@@ -55,9 +58,18 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected override async Task<IList<OrderDto>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
-            //Todo: fix cancellationToken
-            var result = await _orderService.GetOrdersAsync(skip, take, _request, dispatcher);
-            return result;
+            try
+            {
+                //Todo: fix cancellationToken
+                var result = await _orderService.GetOrdersAsync(skip, take, _request, dispatcher);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                //LogException("OrderCollection", "Fetch", ex);
+                _logger.LogError(LogEvents.Fetch, ex, "Load Order Error");
+            }
+            return null;
         }
     }
 }

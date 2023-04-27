@@ -16,6 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
@@ -33,7 +34,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 {
     public class CustomerListViewModel : GenericListViewModel<CustomerDto>
     {
-        private readonly ILogger<CustomerListViewModel> _logger;
+        private readonly ILogger _logger;
         private readonly CustomerServiceFacade _customerService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
@@ -104,6 +105,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             bool isOk = true;
             ItemsCount = 0;
 
+            //todo: questa try é forse inutile, verificare virtualcollection loadasync
             try
             {
                 DataRequest<Customer> request = BuildDataRequest();
@@ -113,7 +115,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 Items = new List<CustomerDto>();
                 StatusError($"Error loading Customers: {ex.Message}");
-                _logger.LogError(ex, "Refresh");
+                _logger.LogError(LogEvents.Refresh, ex, "Error loading Customers");
                 isOk = false;
             }
 
@@ -182,7 +184,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 catch (Exception ex)
                 {
                     StatusError($"Error deleting {count} Customers: {ex.Message}");
-                    _logger.LogError(ex, "Delete");
+                    _logger.LogError(LogEvents.Delete, ex, "Error deleting {count} Customers");
                     count = 0;
                 }
                 await RefreshAsync();

@@ -13,6 +13,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -24,8 +25,8 @@ namespace Inventory.Uwp.ViewModels.Products
 {
     public class ProductsViewModel : ViewModelBase
     {
-        private readonly ILogger<ProductsViewModel> logger;
-        private readonly ProductServiceFacade productService;
+        private readonly ILogger _logger;
+        private readonly ProductServiceFacade _productService;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
                                  ProductServiceFacade productService,
@@ -33,8 +34,8 @@ namespace Inventory.Uwp.ViewModels.Products
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()
         {
-            this.logger = logger;
-            this.productService = productService;
+            _logger = logger;
+            _productService = productService;
 
             ProductList = productListViewModel;
             ProductDetails = productDetailsViewModel;
@@ -103,12 +104,12 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             try
             {
-                var model = await productService.GetProductAsync(selected.Id);
+                var model = await _productService.GetProductAsync(selected.Id);
                 selected.Merge(model);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Product Details");
             }
         }
     }

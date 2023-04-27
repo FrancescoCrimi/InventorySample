@@ -15,8 +15,8 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.OrderItems;
@@ -26,18 +26,15 @@ namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrdersViewModel : ViewModelBase
     {
-        private readonly ILogger<OrdersViewModel> _logger;
-        private readonly OrderService _orderService;
+        private readonly ILogger _logger;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
-                               OrderService orderService,
                                OrderListViewModel orderListViewModel,
                                OrderDetailsViewModel orderDetailsViewModel,
                                OrderItemListViewModel orderItemListViewModel)
             : base()
         {
             _logger = logger;
-            _orderService = orderService;
             OrderList = orderListViewModel;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
@@ -128,7 +125,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load Details");
+                _logger.LogError(LogEvents.LoadDetails, ex, "Load Details");
             }
         }
 
@@ -143,7 +140,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Load OrderItems");
+                _logger.LogError(LogEvents.LoadOrderItems, ex, "Load OrderItems");
             }
         }
     }
