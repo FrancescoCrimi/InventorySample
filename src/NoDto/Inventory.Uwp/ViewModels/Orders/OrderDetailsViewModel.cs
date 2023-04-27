@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
@@ -32,14 +32,17 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrderDetailsViewModel : GenericDetailsViewModel<Order>
     {
         private readonly ILogger _logger;
-        private readonly OrderService _orderService;
+        private readonly IOrderRepository _orderRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderService orderService)
+                                     IOrderRepository orderRepository,
+                                     ICustomerRepository customerRepository)
             : base()
         {
             _logger = logger;
-            _orderService = orderService;
+            _orderRepository = orderRepository;
+            this._customerRepository = customerRepository;
         }
 
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
@@ -75,14 +78,16 @@ namespace Inventory.Uwp.ViewModels.Orders
 
             if (ViewModelArgs.IsNew)
             {
-                Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerID);
+                //Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerID);
+                var customer = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerID);
+                Item = Order.CreateNewOrder(customer);
                 IsEditMode = true;
             }
             else
             {
                 try
                 {
-                    var item = await _orderService.GetOrderAsync(ViewModelArgs.OrderID);
+                    var item = await _orderRepository.GetOrderAsync(ViewModelArgs.OrderID);
                     Item = item ?? new Order { Id = ViewModelArgs.OrderID, IsEmpty = true };
                 }
                 catch (Exception ex)
@@ -126,7 +131,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 StartStatusMessage("Saving order...");
                 await Task.Delay(100);
-                await _orderService.UpdateOrderAsync(model);
+                await _orderRepository.UpdateOrderAsync(model);
                 EndStatusMessage("Order saved");
                 _logger.LogInformation(LogEvents.Save, $"Order #{model.Id} was saved successfully.");
                 OnPropertyChanged(nameof(CanEditCustomer));
@@ -146,7 +151,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 StartStatusMessage("Deleting order...");
                 await Task.Delay(100);
-                await _orderService.DeleteOrderAsync(model);
+                await _orderRepository.DeleteOrdersAsync(model);
                 EndStatusMessage("Order deleted");
                 _logger.LogWarning(LogEvents.Delete, $"Order #{model.Id} was deleted.");
                 return true;
@@ -196,7 +201,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                         {
                             try
                             {
-                                var item = await _orderService.GetOrderAsync(current.Id);
+                                var item = await _orderRepository.GetOrderAsync(current.Id);
                                 item = item ?? new Order { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -223,7 +228,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await _orderService.GetOrderAsync(current.Id);
+                            var model = await _orderRepository.GetOrderAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();

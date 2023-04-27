@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
@@ -33,16 +33,16 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductDetailsViewModel : GenericDetailsViewModel<Product>
     {
         private readonly ILogger _logger;
-        private readonly ProductService _productService;
+        private readonly IProductRepository _productRepository;
         private readonly FilePickerService _filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
-                                       ProductService productService,
+                                       IProductRepository productRepository,
                                        FilePickerService filePickerService)
             : base()
         {
             _logger = logger;
-            _productService = productService;
+            _productRepository = productRepository;
             _filePickerService = filePickerService;
         }
 
@@ -69,7 +69,7 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 try
                 {
-                    var item = await _productService.GetProductAsync(ViewModelArgs.ProductID);
+                    var item = await _productRepository.GetProductAsync(ViewModelArgs.ProductID);
                     Item = item ?? new Product { Id = ViewModelArgs.ProductID, IsEmpty = true };
                 }
                 catch (Exception ex)
@@ -142,7 +142,7 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 StartStatusMessage("Saving product...");
                 await Task.Delay(100);
-                await _productService.UpdateProductAsync(model);
+                await _productRepository.UpdateProductAsync(model);
                 EndStatusMessage("Product saved");
                 _logger.LogInformation(LogEvents.Save, $"Product {model.Id} '{model.Name}' was saved successfully.");
                 return true;
@@ -161,7 +161,7 @@ namespace Inventory.Uwp.ViewModels.Products
             {
                 StartStatusMessage("Deleting product...");
                 await Task.Delay(100);
-                await _productService.DeleteProductAsync(model);
+                await _productRepository.DeleteProductsAsync(model);
                 EndStatusMessage("Product deleted");
                 _logger.LogWarning(LogEvents.Delete, $"Product {model.Id} '{model.Name}' was deleted.");
                 return true;
@@ -201,7 +201,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         {
                             try
                             {
-                                var item = await _productService.GetProductAsync(current.Id);
+                                var item = await _productRepository.GetProductAsync(current.Id);
                                 item = item ?? new Product { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -239,7 +239,7 @@ namespace Inventory.Uwp.ViewModels.Products
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await _productService.GetProductAsync(current.Id);
+                            var model = await _productRepository.GetProductAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();

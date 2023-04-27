@@ -16,8 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
@@ -28,15 +28,15 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class CustomerCollection : VirtualRangeCollection<Customer>
     {
         private readonly ILogger _logger;
-        private readonly CustomerService _customerService;
+        private readonly ICustomerRepository _customerRepository;
         private DataRequest<Customer> _request;
 
         public CustomerCollection(ILogger<CustomerCollection> logger,
-                                  CustomerService customerService)
+                                  ICustomerRepository customerRepository)
             : base(logger)
         {
             _logger = logger;
-            _customerService = customerService;
+            _customerRepository = customerRepository;
         }
 
         // TODO: fix here request
@@ -53,7 +53,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<int> GetCountAsync()
         {
-            var result = await _customerService.GetCustomersCountAsync(_request);
+            var result = await _customerRepository.GetCustomersCountAsync(_request);
             return result;
         }
 
@@ -62,7 +62,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             try
             {
                 //Todo: fix cancellationToken
-                var result = await _customerService.GetCustomersAsync(skip, take, _request);
+                var result = await _customerRepository.GetCustomersAsync(skip, take, _request);
                 return result;
             }
             catch (Exception ex)

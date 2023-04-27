@@ -153,5 +153,20 @@ namespace Inventory.Domain.Model
             ShipperId = source.ShipperId;
             StatusId = source.StatusId;
         }
+
+        public static Order CreateNewOrder(Customer customer)
+        {
+            var order = new Order();
+            order.CustomerId = order.CustomerId;
+            order.OrderDate = DateTime.UtcNow;
+            order.StatusId = 0;
+            order.ShipAddress = customer.AddressLine1;
+            order.ShipCity = customer.City;
+            order.ShipRegion = customer.Region;
+            order.ShipCountryId = customer.CountryId;
+            order.ShipPostalCode = customer.PostalCode;
+            order.Customer = customer;
+            return order;
+        }
     }
 }

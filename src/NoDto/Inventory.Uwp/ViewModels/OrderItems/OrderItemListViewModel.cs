@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
@@ -35,18 +35,18 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemListViewModel : GenericListViewModel<OrderItem>
     {
         private readonly ILogger _logger;
-        private readonly OrderItemService _orderItemService;
+        private readonly IOrderItemRepository _orderItemRepository;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
-                                      OrderItemService orderItemService,
+                                      IOrderItemRepository orderItemRepository,
                                       NavigationService navigationService,
                                       WindowManagerService windowService)
             : base()
         {
             _logger = logger;
-            _orderItemService = orderItemService;
+            _orderItemRepository = orderItemRepository;
             _navigationService = navigationService;
             _windowService = windowService;
         }
@@ -113,7 +113,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             try
             {
                 DataRequest<OrderItem> request = BuildDataRequest();
-                Items = await _orderItemService.GetOrderItemsAsync(request);
+                Items = await _orderItemRepository.GetOrderItemsAsync(0, 100, request);
             }
             catch (Exception ex)
             {
@@ -205,7 +205,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             foreach (var model in models)
             {
-                await _orderItemService.DeleteOrderItemAsync(model);
+                await _orderItemRepository.DeleteOrderItemsAsync(model);
             }
         }
 
@@ -214,7 +214,9 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             DataRequest<OrderItem> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await _orderItemService.DeleteOrderItemRangeAsync(range.Index, range.Length, request);
+                //await _orderItemService.DeleteOrderItemRangeAsync(range.Index, range.Length, request);
+                var items = await _orderItemRepository.GetOrderItemKeysAsync(range.Index, range.Length, request);
+                await _orderItemRepository.DeleteOrderItemsAsync(items.ToArray());
             }
         }
 

@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
@@ -33,16 +33,16 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerDetailsViewModel : GenericDetailsViewModel<Customer>
     {
         private readonly ILogger _logger;
-        private readonly CustomerService _customerService;
+        private readonly ICustomerRepository _customerRepository;
         private readonly FilePickerService _filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
-                                        CustomerService customerService,
+                                        ICustomerRepository customerRepository,
                                         FilePickerService filePickerService)
             : base()
         {
             _logger = logger;
-            _customerService = customerService;
+            _customerRepository = customerRepository;
             _filePickerService = filePickerService;
         }
 
@@ -70,7 +70,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 try
                 {
-                    var item = await _customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
+                    var item = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerID);
                     Item = item ?? new Customer { Id = ViewModelArgs.CustomerID, IsEmpty = true };
                     OnPropertyChanged(nameof(Item));
                 }
@@ -145,7 +145,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 StartStatusMessage("Saving customer...");
                 await Task.Delay(100);
-                await _customerService.UpdateCustomerAsync(model);
+                await _customerRepository.UpdateCustomerAsync(model);
                 EndStatusMessage("Customer saved");
                 _logger.LogInformation(LogEvents.Save, $"Customer {model.Id} '{model.FullName}' was saved successfully.");
                 return true;
@@ -164,7 +164,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 StartStatusMessage("Deleting customer...");
                 await Task.Delay(100);
-                await _customerService.DeleteCustomerAsync(model);
+                await _customerRepository.DeleteCustomersAsync(model);
                 EndStatusMessage("Customer deleted");
                 _logger.LogWarning(LogEvents.Delete, $"Customer {model.Id} '{model.FullName}' was deleted.");
                 return true;
@@ -210,7 +210,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                         {
                             try
                             {
-                                var item = await _customerService.GetCustomerAsync(current.Id);
+                                var item = await _customerRepository.GetCustomerAsync(current.Id);
                                 item = item ?? new Customer { Id = current.Id, IsEmpty = true };
                                 current.Merge(item);
                                 current.NotifyChanges();
@@ -249,7 +249,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await _customerService.GetCustomerAsync(current.Id);
+                            var model = await _customerRepository.GetCustomerAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();

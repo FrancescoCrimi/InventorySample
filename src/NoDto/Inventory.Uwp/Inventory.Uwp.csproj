@@ -431,10 +431,6 @@
       <Project>{cd266705-5d0a-4ee1-ba7e-32498d7b2877}</Project>
       <Name>Inventory.Uwp.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Application\Inventory.Application.csproj">
-      <Project>{6ec1d4de-2028-4a8e-a583-270dd444618c}</Project>
-      <Name>Inventory.Application</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Domain\Inventory.Domain.csproj">
       <Project>{6693c7c0-edf1-4f6b-89c0-f61c262d9ee5}</Project>
       <Name>Inventory.Domain</Name>

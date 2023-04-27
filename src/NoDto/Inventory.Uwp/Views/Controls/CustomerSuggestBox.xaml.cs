@@ -17,8 +17,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Library.Controls;
 using Inventory.Uwp.Library.Extensions;
@@ -34,12 +34,12 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                CustomerService = Ioc.Default.GetService<CustomerService>();
+                CustomerRepository = Ioc.Default.GetService<ICustomerRepository>();
             }
             InitializeComponent();
         }
 
-        private CustomerService CustomerService
+        private ICustomerRepository CustomerRepository
         {
             get;
         }
@@ -124,7 +124,7 @@ namespace Inventory.Uwp.Controls
                 Query = query,
                 OrderBy = r => r.FirstName
             };
-            return await CustomerService.GetCustomersAsync(0, 20, request);
+            return await CustomerRepository.GetCustomersAsync(0, 20, request);
         }
 
         private void OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)

@@ -17,8 +17,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Library.Controls;
 using Inventory.Uwp.Library.Extensions;
@@ -34,12 +34,12 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                ProductService = Ioc.Default.GetService<ProductService>();
+                ProductRepository = Ioc.Default.GetService<IProductRepository>();
             }
             InitializeComponent();
         }
 
-        private ProductService ProductService { get; }
+        private IProductRepository ProductRepository { get; }
 
         #region Items
         public IList<Product> Items
@@ -121,7 +121,7 @@ namespace Inventory.Uwp.Controls
                 Query = query,
                 OrderBy = r => r.Name
             };
-            var listProdudct = await ProductService.GetProductsAsync(0, 20, request);
+            var listProdudct = await ProductRepository.GetProductsAsync(0, 20, request);
             return listProdudct;
         }
 

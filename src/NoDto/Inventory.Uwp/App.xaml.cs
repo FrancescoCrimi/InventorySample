@@ -1,6 +1,6 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Application;
+using Inventory.Persistence;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Activation;
@@ -75,7 +75,9 @@ namespace Inventory.Uwp
                 .AddSingleton<IAppSettings, AppSettings>()
 
                 // Core Services
-                .AddInventoryApplication()
+                //.AddInventoryApplication()
+                .AddInventoryInfrastructure()
+                .AddInventoryPersistence()
 
                 //.AddTransient<LogServiceFacade>()
                 .AddSingleton<LookupTablesService>()

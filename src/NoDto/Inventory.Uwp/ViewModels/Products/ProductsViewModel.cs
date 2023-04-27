@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;

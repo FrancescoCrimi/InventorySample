@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
@@ -36,20 +36,20 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerListViewModel : GenericListViewModel<Customer>
     {
         private readonly ILogger _logger;
-        private readonly CustomerService _customerService;
+        private readonly ICustomerRepository _customerRepository;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly CustomerCollection _collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
-                                     CustomerService customerService,
+                                     ICustomerRepository customerRepository,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
                                      CustomerCollection collection)
             : base()
         {
             _logger = logger;
-            _customerService = customerService;
+            _customerRepository = customerRepository;
             _navigationService = navigationService;
             _windowService = windowService;
             _collection = collection;
@@ -202,7 +202,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             foreach (var model in models)
             {
-                await _customerService.DeleteCustomerAsync(model);
+                await _customerRepository.DeleteCustomersAsync(model);
             }
         }
 
@@ -211,7 +211,10 @@ namespace Inventory.Uwp.ViewModels.Customers
             DataRequest<Customer> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await _customerService.DeleteCustomerRangeAsync(range.Index, range.Length, request);
+                //await _customerService.DeleteCustomerRangeAsync(range.Index, range.Length, request);
+                var items = await _customerRepository.GetCustomerKeysAsync(range.Index, range.Length, request);
+                await _customerRepository.DeleteCustomersAsync(items.ToArray());
+
             }
         }
 

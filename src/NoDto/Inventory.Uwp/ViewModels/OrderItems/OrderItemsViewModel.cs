@@ -15,8 +15,8 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -27,16 +27,16 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemsViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly OrderItemService _orderItemService;
+        private readonly IOrderItemRepository _orderItemRepository;
 
         public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
-                                   OrderItemService orderItemService,
+                                   IOrderItemRepository orderItemRepository,
                                    OrderItemListViewModel orderItemListViewModel,
                                    OrderItemDetailsViewModel orderItemDetailsViewModel)
             : base()
         {
             _logger = logger;
-            _orderItemService = orderItemService;
+            _orderItemRepository = orderItemRepository;
             OrderItemList = orderItemListViewModel;
             OrderItemDetails = orderItemDetailsViewModel;
         }
@@ -112,7 +112,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             try
             {
-                var model = await _orderItemService.GetOrderItemAsync(selected.OrderId, selected.OrderLine);
+                var model = await _orderItemRepository.GetOrderItemAsync(selected.OrderId, selected.OrderLine);
                 selected.Merge(model);
             }
             catch (Exception ex)

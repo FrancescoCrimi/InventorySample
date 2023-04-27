@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
@@ -36,20 +36,20 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrderListViewModel : GenericListViewModel<Order>
     {
         private readonly ILogger _logger;
-        private readonly OrderService _orderService;
+        private readonly IOrderRepository _orderRepository;
         private readonly WindowManagerService _windowService;
         private readonly NavigationService _navigationService;
         private readonly OrderCollection _collection;
 
         public OrderListViewModel(ILogger<OrderListViewModel> logger,
-                                  OrderService orderService,
+                                  IOrderRepository orderRepository,
                                   WindowManagerService windowService,
                                   NavigationService navigationService,
                                   OrderCollection collection)
             : base()
         {
             _logger = logger;
-            _orderService = orderService;
+            _orderRepository = orderRepository;
             _windowService = windowService;
             _navigationService = navigationService;
             _collection = collection;
@@ -207,7 +207,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             foreach (var model in models)
             {
-                await _orderService.DeleteOrderAsync(model);
+                await _orderRepository.DeleteOrdersAsync(model);
             }
         }
 
@@ -216,7 +216,9 @@ namespace Inventory.Uwp.ViewModels.Orders
             DataRequest<Order> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await _orderService.DeleteOrderRangeAsync(range.Index, range.Length, request);
+                //await _orderService.DeleteOrderRangeAsync(range.Index, range.Length, request);
+                var items = await _orderRepository.GetOrderKeysAsync(range.Index, range.Length, request);
+                await _orderRepository.DeleteOrdersAsync(items.ToArray());
             }
         }
 

@@ -17,8 +17,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Services;
@@ -38,9 +38,9 @@ namespace Inventory.Uwp.ViewModels.Dashboard
     {
         private readonly ILogger _logger;
         private readonly NavigationService _navigationService;
-        private readonly CustomerService _customerService;
-        private readonly OrderService _orderService;
-        private readonly ProductService _productService;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
         private readonly AsyncRelayCommand _loadedCommand;
         private readonly RelayCommand _unLoadedCommand;
         private readonly RelayCommand<ItemClickEventArgs> _itemClickCommand;
@@ -50,16 +50,16 @@ namespace Inventory.Uwp.ViewModels.Dashboard
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   NavigationService navigationService,
-                                  CustomerService customerService,
-                                  OrderService orderService,
-                                  ProductService productService)
+                                  ICustomerRepository customerRepository,
+                                  IOrderRepository orderRepository,
+                                  IProductRepository productRepository)
             : base()
         {
             _logger = logger;
             _navigationService = navigationService;
-            _customerService = customerService;
-            _orderService = orderService;
-            _productService = productService;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _productRepository = productRepository;
             _loadedCommand = new AsyncRelayCommand(LoadAsync);
             _unLoadedCommand = new RelayCommand(Unload);
             _itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
@@ -112,7 +112,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 {
                     OrderByDesc = r => r.CreatedOn
                 };
-                Customers = await _customerService.GetCustomersAsync(0, 5, request);
+                Customers = await _customerRepository.GetCustomersAsync(0, 5, request);
             }
             catch (Exception ex)
             {
@@ -128,7 +128,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 {
                     OrderByDesc = r => r.OrderDate
                 };
-                Orders = await _orderService.GetOrdersAsync(0, 5, request);
+                Orders = await _orderRepository.GetOrdersAsync(0, 5, request);
             }
             catch (Exception ex)
             {
@@ -144,7 +144,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 {
                     OrderByDesc = r => r.CreatedOn
                 };
-                Products = await _productService.GetProductsAsync(0, 5, request);
+                Products = await _productRepository.GetProductsAsync(0, 5, request);
             }
             catch (Exception ex)
             {

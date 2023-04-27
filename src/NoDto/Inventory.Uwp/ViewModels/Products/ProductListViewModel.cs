@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
@@ -36,20 +36,20 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductListViewModel : GenericListViewModel<Product>
     {
         private readonly ILogger _logger;
-        private readonly ProductService _productService;
+        private readonly IProductRepository _productRepository;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly ProductCollection _collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
-                                    ProductService productService,
+                                    IProductRepository productRepository,
                                     NavigationService navigationService,
                                     WindowManagerService windowService,
                                     ProductCollection collection)
             : base()
         {
             _logger = logger;
-            _productService = productService;
+            _productRepository = productRepository;
             _navigationService = navigationService;
             _windowService = windowService;
             _collection = collection;
@@ -200,7 +200,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             foreach (var model in models)
             {
-                await _productService.DeleteProductAsync(model);
+                await _productRepository.DeleteProductsAsync(model);
             }
         }
 
@@ -209,7 +209,9 @@ namespace Inventory.Uwp.ViewModels.Products
             DataRequest<Product> request = BuildDataRequest();
             foreach (var range in ranges)
             {
-                await _productService.DeleteProductRangeAsync(range.Index, range.Length, request);
+                //await _productService.DeleteProductRangeAsync(range.Index, range.Length, request);
+                var items = await _productRepository.GetProductKeysAsync(range.Index, range.Length, request);
+                await _productRepository.DeleteProductsAsync(items.ToArray());
             }
         }
 

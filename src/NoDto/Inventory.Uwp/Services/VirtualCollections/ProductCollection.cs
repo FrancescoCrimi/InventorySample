@@ -16,8 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Inventory.Application;
 using Inventory.Domain.Model;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
@@ -28,15 +28,15 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class ProductCollection : VirtualRangeCollection<Product>
     {
         private readonly ILogger _logger;
-        private readonly ProductService _productService;
+        private readonly IProductRepository _productRepository;
         private DataRequest<Product> _request;
 
         public ProductCollection(ILogger<ProductCollection> logger,
-                                 ProductService productService)
+                                 IProductRepository productRepository)
             : base(logger)
         {
             _logger = logger;
-            _productService = productService;
+            _productRepository = productRepository;
         }
 
         // TODO: fix here request
@@ -53,7 +53,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<int> GetCountAsync()
         {
-            var result = await _productService.GetProductsCountAsync(_request);
+            var result = await _productRepository.GetProductsCountAsync(_request);
             return result;
         }
 
@@ -62,7 +62,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             try
             {
                 //Todo: fix cancellationToken
-                var result = await _productService.GetProductsAsync(skip, take, _request);
+                var result = await _productRepository.GetProductsAsync(skip, take, _request);
                 return result;
             }
             catch (Exception ex)
