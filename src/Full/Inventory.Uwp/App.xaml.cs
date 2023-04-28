@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Application;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
+using Inventory.Persistence;
 using Inventory.Uwp.Activation;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
@@ -59,9 +59,7 @@ namespace Inventory.Uwp
             logger.LogError(LogEvents.UnhandledException, e.Exception, "Unhandled Exception");
         }
 
-        private IServiceProvider ConfigureServices()
-        {
-            return new ServiceCollection()
+        private IServiceProvider ConfigureServices() => new ServiceCollection()
 
                 // Default Activation Handler
                 .AddTransient<ActivationHandler<IActivatedEventArgs>, DefaultActivationHandler>()
@@ -76,16 +74,14 @@ namespace Inventory.Uwp
                 .AddSingleton<IAppSettings, AppSettings>()
 
                 // Core Services
-                .AddInventoryApplication()
-
+                .AddInventoryInfrastructure()
+                .AddInventoryPersistence()
                 .AddTransient<LogServiceFacade>()
                 .AddSingleton<LookupTablesService>()
-                .AddSingleton<ProductServiceFacade>()
-                .AddSingleton<CustomerServiceFacade>()
-                .AddSingleton<OrderServiceFacade>()
-                .AddSingleton<OrderItemServiceFacade>()
-
-                ////.AddSingleton<IMessageService, MessageService>()
+                .AddSingleton<ProductService>()
+                .AddSingleton<CustomerService>()
+                .AddSingleton<OrderService>()
+                .AddSingleton<OrderItemService>()
                 .AddSingleton<FilePickerService>()
 
                 // ViewModels
@@ -123,6 +119,5 @@ namespace Inventory.Uwp
                 .AddTransient<ProductCollection>()
 
                 .BuildServiceProvider();
-        }
     }
 }

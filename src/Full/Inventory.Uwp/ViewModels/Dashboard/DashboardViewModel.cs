@@ -38,15 +38,15 @@ namespace Inventory.Uwp.ViewModels.Dashboard
     {
         private readonly ILogger _logger;
         private readonly NavigationService _navigationService;
-        private readonly CustomerServiceFacade _customerService;
-        private readonly OrderServiceFacade _orderService;
-        private readonly ProductServiceFacade _productService;
+        private readonly CustomerService _customerService;
+        private readonly OrderService _orderService;
+        private readonly ProductService _productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   NavigationService navigationService,
-                                  CustomerServiceFacade customerService,
-                                  OrderServiceFacade orderService,
-                                  ProductServiceFacade productService)
+                                  CustomerService customerService,
+                                  OrderService orderService,
+                                  ProductService productService)
             : base()
         {
             _logger = logger;

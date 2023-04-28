@@ -34,12 +34,12 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemListViewModel : GenericListViewModel<OrderItemDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderItemServiceFacade _orderItemService;
+        private readonly OrderItemService _orderItemService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
-                                      OrderItemServiceFacade orderItemService,
+                                      OrderItemService orderItemService,
                                       NavigationService navigationService,
                                       WindowManagerService windowService)
             : base()

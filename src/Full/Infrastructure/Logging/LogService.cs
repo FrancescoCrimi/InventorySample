@@ -28,7 +28,7 @@ namespace Inventory.Infrastructure.Logging
 
         public LogService(IServiceProvider serviceProvider)
         {
-            this._serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
         }
 
 

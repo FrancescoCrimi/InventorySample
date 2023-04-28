@@ -165,15 +165,15 @@
     <Compile Include="Dto\TaxTypeDto.cs" />
     <Compile Include="Services\Infrastructure\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
-    <Compile Include="Services\CustomerServiceFacade.cs" />
+    <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
     <Compile Include="Services\LogServiceFacade.cs" />
     <Compile Include="Services\LookupTablesService.cs" />
     <Compile Include="Services\Infrastructure\NavigationService.cs" />
-    <Compile Include="Services\OrderItemServiceFacade.cs" />
-    <Compile Include="Services\OrderServiceFacade.cs" />
-    <Compile Include="Services\ProductServiceFacade.cs" />
+    <Compile Include="Services\OrderItemService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
     <Compile Include="Services\VirtualCollections\LogCollection.cs" />
     <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
@@ -534,10 +534,6 @@
     <ProjectReference Include="..\..\Share\Inventory.Uwp.Library\Inventory.Uwp.Library.csproj">
       <Project>{cd266705-5d0a-4ee1-ba7e-32498d7b2877}</Project>
       <Name>Inventory.Uwp.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Application\Inventory.Application.csproj">
-      <Project>{6ec1d4de-2028-4a8e-a583-270dd444618c}</Project>
-      <Name>Inventory.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Inventory.Domain.csproj">
       <Project>{6693c7c0-edf1-4f6b-89c0-f61c262d9ee5}</Project>

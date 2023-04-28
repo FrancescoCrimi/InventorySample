@@ -26,10 +26,10 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductsViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly ProductServiceFacade _productService;
+        private readonly ProductService _productService;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
-                                 ProductServiceFacade productService,
+                                 ProductService productService,
                                  ProductListViewModel productListViewModel,
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()

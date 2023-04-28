@@ -156,17 +156,18 @@ namespace Inventory.Domain.Model
 
         public static Order CreateNewOrder(Customer customer)
         {
-            var order = new Order();
-            order.CustomerId = order.CustomerId;
-            order.OrderDate = DateTime.UtcNow;
-            order.StatusId = 0;
-            order.ShipAddress = customer.AddressLine1;
-            order.ShipCity = customer.City;
-            order.ShipRegion = customer.Region;
-            order.ShipCountryId = customer.CountryId;
-            order.ShipPostalCode = customer.PostalCode;
-            order.Customer = customer;
-            return order;
+            return new Order
+            {
+                CustomerId = customer.Id,
+                OrderDate = DateTime.UtcNow,
+                StatusId = 0,
+                ShipAddress = customer.AddressLine1,
+                ShipCity = customer.City,
+                ShipRegion = customer.Region,
+                ShipCountryId = customer.CountryId,
+                ShipPostalCode = customer.PostalCode,
+                Customer = customer
+            };
         }
     }
 }

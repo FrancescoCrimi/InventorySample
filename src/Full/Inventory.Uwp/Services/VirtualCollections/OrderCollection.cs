@@ -28,11 +28,11 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class OrderCollection : VirtualRangeCollection<OrderDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderServiceFacade _orderService;
+        private readonly OrderService _orderService;
         private DataRequest<Order> _request;
 
         public OrderCollection(ILogger<OrderCollection> logger,
-                               OrderServiceFacade orderService)
+                               OrderService orderService)
             : base(logger)
         {
             _logger = logger;

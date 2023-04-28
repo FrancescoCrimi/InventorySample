@@ -32,11 +32,11 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductDetailsViewModel : GenericDetailsViewModel<ProductDto>
     {
         private readonly ILogger _logger;
-        private readonly ProductServiceFacade _productService;
+        private readonly ProductService _productService;
         private readonly FilePickerService _filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
-                                       ProductServiceFacade productService,
+                                       ProductService productService,
                                        FilePickerService filePickerService)
             : base()
         {

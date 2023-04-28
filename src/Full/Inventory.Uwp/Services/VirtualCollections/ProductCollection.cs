@@ -27,11 +27,11 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class ProductCollection : VirtualRangeCollection<ProductDto>
     {
         private readonly ILogger _logger;
-        private readonly ProductServiceFacade _productService;
+        private readonly ProductService _productService;
         private DataRequest<Product> _request;
 
         public ProductCollection(ILogger<ProductCollection> logger,
-                                 ProductServiceFacade productService)
+                                 ProductService productService)
             : base(logger)
         {
             _logger = logger;

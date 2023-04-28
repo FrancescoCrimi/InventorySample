@@ -35,13 +35,13 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerListViewModel : GenericListViewModel<CustomerDto>
     {
         private readonly ILogger _logger;
-        private readonly CustomerServiceFacade _customerService;
+        private readonly CustomerService _customerService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly CustomerCollection _collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
-                                     CustomerServiceFacade customerService,
+                                     CustomerService customerService,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
                                      CustomerCollection collection)

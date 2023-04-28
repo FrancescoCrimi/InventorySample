@@ -35,12 +35,12 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                CustomerService = Ioc.Default.GetService<CustomerServiceFacade>();
+                CustomerService = Ioc.Default.GetService<CustomerService>();
             }
             InitializeComponent();
         }
 
-        private CustomerServiceFacade CustomerService { get; }
+        private CustomerService CustomerService { get; }
 
         #region Items
         public IList<CustomerDto> Items
