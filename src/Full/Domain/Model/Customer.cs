@@ -14,13 +14,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Inventory.Domain.Common;
+using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Customer : ObservableObject<Customer>
+    public partial class Customer : Entity
     {
         public string Title { get; set; }
         public string FirstName { get; set; }
@@ -74,43 +73,42 @@ namespace Inventory.Domain.Model
         [NotMapped]
         public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
 
-        public override void Merge(Customer source)
-        {
-            if (source != null)
-            {
-                Id = source.Id;
-                Title = source.Title;
-                FirstName = source.FirstName;
-                MiddleName = source.MiddleName;
-                LastName = source.LastName;
-                Suffix = source.Suffix;
-                Gender = source.Gender;
-                EmailAddress = source.EmailAddress;
-                AddressLine1 = source.AddressLine1;
-                AddressLine2 = source.AddressLine2;
-                City = source.City;
-                Region = source.Region;
-                Country = source.Country;
-                PostalCode = source.PostalCode;
-                Phone = source.Phone;
-                BirthDate = source.BirthDate;
-                Education = source.Education;
-                Occupation = source.Occupation;
-                YearlyIncome = source.YearlyIncome;
-                MaritalStatus = source.MaritalStatus;
-                TotalChildren = source.TotalChildren;
-                ChildrenAtHome = source.ChildrenAtHome;
-                IsHouseOwner = source.IsHouseOwner;
-                NumberCarsOwned = source.NumberCarsOwned;
-                CreatedOn = source.CreatedOn;
-                LastModifiedOn = source.LastModifiedOn;
-                Thumbnail = source.Thumbnail;
-                Picture = source.Picture;
+        //public override void Merge(Customer source)
+        //{
+        //    if (source != null)
+        //    {
+        //        Id = source.Id;
+        //        Title = source.Title;
+        //        FirstName = source.FirstName;
+        //        MiddleName = source.MiddleName;
+        //        LastName = source.LastName;
+        //        Suffix = source.Suffix;
+        //        Gender = source.Gender;
+        //        EmailAddress = source.EmailAddress;
+        //        AddressLine1 = source.AddressLine1;
+        //        AddressLine2 = source.AddressLine2;
+        //        City = source.City;
+        //        Region = source.Region;
+        //        Country = source.Country;
+        //        PostalCode = source.PostalCode;
+        //        Phone = source.Phone;
+        //        BirthDate = source.BirthDate;
+        //        Education = source.Education;
+        //        Occupation = source.Occupation;
+        //        YearlyIncome = source.YearlyIncome;
+        //        MaritalStatus = source.MaritalStatus;
+        //        TotalChildren = source.TotalChildren;
+        //        ChildrenAtHome = source.ChildrenAtHome;
+        //        IsHouseOwner = source.IsHouseOwner;
+        //        NumberCarsOwned = source.NumberCarsOwned;
+        //        CreatedOn = source.CreatedOn;
+        //        LastModifiedOn = source.LastModifiedOn;
+        //        Thumbnail = source.Thumbnail;
+        //        Picture = source.Picture;
 
-                CountryId = source.CountryId;
+        //        CountryId = source.CountryId;
 
-            }
-
-        }
+        //    }
+        //}
     }
 }

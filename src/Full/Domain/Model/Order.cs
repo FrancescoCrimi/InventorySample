@@ -14,13 +14,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Inventory.Domain.Common;
+using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Order : ObservableObject<Order>
+    public partial class Order : Entity
     {
         public DateTimeOffset OrderDate
         {
@@ -133,26 +132,25 @@ namespace Inventory.Domain.Model
         [NotMapped]
         public string ShipCountryName => "Fake Ship Country Name";
 
-        public override void Merge(Order source)
-        {
-            OrderDate = source.OrderDate;
-            ShippedDate = source.ShippedDate;
-            DeliveredDate = source.DeliveredDate;
-            TrackingNumber = source.TrackingNumber;
-            ShipAddress = source.ShipAddress;
-            ShipCity = source.ShipCity;
-            ShipRegion = source.ShipRegion;
-            ShipPostalCode = source.ShipPostalCode;
-            ShipPhone = source.ShipPhone;
-            LastModifiedOn = source.LastModifiedOn;
-            SearchTerms = source.SearchTerms;
-
-            CustomerId = source.CustomerId;
-            PaymentTypeId = source.PaymentTypeId;
-            ShipCountryId = source.ShipCountryId;
-            ShipperId = source.ShipperId;
-            StatusId = source.StatusId;
-        }
+        //public override void Merge(Order source)
+        //{
+        //    OrderDate = source.OrderDate;
+        //    ShippedDate = source.ShippedDate;
+        //    DeliveredDate = source.DeliveredDate;
+        //    TrackingNumber = source.TrackingNumber;
+        //    ShipAddress = source.ShipAddress;
+        //    ShipCity = source.ShipCity;
+        //    ShipRegion = source.ShipRegion;
+        //    ShipPostalCode = source.ShipPostalCode;
+        //    ShipPhone = source.ShipPhone;
+        //    LastModifiedOn = source.LastModifiedOn;
+        //    SearchTerms = source.SearchTerms;
+        //    CustomerId = source.CustomerId;
+        //    PaymentTypeId = source.PaymentTypeId;
+        //    ShipCountryId = source.ShipCountryId;
+        //    ShipperId = source.ShipperId;
+        //    StatusId = source.StatusId;
+        //}
 
         public static Order CreateNewOrder(Customer customer)
         {

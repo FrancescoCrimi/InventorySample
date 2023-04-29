@@ -34,15 +34,15 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             _logger = logger;
             _logService = logService;
-            AppLogList = appLogListViewModel;
-            AppLogDetails = appLogDetailsViewModel;
+            LogList = appLogListViewModel;
+            LogDetails = appLogDetailsViewModel;
         }
 
-        public LogListViewModel AppLogList
+        public LogListViewModel LogList
         {
             get;
         }
-        public LogDetailsViewModel AppLogDetails
+        public LogDetailsViewModel LogDetails
         {
             get;
         }
@@ -50,28 +50,28 @@ namespace Inventory.Uwp.ViewModels.Logs
         public async Task LoadAsync(LogListArgs args)
         {
             await _logService.MarkAllAsReadAsync();
-            await AppLogList.LoadAsync(args);
+            await LogList.LoadAsync(args);
         }
 
         public void Unload()
         {
-            AppLogList.Unload();
+            LogList.Unload();
         }
 
         public void Subscribe()
         {
             //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
             Messenger.Register<LogMessage>(this, OnMessage);
-            AppLogList.Subscribe();
-            AppLogDetails.Subscribe();
+            LogList.Subscribe();
+            LogDetails.Subscribe();
         }
 
         public void Unsubscribe()
         {
             //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
-            AppLogList.Unsubscribe();
-            AppLogDetails.Unsubscribe();
+            LogList.Unsubscribe();
+            LogDetails.Unsubscribe();
         }
 
         private async void OnMessage(object recipient, LogMessage message)
@@ -88,15 +88,15 @@ namespace Inventory.Uwp.ViewModels.Logs
             //{
             StatusReady();
             //}
-            var selected = AppLogList.SelectedItem;
-            if (!AppLogList.IsMultipleSelection)
+            var selected = LogList.SelectedItem;
+            if (!LogList.IsMultipleSelection)
             {
                 if (selected != null /*&& !selected.IsEmpty*/)
                 {
                     await PopulateDetails(selected);
                 }
             }
-            AppLogDetails.Item = selected;
+            LogDetails.Item = selected;
         }
 
         private async Task<Log> PopulateDetails(Log selected)

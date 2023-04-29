@@ -2,7 +2,7 @@
 
 namespace Inventory.Infrastructure.DomainBase
 {
-    public interface IEntityRepository<TEntity, TId> where TEntity : Entity<TId>
+    public interface IGenericRepository<TEntity, TId> where TEntity : GenericEntity<TId>
     {
         Task<TEntity> GetById(TId id);
         Task<TId> Save(TEntity entity);

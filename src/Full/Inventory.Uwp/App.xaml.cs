@@ -76,7 +76,7 @@ namespace Inventory.Uwp
                 // Core Services
                 .AddInventoryInfrastructure()
                 .AddInventoryPersistence()
-                .AddTransient<LogServiceFacade>()
+                //.AddTransient<LogServiceFacade>()
                 .AddSingleton<LookupTablesService>()
                 .AddSingleton<ProductService>()
                 .AddSingleton<CustomerService>()

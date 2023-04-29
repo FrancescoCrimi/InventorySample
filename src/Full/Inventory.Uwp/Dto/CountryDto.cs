@@ -19,7 +19,7 @@ namespace Inventory.Uwp.Dto
 {
     public class CountryDto : ObservableDto, IEquatable<CountryDto>
     {
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
 

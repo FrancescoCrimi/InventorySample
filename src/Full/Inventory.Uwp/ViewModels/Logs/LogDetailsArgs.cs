@@ -12,22 +12,13 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Infrastructure.DomainBase;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Uwp.ViewModels.Logs
 {
-    public class ObservableDto : CommunityToolkit.Mvvm.ComponentModel.ObservableObject, IEntity
+    public class LogDetailsArgs
     {
-        public long Id { get; set; }
+        public static LogDetailsArgs CreateDefault() => new LogDetailsArgs();
 
-        public bool IsEmpty { get; set; }
-
-        public virtual void Merge(ObservableDto source) { }
-
-        public void NotifyChanges()
-        {
-            // Notify all properties
-            OnPropertyChanged("");
-        }
+        public long AppLogID { get; set; }
     }
 }

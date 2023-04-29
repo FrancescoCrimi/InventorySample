@@ -14,7 +14,6 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,41 +34,41 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             _logger = logger;
             _logService = logService;
-            AppLogList = appLogListViewModel;
-            AppLogDetails = appLogDetailsViewModel;
+            LogList = appLogListViewModel;
+            LogDetails = appLogDetailsViewModel;
         }
 
-        public LogListViewModel AppLogList { get; }
-        public LogDetailsViewModel AppLogDetails { get; }
+        public LogListViewModel LogList { get; }
+        public LogDetailsViewModel LogDetails { get; }
 
         public async Task LoadAsync(LogListArgs args)
         {
             await _logService.MarkAllAsReadAsync();
-            await AppLogList.LoadAsync(args);
+            await LogList.LoadAsync(args);
         }
 
         public void Unload()
         {
-            AppLogList.Unload();
+            LogList.Unload();
         }
 
         public void Subscribe()
         {
             //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<LogModel>>(this, OnMessage);
-            AppLogList.Subscribe();
-            AppLogDetails.Subscribe();
+            Messenger.Register<ItemMessage<Log>>(this, OnMessage);
+            LogList.Subscribe();
+            LogDetails.Subscribe();
         }
 
         public void Unsubscribe()
         {
             //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
-            AppLogList.Unsubscribe();
-            AppLogDetails.Unsubscribe();
+            LogList.Unsubscribe();
+            LogDetails.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, ItemMessage<LogModel> message)
+        private async void OnMessage(object recipient, ItemMessage<Log> message)
         {
             if (/*recipient == AppLogList &&*/ message.Message == "ItemSelected")
             {
@@ -83,18 +82,18 @@ namespace Inventory.Uwp.ViewModels.Logs
             //{
             StatusReady();
             //}
-            var selected = AppLogList.SelectedItem;
-            if (!AppLogList.IsMultipleSelection)
+            var selected = LogList.SelectedItem;
+            if (!LogList.IsMultipleSelection)
             {
                 if (selected != null /*&& !selected.IsEmpty*/)
                 {
                     await PopulateDetails(selected);
                 }
             }
-            AppLogDetails.Item = selected;
+            LogDetails.Item = selected;
         }
 
-        private async Task<Log> PopulateDetails(LogModel selected)
+        private async Task<Log> PopulateDetails(Log selected)
         {
             try
             {

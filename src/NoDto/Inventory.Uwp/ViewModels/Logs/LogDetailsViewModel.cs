@@ -25,18 +25,6 @@ using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Logs
 {
-    #region AppLogDetailsArgs
-    public class LogDetailsArgs
-    {
-        public static LogDetailsArgs CreateDefault() => new LogDetailsArgs();
-
-        public long AppLogID
-        {
-            get; set;
-        }
-    }
-    #endregion
-
     public class LogDetailsViewModel : GenericDetailsViewModel<Log>
     {
         private readonly ILogger _logger;

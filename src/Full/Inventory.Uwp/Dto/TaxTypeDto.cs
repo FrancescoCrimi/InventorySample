@@ -19,7 +19,7 @@ namespace Inventory.Uwp.Dto
 {
     public class TaxTypeDto : ObservableDto, IEquatable<TaxTypeDto>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Name { get; set; }
         public decimal Rate { get; set; }
 

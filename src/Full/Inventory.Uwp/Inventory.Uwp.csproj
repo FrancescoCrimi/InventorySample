@@ -154,7 +154,6 @@
     <Compile Include="Dto\CategoryDto.cs" />
     <Compile Include="Dto\CountryDto.cs" />
     <Compile Include="Dto\CustomerDto.cs" />
-    <Compile Include="Dto\LogModel.cs" />
     <Compile Include="Dto\ObservableDto.cs" />
     <Compile Include="Dto\OrderItemDto.cs" />
     <Compile Include="Dto\OrderDto.cs" />
@@ -168,7 +167,6 @@
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\Infrastructure\DialogService.cs" />
     <Compile Include="Services\Infrastructure\FilePickerService.cs" />
-    <Compile Include="Services\LogServiceFacade.cs" />
     <Compile Include="Services\LookupTablesService.cs" />
     <Compile Include="Services\Infrastructure\NavigationService.cs" />
     <Compile Include="Services\OrderItemService.cs" />
@@ -187,6 +185,7 @@
     <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
     <Compile Include="ViewModels\Dashboard\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogDetailsArgs.cs" />
     <Compile Include="ViewModels\Logs\LogDetailsViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogListArgs.cs" />
     <Compile Include="ViewModels\Logs\LogListViewModel.cs" />

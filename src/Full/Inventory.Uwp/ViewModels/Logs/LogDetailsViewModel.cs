@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
@@ -23,34 +24,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Logs
 {
-    #region AppLogDetailsArgs
-    public class LogDetailsArgs
-    {
-        public static LogDetailsArgs CreateDefault() => new LogDetailsArgs();
-
-        public long AppLogID { get; set; }
-    }
-    #endregion
-
-    public class LogDetailsViewModel : GenericDetailsViewModel<LogModel>
+    public class LogDetailsViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly LogServiceFacade _logService;
+        private readonly LogService _logService;
+        private readonly NavigationService _navigationService;
 
         public LogDetailsViewModel(ILogger<LogListViewModel> logger,
-                                   LogServiceFacade logService)
+                                   LogService logService,
+                                   NavigationService navigationService)
             : base()
         {
             _logger = logger;
             _logService = logService;
+            this._navigationService = navigationService;
         }
 
         public override string Title => "Activity Logs";
 
-        public override bool ItemIsNew => false;
+        public  bool ItemIsNew => false;
 
         public LogDetailsArgs ViewModelArgs { get; private set; }
 
@@ -61,7 +57,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             try
             {
                 var item = await _logService.GetLogAsync(ViewModelArgs.AppLogID);
-                Item = item ?? new LogModel { Id = 0, IsEmpty = true };
+                Item = item ?? new Log { Id = 0/*, IsEmpty = true*/ };
             }
             catch (Exception ex)
             {
@@ -97,12 +93,12 @@ namespace Inventory.Uwp.ViewModels.Logs
             };
         }
 
-        protected override Task<bool> SaveItemAsync(LogModel model)
+        protected  Task<bool> SaveItemAsync(Log model)
         {
             throw new NotImplementedException();
         }
 
-        protected async override Task<bool> DeleteItemAsync(LogModel model)
+        protected async  Task<bool> DeleteItemAsync(Log model)
         {
             try
             {
@@ -120,7 +116,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             }
         }
 
-        protected async override Task<bool> ConfirmDeleteAsync()
+        protected async  Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
         }
@@ -213,5 +209,98 @@ namespace Inventory.Uwp.ViewModels.Logs
             });
             //});
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private Log _item = null;
+        public Log Item
+        {
+            get => _item;
+            set
+            {
+                if (SetProperty(ref _item, value))
+                {
+                    //EditableItem = _item;
+                    //IsEnabled = !_item?.IsEmpty ?? false;
+                    OnPropertyChanged(nameof(IsDataAvailable));
+                    OnPropertyChanged(nameof(IsDataUnavailable));
+                    OnPropertyChanged(nameof(Title));
+                }
+            }
+        }
+
+        public bool IsDataAvailable => _item != null;
+        public bool IsDataUnavailable => !IsDataAvailable;
+
+
+
+
+        public ICommand DeleteCommand => new RelayCommand(OnDelete);
+        protected virtual async void OnDelete()
+        {
+            StatusReady();
+            if (await ConfirmDeleteAsync())
+            {
+                await DeleteAsync();
+            }
+        }
+        public virtual async Task DeleteAsync()
+        {
+            var model = Item;
+            if (model != null)
+            {
+                //IsEnabled = false;
+                if (await DeleteItemAsync(model))
+                {
+                    //MessageService.Send(this, "ItemDeleted", model);
+                    Messenger.Send(new ItemMessage<Log>(model, "ItemDeleted"));
+                }
+                //else
+                //{
+                //    IsEnabled = true;
+                //}
+            }
+        }
+
+
+
+        public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
+
+        public ICommand BackCommand => new RelayCommand(OnBack);
+        protected virtual void OnBack()
+        {
+            StatusReady();
+            if (_navigationService.CanGoBack)
+            {
+                _navigationService.GoBack();
+            }
+        }
+
+        public bool IsEditMode = false;
+        public bool IsEnabled = true;
     }
 }

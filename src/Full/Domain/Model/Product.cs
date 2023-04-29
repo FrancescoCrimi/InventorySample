@@ -14,11 +14,11 @@
 
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using Inventory.Domain.Common;
+using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public class Product : ObservableObject<Product>
+    public class Product : Entity
     {
         public string Name
         {
@@ -113,26 +113,26 @@ namespace Inventory.Domain.Model
         [NotMapped]
         public string CategoryName => Category?.Name;
 
-        public override void Merge(Product source)
-        {
-            Name = source.Name;
-            Description = source.Description;
-            Size = source.Size;
-            Color = source.Color;
-            ListPrice = source.ListPrice;
-            DealerPrice = source.DealerPrice;
-            Discount = source.Discount;
-            DiscountStartDate = source.DiscountStartDate;
-            DiscountEndDate = source.DiscountEndDate;
-            StockUnits = source.StockUnits;
-            SafetyStockLevel = source.SafetyStockLevel;
-            CreatedOn = source.CreatedOn;
-            LastModifiedOn = source.LastModifiedOn;
-            SearchTerms = source.SearchTerms;
-            Picture = source.Picture;
-            Thumbnail = source.Thumbnail;
-            CategoryId = source.CategoryId;
-            TaxTypeId = source.TaxTypeId;
-        }
+        //public override void Merge(Product source)
+        //{
+        //    Name = source.Name;
+        //    Description = source.Description;
+        //    Size = source.Size;
+        //    Color = source.Color;
+        //    ListPrice = source.ListPrice;
+        //    DealerPrice = source.DealerPrice;
+        //    Discount = source.Discount;
+        //    DiscountStartDate = source.DiscountStartDate;
+        //    DiscountEndDate = source.DiscountEndDate;
+        //    StockUnits = source.StockUnits;
+        //    SafetyStockLevel = source.SafetyStockLevel;
+        //    CreatedOn = source.CreatedOn;
+        //    LastModifiedOn = source.LastModifiedOn;
+        //    SearchTerms = source.SearchTerms;
+        //    Picture = source.Picture;
+        //    Thumbnail = source.Thumbnail;
+        //    CategoryId = source.CategoryId;
+        //    TaxTypeId = source.TaxTypeId;
+        //}
     }
 }

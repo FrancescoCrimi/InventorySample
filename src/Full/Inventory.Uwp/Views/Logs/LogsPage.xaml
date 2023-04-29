@@ -1,10 +1,10 @@
 ﻿<Page x:Class="Inventory.Uwp.Views.Logs.LogsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:local="using:Inventory.Uwp.Views.Logs"
       xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -35,13 +35,13 @@
             </Grid.RowDefinitions>
 
             <!--AppLogs-->
-            <Grid Grid.RowSpan="{x:Bind GetRowSpan(ViewModel.AppLogList.IsMultipleSelection), Mode=OneWay}">
-                <libcontrols:Section Header="{x:Bind ViewModel.AppLogList.Title, Mode=OneWay}"
+            <Grid Grid.RowSpan="{x:Bind GetRowSpan(ViewModel.LogList.IsMultipleSelection), Mode=OneWay}">
+                <libcontrols:Section Header="{x:Bind ViewModel.LogList.Title, Mode=OneWay}"
                                      HeaderTemplate="{StaticResource ListHeaderTemplate}"
                                      HeaderButtonGlyph="&#xE2B4;"
                                      HeaderButtonClick="OpenInNewView"
                                      IsButtonVisible="{x:Bind ViewModel.IsMainView}">
-                    <local:LogsListControl ViewModel="{x:Bind ViewModel.AppLogList}" />
+                    <local:LogsListControl ViewModel="{x:Bind ViewModel.LogList}" />
                 </libcontrols:Section>
             </Grid>
 
@@ -49,17 +49,17 @@
             <Grid Grid.Row="1"
                   BorderBrush="LightGray"
                   BorderThickness="0,1,0,0"
-                  Visibility="{x:Bind ViewModel.AppLogList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                <libcontrols:Section IsEnabled="{x:Bind ViewModel.AppLogDetails.IsEnabled, Mode=OneWay}"
+                  Visibility="{x:Bind ViewModel.LogList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                <libcontrols:Section IsEnabled="{x:Bind ViewModel.LogDetails.IsEnabled, Mode=OneWay}"
                                      Background="{StaticResource DetailsViewBackgroundColor}"
-                                     Visibility="{x:Bind ViewModel.AppLogDetails.IsDataAvailable, Mode=OneWay}">
+                                     Visibility="{x:Bind ViewModel.LogDetails.IsDataAvailable, Mode=OneWay}">
                     <local:LogsDetailsControl Grid.Row="1"
-                                              ViewModel="{x:Bind ViewModel.AppLogDetails}" />
+                                              ViewModel="{x:Bind ViewModel.LogDetails}" />
                 </libcontrols:Section>
 
                 <!--Empty Details-->
                 <libcontrols:Section Header="No item selected"
-                                     Visibility="{x:Bind ViewModel.AppLogDetails.IsDataUnavailable, Mode=OneWay}" />
+                                     Visibility="{x:Bind ViewModel.LogDetails.IsDataUnavailable, Mode=OneWay}" />
             </Grid>
 
         </Grid>

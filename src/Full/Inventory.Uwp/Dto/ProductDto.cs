@@ -22,7 +22,7 @@ namespace Inventory.Uwp.Dto
     {
         public static ProductDto CreateEmpty() => new ProductDto { Id = -1, IsEmpty = true };
 
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Size { get; set; }

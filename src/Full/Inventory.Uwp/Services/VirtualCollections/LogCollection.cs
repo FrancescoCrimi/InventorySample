@@ -14,7 +14,6 @@
 
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -23,23 +22,23 @@ using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
-    public class LogCollection : VirtualRangeCollection<LogModel>
+    public class LogCollection : VirtualRangeCollection<Log>
     {
         private readonly ILogger _logger;
-        private LogServiceFacade _logService;
+        private LogService _logService;
         private DataRequest<Log> _request;
 
         public LogCollection(ILogger<LogCollection> logger,
-                             LogServiceFacade logService)
+                             LogService logService)
             : base(logger)
         {
             _logger = logger;
             _logService = logService;
         }
 
-        protected override LogModel CreateDummyEntity()
+        protected override Log CreateDummyEntity()
         {
-            return new LogModel();
+            return new Log();
         }
 
         protected override Task<int> GetCountAsync()
@@ -47,7 +46,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             return _logService.GetLogsCountAsync(_request);
         }
 
-        protected async override Task<IList<LogModel>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
+        protected async override Task<IList<Log>> GetRangeAsync(int skip, int take, CancellationToken cancellationToken)
         {
             try
             {

@@ -19,7 +19,7 @@ namespace Inventory.Uwp.Dto
 {
     public class ShipperDto : ObservableDto, IEquatable<ShipperDto>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
 

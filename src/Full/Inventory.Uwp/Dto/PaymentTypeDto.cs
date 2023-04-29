@@ -19,7 +19,7 @@ namespace Inventory.Uwp.Dto
 {
     public class PaymentTypeDto : ObservableDto, IEquatable<PaymentTypeDto>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Name { get; set; }
 
         public override bool Equals(object obj)

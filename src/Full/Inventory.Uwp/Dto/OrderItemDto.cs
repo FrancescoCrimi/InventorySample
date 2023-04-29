@@ -25,7 +25,7 @@ namespace Inventory.Uwp.Dto
         private decimal _discount;
         private TaxTypeDto _taxTypeDto;
 
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public int OrderLine { get; set; }
         public int Quantity
         {

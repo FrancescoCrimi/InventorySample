@@ -76,6 +76,7 @@
     <Compile Include="ViewModels\Customers\CustomerListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomersViewModel.cs" />
     <Compile Include="ViewModels\Dashboard\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\Logs\LogDetailsArgs.cs" />
     <Compile Include="ViewModels\Logs\LogDetailsViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogListArgs.cs" />
     <Compile Include="ViewModels\Logs\LogListViewModel.cs" />

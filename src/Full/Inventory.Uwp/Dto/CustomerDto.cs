@@ -21,7 +21,7 @@ namespace Inventory.Uwp.Dto
     {
         public static CustomerDto CreateEmpty() => new CustomerDto { Id = -1, IsEmpty = true };
 
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public string Title { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }

@@ -26,7 +26,7 @@ namespace Inventory.Uwp.Dto
 
         public static OrderDto CreateEmpty() => new OrderDto { Id = -1, CustomerId = -1, IsEmpty = true };
 
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public DateTimeOffset OrderDate
         {
             get => _orderDate;

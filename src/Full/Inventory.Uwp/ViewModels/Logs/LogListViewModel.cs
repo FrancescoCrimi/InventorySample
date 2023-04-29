@@ -28,14 +28,14 @@ using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Logs
 {
-    public class LogListViewModel : GenericListViewModel<LogModel>
+    public class LogListViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly LogServiceFacade _logService;
+        private readonly LogService _logService;
         private readonly LogCollection _collection;
 
         public LogListViewModel(ILogger<LogListViewModel> logger,
-                                LogServiceFacade logService,
+                                LogService logService,
                                 LogCollection logCollection)
             : base()
         {
@@ -132,7 +132,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             }
             catch (Exception ex)
             {
-                Items = new List<LogModel>();
+                Items = new List<Log>();
                 StatusError($"Error loading Logs: {ex.Message}");
                 _logger.LogError(LogEvents.Refresh, ex, "Error loading Logs");
                 isOk = false;
@@ -143,12 +143,12 @@ namespace Inventory.Uwp.ViewModels.Logs
             return isOk;
         }
 
-        protected override void OnNew()
+        protected  void OnNew()
         {
             throw new NotImplementedException();
         }
 
-        protected async override void OnRefresh()
+        protected async  void OnRefresh()
         {
             StartStatusMessage("Loading logs...");
             if (await RefreshAsync())
@@ -157,7 +157,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             }
         }
 
-        protected async override void OnDeleteSelection()
+        protected async  void OnDeleteSelection()
         {
             StatusReady();
             if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
@@ -179,7 +179,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<LogModel>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ItemMessage<IList<Log>>(SelectedItems, "ItemsDeleted"));
                     }
                 }
                 catch (Exception ex)
@@ -198,7 +198,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             }
         }
 
-        private async Task DeleteItemsAsync(IEnumerable<LogModel> models)
+        private async Task DeleteItemsAsync(IEnumerable<Log> models)
         {
             foreach (var model in models)
             {
@@ -235,5 +235,83 @@ namespace Inventory.Uwp.ViewModels.Logs
         //        //});
         //    }
         //}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private IList<Log> _items = null;
+        public IList<Log> Items
+        {
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                SetProperty(ref _items, value);
+            }
+        }
+
+        private string _query = null;
+        public string Query
+        {
+            get => _query;
+            set => SetProperty(ref _query, value);
+        }
+
+        private int _itemsCount = 0;
+        public int ItemsCount
+        {
+            get => _itemsCount;
+            set => SetProperty(ref _itemsCount, value);
+        }
+
+        public List<Log> SelectedItems { get; protected set; }
+        public IndexRange[] SelectedIndexRanges { get; protected set; }
+
+
+
+        private Log _selectedItem = default;
+        public Log SelectedItem
+        {
+            get
+            {
+                return _selectedItem;
+            }
+            set
+            {
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    if (!IsMultipleSelection)
+                    {
+                        // fix _selectedItem == null
+                        if (_selectedItem != null)
+                        {
+                            // Todo: fixare selectedItem.Id = 0
+                            ////MessageService.Send(this, "ItemSelected", _selectedItem);
+                            var message = new ItemMessage<Log>(_selectedItem, "ItemSelected");
+                            Messenger.Send(message);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool _isMultipleSelection = false;
+        public bool IsMultipleSelection
+        {
+            get => _isMultipleSelection;
+            set => SetProperty(ref _isMultipleSelection, value);
+        }
     }
 }

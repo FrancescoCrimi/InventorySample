@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:Inventory.Uwp.Views.Logs"
              xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
-             xmlns:dto="using:Inventory.Uwp.Dto"
+             xmlns:log="using:Inventory.Infrastructure.Logging"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -53,7 +53,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ItemTemplate"
-                      x:DataType="dto:LogModel">
+                      x:DataType="log:Log">
             <Grid Height="32">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -106,13 +106,16 @@
                           ItemTemplate="{StaticResource ItemTemplate}"
                           IsMultipleSelection="{x:Bind ViewModel.IsMultipleSelection, Mode=TwoWay}"
                           ItemsCount="{x:Bind ViewModel.ItemsCount, Mode=OneWay}"
-                          RefreshCommand="{x:Bind ViewModel.RefreshCommand}"
                           Query="{x:Bind ViewModel.Query, Mode=TwoWay}"
+                          />
+                          <!--
+                          RefreshCommand="{x:Bind ViewModel.RefreshCommand}"
                           QuerySubmittedCommand="{x:Bind ViewModel.RefreshCommand}"
                           StartSelectionCommand="{x:Bind ViewModel.StartSelectionCommand}"
                           CancelSelectionCommand="{x:Bind ViewModel.CancelSelectionCommand}"
                           SelectItemsCommand="{x:Bind ViewModel.SelectItemsCommand}"
                           DeselectItemsCommand="{x:Bind ViewModel.DeselectItemsCommand}"
                           SelectRangesCommand="{x:Bind ViewModel.SelectRangesCommand}"
-                          DeleteCommand="{x:Bind ViewModel.DeleteSelectionCommand}" />
+                          DeleteCommand="{x:Bind ViewModel.DeleteSelectionCommand}"
+                          -->
 </UserControl>

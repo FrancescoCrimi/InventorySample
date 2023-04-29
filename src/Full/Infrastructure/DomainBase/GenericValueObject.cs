@@ -6,7 +6,7 @@ namespace Inventory.Infrastructure.DomainBase
 {
     [Serializable]
     [DataContract(Name = "ValueObjectOfint", Namespace = "http://gest.cicciosoft.tk")]
-    public abstract class ValueObject<TId> : INotifyPropertyChanged
+    public abstract class GenericValueObject<TId> : INotifyPropertyChanged
     {
         private TId id;
         [DataMember]

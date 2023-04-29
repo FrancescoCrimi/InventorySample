@@ -13,14 +13,11 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Domain.Common;
+using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class OrderItem : ObservableObject<OrderItem>
+    public partial class OrderItem : Entity
     {
         public int OrderLine
         {
@@ -69,9 +66,9 @@ namespace Inventory.Domain.Model
         public decimal Total => 0;
         //=> (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
 
-        public override void Merge(OrderItem source)
-        {
-            //throw new NotImplementedException();
-        }
+        //public override void Merge(OrderItem source)
+        //{
+        //    //throw new NotImplementedException();
+        //}
     }
 }
