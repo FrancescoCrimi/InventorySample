@@ -55,8 +55,12 @@ namespace Inventory.Uwp.ViewModels.Customers
         public async Task LoadAsync(CustomerListArgs args)
         {
             await CustomerList.LoadAsync(args);
-            //IsMainView = args.IsMainView;
-            //OnPropertyChanged(nameof(IsMainView));
+            if (args != null)
+            {
+                IsMainView = args.IsMainView;
+                CustomerList.IsMainView = args.IsMainView;
+                CustomerDetails.IsMainView = args.IsMainView;
+            }
         }
 
         public void Unload()

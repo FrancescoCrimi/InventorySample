@@ -14,7 +14,6 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Uwp.Services;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -27,7 +26,6 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public ViewModelBase()
         {
-            //IsMainView = false;
         }
 
         protected XamlRoot ViewXamlRoot { get; set; }
@@ -35,7 +33,6 @@ namespace Inventory.Uwp.ViewModels.Common
         {
             ViewXamlRoot = xamlRoot;
         }
-
 
         protected Task<bool> ShowDialogAsync(string title,
                                              string content,
@@ -45,9 +42,21 @@ namespace Inventory.Uwp.ViewModels.Common
             return DialogService.Current.ShowAsync(title, content, ok, cancel, ViewXamlRoot);
         }
 
-        public bool IsMainView => true;
+        // todo: make sure modify default as true is good
+        private bool isMainView = true;
+        public bool IsMainView
+        {
+            get => isMainView;
+            set => SetProperty(ref isMainView, value);
+        }
 
-        public virtual string Title => string.Empty;
+        private string title = string.Empty;
+        public virtual string Title
+        {
+            get => title;
+            set => SetProperty(ref title, value);
+        }
+
 
         public void StartStatusMessage(string message)
         {

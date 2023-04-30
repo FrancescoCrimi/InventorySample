@@ -29,6 +29,8 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public string Query { get; set; }
 
+        public bool IsMainView { get; set; }
+
         public Expression<Func<Order, object>> OrderBy { get; set; }
         public Expression<Func<Order, object>> OrderByDesc { get; set; }
     }

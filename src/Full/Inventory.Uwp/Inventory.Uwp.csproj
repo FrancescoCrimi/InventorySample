@@ -519,7 +519,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".editorconfig" />
     <Content Include="Assets\AppLog\AppLog.db" />
     <Content Include="Assets\Database\VanArsdel.1.01.db" />
   </ItemGroup>

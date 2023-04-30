@@ -133,14 +133,15 @@ namespace Inventory.Uwp.Library.Controls
             {
                 _content.RowDefinitions[0].Height = Header == null ? GridLengths.Zero : GridLengths.Auto;
                 _content.RowDefinitions[2].Height = Footer == null ? GridLengths.Zero : GridLengths.Auto;
-                //if (_button != null)
-                //{
-                //    _button.Visibility = IsButtonVisible && !String.IsNullOrEmpty($"{HeaderButtonGlyph}{HeaderButtonLabel}") ? Visibility.Visible : Visibility.Collapsed;
-                //}
+                if (_button != null)
+                {
+                    _button.Visibility = IsButtonVisible && !String.IsNullOrEmpty($"{HeaderButtonGlyph}{HeaderButtonLabel}") ? Visibility.Visible : Visibility.Collapsed;
+                }
                 UpdateContainer();
             }
         }
 
+        // todo: try to remove the comment like the originals
         public void UpdateContainer()
         {
             if (IsEnabled)

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Full\Domain\Inventory.Domain.csproj" />
     <ProjectReference Include="..\..\Full\Infrastructure\Inventory.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Full\Persistence\Inventory.Persistence.csproj" />

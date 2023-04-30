@@ -50,6 +50,12 @@ namespace Inventory.Uwp.ViewModels.Orders
         public async Task LoadAsync(OrderListArgs args)
         {
             await OrderList.LoadAsync(args);
+            if (args != null)
+            {
+                IsMainView = args.IsMainView;
+                OrderList.IsMainView = args.IsMainView;
+                OrderDetails.IsMainView = args.IsMainView;
+            }
         }
 
         public void Unload()

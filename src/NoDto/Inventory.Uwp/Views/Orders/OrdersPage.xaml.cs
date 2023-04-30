@@ -50,6 +50,7 @@ namespace Inventory.Uwp.Views.Orders
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
             var args = ViewModel.OrderList.CreateArgs();
+            args.IsMainView = false;
             await _windowService.OpenInNewWindow<OrdersPage>(args);
         }
 

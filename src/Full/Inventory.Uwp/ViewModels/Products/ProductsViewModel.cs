@@ -47,6 +47,12 @@ namespace Inventory.Uwp.ViewModels.Products
         public async Task LoadAsync(ProductListArgs args)
         {
             await ProductList.LoadAsync(args);
+            if (args != null)
+            {
+                IsMainView = args.IsMainView;
+                ProductList.IsMainView = args.IsMainView;
+                ProductDetails.IsMainView = args.IsMainView;
+            }
         }
         public void Unload()
         {
