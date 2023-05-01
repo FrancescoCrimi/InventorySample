@@ -80,7 +80,6 @@
     <Compile Include="ViewModels\Logs\LogDetailsViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogListArgs.cs" />
     <Compile Include="ViewModels\Logs\LogListViewModel.cs" />
-    <Compile Include="ViewModels\Logs\LogMessage.cs" />
     <Compile Include="ViewModels\Logs\LogsViewModel.cs" />
     <Compile Include="ViewModels\Message\ViewModelsMessage.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsArgs.cs" />
