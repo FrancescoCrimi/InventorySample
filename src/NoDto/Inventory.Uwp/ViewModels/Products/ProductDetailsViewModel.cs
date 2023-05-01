@@ -87,7 +87,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             //MessageService.Subscribe<ProductDetailsViewModel, ProductModel>(this, OnDetailsMessage);
             //MessageService.Subscribe<ProductListViewModel>(this, OnListMessage);
-            Messenger.Register<ProductChangeMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Product>>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -189,7 +189,7 @@ namespace Inventory.Uwp.ViewModels.Products
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnMessage(object recipient, ProductChangeMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Product> message)
         {
             var current = Item;
             if (current != null)
@@ -339,8 +339,5 @@ namespace Inventory.Uwp.ViewModels.Products
             });
             //});
         }
-
-        protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(new ProductChangeMessage(message, itemId));
     }
 }

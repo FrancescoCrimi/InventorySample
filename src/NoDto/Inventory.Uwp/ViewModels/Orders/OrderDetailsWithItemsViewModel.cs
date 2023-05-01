@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Domain.Model;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.OrderItems;
@@ -57,7 +58,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
-            Messenger.Register<OrderChangedMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Order>>(this, OnMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
@@ -70,7 +71,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             OrderItemList.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, OrderChangedMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Order> message)
         {
             if (message.Value == "ItemChanged" && message.Id != 0)
             {

@@ -22,6 +22,7 @@ using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.Views.Products;
 using Microsoft.Extensions.Logging;
 using System;
@@ -83,17 +84,11 @@ namespace Inventory.Uwp.ViewModels.Products
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<IList<ProductDto>>>(this, OnProductListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
-
-            //MessageService.Subscribe<ProductDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
+            Messenger.Register<ViewModelsMessage<ProductDto>>(this, OnMessage);
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -167,16 +162,14 @@ namespace Inventory.Uwp.ViewModels.Products
                         count = SelectedIndexRanges.Sum(r => r.Length);
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteRangesAsync(SelectedIndexRanges);
-                        //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new ItemMessage<IList<IndexRange>>(SelectedIndexRanges, "ItemRangesDeleted"));
+                        Messenger.Send(new ViewModelsMessage<ProductDto>("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
                         count = SelectedItems.Count();
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteItemsAsync(SelectedItems);
-                        //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<ProductDto>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new ViewModelsMessage<ProductDto>("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
@@ -222,63 +215,15 @@ namespace Inventory.Uwp.ViewModels.Products
             };
         }
 
-        //private async void OnMessage(ViewModelBase sender, string message, object args)
-        //{
-        //    switch (message)
-        //    {
-        //        case "NewItemSaved":
-        //        case "ItemDeleted":
-        //        case "ItemsDeleted":
-        //        case "ItemRangesDeleted":
-        //            //await ContextService.RunAsync(async () =>
-        //            //{
-        //                await RefreshAsync();
-        //            //});
-        //            break;
-        //    }
-        //}
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
+        private async void OnMessage(object recipient, ViewModelsMessage<ProductDto> message)
         {
-            switch (message.Message)
-            {
-                //case "NewItemSaved":
-                //case "ItemDeleted":
-                //case "ItemsDeleted":
-                case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
-        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductDto>> message)
-        {
-            switch (message.Message)
-            {
-                //case "NewItemSaved":
-                //case "ItemDeleted":
-                case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
-                    await RefreshAsync();
-                    //});
-                    break;
-            }
-        }
-        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
-        {
-            switch (message.Message)
+            switch (message.Value)
             {
                 case "NewItemSaved":
                 case "ItemDeleted":
-                    //case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    //await ContextService.RunAsync(async () =>
-                    //{
+                case "ItemsDeleted":
+                case "ItemRangesDeleted":
                     await RefreshAsync();
-                    //});
                     break;
             }
         }

@@ -15,6 +15,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.OrderItems;
 using System.Threading.Tasks;
 
@@ -56,30 +57,24 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderDto>>(this, OnOrderMessage);
+            Messenger.Register<ViewModelsMessage<OrderDto>>(this, OnMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
         }
 
 
-        private async void OnOrderMessage(object recipient, ItemMessage<OrderDto> message)
+        private async void OnMessage(object recipient, ViewModelsMessage<OrderDto> message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnMessage(OrderDetailsViewModel viewModel, string message, OrderModel order)
-            //{
-            if (recipient == OrderDetails && message.Message == "ItemChanged")
+            if (recipient == OrderDetails && message.Value == "ItemChanged")
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = message.Value.Id });
+                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = message.Id });
             }
         }
     }

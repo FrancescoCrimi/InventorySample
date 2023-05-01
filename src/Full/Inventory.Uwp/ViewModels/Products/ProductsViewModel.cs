@@ -17,6 +17,7 @@ using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -62,25 +63,23 @@ namespace Inventory.Uwp.ViewModels.Products
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
+            Messenger.Register<ViewModelsMessage<ProductDto>>(this, OnMessage);
             ProductList.Subscribe();
             ProductDetails.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             ProductList.Unsubscribe();
             ProductDetails.Unsubscribe();
         }
 
-        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
+        private async void OnMessage(object recipient, ViewModelsMessage<ProductDto> message)
         {
-            if (message.Message == "ItemSelected")
+            if (message.Value == "ItemSelected")
             {
-                if (message.Value.Id != 0)
+                if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
                     await OnItemSelected();

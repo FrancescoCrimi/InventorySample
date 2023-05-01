@@ -15,6 +15,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -61,7 +62,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         public void Subscribe()
         {
             //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            Messenger.Register<LogMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Log>>(this, OnMessage);
             LogList.Subscribe();
             LogDetails.Subscribe();
         }
@@ -74,7 +75,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             LogDetails.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, LogMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Log> message)
         {
             if (/*recipient == AppLogList &&*/ message.Value == "ItemSelected")
             {

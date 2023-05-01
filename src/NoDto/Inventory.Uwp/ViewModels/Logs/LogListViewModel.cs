@@ -22,6 +22,7 @@ using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 
 namespace Inventory.Uwp.ViewModels.Logs
@@ -65,13 +66,13 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
             //MessageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
-            Messenger.Register<LogMessage>(this, OnItemMessage);
+            Messenger.Register<ViewModelsMessage<Log>>(this, OnItemMessage);
 
             // LogService non salva piu i log
             //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
         }
 
-        private async void OnItemMessage(object recipient, LogMessage message)
+        private async void OnItemMessage(object recipient, ViewModelsMessage<Log> message)
         {
             switch (message.Value)
             {
@@ -169,7 +170,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new LogMessage("ItemRangesDeleted", SelectedIndexRanges));
+                        Messenger.Send(new ViewModelsMessage<Log>("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
@@ -177,7 +178,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new LogMessage("ItemsDeleted", SelectedItems));
+                        Messenger.Send(new ViewModelsMessage<Log>("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
@@ -222,9 +223,6 @@ namespace Inventory.Uwp.ViewModels.Logs
                 OrderByDesc = ViewModelArgs.OrderByDesc
             };
         }
-
-        protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(new LogMessage(message, itemId));
 
         //private async void OnLogServiceMessage(ILogService logService, string message, Log log)
         //{

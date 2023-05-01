@@ -190,7 +190,9 @@
     <Compile Include="ViewModels\Logs\LogListArgs.cs" />
     <Compile Include="ViewModels\Logs\LogListViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogsViewModel.cs" />
-    <Compile Include="ViewModels\Messages.cs" />
+    <Compile Include="ViewModels\Message\LogMessage.cs" />
+    <Compile Include="ViewModels\Message\StatusMessage.cs" />
+    <Compile Include="ViewModels\Message\ViewModelsMessage.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsArgs.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemListArgs.cs" />

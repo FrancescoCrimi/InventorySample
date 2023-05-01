@@ -57,7 +57,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public void Subscribe()
         {
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
-            Messenger.Register<OrderItemChangeMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<OrderItem>>(this, OnMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
         }
@@ -71,7 +71,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         }
 
 
-        private void OnMessage(object recipient, OrderItemChangeMessage message)
+        private void OnMessage(object recipient, ViewModelsMessage<OrderItem> message)
         {
             if (message.Id != 0 && message.Value == "ItemSelected")
             {

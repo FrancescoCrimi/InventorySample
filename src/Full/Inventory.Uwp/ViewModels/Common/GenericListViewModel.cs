@@ -19,13 +19,14 @@ using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Message;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableDto
+    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableDto, new()
     {
         public GenericListViewModel()
             : base()
@@ -74,8 +75,7 @@ namespace Inventory.Uwp.ViewModels.Common
                         {
                             // Todo: fixare selectedItem.Id = 0
                             ////MessageService.Send(this, "ItemSelected", _selectedItem);
-                            var message = new ItemMessage<TModel>(_selectedItem, "ItemSelected");
-                            Messenger.Send(message);
+                            Messenger.Send(new ViewModelsMessage<TModel>("ItemSelected", _selectedItem.Id));
                         }
                     }
                 }

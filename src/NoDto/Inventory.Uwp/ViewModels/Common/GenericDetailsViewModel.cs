@@ -18,8 +18,10 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
+using Inventory.Uwp.ViewModels.Message;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
@@ -100,10 +102,8 @@ namespace Inventory.Uwp.ViewModels.Common
             StatusReady();
             BeginEdit();
             //MessageService.Send(this, "BeginEdit", Item);
-            SendItemChangedMessage("BeginEdit", Item.Id);
+            Messenger.Send(new ViewModelsMessage<TModel>("BeginEdit", Item.Id));
         }
-
-        protected abstract void SendItemChangedMessage(string message, long itemId);
 
         public virtual void BeginEdit()
         {
@@ -122,8 +122,7 @@ namespace Inventory.Uwp.ViewModels.Common
         {
             StatusReady();
             CancelEdit();
-            //MessageService.Send(this, "CancelEdit", Item);
-            SendItemChangedMessage("CancelEdit", Item.Id);
+            Messenger.Send(new ViewModelsMessage<TModel>("CancelEdit", Item.Id));
         }
 
         public virtual void CancelEdit()
@@ -181,12 +180,12 @@ namespace Inventory.Uwp.ViewModels.Common
                 if (isNew)
                 {
                     //MessageService.Send(this, "NewItemSaved", Item);
-                    SendItemChangedMessage("NewItemSaved", Item.Id);
+                    Messenger.Send(new ViewModelsMessage<TModel>("NewItemSaved", Item.Id));
                 }
                 else
                 {
                     //MessageService.Send(this, "ItemChanged", Item);
-                    SendItemChangedMessage("ItemChanged", Item.Id);
+                    Messenger.Send(new ViewModelsMessage<TModel>("ItemChanged", Item.Id));
                 }
                 IsEditMode = false;
 
@@ -214,7 +213,7 @@ namespace Inventory.Uwp.ViewModels.Common
                 {
                     // TODO: fix send entity id
                     //MessageService.Send(this, "ItemDeleted", model);
-                    SendItemChangedMessage("ItemDeleted", model.Id);
+                    Messenger.Send(new ViewModelsMessage<TModel>("ItemDeleted", model.Id));
                 }
                 else
                 {

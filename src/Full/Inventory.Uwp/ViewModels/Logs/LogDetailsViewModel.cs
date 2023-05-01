@@ -46,7 +46,7 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public override string Title => "Activity Logs";
 
-        public  bool ItemIsNew => false;
+        public bool ItemIsNew => false;
 
         public LogDetailsArgs ViewModelArgs { get; private set; }
 
@@ -72,16 +72,11 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<AppLogDetailsViewModel, AppLogModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<Log>>(this, OnDetailsMessage);
-            //MessageService.Subscribe<AppLogListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<Log>>>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnListIndexRange);
+            Messenger.Register<LogMessage>(this, OnDetailsMessage);
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -93,12 +88,12 @@ namespace Inventory.Uwp.ViewModels.Logs
             };
         }
 
-        protected  Task<bool> SaveItemAsync(Log model)
+        protected Task<bool> SaveItemAsync(Log model)
         {
             throw new NotImplementedException();
         }
 
-        protected async  Task<bool> DeleteItemAsync(Log model)
+        protected async Task<bool> DeleteItemAsync(Log model)
         {
             try
             {
@@ -116,7 +111,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             }
         }
 
-        protected async  Task<bool> ConfirmDeleteAsync()
+        protected async Task<bool> ConfirmDeleteAsync()
         {
             return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
         }
@@ -125,67 +120,28 @@ namespace Inventory.Uwp.ViewModels.Logs
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnDetailsMessage(object recipient, ItemMessage<Log> message)
+        private async void OnDetailsMessage(object recipient, LogMessage message)
         {
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.Id == current?.Id)
+                switch (message.Value)
                 {
-                    switch (message.Message)
-                    {
-                        case "ItemDeleted":
-                            await OnItemDeletedExternally();
-                            break;
-                    }
-                }
-            }
-        }
-
-        //private async void OnDetailsMessage(AppLogDetailsViewModel sender, string message, AppLogModel changed)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        if (changed != null && changed.Id == current?.Id)
-        //        {
-        //            switch (message)
-        //            {
-        //                case "ItemDeleted":
-        //                    await OnItemDeletedExternally();
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-
-        private async void OnListMessage(object recipient, ItemMessage<IList<Log>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
-                    case "ItemsDeleted":
-                        if (message.Value is IList<Log> deletedModels)
+                    case "ItemDeleted":
+                        if (message.Id != 0 && message.Id == current?.Id)
                         {
-                            if (deletedModels.Any(r => r.Id == current.Id))
+                            await OnItemDeletedExternally();
+                        }
+                        break;
+                    case "ItemsDeleted":
+                        if (message.Items != null)
+                        {
+                            if (message.Items.Any(r => r.Id == current.Id))
                             {
                                 await OnItemDeletedExternally();
                             }
                         }
                         break;
-                }
-            }
-        }
-
-        private async void OnListIndexRange(object recipient, ItemMessage<IList<IndexRange>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
                     case "ItemRangesDeleted":
                         var model = await _logService.GetLogAsync(current.Id);
                         if (model == null)
@@ -199,15 +155,12 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 //CancelEdit();
                 //IsEnabled = false;
                 StatusMessage("WARNING: This log has been deleted externally");
             });
-            //});
         }
 
 
@@ -277,7 +230,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                 if (await DeleteItemAsync(model))
                 {
                     //MessageService.Send(this, "ItemDeleted", model);
-                    Messenger.Send(new ItemMessage<Log>(model, "ItemDeleted"));
+                    Messenger.Send(new LogMessage("ItemDeleted", model.Id));
                 }
                 //else
                 //{

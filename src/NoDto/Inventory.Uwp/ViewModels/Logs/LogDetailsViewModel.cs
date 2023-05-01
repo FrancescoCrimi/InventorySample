@@ -17,6 +17,7 @@ using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             //MessageService.Subscribe<AppLogDetailsViewModel, AppLogModel>(this, OnDetailsMessage);
             //MessageService.Subscribe<AppLogListViewModel>(this, OnListMessage);
-            Messenger.Register<LogMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Log>>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -120,7 +121,7 @@ namespace Inventory.Uwp.ViewModels.Logs
          *  Handle external messages
          ****************************************************************/
 
-        private async void OnMessage(object recipient, LogMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Log> message)
         {
             var current = Item;
             if (current != null)
@@ -128,7 +129,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                 switch (message.Value)
                 {
                     case "ItemDeleted":
-                        if (message.Log != null && message.Log.Id == current?.Id)
+                        if (message.Id != 0 && message.Id == current?.Id)
                         {
                             await OnItemDeletedExternally();
                         }
@@ -211,7 +212,5 @@ namespace Inventory.Uwp.ViewModels.Logs
             });
             //});
         }
-
-        protected override void SendItemChangedMessage(string message, long itemId) => throw new NotImplementedException();
     }
 }

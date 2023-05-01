@@ -107,7 +107,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnDetailsMessage);
             //MessageService.Subscribe<OrderListViewModel>(this, OnListMessage);
-            Messenger.Register<OrderChangedMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Order>>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -189,7 +189,7 @@ namespace Inventory.Uwp.ViewModels.Orders
          ****************************************************************/
 
 
-        private async void OnMessage(object recipient, OrderChangedMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Order> message)
         {
             var current = Item;
             if (current != null)
@@ -338,8 +338,5 @@ namespace Inventory.Uwp.ViewModels.Orders
             });
             //});
         }
-
-        protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(message, itemId);
     }
 }

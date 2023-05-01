@@ -83,13 +83,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
             //MessageService.Subscribe<OrderItemDetailsViewModel>(this, OnMessage);
-            Messenger.Register<OrderItemChangeMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<OrderItem>>(this, OnMessage);
         }
 
         public void Unsubscribe()
         {
             //MessageService.Unsubscribe(this);
-            Messenger.RegisterAll(this);
+            Messenger.UnregisterAll(this);
         }
 
         public OrderItemListArgs CreateArgs()
@@ -174,7 +174,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         StartStatusMessage($"Deleting {count} order items...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new OrderItemChangeMessage("ItemRangesDeleted", SelectedIndexRanges));
+                        Messenger.Send(new ViewModelsMessage<OrderItem>("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
@@ -182,7 +182,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         StartStatusMessage($"Deleting {count} order items...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new OrderItemChangeMessage("ItemsDeleted", SelectedItems));
+                        Messenger.Send(new ViewModelsMessage<OrderItem>("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
@@ -251,7 +251,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         //    }
         //}
 
-        private async void OnMessage(object recipient, OrderItemChangeMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<OrderItem> message)
         {
             switch (message.Value)
             {
@@ -264,7 +264,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             }
         }
 
-        protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(new OrderItemChangeMessage(message, itemId));
+        //protected override void SendItemChangedMessage(string message, long itemId)
+        //    => Messenger.Send(new OrderItemChangeMessage(message, itemId));
     }
 }

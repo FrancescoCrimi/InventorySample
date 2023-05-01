@@ -20,6 +20,7 @@ using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -83,11 +84,8 @@ namespace Inventory.Uwp.ViewModels.Customers
         public void Subscribe()
         {
             //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<CustomerDto>>(this, OnCustomerMessage);
-
             //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<CustomerDto>>>(this, OnCustomerListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
+            Messenger.Register<ViewModelsMessage<CustomerDto>>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -192,23 +190,16 @@ namespace Inventory.Uwp.ViewModels.Customers
             //yield return new RequiredConstraint<CustomerDto>("Country", m => m.CountryCode);
         }
 
-        /*
-         *  Handle external messages
-         ****************************************************************/
-
-        //private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
-        private async void OnCustomerMessage(object recipient, ItemMessage<CustomerDto> message)
+        private async void OnMessage(object recipient, ViewModelsMessage<CustomerDto> message)
         {
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.Id == current?.Id)
+                switch (message.Value)
                 {
-                    switch (message.Message)
-                    {
-                        case "ItemChanged":
-                            //await ContextService.RunAsync(async () =>
-                            //{
+                    case "ItemChanged":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
                             try
                             {
                                 var item = await _customerService.GetCustomerAsync(current.Id);
@@ -225,40 +216,23 @@ namespace Inventory.Uwp.ViewModels.Customers
                             {
                                 _logger.LogError(LogEvents.HandleChanges, ex, "Handle Customer Changes");
                             }
-                            //});
-                            break;
-                        case "ItemDeleted":
-                            await OnItemDeletedExternally();
-                            break;
-                    }
-                }
-            }
-        }
-
-        private async void OnCustomerListMessage(object recipient, ItemMessage<IList<CustomerDto>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
-                    case "ItemsDeleted":
-                        if (message.Value.Any(r => r.Id == current.Id))
+                        }
+                        break;
+                    case "ItemDeleted":
+                        if (message.Id != 0 && message.Id == current?.Id)
                         {
                             await OnItemDeletedExternally();
                         }
                         break;
-                }
-            }
-        }
-
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
+                    case "ItemsDeleted":
+                        if (message.SelectedItems != null)
+                        {
+                            if (message.SelectedItems.Any(r => r.Id == current.Id))
+                            {
+                                await OnItemDeletedExternally();
+                            }
+                        }
+                        break;
                     case "ItemRangesDeleted":
                         try
                         {
@@ -276,40 +250,6 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
             }
         }
-
-        //private async void OnListMessage(CustomerListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<CustomerModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.CustomerID == current.CustomerID))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await customerService.GetCustomerAsync(current.CustomerID);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    logger.LogError(ex, "Handle Ranges Deleted");
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
 
         private async Task OnItemDeletedExternally()
         {

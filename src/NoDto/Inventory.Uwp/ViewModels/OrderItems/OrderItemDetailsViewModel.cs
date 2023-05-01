@@ -172,10 +172,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             //MessageService.Subscribe<OrderItemDetailsViewModel, OrderItemModel>(this, OnDetailsMessage);
             //MessageService.Subscribe<OrderItemListViewModel>(this, OnListMessage);
-            Messenger.Register<OrderItemChangeMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<OrderItem>>(this, OnMessage);
         }
 
-        private async void OnMessage(object recipient, OrderItemChangeMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<OrderItem> message)
         {
             var current = Item;
             if (current != null)
@@ -183,7 +183,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 switch (message.Value)
                 {
                     case "ItemChanged":
-                        if (message.OrderID == current?.OrderId && message.OrderLine == current?.OrderLine)
+                        if (message.Id != 0 && message.Id == current?.Id)
                         {
                             try
                             {
@@ -205,7 +205,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         break;
 
                     case "ItemDeleted":
-                        if (message.OrderID == current?.OrderId && message.OrderLine == current?.OrderLine)
+                        if (message.Id != 0 && message.Id == current?.Id)
                         {
                             await OnItemDeletedExternally();
                         }
@@ -323,7 +323,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             //});
         }
 
-        protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(new OrderItemChangeMessage(message, Item.OrderId, Item.OrderLine));
+        //protected override void SendItemChangedMessage(string message, long itemId)
+        //    => Messenger.Send(new OrderItemChangeMessage(message, Item.OrderId, Item.OrderLine));
     }
 }

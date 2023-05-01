@@ -20,6 +20,7 @@ using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -82,11 +83,8 @@ namespace Inventory.Uwp.ViewModels.Products
         public void Subscribe()
         {
             //MessageService.Subscribe<ProductDetailsViewModel, ProductModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<ProductDto>>(this, OnProductMessage);
-
             //MessageService.Subscribe<ProductListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<ProductDto>>>(this, OnProductListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
+            Messenger.Register<ViewModelsMessage<ProductDto>>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -184,26 +182,16 @@ namespace Inventory.Uwp.ViewModels.Products
             yield return new RequiredGreaterThanZeroConstraint<ProductDto>("Category", m => m.CategoryId);
         }
 
-        /*
-         *  Handle external messages
-         ****************************************************************/
-
-        private async void OnProductMessage(object recipient, ItemMessage<ProductDto> message)
+        private async void OnMessage(object recipient, ViewModelsMessage<ProductDto> message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnDetailsMessage(ProductDetailsViewModel sender, string message, ProductModel changed)
-            //{
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.Id == current?.Id)
+                switch (message.Value)
                 {
-                    switch (message.Message)
-                    {
-                        case "ItemChanged":
-                            //await ContextService.RunAsync(async () =>
-                            //{
+                    case "ItemChanged":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
                             try
                             {
                                 var item = await _productService.GetProductAsync(current.Id);
@@ -220,24 +208,23 @@ namespace Inventory.Uwp.ViewModels.Products
                             {
                                 _logger.LogError(LogEvents.HandleChanges, ex, "Handle Product Changes");
                             }
-                            //});
-                            break;
-                        case "ItemDeleted":
+                        }
+                        break;
+                    case "ItemDeleted":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
                             await OnItemDeletedExternally();
-                            break;
-                    }
-                }
-            }
-        }
-
-
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
+                        }
+                        break;
+                    case "ItemsDeleted":
+                        if (message.SelectedItems != null)
+                        {
+                            if (message.SelectedItems.Any(r => r.Id == current.Id))
+                            {
+                                await OnItemDeletedExternally();
+                            }
+                        }
+                        break;
                     case "ItemRangesDeleted":
                         try
                         {
@@ -256,70 +243,14 @@ namespace Inventory.Uwp.ViewModels.Products
             }
         }
 
-        private async void OnProductListMessage(object recipient, ItemMessage<IList<ProductDto>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
-                    case "ItemsDeleted":
-                        //if (args is IList<ProductModel> deletedModels)
-                        //{
-                        if (message.Value.Any(r => r.Id == current.Id))
-                        {
-                            await OnItemDeletedExternally();
-                        }
-                        //}
-                        break;
-                }
-            }
-        }
-        //private async void OnListMessage(ProductListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<ProductModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.ProductID == current.ProductID))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await productService.GetProductAsync(current.ProductID);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    logger.LogError(ex, "Handle Ranges Deleted");
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
-
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This product has been deleted externally");
             });
-            //});
         }
     }
 }

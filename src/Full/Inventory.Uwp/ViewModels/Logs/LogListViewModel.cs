@@ -67,15 +67,15 @@ namespace Inventory.Uwp.ViewModels.Logs
         {
             //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
             //MessageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<Log>>(this, OnItemMessage);
+            Messenger.Register<LogMessage>(this, OnItemMessage);
 
             // LogService non salva piu i log
             //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
         }
 
-        private async void OnItemMessage(object recipient, ItemMessage<Log> message)
+        private async void OnItemMessage(object recipient, LogMessage message)
         {
-            switch (message.Message)
+            switch (message.Value)
             {
                 //case "NewItemSaved":
                 case "ItemDeleted":
@@ -171,7 +171,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new ItemMessage<IList<IndexRange>>(SelectedIndexRanges, "ItemRangesDeleted"));
+                        Messenger.Send(new LogMessage("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
@@ -179,7 +179,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                         StartStatusMessage($"Deleting {count} logs...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ItemMessage<IList<Log>>(SelectedItems, "ItemsDeleted"));
+                        Messenger.Send(new LogMessage("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
@@ -299,8 +299,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                         {
                             // Todo: fixare selectedItem.Id = 0
                             ////MessageService.Send(this, "ItemSelected", _selectedItem);
-                            var message = new ItemMessage<Log>(_selectedItem, "ItemSelected");
-                            Messenger.Send(message);
+                            Messenger.Send(new LogMessage("ItemSelected", _selectedItem.Id));
                         }
                     }
                 }

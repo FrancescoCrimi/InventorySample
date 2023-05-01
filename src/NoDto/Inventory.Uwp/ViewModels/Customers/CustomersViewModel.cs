@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Domain.Model;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -72,7 +73,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         public void Subscribe()
         {
             //MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
-            Messenger.Register<CustomerChangedMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Customer>>(this, OnMessage);
 
             CustomerList.Subscribe();
             CustomerDetails.Subscribe();
@@ -82,13 +83,14 @@ namespace Inventory.Uwp.ViewModels.Customers
         public void Unsubscribe()
         {
             //MessageService.Unsubscribe(this);
-            Messenger.Unregister<CustomerChangedMessage>(this);
+            Messenger.UnregisterAll(this);
+
             CustomerList.Unsubscribe();
             CustomerDetails.Unsubscribe();
             CustomerOrders.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, CustomerChangedMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Customer> message)
         {
             if (message.Value == "ItemSelected")
             {
@@ -112,6 +114,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         //}
 
         // TODO: modificare metodo in (long selectedCustomerId)
+
         private async Task OnItemSelected()
         {
             if (CustomerDetails.IsEditMode)

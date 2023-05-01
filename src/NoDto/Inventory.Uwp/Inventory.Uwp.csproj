@@ -82,10 +82,7 @@
     <Compile Include="ViewModels\Logs\LogListViewModel.cs" />
     <Compile Include="ViewModels\Logs\LogMessage.cs" />
     <Compile Include="ViewModels\Logs\LogsViewModel.cs" />
-    <Compile Include="ViewModels\Message\OrderChangedMessage.cs" />
-    <Compile Include="ViewModels\Message\OrderItemChangeMessage.cs" />
-    <Compile Include="ViewModels\Message\ProductChangeMessage.cs" />
-    <Compile Include="ViewModels\Message\CustomerChangedMessage.cs" />
+    <Compile Include="ViewModels\Message\ViewModelsMessage.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsArgs.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemDetailsViewModel.cs" />
     <Compile Include="ViewModels\OrderItems\OrderItemListArgs.cs" />

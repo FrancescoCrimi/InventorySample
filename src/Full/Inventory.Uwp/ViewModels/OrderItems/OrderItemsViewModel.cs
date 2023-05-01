@@ -17,6 +17,7 @@ using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -55,32 +56,23 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
+            Messenger.Register<ViewModelsMessage<OrderItemDto>>(this, OnMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             OrderItemList.Unsubscribe();
             OrderItemDetails.Unsubscribe();
         }
 
-        private void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
+        private void OnMessage(object recipient, ViewModelsMessage<OrderItemDto> message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnMessage(OrderItemListViewModel viewModel, string message, object args)
-            //{
-            if (recipient == OrderItemList && message.Message == "ItemSelected")
+            if (recipient == OrderItemList && message.Value == "ItemSelected")
             {
-                //await ContextService.RunAsync(() =>
-                //{
                 OnItemSelected();
-                //});
             }
         }
 

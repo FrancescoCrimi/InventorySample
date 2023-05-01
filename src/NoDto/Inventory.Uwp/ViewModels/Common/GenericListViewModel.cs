@@ -16,13 +16,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Common;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Library.Common;
+using Inventory.Uwp.ViewModels.Message;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : Inventory.Infrastructure.Common.ObservableObject<TModel>
+    public abstract class GenericListViewModel<TModel> : ViewModelBase where TModel : Inventory.Infrastructure.Common.ObservableObject<TModel>
     {
         public GenericListViewModel()
             : base()
@@ -61,14 +63,12 @@ namespace Inventory.Uwp.ViewModels.Common
                         if (_selectedItem != null)
                         {
                             //MessageService.Send(this, "ItemSelected", _selectedItem);
-                            SendItemChangedMessage("ItemSelected", _selectedItem.Id);
+                            Messenger.Send(new ViewModelsMessage<TModel>("ItemSelected", _selectedItem.Id));
                         }
                     }
                 }
             }
         }
-
-        protected abstract void SendItemChangedMessage(string message, long itemId);
 
         private string _query = null;
         public string Query

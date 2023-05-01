@@ -20,6 +20,7 @@ using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
+using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -92,17 +93,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<OrderItemDetailsViewModel, OrderItemModel>(this, OnDetailsMessage);
-            Messenger.Register<ItemMessage<OrderItemDto>>(this, OnOrderItemMessage);
-
-            //MessageService.Subscribe<OrderItemListViewModel>(this, OnListMessage);
-            Messenger.Register<ItemMessage<IList<OrderItemDto>>>(this, OnOrderItemListMessage);
-            Messenger.Register<ItemMessage<IList<IndexRange>>>(this, OnIndexRangeListMessage);
+            Messenger.Register<ViewModelsMessage<OrderItemDto>>(this, OnMessage);
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -168,26 +163,16 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             yield return new NonGreaterThanConstraint<OrderItemDto>("Discount", m => m.Discount, (double)model.Subtotal, "'Subtotal'");
         }
 
-        /*
-         *  Handle external messages
-         ****************************************************************/
-
-        private async void OnOrderItemMessage(object recipient, ItemMessage<OrderItemDto> message)
+        private async void OnMessage(object recipient, ViewModelsMessage<OrderItemDto> message)
         {
-            //    throw new NotImplementedException();
-            //}
-            //private async void OnDetailsMessage(OrderItemDetailsViewModel sender, string message, OrderItemModel changed)
-            //{
             var current = Item;
             if (current != null)
             {
-                if (message.Value != null && message.Value.OrderId == current?.OrderId && message.Value.OrderLine == current?.OrderLine)
+                switch (message.Value)
                 {
-                    switch (message.Message)
-                    {
-                        case "ItemChanged":
-                            //await ContextService.RunAsync(async () =>
-                            //{
+                    case "ItemChanged":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
                             try
                             {
                                 var item = await _orderItemService.GetOrderItemAsync(current.OrderId, current.OrderLine);
@@ -204,24 +189,20 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                             {
                                 _logger.LogError(LogEvents.HandleChanges, ex, "Handle OrderItem Changes");
                             }
-                            //});
-                            break;
-                        case "ItemDeleted":
+                        }
+                        break;
+                    case "ItemDeleted":
+                        if (message.Id != 0 && message.Id == current?.Id)
+                        {
                             await OnItemDeletedExternally();
-                            break;
-                    }
-                }
-            }
-        }
-
-
-        private async void OnIndexRangeListMessage(object recipient, ItemMessage<IList<IndexRange>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
+                        }
+                        break;
+                    case "ItemsDeleted":
+                        if (message.SelectedItems.Any(r => r.Id == current.Id))
+                        {
+                            await OnItemDeletedExternally();
+                        }
+                        break;
                     case "ItemRangesDeleted":
                         try
                         {
@@ -239,67 +220,15 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 }
             }
         }
-        private async void OnOrderItemListMessage(object recipient, ItemMessage<IList<OrderItemDto>> message)
-        {
-            var current = Item;
-            if (current != null)
-            {
-                switch (message.Message)
-                {
-                    case "ItemsDeleted":
-                        if (message.Value.Any(r => r.OrderId == current.OrderId && r.OrderLine == current.OrderLine))
-                        {
-                            await OnItemDeletedExternally();
-                        }
-                        break;
-                }
-            }
-        }
-        //private async void OnListMessage(OrderItemListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<OrderItemModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.OrderID == current.OrderID && r.OrderLine == current.OrderLine))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await orderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    logger.LogError(ex, "Handle Ranges Deleted");
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
 
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This orderItem has been deleted externally");
             });
-            //});
         }
     }
 }

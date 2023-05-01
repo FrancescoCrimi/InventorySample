@@ -89,7 +89,7 @@ namespace Inventory.Uwp.ViewModels.Products
         {
             //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
             //MessageService.Subscribe<ProductDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ProductChangeMessage>(this, OnMessage);
+            Messenger.Register<ViewModelsMessage<Product>>(this, OnMessage);
         }
 
         public void Unsubscribe()
@@ -169,7 +169,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteRangesAsync(SelectedIndexRanges);
                         //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new ProductChangeMessage("ItemRangesDeleted", SelectedIndexRanges));
+                        Messenger.Send(new ViewModelsMessage<Product>("ItemRangesDeleted", SelectedIndexRanges));
                     }
                     else if (SelectedItems != null)
                     {
@@ -177,7 +177,7 @@ namespace Inventory.Uwp.ViewModels.Products
                         StartStatusMessage($"Deleting {count} products...");
                         await DeleteItemsAsync(SelectedItems);
                         //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ProductChangeMessage("ItemsDeleted", SelectedItems));
+                        Messenger.Send(new ViewModelsMessage<Product>("ItemsDeleted", SelectedItems));
                     }
                 }
                 catch (Exception ex)
@@ -225,7 +225,7 @@ namespace Inventory.Uwp.ViewModels.Products
             };
         }
 
-        private async void OnMessage(object recipient, ProductChangeMessage message)
+        private async void OnMessage(object recipient, ViewModelsMessage<Product> message)
         {
             switch (message.Value)
             {
@@ -253,8 +253,5 @@ namespace Inventory.Uwp.ViewModels.Products
         //            break;
         //    }
         //}
-
-        protected override void SendItemChangedMessage(string message, long itemId)
-            => Messenger.Send(new ProductChangeMessage(message, itemId));
     }
 }

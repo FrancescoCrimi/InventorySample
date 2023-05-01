@@ -54,25 +54,26 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            Messenger.Register<ItemMessage<Log>>(this, OnMessage);
+            Messenger.Register<LogMessage>(this, OnMessage);
             LogList.Subscribe();
             LogDetails.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             LogList.Unsubscribe();
             LogDetails.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, ItemMessage<Log> message)
+        private async void OnMessage(object recipient, LogMessage message)
         {
-            if (/*recipient == AppLogList &&*/ message.Message == "ItemSelected")
+            if (/*recipient == AppLogList &&*/ message.Value == "ItemSelected")
             {
-                await OnItemSelected();
+                if(message.Id != 0)
+                {
+                    await OnItemSelected();
+                }
             }
         }
 
