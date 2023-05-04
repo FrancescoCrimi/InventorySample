@@ -12,19 +12,35 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Country : IEquatable<Country>
+    public class Country : Entity, IEquatable<Country>
     {
-        public long Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
+        private string code;
+        private string name;
+
+        public string Code
+        {
+            get => code;
+            set => SetProperty(ref code, value);
+        }
+
+        public string Name
+        {
+            get => name;
+            set => SetProperty(ref name, value);
+        }
+
+        #region Equals
 
         public override bool Equals(object obj) => Equals(obj as Country);
+
         public bool Equals(Country other) => !(other is null) && Id == other.Id;
+
         public override int GetHashCode() => HashCode.Combine(Id);
 
         public static bool operator ==(Country left, Country right)
@@ -36,5 +52,7 @@ namespace Inventory.Domain.Model
         {
             return !(left == right);
         }
+
+        #endregion
     }
 }

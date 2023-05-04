@@ -13,88 +13,131 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
-    public class Product : Infrastructure.Common.ObservableObject<Product>
+    public class Product : Infrastructure.Common.ObservableObject<Product>, IEquatable<Product>
     {
+        private string name;
+        private string description;
+        private string size;
+        private string color;
+        private decimal listPrice;
+        private decimal dealerPrice;
+        private decimal discount;
+        private DateTimeOffset? discountStartDate;
+        private DateTimeOffset? discountEndDate;
+        private int stockUnits;
+        private int safetyStockLevel;
+        private DateTimeOffset createdOn;
+        private DateTimeOffset lastModifiedOn;
+        private string searchTerms;
+        private byte[] picture;
+        private byte[] thumbnail;
+        private long categoryId;
+        private long taxTypeId;
+
+
+        #region Property
+
         public string Name
         {
-            get; set;
+            get => name;
+            set => SetProperty(ref name, value);
         }
         public string Description
         {
-            get; set;
+            get => description;
+            set => SetProperty(ref description, value);
         }
         public string Size
         {
-            get; set;
+            get => size;
+            set => SetProperty(ref size, value);
         }
         public string Color
         {
-            get; set;
+            get => color;
+            set => SetProperty(ref color, value);
         }
         public decimal ListPrice
         {
-            get; set;
+            get => listPrice;
+            set => SetProperty(ref listPrice, value);
         }
         public decimal DealerPrice
         {
-            get; set;
+            get => dealerPrice;
+            set => SetProperty(ref dealerPrice, value);
         }
         public decimal Discount
         {
-            get; set;
+            get => discount;
+            set => SetProperty(ref discount, value);
         }
         public DateTimeOffset? DiscountStartDate
         {
-            get; set;
+            get => discountStartDate;
+            set => SetProperty(ref discountStartDate, value);
         }
         public DateTimeOffset? DiscountEndDate
         {
-            get; set;
+            get => discountEndDate;
+            set => SetProperty(ref discountEndDate, value);
         }
         public int StockUnits
         {
-            get; set;
+            get => stockUnits;
+            set => SetProperty(ref stockUnits, value);
         }
         public int SafetyStockLevel
         {
-            get; set;
+            get => safetyStockLevel;
+            set => SetProperty(ref safetyStockLevel, value);
         }
         public DateTimeOffset CreatedOn
         {
-            get; set;
+            get => createdOn;
+            set => SetProperty(ref createdOn, value);
         }
         public DateTimeOffset LastModifiedOn
         {
-            get; set;
+            get => lastModifiedOn;
+            set => SetProperty(ref lastModifiedOn, value);
         }
         public string SearchTerms
         {
-            get; set;
+            get => searchTerms;
+            set => SetProperty(ref searchTerms, value);
         }
         public byte[] Picture
         {
-            get; set;
+            get => picture;
+            set => SetProperty(ref picture, value);
         }
         public byte[] Thumbnail
         {
-            get; set;
+            get => thumbnail;
+            set => SetProperty(ref thumbnail, value);
         }
 
-
-        public int CategoryId
+        public long CategoryId
         {
-            get; set;
+            get => categoryId;
+            set => SetProperty(ref categoryId, value);
         }
-        public int TaxTypeId
+        public long TaxTypeId
         {
-            get; set;
+            get => taxTypeId;
+            set => SetProperty(ref taxTypeId, value);
         }
 
+        #endregion
+
+
+        #region relation
 
         public virtual Category Category
         {
@@ -105,13 +148,16 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
+        #endregion
 
 
-        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
-
-        //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         [NotMapped]
         public string CategoryName => Category?.Name;
+
+
+        #region Method
+
+        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
 
         public override void Merge(Product source)
         {
@@ -134,5 +180,38 @@ namespace Inventory.Domain.Model
             CategoryId = source.CategoryId;
             TaxTypeId = source.TaxTypeId;
         }
+
+        #endregion
+
+
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Product);
+        }
+
+        public bool Equals(Product other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+
+        public static bool operator ==(Product left, Product right)
+        {
+            return EqualityComparer<Product>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Product left, Product right)
+        {
+            return !(left == right);
+        }
+
+        #endregion
     }
 }

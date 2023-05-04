@@ -14,15 +14,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
@@ -42,11 +45,15 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             _logger = logger;
             _orderRepository = orderRepository;
-            this._customerRepository = customerRepository;
+            _customerRepository = customerRepository;
         }
 
+        #region public property
+
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
+
         public string TitleNew => Item?.Customer == null ? "New Order" : $"New Order, {Item?.Customer?.FullName}";
+
         public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.Id}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -71,6 +78,10 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             get; private set;
         }
+
+        #endregion
+
+        #region public method
 
         public async Task LoadAsync(OrderDetailsArgs args)
         {
@@ -97,6 +108,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
             OnPropertyChanged(nameof(ItemIsNew));
         }
+
         public void Unload()
         {
             ViewModelArgs.CustomerID = Item?.CustomerId ?? 0;
@@ -124,6 +136,10 @@ namespace Inventory.Uwp.ViewModels.Orders
                 OrderID = Item?.Id ?? 0
             };
         }
+
+        #endregion
+
+        #region protected and private method
 
         protected async override Task<bool> SaveItemAsync(Order model)
         {
@@ -183,10 +199,6 @@ namespace Inventory.Uwp.ViewModels.Orders
                 }
             }
         }
-
-        /*
-         *  Handle external messages
-         ****************************************************************/
 
 
         private async void OnMessage(object recipient, ViewModelsMessage<Order> message)
@@ -253,79 +265,6 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
         }
 
-        //private async void OnDetailsMessage(OrderDetailsViewModel sender, string message, OrderModel changed)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        if (changed != null && changed.OrderID == current?.OrderID)
-        //        {
-        //            switch (message)
-        //            {
-        //                case "ItemChanged":
-        //                    await ContextService.RunAsync(async () =>
-        //                    {
-        //                        try
-        //                        {
-        //                            var item = await OrderService.GetOrderAsync(current.OrderID);
-        //                            item = item ?? new OrderModel { OrderID = current.OrderID, IsEmpty = true };
-        //                            current.Merge(item);
-        //                            current.NotifyChanges();
-        //                            NotifyPropertyChanged(nameof(Title));
-        //                            if (IsEditMode)
-        //                            {
-        //                                StatusMessage("WARNING: This order has been modified externally");
-        //                            }
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            LogException("Order", "Handle Changes", ex);
-        //                        }
-        //                    });
-        //                    break;
-        //                case "ItemDeleted":
-        //                    await OnItemDeletedExternally();
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private async void OnListMessage(OrderListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<OrderModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.OrderID == current.OrderID))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await OrderService.GetOrderAsync(current.OrderID);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    LogException("Order", "Handle Ranges Deleted", ex);
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
-
-
         private async Task OnItemDeletedExternally()
         {
             //await ContextService.RunAsync(() =>
@@ -338,5 +277,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             });
             //});
         }
+
+        #endregion
     }
 }

@@ -12,58 +12,82 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
-    public partial class OrderItem : Infrastructure.Common.ObservableObject<OrderItem>
+    public class OrderItem : Infrastructure.Common.ObservableObject<OrderItem>
     {
+        private int orderLine;
+        private int quantity;
+        private decimal unitPrice;
+        private decimal discount;
+        private long orderId;
+        private long productId;
+        private long taxTypeId;
+
+
+        #region public property
+
         public int OrderLine
         {
-            get; set;
+            get => orderLine;
+            set => SetProperty(ref orderLine, value);
         }
         public int Quantity
         {
-            get; set;
+            get => quantity;
+            set => SetProperty(ref quantity, value);
         }
         public decimal UnitPrice
         {
-            get; set;
+            get => unitPrice;
+            set => SetProperty(ref unitPrice, value);
         }
         public decimal Discount
         {
-            get; set;
+            get => discount;
+            set => SetProperty(ref discount, value);
         }
 
         public long OrderId
         {
-            get; set;
+            get => orderId;
+            set => SetProperty(ref orderId, value);
         }
         public long ProductId
         {
-            get; set;
+            get => productId;
+            set => SetProperty(ref productId, value);
         }
-        public int TaxTypeId
+        public long TaxTypeId
         {
-            get; set;
+            get => taxTypeId;
+            set => SetProperty(ref taxTypeId, value);
         }
+
+        #endregion
+
+
+        #region relation
 
         public virtual Order Order
         {
-            get; set;
+            get;
+            set;
         }
         public virtual Product Product
         {
-            get; set;
+            get;
+            set;
         }
         public virtual TaxType TaxType
         {
-            get; set;
+            get;
+            set;
         }
+
+        #endregion
+
 
         public decimal Subtotal => Quantity * UnitPrice;
         public decimal Total => 0;

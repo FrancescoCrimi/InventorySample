@@ -26,16 +26,16 @@ namespace Inventory.Persistence.Repository
 {
     internal class CustomerRepository : ICustomerRepository
     {
-        private readonly AppDbContext _dataSource = null;
+        private readonly AppDbContext _dbContext;
 
-        public CustomerRepository(AppDbContext dataSource)
+        public CustomerRepository(AppDbContext dbContext)
         {
-            _dataSource = dataSource;
+            _dbContext = dbContext;
         }
 
         public async Task<Customer> GetCustomerAsync(long id)
         {
-            var cust = await _dataSource.Customers
+            var cust = await _dbContext.Customers
                 .Where(r => r.Id == id)
                 .Include(c => c.Country)
                 .FirstOrDefaultAsync();
@@ -93,7 +93,7 @@ namespace Inventory.Persistence.Repository
 
         private IQueryable<Customer> GetCustomers(DataRequest<Customer> request)
         {
-            IQueryable<Customer> items = _dataSource.Customers;
+            IQueryable<Customer> items = _dbContext.Customers;
 
             // Query
             if (!string.IsNullOrEmpty(request.Query))
@@ -122,7 +122,7 @@ namespace Inventory.Persistence.Repository
 
         public async Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
         {
-            IQueryable<Customer> items = _dataSource.Customers;
+            IQueryable<Customer> items = _dbContext.Customers;
 
             // Query
             if (!string.IsNullOrEmpty(request.Query))
@@ -143,24 +143,24 @@ namespace Inventory.Persistence.Repository
         {
             if (customer.Id > 0)
             {
-                _dataSource.Entry(customer).State = EntityState.Modified;
+                _dbContext.Entry(customer).State = EntityState.Modified;
             }
             else
             {
                 customer.Id = UIDGenerator.Next();
                 customer.CreatedOn = DateTime.UtcNow;
-                _dataSource.Entry(customer).State = EntityState.Added;
+                _dbContext.Entry(customer).State = EntityState.Added;
             }
             customer.LastModifiedOn = DateTime.UtcNow;
             customer.SearchTerms = customer.BuildSearchTerms();
-            var res = await _dataSource.SaveChangesAsync();
+            var res = await _dbContext.SaveChangesAsync();
             return res;
         }
 
         public async Task<int> DeleteCustomersAsync(params Customer[] customers)
         {
-            _dataSource.Customers.RemoveRange(customers);
-            return await _dataSource.SaveChangesAsync();
+            _dbContext.Customers.RemoveRange(customers);
+            return await _dbContext.SaveChangesAsync();
         }
 
         #region Dispose
@@ -174,9 +174,9 @@ namespace Inventory.Persistence.Repository
         {
             if (disposing)
             {
-                if (_dataSource != null)
+                if (_dbContext != null)
                 {
-                    _dataSource.Dispose();
+                    _dbContext.Dispose();
                 }
             }
         }

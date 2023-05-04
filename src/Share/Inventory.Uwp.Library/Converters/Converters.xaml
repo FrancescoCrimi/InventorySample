@@ -15,6 +15,8 @@
     <converters:DateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
     <converters:DecimalConverter x:Key="DecimalConverter" />
     <converters:Int32Converter x:Key="Int32Converter" />
+    <converters:Int64Converter x:Key="Int64Converter" />
+    <converters:NullableInt64Converter x:Key="NullableInt64Converter" />
     <converters:LogLevelConverter x:Key="LogLevelConverter" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <converters:EnumToBooleanConverter x:Key="EnumToBooleanConverter"

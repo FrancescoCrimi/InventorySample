@@ -12,15 +12,14 @@
 // ******************************************************************
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Common;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.ViewModels.Message;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Common
 {

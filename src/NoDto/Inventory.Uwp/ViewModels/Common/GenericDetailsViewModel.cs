@@ -25,7 +25,8 @@ using Inventory.Uwp.ViewModels.Message;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : Inventory.Infrastructure.Common.ObservableObject<TModel>, new()
+    public abstract partial class GenericDetailsViewModel<TModel>
+        : ViewModelBase where TModel : Inventory.Infrastructure.Common.ObservableObject<TModel>, new()
     {
         private readonly NavigationService navigationService;
         private readonly WindowManagerService windowService;
@@ -38,15 +39,32 @@ namespace Inventory.Uwp.ViewModels.Common
             LookupTables = Ioc.Default.GetRequiredService<LookupTablesService>();
         }
 
+        #region public property
+
         public LookupTablesService LookupTables
         {
             get;
         }
 
         public bool IsDataAvailable => _item != null;
+
         public bool IsDataUnavailable => !IsDataAvailable;
 
         public bool CanGoBack => !IsMainView && navigationService.CanGoBack;
+
+        private bool _isEditMode = false;
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set => SetProperty(ref _isEditMode, value);
+        }
+
+        private bool _isEnabled = true;
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
 
         private TModel _item = null;
         public TModel Item
@@ -72,20 +90,6 @@ namespace Inventory.Uwp.ViewModels.Common
             set => SetProperty(ref _editableItem, value);
         }
 
-        private bool _isEditMode = false;
-        public bool IsEditMode
-        {
-            get => _isEditMode;
-            set => SetProperty(ref _isEditMode, value);
-        }
-
-        private bool _isEnabled = true;
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
-        }
-
         public ICommand BackCommand => new RelayCommand(OnBack);
         protected virtual void OnBack()
         {
@@ -105,51 +109,12 @@ namespace Inventory.Uwp.ViewModels.Common
             Messenger.Send(new ViewModelsMessage<TModel>("BeginEdit", Item.Id));
         }
 
-        public virtual void BeginEdit()
-        {
-            if (!IsEditMode)
-            {
-                IsEditMode = true;
-                // Create a copy for edit
-                var editableItem = new TModel();
-                editableItem.Merge(Item);
-                EditableItem = editableItem;
-            }
-        }
-
         public ICommand CancelCommand => new RelayCommand(OnCancel);
         protected virtual void OnCancel()
         {
             StatusReady();
             CancelEdit();
             Messenger.Send(new ViewModelsMessage<TModel>("CancelEdit", Item.Id));
-        }
-
-        public virtual void CancelEdit()
-        {
-            if (ItemIsNew)
-            {
-                // We were creating a new item: cancel means exit
-                if (navigationService.CanGoBack)
-                {
-                    navigationService.GoBack();
-                }
-                else
-                {
-                    Task.Run(async () =>
-                    {
-                        await windowService.CloseViewAsync();
-                    });
-                }
-                return;
-            }
-
-            // We were editing an existing item: just cancel edition
-            if (IsEditMode)
-            {
-                EditableItem = Item;
-            }
-            IsEditMode = false;
         }
 
         public ICommand SaveCommand => new RelayCommand(OnSave);
@@ -222,6 +187,50 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
+        #endregion
+
+
+        #region public method
+
+        public virtual void BeginEdit()
+        {
+            if (!IsEditMode)
+            {
+                IsEditMode = true;
+                // Create a copy for edit
+                var editableItem = new TModel();
+                editableItem.Merge(Item);
+                EditableItem = editableItem;
+            }
+        }
+
+        public virtual void CancelEdit()
+        {
+            if (ItemIsNew)
+            {
+                // We were creating a new item: cancel means exit
+                if (navigationService.CanGoBack)
+                {
+                    navigationService.GoBack();
+                }
+                else
+                {
+                    Task.Run(async () =>
+                    {
+                        await windowService.CloseViewAsync();
+                    });
+                }
+                return;
+            }
+
+            // We were editing an existing item: just cancel edition
+            if (IsEditMode)
+            {
+                EditableItem = Item;
+            }
+            IsEditMode = false;
+        }
+
         public virtual Result Validate(TModel model)
         {
             foreach (var constraint in GetValidationConstraints(model))
@@ -238,8 +247,15 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public abstract bool ItemIsNew { get; }
 
+        #endregion
+
+
+        #region protected and private method 
+
         protected abstract Task<bool> SaveItemAsync(TModel model);
         protected abstract Task<bool> DeleteItemAsync(TModel model);
         protected abstract Task<bool> ConfirmDeleteAsync();
+
+        #endregion
     }
 }

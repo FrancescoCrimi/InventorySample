@@ -14,81 +14,118 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Inventory.Domain.Common;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Order : Infrastructure.Common.ObservableObject<Order>
+    public class Order : Infrastructure.Common.ObservableObject<Order>, IEquatable<Order>
     {
+        private DateTimeOffset orderDate;
+        private DateTimeOffset? shippedDate;
+        private DateTimeOffset? deliveredDate;
+        private string trackingNumber;
+        private string shipAddress;
+        private string shipCity;
+        private string shipRegion;
+        private string shipPostalCode;
+        private string shipPhone;
+        private DateTimeOffset lastModifiedOn;
+        private string searchTerms;
+        private long customerId;
+        private long? paymentTypeId;
+        private long shipCountryId;
+        private long? shipperId;
+        private long statusId;
+
+
+        #region property
+
         public DateTimeOffset OrderDate
         {
-            get; set;
+            get => orderDate;
+            set => SetProperty(ref orderDate, value);
         }
         public DateTimeOffset? ShippedDate
         {
-            get; set;
+            get => shippedDate;
+            set => SetProperty(ref shippedDate, value);
         }
         public DateTimeOffset? DeliveredDate
         {
-            get; set;
+            get => deliveredDate;
+            set => SetProperty(ref deliveredDate, value);
         }
         public string TrackingNumber
         {
-            get; set;
+            get => trackingNumber;
+            set => SetProperty(ref trackingNumber, value);
         }
         public string ShipAddress
         {
-            get; set;
+            get => shipAddress;
+            set => SetProperty(ref shipAddress, value);
         }
         public string ShipCity
         {
-            get; set;
+            get => shipCity;
+            set => SetProperty(ref shipCity, value);
         }
         public string ShipRegion
         {
-            get; set;
+            get => shipRegion;
+            set => SetProperty(ref shipRegion, value);
         }
         public string ShipPostalCode
         {
-            get; set;
+            get => shipPostalCode;
+            set => SetProperty(ref shipPostalCode, value);
         }
         public string ShipPhone
         {
-            get; set;
+            get => shipPhone;
+            set => SetProperty(ref shipPhone, value);
         }
         public DateTimeOffset LastModifiedOn
         {
-            get; set;
+            get => lastModifiedOn;
+            set => SetProperty(ref lastModifiedOn, value);
         }
-
         public string SearchTerms
         {
-            get; set;
+            get => searchTerms;
+            set => SetProperty(ref searchTerms, value);
         }
 
         public long CustomerId
         {
-            get; set;
+            get => customerId;
+            set => SetProperty(ref customerId, value);
         }
-        public int? PaymentTypeId
+        public long? PaymentTypeId
         {
-            get; set;
+            get => paymentTypeId;
+            set => SetProperty(ref paymentTypeId, value);
         }
         public long ShipCountryId
         {
-            get; set;
+            get => shipCountryId;
+            set => SetProperty(ref shipCountryId, value);
         }
-        public int? ShipperId
+        public long? ShipperId
         {
-            get; set;
+            get => shipperId;
+            set => SetProperty(ref shipperId, value);
         }
-        public int StatusId
+        public long StatusId
         {
-            get; set;
+            get => statusId;
+            set => SetProperty(ref statusId, value);
         }
 
+        #endregion
+
+
+        #region relation
 
         public virtual Customer Customer
         {
@@ -115,7 +152,10 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
+        #endregion
+
+
+        #region not mapped
 
         [NotMapped]
         public bool CanEditPayment => StatusId > 0;
@@ -123,7 +163,6 @@ namespace Inventory.Domain.Model
         public bool CanEditShipping => StatusId > 1;
         [NotMapped]
         public bool CanEditDelivery => StatusId > 2;
-
         [NotMapped]
         public string StatusDesc => "Fake Status Desc";
         [NotMapped]
@@ -132,6 +171,13 @@ namespace Inventory.Domain.Model
         public string ShipViaDesc => "Fake Ship Via Desc";
         [NotMapped]
         public string ShipCountryName => "Fake Ship Country Name";
+
+        #endregion
+
+
+        #region public method
+
+        public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
 
         public override void Merge(Order source)
         {
@@ -169,5 +215,38 @@ namespace Inventory.Domain.Model
                 Customer = customer
             };
         }
+
+        #endregion
+
+
+        #region equals
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Order);
+        }
+
+        public bool Equals(Order other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+
+        public static bool operator ==(Order left, Order right)
+        {
+            return EqualityComparer<Order>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Order left, Order right)
+        {
+            return !(left == right);
+        }
+
+        #endregion
     }
 }

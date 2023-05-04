@@ -80,6 +80,8 @@
     <Compile Include="Converters\DecimalConverter.cs" />
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Converters\Int32Converter.cs" />
+    <Compile Include="Converters\Int64Converter.cs" />
+    <Compile Include="Converters\NullableInt64Converter.cs" />
     <Compile Include="Converters\LogLevelConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToImageConverter.cs" />

@@ -12,14 +12,13 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services
 {
@@ -33,165 +32,155 @@ namespace Inventory.Uwp.Services
         {
             _logger = logger;
             _repository = repository;
+            Categories = new ObservableCollection<Category>();
+            CountryCodes = new ObservableCollection<Country>();
+            OrderStatus = new ObservableCollection<OrderStatus>();
+            PaymentTypes = new ObservableCollection<PaymentType>();
+            Shippers = new ObservableCollection<Shipper>();
+            TaxTypes = new ObservableCollection<TaxType>();
         }
 
-        public IList<Category> Categories
+        public ObservableCollection<Category> Categories
         {
             get; private set;
         }
 
-        public IList<Country> CountryCodes
+        public ObservableCollection<Country> CountryCodes
         {
             get; private set;
         }
 
-        public IList<OrderStatus> OrderStatus
+        public ObservableCollection<OrderStatus> OrderStatus
         {
             get; private set;
         }
 
-        public IList<PaymentType> PaymentTypes
+        public ObservableCollection<PaymentType> PaymentTypes
         {
             get; private set;
         }
 
-        public IList<Shipper> Shippers
+        public ObservableCollection<Shipper> Shippers
         {
             get; private set;
         }
 
-        public IList<TaxType> TaxTypes
+        public ObservableCollection<TaxType> TaxTypes
         {
             get; private set;
         }
 
-        public string GetCategory(int id)
-        {
-            return Categories.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetCountry(string id)
-        {
-            return CountryCodes.Where(r => r.Code == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetOrderStatus(int id)
-        {
-            return OrderStatus.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetPaymentType(int? id)
-        {
-            return id == null ? "" : PaymentTypes.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetShipper(int? id)
-        {
-            return id == null ? "" : Shippers.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetTaxDesc(int id)
-        {
-            return TaxTypes.Where(r => r.Id == id).Select(r => $"{r.Rate} %").FirstOrDefault();
-        }
-
-        public decimal GetTaxRate(int id)
-        {
-            return TaxTypes.Where(r => r.Id == id).Select(r => r.Rate).FirstOrDefault();
-        }
 
         public async Task InitializeAsync()
         {
-            Categories = await GetCategoriesAsync();
-            CountryCodes = await GetCountryCodesAsync();
-            OrderStatus = await GetOrderStatusAsync();
-            PaymentTypes = await GetPaymentTypesAsync();
-            Shippers = await GetShippersAsync();
-            TaxTypes = await GetTaxTypesAsync();
+            await GetCategoriesAsync();
+            await GetCountryCodesAsync();
+            await GetOrderStatusAsync();
+            await GetPaymentTypesAsync();
+            await GetShippersAsync();
+            await GetTaxTypesAsync();
         }
 
-        private async Task<IList<Category>> GetCategoriesAsync()
+        private async Task GetCategoriesAsync()
         {
             try
             {
                 var items = await _repository.GetCategoriesAsync();
-                return items.ToList();
+                Categories.Clear();
+                foreach (var item in items)
+                {
+                    Categories.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadCategories, ex, "Load Categories");
             }
-            return new List<Category>();
         }
 
-        private async Task<IList<Country>> GetCountryCodesAsync()
+        private async Task GetCountryCodesAsync()
         {
             try
             {
                 var items = await _repository.GetCountryCodesAsync();
-                return items.ToList();
+                CountryCodes.Clear();
+                foreach (var item in items)
+                {
+                    CountryCodes.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
             }
-            return new List<Country>();
         }
 
-        private async Task<IList<OrderStatus>> GetOrderStatusAsync()
+        private async Task GetOrderStatusAsync()
         {
             try
             {
                 var items = await _repository.GetOrderStatusAsync();
-                return items.ToList();
+                OrderStatus.Clear();
+                foreach (var item in items)
+                {
+                    OrderStatus.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadOrderStatus, ex, "Load OrderStatus");
             }
-            return new List<OrderStatus>();
         }
 
-        private async Task<IList<PaymentType>> GetPaymentTypesAsync()
+        private async Task GetPaymentTypesAsync()
         {
             try
             {
                 var items = await _repository.GetPaymentTypesAsync();
-                return items.ToList();
+                PaymentTypes.Clear();
+                foreach (var item in items)
+                {
+                    PaymentTypes.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadPaymentTypes, ex, "Load PaymentTypes");
             }
-            return new List<PaymentType>();
         }
 
-        private async Task<IList<Shipper>> GetShippersAsync()
+        private async Task GetShippersAsync()
         {
             try
             {
                 var items = await _repository.GetShippersAsync();
-                return items.ToList();
+                Shippers.Clear();
+                foreach (var item in items)
+                {
+                    Shippers.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadShippers, ex, "Load Shippers");
             }
-            return new List<Shipper>();
         }
 
-        private async Task<IList<TaxType>> GetTaxTypesAsync()
+        private async Task GetTaxTypesAsync()
         {
             try
             {
                 var items = await _repository.GetTaxTypesAsync();
-                return items.ToList();
+                TaxTypes.Clear();
+                foreach (var item in items)
+                {
+                    TaxTypes.Add(item);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
             }
-            return new List<TaxType>();
         }
     }
 }

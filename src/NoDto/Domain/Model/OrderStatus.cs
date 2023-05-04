@@ -12,17 +12,50 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Infrastructure.Common;
+using System;
+using System.Collections.Generic;
+
 namespace Inventory.Domain.Model
 {
-    public partial class OrderStatus
+    public class OrderStatus : Entity, IEquatable<OrderStatus>
     {
-        public int Id   // ex Status
-        {
-            get; set;
-        }
+        private string name;
+
         public string Name
         {
-            get; set;
+            get => name;
+            set => SetProperty(ref name, value);
         }
+
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as OrderStatus);
+        }
+
+        public bool Equals(OrderStatus other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+
+        public static bool operator ==(OrderStatus left, OrderStatus right)
+        {
+            return EqualityComparer<OrderStatus>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(OrderStatus left, OrderStatus right)
+        {
+            return !(left == right);
+        }
+
+        #endregion
     }
 }

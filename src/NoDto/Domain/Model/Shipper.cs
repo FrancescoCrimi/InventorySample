@@ -12,34 +12,63 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Infrastructure.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inventory.Domain.Model
 {
     [Table("Shippers")]
-    public partial class Shipper
+    public class Shipper : Entity, IEquatable<Shipper>
     {
-        [Key]
-        //[Column("ShipperID")]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int Id
-        {
-            get; set;
-        }
+        private string name;
+        private string phone;
 
         [Required]
         [MaxLength(50)]
         public string Name
         {
-            get; set;
+            get => name;
+            set => SetProperty(ref name, value);
         }
 
         [MaxLength(20)]
         public string Phone
         {
-            get; set;
+            get => phone;
+            set => SetProperty(ref phone, value);
         }
+
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Shipper);
+        }
+
+        public bool Equals(Shipper other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+
+        public static bool operator ==(Shipper left, Shipper right)
+        {
+            return EqualityComparer<Shipper>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Shipper left, Shipper right)
+        {
+            return !(left == right);
+        }
+
+        #endregion
     }
 }
