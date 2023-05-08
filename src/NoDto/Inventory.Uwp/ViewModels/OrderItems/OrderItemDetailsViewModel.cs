@@ -23,6 +23,7 @@ using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
@@ -35,15 +36,22 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         private readonly IOrderItemRepository _orderItemRepository;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
+                                         NavigationService navigationService,
+                                         WindowManagerService windowService,
+                                         LookupTablesService lookupTablesService,
                                          IOrderItemRepository orderItemRepository)
-            : base()
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _orderItemRepository = orderItemRepository;
         }
 
+        #region property
+
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
+
         public string TitleNew => $"New Order Item, Order #{OrderID}";
+
         public string TitleEdit => $"Order Line {Item?.OrderLine}, #{Item?.OrderId}" ?? string.Empty;
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -61,12 +69,25 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         public ICommand ProductSelectedCommand => new RelayCommand<Product>(ProductSelected);
         private void ProductSelected(Product product)
         {
-            EditableItem.ProductId = product.Id;
-            EditableItem.UnitPrice = product.ListPrice;
-            EditableItem.Product = product;
+            //EditableItem.ProductId = product.Id;
+            //EditableItem.UnitPrice = product.ListPrice;
+            //EditableItem.Product = product;
 
-            EditableItem.NotifyChanges();
+            //EditableItem.NotifyChanges();
+
+            Item = new OrderItem
+            {
+                OrderId = OrderID,
+                ProductId = product.Id,
+                UnitPrice = product.ListPrice,
+                Product = product,
+            };
         }
+
+        #endregion
+
+
+        #region method
 
         public async Task LoadAsync(OrderItemDetailsArgs args)
         {
@@ -91,14 +112,19 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 }
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.OrderID = Item?.OrderId ?? 0;
         }
 
+        public void Subscribe()
+        {
+            Messenger.Register<ViewModelsMessage<OrderItem>>(this, OnMessage);
+        }
+
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -110,6 +136,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 OrderLine = Item?.OrderLine ?? 0
             };
         }
+
+        #endregion
+
+
+        #region protected and private method
 
         protected async override Task<bool> SaveItemAsync(OrderItem model)
         {
@@ -164,16 +195,6 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             yield return new NonGreaterThanConstraint<OrderItem>("Discount", m => m.Discount, (double)model.Subtotal, "'Subtotal'");
         }
 
-        /*
-         *  Handle external messages
-         ****************************************************************/
-
-        public void Subscribe()
-        {
-            //MessageService.Subscribe<OrderItemDetailsViewModel, OrderItemModel>(this, OnDetailsMessage);
-            //MessageService.Subscribe<OrderItemListViewModel>(this, OnListMessage);
-            Messenger.Register<ViewModelsMessage<OrderItem>>(this, OnMessage);
-        }
 
         private async void OnMessage(object recipient, ViewModelsMessage<OrderItem> message)
         {
@@ -187,10 +208,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                         {
                             try
                             {
-                                var item = await _orderItemRepository.GetOrderItemAsync(current.OrderId, current.OrderLine);
-                                item = item ?? new OrderItem { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
-                                current.Merge(item);
-                                current.NotifyChanges();
+                                //var item = await _orderItemRepository.GetOrderItemAsync(current.OrderId, current.OrderLine);
+                                //item = item ?? new OrderItem { OrderId = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
+                                //current.Merge(item);
+                                //current.NotifyChanges();
+                                Item = await _orderItemRepository.GetOrderItemAsync(current.Id);
                                 OnPropertyChanged(nameof(Title));
                                 if (IsEditMode)
                                 {
@@ -237,79 +259,6 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             }
         }
 
-        //private async void OnDetailsMessage(OrderItemDetailsViewModel sender, string message, OrderItemModel changed)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        if (changed != null && changed.OrderID == current?.OrderID && changed.OrderLine == current?.OrderLine)
-        //        {
-        //            switch (message)
-        //            {
-        //                case "ItemChanged":
-        //                    await ContextService.RunAsync(async () =>
-        //                    {
-        //                        try
-        //                        {
-        //                            var item = await OrderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
-        //                            item = item ?? new OrderItemModel { OrderID = OrderID, OrderLine = ViewModelArgs.OrderLine, IsEmpty = true };
-        //                            current.Merge(item);
-        //                            current.NotifyChanges();
-        //                            NotifyPropertyChanged(nameof(Title));
-        //                            if (IsEditMode)
-        //                            {
-        //                                StatusMessage("WARNING: This orderItem has been modified externally");
-        //                            }
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            LogException("OrderItem", "Handle Changes", ex);
-        //                        }
-        //                    });
-        //                    break;
-        //                case "ItemDeleted":
-        //                    await OnItemDeletedExternally();
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private async void OnListMessage(OrderItemListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<OrderItemModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.OrderID == current.OrderID && r.OrderLine == current.OrderLine))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await OrderItemService.GetOrderItemAsync(current.OrderID, current.OrderLine);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    LogException("OrderItem", "Handle Ranges Deleted", ex);
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
-
-
         private async Task OnItemDeletedExternally()
         {
             //await ContextService.RunAsync(() =>
@@ -323,7 +272,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             //});
         }
 
-        //protected override void SendItemChangedMessage(string message, long itemId)
-        //    => Messenger.Send(new OrderItemChangeMessage(message, Item.OrderId, Item.OrderLine));
+        protected async override Task<OrderItem> GetItemAsync(long id)
+        {
+            return await _orderItemRepository.GetOrderItemAsync(id);
+        }
+
+        #endregion
     }
 }

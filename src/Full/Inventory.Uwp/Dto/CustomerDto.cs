@@ -17,59 +17,201 @@ using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class CustomerDto : ObservableDto
+    public class CustomerDto : ObservableDto<CustomerDto>
     {
-        public static CustomerDto CreateEmpty() => new CustomerDto { Id = -1, IsEmpty = true };
+        private string _title;
+        private string _firstName;
+        private string _middleName;
+        private string _lastName;
+        private string _suffix;
+        private string _gender;
+        private string _emailAddress;
+        private string _addressLine1;
+        private string _addressLine2;
+        private string _city;
+        private string _region;
+        private string _postalCode;
+        private string _phone;
+        private DateTimeOffset? _birthDate;
+        private string _education;
+        private string _occupation;
+        private decimal? _yearlyIncome;
+        private string _maritalStatus;
+        private int? _totalChildren;
+        private int? _childrenAtHome;
+        private bool? _isHouseOwner;
+        private int? _numberCarsOwned;
+        private DateTimeOffset _createdOn;
+        private DateTimeOffset? _lastModifiedOn;
+        private byte[] _picture;
+        private byte[] _thumbnail;
+        private long _countryId;
+        private CountryDto _country;
 
-        //public long Id { get; set; }
-        public string Title { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
-        public string LastName { get; set; }
-        public string Suffix { get; set; }
-        public string Gender { get; set; }
-        public string EmailAddress { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public string Region { get; set; }
-        public string PostalCode { get; set; }
-        public string Phone { get; set; }
-        public DateTimeOffset? BirthDate { get; set; }
-        public string Education { get; set; }
-        public string Occupation { get; set; }
-        public decimal? YearlyIncome { get; set; }
-        public string MaritalStatus { get; set; }
-        public int? TotalChildren { get; set; }
-        public int? ChildrenAtHome { get; set; }
-        public bool? IsHouseOwner { get; set; }
-        public int? NumberCarsOwned { get; set; }
-        public DateTimeOffset CreatedOn { get; set; }
-        public DateTimeOffset? LastModifiedOn { get; set; }
-        public byte[] Picture { get; set; }
-        public byte[] Thumbnail { get; set; }
 
-        public long CountryId { get; set; }
+        #region property
 
-        public CountryDto Country { get; set; }
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value);
+        }
+        public string FirstName
+        {
+            get => _firstName;
+            set => SetProperty(ref _firstName, value);
+        }
+        public string MiddleName
+        {
+            get => _middleName;
+            set => SetProperty(ref _middleName, value);
+        }
+        public string LastName
+        {
+            get => _lastName;
+            set => SetProperty(ref _lastName, value);
+        }
+        public string Suffix
+        {
+            get => _suffix;
+            set => SetProperty(ref _suffix, value);
+        }
+        public string Gender
+        {
+            get => _gender;
+            set => SetProperty(ref _gender, value);
+        }
+        public string EmailAddress
+        {
+            get => _emailAddress;
+            set => SetProperty(ref _emailAddress, value);
+        }
+        public string AddressLine1
+        {
+            get => _addressLine1;
+            set => SetProperty(ref _addressLine1, value);
+        }
+        public string AddressLine2
+        {
+            get => _addressLine2;
+            set => SetProperty(ref _addressLine2, value);
+        }
+        public string City
+        {
+            get => _city;
+            set => SetProperty(ref _city, value);
+        }
+        public string Region
+        {
+            get => _region;
+            set => SetProperty(ref _region, value);
+        }
+        public string PostalCode
+        {
+            get => _postalCode;
+            set => SetProperty(ref _postalCode, value);
+        }
+        public string Phone
+        {
+            get => _phone;
+            set => SetProperty(ref _phone, value);
+        }
+        public DateTimeOffset? BirthDate
+        {
+            get => _birthDate;
+            set => SetProperty(ref _birthDate, value);
+        }
+        public string Education
+        {
+            get => _education;
+            set => SetProperty(ref _education, value);
+        }
+        public string Occupation
+        {
+            get => _occupation;
+            set => SetProperty(ref _occupation, value);
+        }
+        public decimal? YearlyIncome
+        {
+            get => _yearlyIncome;
+            set => SetProperty(ref _yearlyIncome, value);
+        }
+        public string MaritalStatus
+        {
+            get => _maritalStatus;
+            set => SetProperty(ref _maritalStatus, value);
+        }
+        public int? TotalChildren
+        {
+            get => _totalChildren;
+            set => SetProperty(ref _totalChildren, value);
+        }
+        public int? ChildrenAtHome
+        {
+            get => _childrenAtHome;
+            set => SetProperty(ref _childrenAtHome, value);
+        }
+        public bool? IsHouseOwner
+        {
+            get => _isHouseOwner;
+            set => SetProperty(ref _isHouseOwner, value);
+        }
+        public int? NumberCarsOwned
+        {
+            get => _numberCarsOwned;
+            set => SetProperty(ref _numberCarsOwned, value);
+        }
+        public DateTimeOffset CreatedOn
+        {
+            get => _createdOn;
+            set => SetProperty(ref _createdOn, value);
+        }
+        public DateTimeOffset? LastModifiedOn
+        {
+            get => _lastModifiedOn;
+            set => SetProperty(ref _lastModifiedOn, value);
+        }
+        public byte[] Picture
+        {
+            get => _picture;
+            set => SetProperty(ref _picture, value);
+        }
+        public byte[] Thumbnail
+        {
+            get => _thumbnail;
+            set => SetProperty(ref _thumbnail, value);
+        }
+
+        #endregion
+
+
+        #region relation
+
+        public long CountryId
+        {
+            get => _countryId;
+            set => SetProperty(ref _countryId, value);
+        }
+        public CountryDto Country
+        {
+            get => _country;
+            set => SetProperty(ref _country, value);
+        }
+
         public IList<OrderItemDto> Items { get; set; }
 
+        #endregion
+
+
         public string CountryName { get; set; }
-        public bool IsNew => Id <= 0;
         public string FullName => $"{FirstName} {LastName}";
         public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
         public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}\n{CountryName}";
 
 
-        public override void Merge(ObservableDto source)
-        {
-            if (source is CustomerDto model)
-            {
-                Merge(model);
-            }
-        }
+        public static CustomerDto CreateEmpty() => new CustomerDto { Id = -1, IsEmpty = true };
 
-        public void Merge(CustomerDto source)
+        public override void Merge(CustomerDto source)
         {
             if (source != null)
             {

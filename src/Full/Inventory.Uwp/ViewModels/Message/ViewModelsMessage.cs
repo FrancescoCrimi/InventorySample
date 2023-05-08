@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inventory.Uwp.ViewModels.Message
 {
-    public class ViewModelsMessage<T> : ValueChangedMessage<string> where T : ObservableDto, new()
+    public class ViewModelsMessage<T> : ValueChangedMessage<string> where T : ObservableDto<T>, new()
     {
         public ViewModelsMessage(string value, long id)
             : base(value) => Id = id;

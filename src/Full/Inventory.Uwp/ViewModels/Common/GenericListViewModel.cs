@@ -12,13 +12,11 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
-using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Message;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,14 +24,15 @@ using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericListViewModel<TModel> : ViewModelBase where TModel : ObservableDto, new()
+    public abstract class GenericListViewModel<TModel>
+        : ViewModelBase where TModel : ObservableDto<TModel>, new()
     {
         public GenericListViewModel()
             : base()
         {
         }
 
-        public LookupTablesService LookupTables => Ioc.Default.GetRequiredService<LookupTablesService>();
+        #region property
 
         public override string Title => string.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
 
@@ -71,7 +70,7 @@ namespace Inventory.Uwp.ViewModels.Common
                     if (!IsMultipleSelection)
                     {
                         // fix _selectedItem == null
-                        if(_selectedItem != null)
+                        if (_selectedItem != null)
                         {
                             // Todo: fixare selectedItem.Id = 0
                             ////MessageService.Send(this, "ItemSelected", _selectedItem);
@@ -106,9 +105,16 @@ namespace Inventory.Uwp.ViewModels.Common
         public List<TModel> SelectedItems { get; protected set; }
         public IndexRange[] SelectedIndexRanges { get; protected set; }
 
+        #endregion
+
+
+        #region icommand property
+
         public ICommand NewCommand => new RelayCommand(OnNew);
+        protected abstract void OnNew();
 
         public ICommand RefreshCommand => new RelayCommand(OnRefresh);
+        protected abstract void OnRefresh();
 
         public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
         protected virtual void OnStartSelection()
@@ -167,10 +173,8 @@ namespace Inventory.Uwp.ViewModels.Common
         }
 
         public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
-
-        protected abstract void OnNew();
-        protected abstract void OnRefresh();
         protected abstract void OnDeleteSelection();
 
+        #endregion
     }
 }

@@ -26,13 +26,5 @@ namespace Inventory.Infrastructure.Common
         {
             get; set;
         }
-
-        public abstract void Merge(T source);
-
-        // Notify all properties
-        public void NotifyChanges()
-        {
-            OnPropertyChanged("");
-        }
     }
 }

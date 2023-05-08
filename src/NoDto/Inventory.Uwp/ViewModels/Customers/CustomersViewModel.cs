@@ -102,19 +102,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
         }
 
-        //private async void OnMessage(CustomerListViewModel viewModel, string message, object args)
-        //{
-        //    if (viewModel == CustomerList && message == "ItemSelected")
-        //    {
-        //        await ContextService.RunAsync(() =>
-        //        {
-        //            await OnItemSelected();
-        //        });
-        //    }
-        //}
-
         // TODO: modificare metodo in (long selectedCustomerId)
-
         private async Task OnItemSelected()
         {
             if (CustomerDetails.IsEditMode)
@@ -132,14 +120,13 @@ namespace Inventory.Uwp.ViewModels.Customers
                     await PopulateOrders(selected.Id);
                 }
             }
-            //CustomerDetails.Item = selected;
         }
 
         private async Task PopulateDetails(long selectedCustomerId)
         {
             try
             {
-                await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerID = selectedCustomerId });
+                await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerId = selectedCustomerId });
             }
             catch (Exception ex)
             {
@@ -151,7 +138,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             try
             {
-                await CustomerOrders.LoadAsync(new OrderListArgs { CustomerID = selectedCustomerId }, silent: true);
+                await CustomerOrders.LoadAsync(new OrderListArgs { CustomerId = selectedCustomerId }, silent: true);
             }
             catch (Exception ex)
             {

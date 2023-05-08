@@ -38,8 +38,7 @@
 
                 <libcontrols:FormComboBox Header="Tax Type"
                                           ItemsSource="{x:Bind LookupTables.TaxTypes}"
-                                          SelectedValue="{x:Bind EditableItem.TaxType, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
-                                          SelectedValuePath="TaxTypeID"
+                                          SelectedItem="{x:Bind EditableItem.TaxType, Mode=TwoWay}"
                                           DisplayMemberPath="Name" />
                 <libcontrols:FormTextBox Header="Total"
                                          Text="{x:Bind EditableItem.Total, Mode=OneWay, Converter={StaticResource DecimalConverter}}"

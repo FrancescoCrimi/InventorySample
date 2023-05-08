@@ -12,15 +12,12 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Category
+    public class Category : Entity<Category>
     {
-        public int Id { get; set; }
         public string Name { get; set;}
         public string Description { get; set; }
         public byte[] Picture { get; set; }

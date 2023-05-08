@@ -213,28 +213,25 @@ namespace Inventory.Domain.Model
             set => SetProperty(ref thumbnail, value);
         }
 
+        #endregion
+
+
+        #region relation
+
         public long CountryId
         {
             get => countryId;
             set => SetProperty(ref countryId, value);
         }
 
-        #endregion
-
-
-        #region relation
-
-        public virtual Country Country
-        {
-            get; set;
-        }
+        public virtual Country Country { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 
         #endregion
 
 
-        #region Not Mapped
+        #region not mapped
 
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";
@@ -243,7 +240,7 @@ namespace Inventory.Domain.Model
         public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
 
         [NotMapped]
-        public string CountryName => Country == null ? "" : Country.Name;
+        public string CountryName => Country == null ? string.Empty : Country.Name;
 
         [NotMapped]
         public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}\n{CountryName}";
@@ -251,46 +248,9 @@ namespace Inventory.Domain.Model
         #endregion
 
 
-        #region Method
+        #region method
 
         public string BuildSearchTerms() => $"{Id} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
-
-        public override void Merge(Customer source)
-        {
-            if (source != null)
-            {
-                Id = source.Id;
-                Title = source.Title;
-                FirstName = source.FirstName;
-                MiddleName = source.MiddleName;
-                LastName = source.LastName;
-                Suffix = source.Suffix;
-                Gender = source.Gender;
-                EmailAddress = source.EmailAddress;
-                AddressLine1 = source.AddressLine1;
-                AddressLine2 = source.AddressLine2;
-                City = source.City;
-                Region = source.Region;
-                PostalCode = source.PostalCode;
-                Phone = source.Phone;
-                BirthDate = source.BirthDate;
-                Education = source.Education;
-                Occupation = source.Occupation;
-                YearlyIncome = source.YearlyIncome;
-                MaritalStatus = source.MaritalStatus;
-                TotalChildren = source.TotalChildren;
-                ChildrenAtHome = source.ChildrenAtHome;
-                IsHouseOwner = source.IsHouseOwner;
-                NumberCarsOwned = source.NumberCarsOwned;
-                CreatedOn = source.CreatedOn;
-                LastModifiedOn = source.LastModifiedOn;
-                Thumbnail = source.Thumbnail;
-                Picture = source.Picture;
-
-                CountryId = source.CountryId;
-                Country = source.Country;
-            }
-        }
 
         #endregion
 

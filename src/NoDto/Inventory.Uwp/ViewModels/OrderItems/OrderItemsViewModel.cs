@@ -12,42 +12,40 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
-using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.OrderItems
 {
     public class OrderItemsViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly IOrderItemRepository _orderItemRepository;
 
         public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
-                                   IOrderItemRepository orderItemRepository,
                                    OrderItemListViewModel orderItemListViewModel,
                                    OrderItemDetailsViewModel orderItemDetailsViewModel)
             : base()
         {
             _logger = logger;
-            _orderItemRepository = orderItemRepository;
             OrderItemList = orderItemListViewModel;
             OrderItemDetails = orderItemDetailsViewModel;
         }
 
         public OrderItemListViewModel OrderItemList { get; set; }
+
         public OrderItemDetailsViewModel OrderItemDetails { get; set; }
 
         public async Task LoadAsync(OrderItemListArgs args)
         {
             await OrderItemList.LoadAsync(args);
         }
+
         public void Unload()
         {
             OrderItemDetails.CancelEdit();
@@ -56,7 +54,6 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<OrderItemListViewModel>(this, OnMessage);
             Messenger.Register<ViewModelsMessage<OrderItem>>(this, OnMessage);
             OrderItemList.Subscribe();
             OrderItemDetails.Subscribe();
@@ -64,12 +61,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             OrderItemList.Unsubscribe();
             OrderItemDetails.Unsubscribe();
         }
-
 
         private void OnMessage(object recipient, ViewModelsMessage<OrderItem> message)
         {
@@ -78,17 +73,6 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 OnItemSelected();
             }
         }
-
-        //private async void OnMessage(OrderItemListViewModel viewModel, string message, object args)
-        //{
-        //    if (viewModel == OrderItemList && message == "ItemSelected")
-        //    {
-        //        await ContextService.RunAsync(() =>
-        //        {
-        //            OnItemSelected();
-        //        });
-        //    }
-        //}
 
         private async void OnItemSelected()
         {
@@ -105,15 +89,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                     await PopulateDetails(selected);
                 }
             }
-            OrderItemDetails.Item = selected;
         }
 
         private async Task PopulateDetails(OrderItem selected)
         {
             try
             {
-                var model = await _orderItemRepository.GetOrderItemAsync(selected.OrderId, selected.OrderLine);
-                selected.Merge(model);
+                await OrderItemDetails.LoadAsync(new OrderItemDetailsArgs { OrderID = selected.OrderId, OrderLine = selected.OrderLine });
             }
             catch (Exception ex)
             {

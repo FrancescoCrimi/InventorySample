@@ -12,13 +12,6 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
@@ -29,6 +22,11 @@ using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
@@ -39,9 +37,12 @@ namespace Inventory.Uwp.ViewModels.Orders
         private readonly ICustomerRepository _customerRepository;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
+                                     NavigationService navigationService,
+                                     WindowManagerService windowService,
+                                     LookupTablesService lookupTablesService,
                                      IOrderRepository orderRepository,
                                      ICustomerRepository customerRepository)
-            : base()
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _orderRepository = orderRepository;
@@ -63,15 +64,16 @@ namespace Inventory.Uwp.ViewModels.Orders
         public ICommand CustomerSelectedCommand => new RelayCommand<Customer>(CustomerSelected);
         private void CustomerSelected(Customer customer)
         {
-            EditableItem.CustomerId = customer.Id;
-            EditableItem.ShipAddress = customer.AddressLine1;
-            EditableItem.ShipCity = customer.City;
-            EditableItem.ShipRegion = customer.Region;
-            EditableItem.ShipCountryId = customer.CountryId;
-            EditableItem.ShipPostalCode = customer.PostalCode;
-            EditableItem.Customer = customer;
+            //EditableItem.CustomerId = customer.Id;
+            //EditableItem.ShipAddress = customer.AddressLine1;
+            //EditableItem.ShipCity = customer.City;
+            //EditableItem.ShipRegion = customer.Region;
+            //EditableItem.ShipCountryId = customer.CountryId;
+            //EditableItem.ShipPostalCode = customer.PostalCode;
+            //EditableItem.Customer = customer;
 
-            EditableItem.NotifyChanges();
+            Item = Order.CreateNewOrder(customer);
+            //Item.NotifyChanges();
         }
 
         public OrderDetailsArgs ViewModelArgs
@@ -80,6 +82,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         }
 
         #endregion
+
 
         #region public method
 
@@ -90,16 +93,23 @@ namespace Inventory.Uwp.ViewModels.Orders
             if (ViewModelArgs.IsNew)
             {
                 //Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerID);
-                var customer = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerID);
-                Item = Order.CreateNewOrder(customer);
+                if (ViewModelArgs.CustomerId == 0)
+                {
+                    Item = new Order();
+                }
+                else
+                {
+                    var customer = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerId);
+                    Item = Order.CreateNewOrder(customer);
+                }
                 IsEditMode = true;
             }
             else
             {
                 try
                 {
-                    var item = await _orderRepository.GetOrderAsync(ViewModelArgs.OrderID);
-                    Item = item ?? new Order { Id = ViewModelArgs.OrderID, IsEmpty = true };
+                    var item = await _orderRepository.GetOrderAsync(ViewModelArgs.OrderId);
+                    Item = item ?? new Order { Id = ViewModelArgs.OrderId, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -111,8 +121,8 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Unload()
         {
-            ViewModelArgs.CustomerID = Item?.CustomerId ?? 0;
-            ViewModelArgs.OrderID = Item?.Id ?? 0;
+            ViewModelArgs.CustomerId = Item?.CustomerId ?? 0;
+            ViewModelArgs.OrderId = Item?.Id ?? 0;
         }
 
         public void Subscribe()
@@ -132,12 +142,13 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             return new OrderDetailsArgs
             {
-                CustomerID = Item?.CustomerId ?? 0,
-                OrderID = Item?.Id ?? 0
+                CustomerId = Item?.CustomerId ?? 0,
+                OrderId = Item?.Id ?? 0
             };
         }
 
         #endregion
+
 
         #region protected and private method
 
@@ -213,10 +224,11 @@ namespace Inventory.Uwp.ViewModels.Orders
                         {
                             try
                             {
-                                var item = await _orderRepository.GetOrderAsync(current.Id);
-                                item = item ?? new Order { Id = current.Id, IsEmpty = true };
-                                current.Merge(item);
-                                current.NotifyChanges();
+                                //var item = await _orderRepository.GetOrderAsync(current.Id);
+                                //item = item ?? new Order { Id = current.Id, IsEmpty = true };
+                                //current.Merge(item);
+                                //current.NotifyChanges();
+                                Item = await GetItemAsync(current.Id);
                                 OnPropertyChanged(nameof(Title));
                                 if (IsEditMode)
                                 {
@@ -267,15 +279,17 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This order has been deleted externally");
             });
-            //});
+        }
+
+        protected async override Task<Order> GetItemAsync(long id)
+        {
+            return await _orderRepository.GetOrderAsync(id);
         }
 
         #endregion

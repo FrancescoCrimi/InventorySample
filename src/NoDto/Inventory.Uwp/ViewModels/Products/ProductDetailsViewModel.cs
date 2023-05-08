@@ -37,16 +37,22 @@ namespace Inventory.Uwp.ViewModels.Products
         private readonly FilePickerService _filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
+                                       NavigationService navigationService,
+                                       WindowManagerService windowService,
+                                       LookupTablesService lookupTablesService,
                                        IProductRepository productRepository,
                                        FilePickerService filePickerService)
-            : base()
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _productRepository = productRepository;
             _filePickerService = filePickerService;
         }
 
+        #region property
+
         public override string Title => Item?.IsNew ?? true ? "New Product" : TitleEdit;
+
         public string TitleEdit => Item == null ? "Product" : $"{Item.Name}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -56,65 +62,11 @@ namespace Inventory.Uwp.ViewModels.Products
             get; private set;
         }
 
-        public async Task LoadAsync(ProductDetailsArgs args)
-        {
-            ViewModelArgs = args ?? ProductDetailsArgs.CreateDefault();
-
-            if (ViewModelArgs.IsNew)
-            {
-                Item = new Product();
-                IsEditMode = true;
-            }
-            else
-            {
-                try
-                {
-                    var item = await _productRepository.GetProductAsync(ViewModelArgs.ProductID);
-                    Item = item ?? new Product { Id = ViewModelArgs.ProductID, IsEmpty = true };
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.Load, ex, "Load Product");
-                }
-            }
-        }
-        public void Unload()
-        {
-            ViewModelArgs.ProductID = Item.Id;
-        }
-
-        public void Subscribe()
-        {
-            //MessageService.Subscribe<ProductDetailsViewModel, ProductModel>(this, OnDetailsMessage);
-            //MessageService.Subscribe<ProductListViewModel>(this, OnListMessage);
-            Messenger.Register<ViewModelsMessage<Product>>(this, OnMessage);
-        }
-
-        public void Unsubscribe()
-        {
-            //MessageService.Unsubscribe(this);
-            Messenger.UnregisterAll(this);
-        }
-
-        public ProductDetailsArgs CreateArgs()
-        {
-            return new ProductDetailsArgs
-            {
-                ProductID = Item.Id
-            };
-        }
-
         private object _newPictureSource = null;
         public object NewPictureSource
         {
             get => _newPictureSource;
             set => SetProperty(ref _newPictureSource, value);
-        }
-
-        public override void BeginEdit()
-        {
-            NewPictureSource = null;
-            base.BeginEdit();
         }
 
         public ICommand EditPictureCommand => new RelayCommand(OnEditPicture);
@@ -135,6 +87,71 @@ namespace Inventory.Uwp.ViewModels.Products
                 NewPictureSource = null;
             }
         }
+
+        #endregion
+
+
+        #region method
+
+        public async Task LoadAsync(ProductDetailsArgs args)
+        {
+            ViewModelArgs = args ?? ProductDetailsArgs.CreateDefault();
+
+            if (ViewModelArgs.IsNew)
+            {
+                Item = new Product();
+                IsEditMode = true;
+            }
+            else
+            {
+                try
+                {
+                    var item = await _productRepository.GetProductAsync(ViewModelArgs.ProductId);
+                    Item = item ?? new Product { Id = ViewModelArgs.ProductId, IsEmpty = true };
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(LogEvents.Load, ex, "Load Product");
+                }
+            }
+        }
+
+        public void Unload()
+        {
+            ViewModelArgs.ProductId = Item.Id;
+        }
+
+        public void Subscribe()
+        {
+            //MessageService.Subscribe<ProductDetailsViewModel, ProductModel>(this, OnDetailsMessage);
+            //MessageService.Subscribe<ProductListViewModel>(this, OnListMessage);
+            Messenger.Register<ViewModelsMessage<Product>>(this, OnMessage);
+        }
+
+        public void Unsubscribe()
+        {
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
+        }
+
+        public ProductDetailsArgs CreateArgs()
+        {
+            return new ProductDetailsArgs
+            {
+                ProductId = Item.Id
+            };
+        }
+
+        public override void BeginEdit()
+        {
+            NewPictureSource = null;
+            base.BeginEdit();
+        }
+
+        #endregion
+
+
+        #region protected and private method
 
         protected async override Task<bool> SaveItemAsync(Product model)
         {
@@ -185,9 +202,6 @@ namespace Inventory.Uwp.ViewModels.Products
             yield return new RequiredGreaterThanZeroConstraint<Product>("Category", m => m.CategoryId);
         }
 
-        /*
-         *  Handle external messages
-         ****************************************************************/
 
         private async void OnMessage(object recipient, ViewModelsMessage<Product> message)
         {
@@ -201,10 +215,11 @@ namespace Inventory.Uwp.ViewModels.Products
                         {
                             try
                             {
-                                var item = await _productRepository.GetProductAsync(current.Id);
-                                item = item ?? new Product { Id = current.Id, IsEmpty = true };
-                                current.Merge(item);
-                                current.NotifyChanges();
+                                //var item = await _productRepository.GetProductAsync(current.Id);
+                                //item = item ?? new Product { Id = current.Id, IsEmpty = true };
+                                //current.Merge(item);
+                                //current.NotifyChanges();
+                                Item = await GetItemAsync(current.Id);
                                 OnPropertyChanged(nameof(Title));
                                 if (IsEditMode)
                                 {
@@ -254,90 +269,21 @@ namespace Inventory.Uwp.ViewModels.Products
             }
         }
 
-
-        //private async void OnDetailsMessage(ProductDetailsViewModel sender, string message, ProductModel changed)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        if (changed != null && changed.ProductID == current?.ProductID)
-        //        {
-        //            switch (message)
-        //            {
-        //                case "ItemChanged":
-        //                    await ContextService.RunAsync(async () =>
-        //                    {
-        //                        try
-        //                        {
-        //                            var item = await ProductService.GetProductAsync(current.ProductID);
-        //                            item = item ?? new ProductModel { ProductID = current.ProductID, IsEmpty = true };
-        //                            current.Merge(item);
-        //                            current.NotifyChanges();
-        //                            NotifyPropertyChanged(nameof(Title));
-        //                            if (IsEditMode)
-        //                            {
-        //                                StatusMessage("WARNING: This product has been modified externally");
-        //                            }
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            LogException("Product", "Handle Changes", ex);
-        //                        }
-        //                    });
-        //                    break;
-        //                case "ItemDeleted":
-        //                    await OnItemDeletedExternally();
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private async void OnListMessage(ProductListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<ProductModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.ProductID == current.ProductID))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await ProductService.GetProductAsync(current.ProductID);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    LogException("Product", "Handle Ranges Deleted", ex);
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
-
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This product has been deleted externally");
             });
-            //});
         }
+
+        protected async override Task<Product> GetItemAsync(long id)
+        {
+            return await _productRepository.GetProductAsync(id);
+        }
+
+        #endregion
     }
 }

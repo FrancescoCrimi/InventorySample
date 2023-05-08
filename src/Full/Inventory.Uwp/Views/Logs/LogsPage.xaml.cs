@@ -13,8 +13,10 @@
 #endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Logs;
 using System.Threading.Tasks;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -23,9 +25,12 @@ namespace Inventory.Uwp.Views.Logs
 {
     public sealed partial class LogsPage : Page
     {
+        private readonly WindowManagerService _windowService;
+
         public LogsPage()
         {
             ViewModel = Ioc.Default.GetService<LogsViewModel>();
+            _windowService = Ioc.Default.GetService<WindowManagerService>();
             InitializeComponent();
         }
 
@@ -45,8 +50,9 @@ namespace Inventory.Uwp.Views.Logs
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            //await windowService.OpenInNewWindow<LogsViewModel>(ViewModel.AppLogList.CreateArgs());
-            await Task.CompletedTask;
+            var args = ViewModel.LogList.CreateArgs();
+            args.IsMainView = false;
+            await _windowService.OpenInNewWindow<LogsPage>(args);
         }
 
         public int GetRowSpan(bool isMultipleSelection)

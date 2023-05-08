@@ -33,9 +33,15 @@ namespace Inventory.Persistence.DbContexts
 
             modelBuilder.Entity<Customer>(t =>
             {
+                t.Property(p => p.YearlyIncome).HasConversion<double>();
                 t.Property(p => p.BirthDate).HasConversion(new DateTimeOffsetToBinaryConverter());
                 t.Property(p => p.CreatedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
                 t.Property(p => p.LastModifiedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+            });
+            modelBuilder.Entity<OrderItem>(t =>
+            {
+                t.Property(p => p.UnitPrice).HasConversion<double>();
+                t.Property(p => p.Discount).HasConversion<double>();
             });
             modelBuilder.Entity<Order>(t =>
             {
@@ -46,10 +52,17 @@ namespace Inventory.Persistence.DbContexts
             });
             modelBuilder.Entity<Product>(t =>
             {
+                t.Property(p => p.ListPrice).HasConversion<double>();
+                t.Property(p => p.DealerPrice).HasConversion<double>();
+                t.Property(p => p.Discount).HasConversion<double>();
                 t.Property(p => p.CreatedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
                 t.Property(p => p.DiscountEndDate).HasConversion(new DateTimeOffsetToBinaryConverter());
                 t.Property(p => p.DiscountStartDate).HasConversion(new DateTimeOffsetToBinaryConverter());
                 t.Property(p => p.LastModifiedOn).HasConversion(new DateTimeOffsetToBinaryConverter());
+            });
+            modelBuilder.Entity<TaxType>(t =>
+            {
+                t.Property(p => p.Rate).HasConversion<double>();
             });
 
             // SQLite does not have proper support for DateTimeOffset via Entity Framework Core, see the limitations

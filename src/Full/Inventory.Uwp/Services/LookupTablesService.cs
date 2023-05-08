@@ -47,41 +47,6 @@ namespace Inventory.Uwp.Services
 
         public IList<TaxTypeDto> TaxTypes { get; private set; }
 
-        public string GetCategory(int id)
-        {
-            return Categories.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetCountry(long id)
-        {
-            return Countries.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetOrderStatus(int id)
-        {
-            return OrderStatus.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetPaymentType(int? id)
-        {
-            return id == null ? "" : PaymentTypes.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetShipper(int? id)
-        {
-            return id == null ? "" : Shippers.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault();
-        }
-
-        public string GetTaxDesc(int id)
-        {
-            return TaxTypes.Where(r => r.Id == id).Select(r => $"{r.Rate} %").FirstOrDefault();
-        }
-
-        public decimal GetTaxRate(int id)
-        {
-            return TaxTypes.Where(r => r.Id == id).Select(r => r.Rate).FirstOrDefault();
-        }
-
         public async Task InitializeAsync()
         {
             Categories = await GetCategoriesAsync();
@@ -96,8 +61,6 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
-                //{
                 var items = await _repository.GetCategoriesAsync();
                 return items.Select(r => new CategoryDto
                 {
@@ -105,7 +68,6 @@ namespace Inventory.Uwp.Services
                     Name = r.Name
                 })
                 .ToList();
-                //}
             }
             catch (Exception ex)
             {
@@ -118,8 +80,6 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
-                //{
                 var items = await _repository.GetCountryCodesAsync();
                 return items.OrderBy(r => r.Name).Select(r => new CountryDto
                 {
@@ -128,7 +88,6 @@ namespace Inventory.Uwp.Services
                     Name = r.Name
                 })
                 .ToList();
-                //}
             }
             catch (Exception ex)
             {
@@ -141,8 +100,6 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
-                //{
                 var items = await _repository.GetOrderStatusAsync();
                 return items.Select(r => new OrderStatusDto
                 {
@@ -150,7 +107,6 @@ namespace Inventory.Uwp.Services
                     Name = r.Name
                 })
                 .ToList();
-                //}
             }
             catch (Exception ex)
             {
@@ -163,8 +119,6 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
-                //{
                 var items = await _repository.GetPaymentTypesAsync();
                 return items.Select(r => new PaymentTypeDto
                 {
@@ -172,7 +126,6 @@ namespace Inventory.Uwp.Services
                     Name = r.Name
                 })
                 .ToList();
-                //}
             }
             catch (Exception ex)
             {
@@ -185,8 +138,6 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
-                //{
                 var items = await _repository.GetShippersAsync();
                 return items.Select(r => new ShipperDto
                 {
@@ -195,7 +146,6 @@ namespace Inventory.Uwp.Services
                     Phone = r.Phone
                 })
                 .ToList();
-                //}
             }
             catch (Exception ex)
             {
@@ -208,8 +158,6 @@ namespace Inventory.Uwp.Services
         {
             try
             {
-                //using (var dataService = serviceProvider.GetService<ILookupTableRepository>())
-                //{
                 var items = await _repository.GetTaxTypesAsync();
                 return items.Select(r => new TaxTypeDto
                 {
@@ -218,7 +166,6 @@ namespace Inventory.Uwp.Services
                     Rate = r.Rate
                 })
                 .ToList();
-                //}
             }
             catch (Exception ex)
             {

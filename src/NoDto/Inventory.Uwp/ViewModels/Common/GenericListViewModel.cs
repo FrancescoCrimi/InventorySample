@@ -23,29 +23,44 @@ using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract class GenericListViewModel<TModel> : ViewModelBase where TModel : Inventory.Infrastructure.Common.ObservableObject<TModel>
+    public abstract class GenericListViewModel<TModel>
+        : ViewModelBase where TModel : Infrastructure.Common.ObservableObject<TModel>
     {
         public GenericListViewModel()
             : base()
         {
         }
 
-        //public LookupTableServiceFacade LookupTables => Ioc.Default.GetRequiredService<LookupTableServiceFacade>();
+        #region property
 
         public override string Title => string.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
-
-        private IList<TModel> _items = null;
-        public IList<TModel> Items
-        {
-            get => _items;
-            set => SetProperty(ref _items, value);
-        }
 
         private int _itemsCount = 0;
         public int ItemsCount
         {
             get => _itemsCount;
             set => SetProperty(ref _itemsCount, value);
+        }
+
+        private string _query = null;
+        public string Query
+        {
+            get => _query;
+            set => SetProperty(ref _query, value);
+        }
+
+        private bool _isMultipleSelection = false;
+        public bool IsMultipleSelection
+        {
+            get => _isMultipleSelection;
+            set => SetProperty(ref _isMultipleSelection, value);
+        }
+
+        private ListToolbarMode _toolbarMode = ListToolbarMode.Default;
+        public ListToolbarMode ToolbarMode
+        {
+            get => _toolbarMode;
+            set => SetProperty(ref _toolbarMode, value);
         }
 
         private TModel _selectedItem = default;
@@ -69,33 +84,26 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        private string _query = null;
-        public string Query
+        private IList<TModel> _items = null;
+        public IList<TModel> Items
         {
-            get => _query;
-            set => SetProperty(ref _query, value);
-        }
-
-        private ListToolbarMode _toolbarMode = ListToolbarMode.Default;
-        public ListToolbarMode ToolbarMode
-        {
-            get => _toolbarMode;
-            set => SetProperty(ref _toolbarMode, value);
-        }
-
-        private bool _isMultipleSelection = false;
-        public bool IsMultipleSelection
-        {
-            get => _isMultipleSelection;
-            set => SetProperty(ref _isMultipleSelection, value);
+            get => _items;
+            set => SetProperty(ref _items, value);
         }
 
         public List<TModel> SelectedItems { get; protected set; }
         public IndexRange[] SelectedIndexRanges { get; protected set; }
 
+        #endregion
+
+
+        #region icommand property
+
         public ICommand NewCommand => new RelayCommand(OnNew);
+        protected abstract void OnNew();
 
         public ICommand RefreshCommand => new RelayCommand(OnRefresh);
+        protected abstract void OnRefresh();
 
         public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
         protected virtual void OnStartSelection()
@@ -154,10 +162,8 @@ namespace Inventory.Uwp.ViewModels.Common
         }
 
         public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
-
-        protected abstract void OnNew();
-        protected abstract void OnRefresh();
         protected abstract void OnDeleteSelection();
 
+        #endregion
     }
 }

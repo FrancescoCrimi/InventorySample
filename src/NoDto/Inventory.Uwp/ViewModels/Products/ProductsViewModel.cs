@@ -66,7 +66,6 @@ namespace Inventory.Uwp.ViewModels.Products
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<ProductListViewModel>(this, OnMessage);
             Messenger.Register<ViewModelsMessage<Product>>(this, OnMessage);
             ProductList.Subscribe();
             ProductDetails.Subscribe();
@@ -74,7 +73,6 @@ namespace Inventory.Uwp.ViewModels.Products
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             ProductList.Unsubscribe();
             ProductDetails.Unsubscribe();
@@ -107,16 +105,13 @@ namespace Inventory.Uwp.ViewModels.Products
                     await PopulateDetails(selected);
                 }
             }
-            //ProductDetails.Item = selected;
         }
 
         private async Task PopulateDetails(Product selected)
         {
             try
             {
-                //var model = await _productService.GetProductAsync(selected.Id);
-                //selected.Merge(model);
-                await ProductDetails.LoadAsync(new ProductDetailsArgs { ProductID = selected.Id });
+                await ProductDetails.LoadAsync(new ProductDetailsArgs { ProductId = selected.Id });
             }
             catch (Exception ex)
             {

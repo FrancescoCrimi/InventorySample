@@ -17,16 +17,30 @@ using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderDto : ObservableDto, IEquatable<OrderDto>
+    public class OrderDto : ObservableDto<OrderDto>
     {
         private DateTimeOffset _orderDate;
         private DateTimeOffset? _shippedDate;
         private DateTimeOffset? _deliveredDate;
-        private int _status;
+        private string _trackingNumber;
+        private string _shipAddress;
+        private string _shipCity;
+        private string _shipRegion;
+        private string _shipPostalCode;
+        private string _shipPhone;
+        private long _customerId;
+        private long? _paymentTypeId;
+        private long _shipCountryId;
+        private long? _shipperId;
+        private long _statusId;
+        public CustomerDto _customer;
+        public PaymentTypeDto _paymentType;
+        public CountryDto _shipCountry;
+        public ShipperDto _shipper;
+        private OrderStatusDto _status;
 
-        public static OrderDto CreateEmpty() => new OrderDto { Id = -1, CustomerId = -1, IsEmpty = true };
+        #region property
 
-        //public long Id { get; set; }
         public DateTimeOffset OrderDate
         {
             get => _orderDate;
@@ -42,33 +56,98 @@ namespace Inventory.Uwp.Dto
             get => _deliveredDate;
             set => SetProperty(ref _deliveredDate, value);
         }
-        public string TrackingNumber { get; set; }
-        public string ShipAddress { get; set; }
-        public string ShipCity { get; set; }
-        public string ShipRegion { get; set; }
-        public string ShipPostalCode { get; set; }
-        public string ShipPhone { get; set; }
+        public string TrackingNumber
+        {
+            get => _trackingNumber;
+            set => SetProperty(ref _trackingNumber, value); 
+        }
+        public string ShipAddress 
+        {
+            get => _shipAddress;
+            set => SetProperty(ref _shipAddress, value); 
+        }
+        public string ShipCity 
+        {
+            get => _shipCity;
+            set => SetProperty(ref _shipCity, value); 
+        }
+        public string ShipRegion 
+        {
+            get => _shipRegion;
+            set => SetProperty(ref _shipRegion, value); 
+        }
+        public string ShipPostalCode 
+        {
+            get => _shipPostalCode;
+            set => SetProperty(ref _shipPostalCode, value); 
+        }
+        public string ShipPhone 
+        {
+            get => _shipPhone;
+            set => SetProperty(ref _shipPhone, value); 
+        }
+
+        #endregion
 
 
-        public long CustomerId { get; set; }
-        public int? PaymentTypeId { get; set; }
-        public long ShipCountryId { get; set; }
-        public int? ShipperId { get; set; }
-        public int StatusId
+        #region relation
+
+        public long CustomerId 
+        {
+            get => _customerId;
+            set => SetProperty(ref _customerId, value); 
+        }
+        public long? PaymentTypeId 
+        {
+            get => _paymentTypeId;
+            set => SetProperty(ref _paymentTypeId, value); 
+        }
+        public long ShipCountryId 
+        {
+            get => _shipCountryId;
+            set => SetProperty(ref _shipCountryId, value); 
+        }
+        public long? ShipperId 
+        {
+            get => _shipperId;
+            set => SetProperty(ref _shipperId, value); 
+        }
+        public long StatusId
+        {
+            get => _statusId;
+            set { if (SetProperty(ref _statusId, value)) UpdateStatusDependencies(); }
+        }
+
+        public CustomerDto Customer 
+        {
+            get => _customer;
+            set => SetProperty(ref _customer, value); 
+        }
+        public PaymentTypeDto PaymentType 
+        {
+            get => _paymentType;
+            set => SetProperty(ref _paymentType, value); 
+        }
+        public CountryDto ShipCountry 
+        {
+            get => _shipCountry;
+            set => SetProperty(ref _shipCountry, value); 
+        }
+        public ShipperDto Shipper 
+        {
+            get => _shipper;
+            set => SetProperty(ref _shipper, value); 
+        }
+        public OrderStatusDto Status 
         {
             get => _status;
             set { if (SetProperty(ref _status, value)) UpdateStatusDependencies(); }
         }
-
-        public CustomerDto Customer { get; set; }
-        public PaymentTypeDto PaymentType { get; set; }
-        public CountryDto ShipCountry { get; set; }
-        public ShipperDto Shipper { get; set; }
-        public OrderStatusDto Status { get; set; }
         public IList<OrderItemDto> OrderItems { get; set; }
 
+        #endregion
 
-        public bool IsNew => Id <= 0;
+
         public bool CanEditPayment => StatusId > 0;
         public bool CanEditShipping => StatusId > 1;
         public bool CanEditDelivery => StatusId > 2;
@@ -78,6 +157,10 @@ namespace Inventory.Uwp.Dto
         public string ShipViaDesc { get; set; }
         public string ShipCountryName { get; set; }
 
+
+        #region method
+
+        public static OrderDto CreateEmpty() => new OrderDto { Id = -1, CustomerId = -1, IsEmpty = true };
 
         private void UpdateStatusDependencies()
         {
@@ -104,15 +187,7 @@ namespace Inventory.Uwp.Dto
             OnPropertyChanged(nameof(CanEditDelivery));
         }
 
-        public override void Merge(ObservableDto source)
-        {
-            if (source is OrderDto model)
-            {
-                Merge(model);
-            }
-        }
-
-        public void Merge(OrderDto source)
+        public override void Merge(OrderDto source)
         {
             if (source != null)
             {
@@ -142,24 +217,6 @@ namespace Inventory.Uwp.Dto
             }
         }
 
-
-
-        public override string ToString()
-        {
-            return Id.ToString();
-        }
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as OrderDto);
-        }
-        public bool Equals(OrderDto other)
-        {
-            return !(other is null) &&
-                   Id == other.Id;
-        }
-        public override int GetHashCode()
-        {
-            return 1651275338 + Id.GetHashCode();
-        }
+        #endregion
     }
 }

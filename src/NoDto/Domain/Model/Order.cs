@@ -164,13 +164,13 @@ namespace Inventory.Domain.Model
         [NotMapped]
         public bool CanEditDelivery => StatusId > 2;
         [NotMapped]
-        public string StatusDesc => "Fake Status Desc";
+        public string StatusDesc => Status == null ? string.Empty : Status.Name;
         [NotMapped]
-        public string PaymentTypeDesc => "Fake Payment Type Desc";
+        public string PaymentTypeDesc => PaymentType == null ? string.Empty : PaymentType.Name;
         [NotMapped]
-        public string ShipViaDesc => "Fake Ship Via Desc";
+        public string ShipViaDesc => Shipper == null ? string.Empty : Shipper.Name;
         [NotMapped]
-        public string ShipCountryName => "Fake Ship Country Name";
+        public string ShipCountryName => ShipCountry == null ? string.Empty : ShipCountry.Name;
 
         #endregion
 
@@ -179,34 +179,13 @@ namespace Inventory.Domain.Model
 
         public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
 
-        public override void Merge(Order source)
-        {
-            OrderDate = source.OrderDate;
-            ShippedDate = source.ShippedDate;
-            DeliveredDate = source.DeliveredDate;
-            TrackingNumber = source.TrackingNumber;
-            ShipAddress = source.ShipAddress;
-            ShipCity = source.ShipCity;
-            ShipRegion = source.ShipRegion;
-            ShipPostalCode = source.ShipPostalCode;
-            ShipPhone = source.ShipPhone;
-            LastModifiedOn = source.LastModifiedOn;
-            SearchTerms = source.SearchTerms;
-
-            CustomerId = source.CustomerId;
-            PaymentTypeId = source.PaymentTypeId;
-            ShipCountryId = source.ShipCountryId;
-            ShipperId = source.ShipperId;
-            StatusId = source.StatusId;
-        }
-
         public static Order CreateNewOrder(Customer customer)
         {
             return new Order
             {
-                CustomerId = customer.Id,
-                OrderDate = DateTime.UtcNow,
                 StatusId = 0,
+                OrderDate = DateTime.UtcNow,
+                CustomerId = customer.Id,
                 ShipAddress = customer.AddressLine1,
                 ShipCity = customer.City,
                 ShipRegion = customer.Region,

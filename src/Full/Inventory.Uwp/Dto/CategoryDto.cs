@@ -13,38 +13,39 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class CategoryDto : ObservableDto, IEquatable<CategoryDto>
+    public class CategoryDto : ObservableDto<CategoryDto>
     {
-        //public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public byte[] Picture { get; set; }
-        public byte[] Thumbnail { get; set; }
+        private string _name;
+        private string _description;
+        private byte[] _picture;
+        private byte[] _thumbnail;
 
-        public override bool Equals(object obj)
+
+        public string Name
         {
-            return Equals(obj as CategoryDto);
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
-        public bool Equals(CategoryDto other)
+        public string Description
         {
-            return !(other is null) &&
-                   Id == other.Id;
+            get => _description;
+            set => SetProperty(ref _description, value);
         }
-        public override int GetHashCode()
+        public byte[] Picture
         {
-            return HashCode.Combine(Id);
+            get => _picture;
+            set => SetProperty(ref _picture, value);
         }
-        public static bool operator ==(CategoryDto left, CategoryDto right)
+        public byte[] Thumbnail
         {
-            return EqualityComparer<CategoryDto>.Default.Equals(left, right);
+            get => _thumbnail;
+            set => SetProperty(ref _thumbnail, value);
         }
-        public static bool operator !=(CategoryDto left, CategoryDto right)
-        {
-            return !(left == right);
-        }
+
+        public override void Merge(CategoryDto source)
+            => throw new NotImplementedException();
     }
 }

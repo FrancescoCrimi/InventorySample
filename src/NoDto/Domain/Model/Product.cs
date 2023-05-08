@@ -151,35 +151,17 @@ namespace Inventory.Domain.Model
         #endregion
 
 
+        #region not mapped
+
         [NotMapped]
         public string CategoryName => Category?.Name;
+
+        #endregion
 
 
         #region Method
 
         public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
-
-        public override void Merge(Product source)
-        {
-            Name = source.Name;
-            Description = source.Description;
-            Size = source.Size;
-            Color = source.Color;
-            ListPrice = source.ListPrice;
-            DealerPrice = source.DealerPrice;
-            Discount = source.Discount;
-            DiscountStartDate = source.DiscountStartDate;
-            DiscountEndDate = source.DiscountEndDate;
-            StockUnits = source.StockUnits;
-            SafetyStockLevel = source.SafetyStockLevel;
-            CreatedOn = source.CreatedOn;
-            LastModifiedOn = source.LastModifiedOn;
-            SearchTerms = source.SearchTerms;
-            Picture = source.Picture;
-            Thumbnail = source.Thumbnail;
-            CategoryId = source.CategoryId;
-            TaxTypeId = source.TaxTypeId;
-        }
 
         #endregion
 

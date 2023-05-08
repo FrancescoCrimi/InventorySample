@@ -25,18 +25,20 @@ using Inventory.Uwp.ViewModels.Message;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericDetailsViewModel<TModel>
+    public abstract class GenericDetailsViewModel<TModel>
         : ViewModelBase where TModel : Inventory.Infrastructure.Common.ObservableObject<TModel>, new()
     {
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
 
-        public GenericDetailsViewModel()
+        public GenericDetailsViewModel(NavigationService navigationService,
+                                       WindowManagerService windowService,
+                                       LookupTablesService lookupTablesService)
             : base()
         {
-            navigationService = Ioc.Default.GetService<NavigationService>();
-            windowService = Ioc.Default.GetService<WindowManagerService>();
-            LookupTables = Ioc.Default.GetRequiredService<LookupTablesService>();
+            _navigationService = navigationService;
+            _windowService = windowService;
+            LookupTables = lookupTablesService;
         }
 
         #region public property
@@ -50,7 +52,7 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public bool IsDataUnavailable => !IsDataAvailable;
 
-        public bool CanGoBack => !IsMainView && navigationService.CanGoBack;
+        public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
 
         private bool _isEditMode = false;
         public bool IsEditMode
@@ -72,14 +74,18 @@ namespace Inventory.Uwp.ViewModels.Common
             get => _item;
             set
             {
-                if (SetProperty(ref _item, value))
-                {
+                //if (SetProperty(ref _item, value))
+                //{
+                OnPropertyChanging(nameof(Item));
+                _item = value;
+
                     EditableItem = _item;
                     IsEnabled = !_item?.IsEmpty ?? false;
+                OnPropertyChanged(nameof(Item));
                     OnPropertyChanged(nameof(IsDataAvailable));
                     OnPropertyChanged(nameof(IsDataUnavailable));
                     OnPropertyChanged(nameof(Title));
-                }
+                //}
             }
         }
 
@@ -87,16 +93,22 @@ namespace Inventory.Uwp.ViewModels.Common
         public TModel EditableItem
         {
             get => _editableItem;
-            set => SetProperty(ref _editableItem, value);
+            //set => SetProperty(ref _editableItem, value);
+            set
+            {
+                OnPropertyChanging(nameof(EditableItem));
+                _editableItem = value;
+                OnPropertyChanged(nameof(EditableItem));
+            }
         }
 
         public ICommand BackCommand => new RelayCommand(OnBack);
         protected virtual void OnBack()
         {
             StatusReady();
-            if (navigationService.CanGoBack)
+            if (_navigationService.CanGoBack)
             {
-                navigationService.GoBack();
+                _navigationService.GoBack();
             }
         }
 
@@ -137,8 +149,9 @@ namespace Inventory.Uwp.ViewModels.Common
             var isNew = ItemIsNew;
             if (await SaveItemAsync(EditableItem))
             {
-                Item.Merge(EditableItem);
-                Item.NotifyChanges();
+                //Item.Merge(EditableItem);
+                //Item.NotifyChanges();
+                Item = await GetItemAsync(EditableItem.Id);
                 OnPropertyChanged(nameof(Title));
                 EditableItem = Item;
 
@@ -197,10 +210,10 @@ namespace Inventory.Uwp.ViewModels.Common
             if (!IsEditMode)
             {
                 IsEditMode = true;
-                // Create a copy for edit
-                var editableItem = new TModel();
-                editableItem.Merge(Item);
-                EditableItem = editableItem;
+                //// Create a copy for edit
+                //var editableItem = new TModel();
+                //editableItem.Merge(Item);
+                //EditableItem = editableItem;
             }
         }
 
@@ -209,27 +222,30 @@ namespace Inventory.Uwp.ViewModels.Common
             if (ItemIsNew)
             {
                 // We were creating a new item: cancel means exit
-                if (navigationService.CanGoBack)
+                if (_navigationService.CanGoBack)
                 {
-                    navigationService.GoBack();
+                    _navigationService.GoBack();
                 }
                 else
                 {
                     Task.Run(async () =>
                     {
-                        await windowService.CloseViewAsync();
+                        await _windowService.CloseViewAsync();
                     });
                 }
                 return;
             }
 
-            // We were editing an existing item: just cancel edition
+            //// We were editing an existing item: just cancel edition
             if (IsEditMode)
             {
-                EditableItem = Item;
+                //EditableItem = Item;
+                EditableItem = GetItemAsync(Item.Id).Result;
             }
             IsEditMode = false;
         }
+
+        protected abstract Task<TModel> GetItemAsync(long id);
 
         public virtual Result Validate(TModel model)
         {

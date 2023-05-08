@@ -12,36 +12,20 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class PaymentTypeDto : ObservableDto, IEquatable<PaymentTypeDto>
+    public class PaymentTypeDto : ObservableDto<PaymentTypeDto>
     {
-        //public int Id { get; set; }
-        public string Name { get; set; }
+        private string _name;
 
-        public override bool Equals(object obj)
+        public string Name
         {
-            return Equals(obj as PaymentTypeDto);
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
-        public bool Equals(PaymentTypeDto other)
-        {
-            return !(other is null) &&
-                   Id == other.Id;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id);
-        }
-        public static bool operator ==(PaymentTypeDto left, PaymentTypeDto right)
-        {
-            return EqualityComparer<PaymentTypeDto>.Default.Equals(left, right);
-        }
-        public static bool operator !=(PaymentTypeDto left, PaymentTypeDto right)
-        {
-            return !(left == right);
-        }
+
+        public override void Merge(PaymentTypeDto source)
+            => throw new System.NotImplementedException();
     }
 }

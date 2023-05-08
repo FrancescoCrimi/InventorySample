@@ -12,6 +12,7 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Infrastructure.DomainBase;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,16 +20,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Inventory.Domain.Model
 {
     [Table("TaxTypes")]
-    public partial class TaxType
+    public class TaxType : Entity<TaxType>
     {
-        [Key]
-        //[Column("TaxTypeID")]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int Id
-        {
-            get; set;
-        }
-
         [Required]
         [MaxLength(50)]
         public string Name

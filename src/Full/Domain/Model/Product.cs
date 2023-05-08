@@ -18,8 +18,10 @@ using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public class Product : Entity
+    public class Product : Entity<Product>
     {
+        #region property
+
         public string Name
         {
             get; set;
@@ -85,54 +87,46 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
+        #endregion
 
-        public int CategoryId
+
+        #region relation
+
+        public long CategoryId
         {
             get; set;
         }
-        public int TaxTypeId
+
+        public long TaxTypeId
         {
             get; set;
         }
-
 
         public virtual Category Category
         {
             get; set;
         }
+
         public virtual TaxType TaxType
         {
             get; set;
         }
 
+        #endregion
 
 
-        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
+        #region not mapped
 
-        //public string CategoryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCategory(CategoryID);
         [NotMapped]
         public string CategoryName => Category?.Name;
 
-        //public override void Merge(Product source)
-        //{
-        //    Name = source.Name;
-        //    Description = source.Description;
-        //    Size = source.Size;
-        //    Color = source.Color;
-        //    ListPrice = source.ListPrice;
-        //    DealerPrice = source.DealerPrice;
-        //    Discount = source.Discount;
-        //    DiscountStartDate = source.DiscountStartDate;
-        //    DiscountEndDate = source.DiscountEndDate;
-        //    StockUnits = source.StockUnits;
-        //    SafetyStockLevel = source.SafetyStockLevel;
-        //    CreatedOn = source.CreatedOn;
-        //    LastModifiedOn = source.LastModifiedOn;
-        //    SearchTerms = source.SearchTerms;
-        //    Picture = source.Picture;
-        //    Thumbnail = source.Thumbnail;
-        //    CategoryId = source.CategoryId;
-        //    TaxTypeId = source.TaxTypeId;
-        //}
+        #endregion
+
+
+        #region method
+
+        public string BuildSearchTerms() => $"{Id} {Name} {Color}".ToLower();
+
+        #endregion
     }
 }

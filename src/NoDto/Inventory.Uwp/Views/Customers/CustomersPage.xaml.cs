@@ -23,12 +23,12 @@ namespace Inventory.Uwp.Views.Customers
 {
     public sealed partial class CustomersPage : Page
     {
-        private readonly WindowManagerService windowService;
+        private readonly WindowManagerService _windowService;
 
         public CustomersPage()
         {
             ViewModel = Ioc.Default.GetService<CustomersViewModel>();
-            windowService = Ioc.Default.GetService<WindowManagerService>();
+            _windowService = Ioc.Default.GetService<WindowManagerService>();
             InitializeComponent();
         }
 
@@ -50,7 +50,7 @@ namespace Inventory.Uwp.Views.Customers
         {
             var args = ViewModel.CustomerList.CreateArgs();
             args.IsMainView = false;
-            await windowService.OpenInNewWindow<CustomersPage>(args);
+            await _windowService.OpenInNewWindow<CustomersPage>(args);
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
@@ -58,11 +58,11 @@ namespace Inventory.Uwp.Views.Customers
             ViewModel.CustomerDetails.CancelEdit();
             if (pivot.SelectedIndex == 0)
             {
-                await windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerDetails.CreateArgs());
+                await _windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerDetails.CreateArgs());
             }
             else
             {
-                await windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerOrders.CreateArgs());
+                await _windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerOrders.CreateArgs());
             }
         }
 

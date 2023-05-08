@@ -37,87 +37,31 @@ namespace Inventory.Uwp.ViewModels.Customers
         private readonly FilePickerService _filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
+                                        NavigationService navigationService,
+                                        WindowManagerService windowService,
+                                        LookupTablesService lookupTablesService,
                                         ICustomerRepository customerRepository,
                                         FilePickerService filePickerService)
-            : base()
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _customerRepository = customerRepository;
             _filePickerService = filePickerService;
         }
 
+        #region property
 
         public override string Title => Item?.IsNew ?? true ? "New Customer" : TitleEdit;
+
         public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
 
-        public CustomerDetailsArgs ViewModelArgs
-        {
-            get; private set;
-        }
-
-        public async Task LoadAsync(CustomerDetailsArgs args)
-        {
-            ViewModelArgs = args ?? CustomerDetailsArgs.CreateDefault();
-
-            if (ViewModelArgs.IsNew)
-            {
-                Item = new Customer();
-                IsEditMode = true;
-            }
-            else
-            {
-                try
-                {
-                    var item = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerID);
-                    Item = item ?? new Customer { Id = ViewModelArgs.CustomerID, IsEmpty = true };
-                    OnPropertyChanged(nameof(Item));
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.Load, ex, "Load Customer");
-                }
-            }
-        }
-        public void Unload()
-        {
-            ViewModelArgs.CustomerID = Item?.Id ?? 0;
-        }
-
-        public void Subscribe()
-        {
-            //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
-            //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
-            Messenger.Register<ViewModelsMessage<Customer>>(this, OnMessage);
-        }
-
-        public void Unsubscribe()
-        {
-            //MessageService.Unsubscribe(this);
-            Messenger.UnregisterAll(this);
-        }
-
-        public CustomerDetailsArgs CreateArgs()
-        {
-            return new CustomerDetailsArgs
-            {
-                CustomerID = Item?.Id ?? 0
-            };
-        }
-
         private object _newPictureSource = null;
-
         public object NewPictureSource
         {
             get => _newPictureSource;
             set => SetProperty(ref _newPictureSource, value);
-        }
-
-        public override void BeginEdit()
-        {
-            NewPictureSource = null;
-            base.BeginEdit();
         }
 
         public ICommand EditPictureCommand => new RelayCommand(OnEditPicture);
@@ -138,6 +82,76 @@ namespace Inventory.Uwp.ViewModels.Customers
                 NewPictureSource = null;
             }
         }
+
+        #endregion
+
+
+        #region method
+
+        public CustomerDetailsArgs ViewModelArgs
+        {
+            get; private set;
+        }
+
+        public async Task LoadAsync(CustomerDetailsArgs args)
+        {
+            ViewModelArgs = args ?? CustomerDetailsArgs.CreateDefault();
+
+            if (ViewModelArgs.IsNew)
+            {
+                Item = new Customer();
+                IsEditMode = true;
+            }
+            else
+            {
+                try
+                {
+                    var item = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerId);
+                    Item = item ?? new Customer { Id = ViewModelArgs.CustomerId, IsEmpty = true };
+                    OnPropertyChanged(nameof(Item));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(LogEvents.Load, ex, "Load Customer");
+                }
+            }
+        }
+        public void Unload()
+        {
+            ViewModelArgs.CustomerId = Item?.Id ?? 0;
+        }
+
+        public void Subscribe()
+        {
+            //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
+            //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
+            Messenger.Register<ViewModelsMessage<Customer>>(this, OnMessage);
+        }
+
+        public void Unsubscribe()
+        {
+            //MessageService.Unsubscribe(this);
+            Messenger.UnregisterAll(this);
+        }
+
+        public CustomerDetailsArgs CreateArgs()
+        {
+            return new CustomerDetailsArgs
+            {
+                CustomerId = Item?.Id ?? 0
+            };
+        }
+
+        public override void BeginEdit()
+        {
+            NewPictureSource = null;
+            base.BeginEdit();
+        }
+
+        #endregion
+
+
+        #region protected and private method
 
         protected async override Task<bool> SaveItemAsync(Customer model)
         {
@@ -194,9 +208,6 @@ namespace Inventory.Uwp.ViewModels.Customers
             yield return new RequiredConstraint<Customer>("Country", m => m.Country);
         }
 
-        /*
-         *  Handle external messages
-         ****************************************************************/
 
         private async void OnMessage(object recipient, ViewModelsMessage<Customer> message)
         {
@@ -210,10 +221,11 @@ namespace Inventory.Uwp.ViewModels.Customers
                         {
                             try
                             {
-                                var item = await _customerRepository.GetCustomerAsync(current.Id);
-                                item = item ?? new Customer { Id = current.Id, IsEmpty = true };
-                                current.Merge(item);
-                                current.NotifyChanges();
+                                //var item = await _customerRepository.GetCustomerAsync(current.Id);
+                                //item = item ?? new Customer { Id = current.Id, IsEmpty = true };
+                                //current.Merge(item);
+                                //current.NotifyChanges();
+                                Item = await _customerRepository.GetCustomerAsync(current.Id);
                                 OnPropertyChanged(nameof(Title));
                                 if (IsEditMode)
                                 {
@@ -264,90 +276,21 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
         }
 
-        //private async void OnDetailsMessage(CustomerDetailsViewModel sender, string message, CustomerModel changed)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        if (changed != null && changed.CustomerID == current?.CustomerID)
-        //        {
-        //            switch (message)
-        //            {
-        //                case "ItemChanged":
-        //                    await ContextService.RunAsync(async () =>
-        //                    {
-        //                        try
-        //                        {
-        //                            var item = await CustomerService.GetCustomerAsync(current.CustomerID);
-        //                            item = item ?? new CustomerModel { CustomerID = current.CustomerID, IsEmpty = true };
-        //                            current.Merge(item);
-        //                            current.NotifyChanges();
-        //                            NotifyPropertyChanged(nameof(Title));
-        //                            if (IsEditMode)
-        //                            {
-        //                                StatusMessage("WARNING: This customer has been modified externally");
-        //                            }
-        //                        }
-        //                        catch (Exception ex)
-        //                        {
-        //                            LogException("Customer", "Handle Changes", ex);
-        //                        }
-        //                    });
-        //                    break;
-        //                case "ItemDeleted":
-        //                    await OnItemDeletedExternally();
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-
-
-        //private async void OnListMessage(CustomerListViewModel sender, string message, object args)
-        //{
-        //    var current = Item;
-        //    if (current != null)
-        //    {
-        //        switch (message)
-        //        {
-        //            case "ItemsDeleted":
-        //                if (args is IList<CustomerModel> deletedModels)
-        //                {
-        //                    if (deletedModels.Any(r => r.CustomerID == current.CustomerID))
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                break;
-        //            case "ItemRangesDeleted":
-        //                try
-        //                {
-        //                    var model = await customerService.GetCustomerAsync(current.CustomerID);
-        //                    if (model == null)
-        //                    {
-        //                        await OnItemDeletedExternally();
-        //                    }
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    logger.LogError(ex, "Handle Ranges Deleted");
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
-
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This customer has been deleted externally");
             });
-            //});
         }
+
+        protected async override Task<Customer> GetItemAsync(long id)
+        {
+            return await _customerRepository.GetCustomerAsync(id);
+        }
+
+        #endregion
     }
 }

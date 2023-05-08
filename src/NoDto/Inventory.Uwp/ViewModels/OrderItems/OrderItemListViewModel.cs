@@ -74,6 +74,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 }
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.Query = Query;
@@ -263,8 +264,5 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                     break;
             }
         }
-
-        //protected override void SendItemChangedMessage(string message, long itemId)
-        //    => Messenger.Send(new OrderItemChangeMessage(message, itemId));
     }
 }

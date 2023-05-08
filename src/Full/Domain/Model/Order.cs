@@ -19,8 +19,10 @@ using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Order : Entity
+    public class Order : Entity<Order>
     {
+        #region property
+
         public DateTimeOffset OrderDate
         {
             get; set;
@@ -61,17 +63,21 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
-
         public string SearchTerms
         {
             get; set;
         }
 
+        #endregion
+
+
+        #region relation
+
         public long CustomerId
         {
             get; set;
         }
-        public int? PaymentTypeId
+        public long? PaymentTypeId
         {
             get; set;
         }
@@ -79,15 +85,14 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
-        public int? ShipperId
+        public long? ShipperId
         {
             get; set;
         }
-        public int StatusId
+        public long StatusId
         {
             get; set;
         }
-
 
         public virtual Customer Customer
         {
@@ -114,7 +119,10 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
+        #endregion
+
+
+        #region not mapped
 
         [NotMapped]
         public bool CanEditPayment => StatusId > 0;
@@ -122,35 +130,19 @@ namespace Inventory.Domain.Model
         public bool CanEditShipping => StatusId > 1;
         [NotMapped]
         public bool CanEditDelivery => StatusId > 2;
+        [NotMapped]
+        public string StatusDesc => Status == null ? string.Empty : Status.Name;
+        [NotMapped]
+        public string PaymentTypeDesc => PaymentType == null ? string.Empty : PaymentType.Name;
+        [NotMapped]
+        public string ShipViaDesc => Shipper == null ? string.Empty : Shipper.Name;
+        [NotMapped]
+        public string ShipCountryName => ShipCountry == null ? string.Empty : ShipCountry.Name;
 
-        [NotMapped]
-        public string StatusDesc => "Fake Status Desc";
-        [NotMapped]
-        public string PaymentTypeDesc => "Fake Payment Type Desc";
-        [NotMapped]
-        public string ShipViaDesc => "Fake Ship Via Desc";
-        [NotMapped]
-        public string ShipCountryName => "Fake Ship Country Name";
+        #endregion
 
-        //public override void Merge(Order source)
-        //{
-        //    OrderDate = source.OrderDate;
-        //    ShippedDate = source.ShippedDate;
-        //    DeliveredDate = source.DeliveredDate;
-        //    TrackingNumber = source.TrackingNumber;
-        //    ShipAddress = source.ShipAddress;
-        //    ShipCity = source.ShipCity;
-        //    ShipRegion = source.ShipRegion;
-        //    ShipPostalCode = source.ShipPostalCode;
-        //    ShipPhone = source.ShipPhone;
-        //    LastModifiedOn = source.LastModifiedOn;
-        //    SearchTerms = source.SearchTerms;
-        //    CustomerId = source.CustomerId;
-        //    PaymentTypeId = source.PaymentTypeId;
-        //    ShipCountryId = source.ShipCountryId;
-        //    ShipperId = source.ShipperId;
-        //    StatusId = source.StatusId;
-        //}
+
+        #region method
 
         public static Order CreateNewOrder(Customer customer)
         {
@@ -167,5 +159,9 @@ namespace Inventory.Domain.Model
                 Customer = customer,
             };
         }
+
+        public string BuildSearchTerms() => $"{Id} {CustomerId} {ShipCity} {ShipRegion}".ToLower();
+
+        #endregion
     }
 }

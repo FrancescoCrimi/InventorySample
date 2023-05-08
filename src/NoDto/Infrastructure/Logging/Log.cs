@@ -29,48 +29,17 @@ namespace Inventory.Infrastructure.Logging
         public static EventId Settings = new EventId(1020, "Settings");
     }
 
-    public class Log : Infrastructure.Common.ObservableObject<Log>
+    public class Log
     {
-        public Log()
-        {
-        }
-        public bool IsRead
-        {
-            get; set;
-        }
-        public string Name
-        {
-            get; set;
-        }
-        public DateTimeOffset DateTime
-        {
-            get; set;
-        }
-        public string User
-        {
-            get; set;
-        }
-        public LogLevel Level
-        {
-            get; set;
-        }
-        public string Source
-        {
-            get; set;
-        }
-        public string Action
-        {
-            get; set;
-        }
-        public string Message
-        {
-            get; set;
-        }
-        public string Description
-        {
-            get; set;
-        }
-
-        public override void Merge(Log source) => throw new NotImplementedException();
+        public long Id { get; set; }
+        public bool IsRead { get; set; }
+        public string Name { get; set; }
+        public DateTimeOffset DateTime { get; set; }
+        public string User { get; set; }
+        public LogLevel Level { get; set; }
+        public string Source { get; set; }
+        public string Action { get; set; }
+        public string Message { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -38,10 +38,10 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             await OrderDetails.LoadAsync(args);
 
-            long orderID = args?.OrderID ?? 0;
+            long orderID = args?.OrderId ?? 0;
             if (orderID > 0)
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = args.OrderID });
+                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = args.OrderId });
             }
             else
             {

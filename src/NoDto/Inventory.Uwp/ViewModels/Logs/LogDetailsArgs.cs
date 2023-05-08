@@ -19,7 +19,7 @@ namespace Inventory.Uwp.ViewModels.Logs
     {
         public static LogDetailsArgs CreateDefault() => new LogDetailsArgs();
 
-        public long AppLogID
+        public long LogId
         {
             get; set;
         }

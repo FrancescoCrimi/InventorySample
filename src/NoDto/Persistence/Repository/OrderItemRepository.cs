@@ -36,7 +36,16 @@ namespace Inventory.Persistence.Repository
         public async Task<OrderItem> GetOrderItemAsync(long orderID, int orderLine)
         {
             return await _dataSource.OrderItems
-                .Where(r => r.OrderId == orderID && r.OrderLine == orderLine)
+                .Where(e => e.OrderId == orderID && e.OrderLine == orderLine)
+                .Include(e => e.Product)
+                .Include(e => e.TaxType)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<OrderItem> GetOrderItemAsync(long id)
+        {
+            return await _dataSource.OrderItems
+                .Where(r => r.Id == id)
                 .Include(r => r.Product)
                 .FirstOrDefaultAsync();
         }

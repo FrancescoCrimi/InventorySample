@@ -12,14 +12,12 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Infrastructure.DomainBase;
+
 namespace Inventory.Domain.Model
 {
-    public partial class OrderStatus
+    public class OrderStatus : Entity<OrderStatus>
     {
-        public int Id   // ex Status
-        {
-            get; set;
-        }
         public string Name
         {
             get; set;

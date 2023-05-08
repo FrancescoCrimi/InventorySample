@@ -12,20 +12,16 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Domain.Model;
-using Inventory.Uwp.Services;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderItemDto : ObservableDto
+    public class OrderItemDto : ObservableDto<OrderItemDto>
     {
         private int _quantity;
         private int _taxTypeId;
         private decimal _discount;
         private TaxTypeDto _taxTypeDto;
 
-        //public long Id { get; set; }
         public int OrderLine { get; set; }
         public int Quantity
         {
@@ -57,8 +53,7 @@ namespace Inventory.Uwp.Dto
 
 
         public decimal Subtotal => Quantity * UnitPrice;
-        public decimal Total => (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTablesService>().GetTaxRate(TaxTypeId) / 100m);
-        public bool IsNew => OrderLine <= 0;
+        public decimal Total => (decimal)((Subtotal - Discount) * (1 + TaxType?.Rate / 100m));
 
         private void UpdateTotals()
         {
@@ -66,15 +61,7 @@ namespace Inventory.Uwp.Dto
             OnPropertyChanged(nameof(Total));
         }
 
-        public override void Merge(ObservableDto source)
-        {
-            if (source is OrderItemDto model)
-            {
-                Merge(model);
-            }
-        }
-
-        public void Merge(OrderItemDto source)
+        public override void Merge(OrderItemDto source)
         {
             if (source != null)
             {

@@ -12,23 +12,15 @@
 // ******************************************************************
 #endregion
 
-using System;
+using Inventory.Infrastructure.DomainBase;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inventory.Domain.Model
 {
     [Table("Shippers")]
-    public partial class Shipper
+    public class Shipper : Entity<Shipper>
     {
-        [Key]
-        //[Column("ShipperID")]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
-        public int Id
-        {
-            get; set;
-        }
-
         [Required]
         [MaxLength(50)]
         public string Name

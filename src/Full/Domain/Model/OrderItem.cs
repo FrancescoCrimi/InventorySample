@@ -17,8 +17,10 @@ using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class OrderItem : Entity
+    public class OrderItem : Entity<OrderItem>
     {
+        #region property
+
         public int OrderLine
         {
             get; set;
@@ -36,6 +38,11 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
+        #endregion
+
+
+        #region relation
+
         public long OrderId
         {
             get; set;
@@ -44,7 +51,7 @@ namespace Inventory.Domain.Model
         {
             get; set;
         }
-        public int TaxTypeId
+        public long TaxTypeId
         {
             get; set;
         }
@@ -62,13 +69,9 @@ namespace Inventory.Domain.Model
             get; set;
         }
 
-        public decimal Subtotal => Quantity * UnitPrice;
-        public decimal Total => 0;
-        //=> (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
+        #endregion
 
-        //public override void Merge(OrderItem source)
-        //{
-        //    //throw new NotImplementedException();
-        //}
+        public decimal Subtotal => Quantity * UnitPrice;
+        public decimal Total => (Subtotal - Discount) * (1 + TaxType.Rate / 100m);
     }
 }

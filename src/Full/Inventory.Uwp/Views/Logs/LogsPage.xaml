@@ -50,8 +50,7 @@
                   BorderBrush="LightGray"
                   BorderThickness="0,1,0,0"
                   Visibility="{x:Bind ViewModel.LogList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                <libcontrols:Section IsEnabled="{x:Bind ViewModel.LogDetails.IsEnabled, Mode=OneWay}"
-                                     Background="{StaticResource DetailsViewBackgroundColor}"
+                <libcontrols:Section Background="{StaticResource DetailsViewBackgroundColor}"
                                      Visibility="{x:Bind ViewModel.LogDetails.IsDataAvailable, Mode=OneWay}">
                     <local:LogsDetailsControl Grid.Row="1"
                                               ViewModel="{x:Bind ViewModel.LogDetails}" />

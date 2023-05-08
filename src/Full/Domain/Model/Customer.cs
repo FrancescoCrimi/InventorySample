@@ -19,8 +19,10 @@ using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Customer : Entity
+    public class Customer : Entity<Customer>
     {
+        #region property
+
         public string Title { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
@@ -49,66 +51,39 @@ namespace Inventory.Domain.Model
         public byte[] Picture { get; set; }
         public byte[] Thumbnail { get; set; }
 
+        #endregion
+
+
+        #region relation
 
         public long CountryId { get; set; }
-
-
-        public virtual Country Country
-        {
-            get; set;
-        }
+        public virtual Country Country { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
 
+        #endregion
 
-        public string BuildSearchTerms() => $"{Id} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
 
+        #region not mapped
 
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}";
+
         [NotMapped]
         public string Initials => string.Format("{0}{1}", $"{FirstName} "[0], $"{LastName} "[0]).Trim().ToUpper();
-        //public string CountryName => Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetCountry(CountryCode);
+
         [NotMapped]
-        public string CountryName => "Fake Country";
+        public string CountryName => Country == null ? string.Empty : Country.Name;
+
         [NotMapped]
-        public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}"/*\n{CountryName}"*/;
+        public string FullAddress => $"{AddressLine1} {AddressLine2}\n{City}, {Region} {PostalCode}\n{CountryName}";
 
-        //public override void Merge(Customer source)
-        //{
-        //    if (source != null)
-        //    {
-        //        Id = source.Id;
-        //        Title = source.Title;
-        //        FirstName = source.FirstName;
-        //        MiddleName = source.MiddleName;
-        //        LastName = source.LastName;
-        //        Suffix = source.Suffix;
-        //        Gender = source.Gender;
-        //        EmailAddress = source.EmailAddress;
-        //        AddressLine1 = source.AddressLine1;
-        //        AddressLine2 = source.AddressLine2;
-        //        City = source.City;
-        //        Region = source.Region;
-        //        Country = source.Country;
-        //        PostalCode = source.PostalCode;
-        //        Phone = source.Phone;
-        //        BirthDate = source.BirthDate;
-        //        Education = source.Education;
-        //        Occupation = source.Occupation;
-        //        YearlyIncome = source.YearlyIncome;
-        //        MaritalStatus = source.MaritalStatus;
-        //        TotalChildren = source.TotalChildren;
-        //        ChildrenAtHome = source.ChildrenAtHome;
-        //        IsHouseOwner = source.IsHouseOwner;
-        //        NumberCarsOwned = source.NumberCarsOwned;
-        //        CreatedOn = source.CreatedOn;
-        //        LastModifiedOn = source.LastModifiedOn;
-        //        Thumbnail = source.Thumbnail;
-        //        Picture = source.Picture;
+        #endregion
 
-        //        CountryId = source.CountryId;
 
-        //    }
-        //}
+        #region method
+
+        public string BuildSearchTerms() => $"{Id} {FirstName} {LastName} {EmailAddress} {AddressLine1}".ToLower();
+
+        #endregion
     }
 }

@@ -12,22 +12,23 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Logs
 {
-    public class LogListViewModel : GenericListViewModel<Log>
+    public class LogListViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
         private readonly LogService _logService;
@@ -44,7 +45,7 @@ namespace Inventory.Uwp.ViewModels.Logs
             Items = collection;
         }
 
-        public LogListArgs ViewModelArgs { get; private set; }
+        #region public method
 
         public async Task LoadAsync(LogListArgs args)
         {
@@ -57,6 +58,7 @@ namespace Inventory.Uwp.ViewModels.Logs
                 EndStatusMessage("Logs loaded");
             }
         }
+
         public void Unload()
         {
             ViewModelArgs.Query = Query;
@@ -64,48 +66,11 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            //MessageService.Subscribe<AppLogDetailsViewModel>(this, OnMessage);
-            Messenger.Register<ViewModelsMessage<Log>>(this, OnItemMessage);
-
-            // LogService non salva piu i log
-            //MessageService.Subscribe<ILogService, Log>(this, OnLogServiceMessage);
+            Messenger.Register<LogMessage>(this, OnItemMessage);
         }
-
-        private async void OnItemMessage(object recipient, ViewModelsMessage<Log> message)
-        {
-            switch (message.Value)
-            {
-                //case "NewItemSaved":
-                case "ItemDeleted":
-                case "ItemsDeleted":
-                    //case "ItemRangesDeleted":
-                    await RefreshAsync();
-                    break;
-            }
-        }
-
-        //private async void OnMessage(ViewModelBase sender, string message, object args)
-        //{
-        //    switch (message)
-        //    {
-        //        case "NewItemSaved":
-        //        case "ItemDeleted":
-        //        case "ItemsDeleted":
-        //        case "ItemRangesDeleted":
-        //            //await ContextService.RunAsync(async () =>
-        //            //{
-        //            await RefreshAsync();
-        //            //});
-        //            break;
-        //    }
-        //}
-
-
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -119,7 +84,218 @@ namespace Inventory.Uwp.ViewModels.Logs
             };
         }
 
-        public async Task<bool> RefreshAsync()
+        #endregion
+
+
+        #region property
+
+        public LogListArgs ViewModelArgs { get; private set; }
+
+        private Log _selectedItem = default;
+        public Log SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    if (!IsMultipleSelection)
+                    {
+                        // fix _selectedItem == null
+                        if (_selectedItem != null)
+                        {
+                            //MessageService.Send(this, "ItemSelected", _selectedItem);
+                            Messenger.Send(new LogMessage("ItemSelected", _selectedItem.Id));
+                        }
+                    }
+                }
+            }
+        }
+
+        private IList<Log> _items = null;
+        public IList<Log> Items
+        {
+            get => _items;
+            set => SetProperty(ref _items, value);
+        }
+
+        private string _query = null;
+        public string Query
+        {
+            get => _query;
+            set => SetProperty(ref _query, value);
+        }
+
+        private int _itemsCount = 0;
+        public int ItemsCount
+        {
+            get => _itemsCount;
+            set => SetProperty(ref _itemsCount, value);
+        }
+
+        public List<Log> SelectedItems { get; protected set; }
+
+        public IndexRange[] SelectedIndexRanges { get; protected set; }
+
+        private bool _isMultipleSelection = false;
+        public bool IsMultipleSelection
+        {
+            get => _isMultipleSelection;
+            set => SetProperty(ref _isMultipleSelection, value);
+        }
+
+        #endregion
+
+
+        #region icommand property
+
+        public ICommand NewCommand => new RelayCommand(OnNew);
+        private void OnNew()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommand RefreshCommand => new RelayCommand(OnRefresh);
+        private async void OnRefresh()
+        {
+            StartStatusMessage("Loading logs...");
+            if (await RefreshAsync())
+            {
+                EndStatusMessage("Logs loaded");
+            }
+        }
+
+        public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
+        protected virtual void OnStartSelection()
+        {
+            StatusMessage("Start selection");
+            SelectedItem = null;
+            SelectedItems = new List<Log>();
+            SelectedIndexRanges = null;
+            IsMultipleSelection = true;
+        }
+
+        public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
+        protected virtual void OnCancelSelection()
+        {
+            StatusReady();
+            SelectedItems = null;
+            SelectedIndexRanges = null;
+            IsMultipleSelection = false;
+            SelectedItem = Items?.FirstOrDefault();
+        }
+
+        public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
+        protected virtual void OnSelectItems(IList<object> items)
+        {
+            StatusReady();
+            if (IsMultipleSelection)
+            {
+                SelectedItems.AddRange(items.Cast<Log>());
+                StatusMessage($"{SelectedItems.Count} items selected");
+            }
+        }
+
+        public ICommand DeselectItemsCommand => new RelayCommand<IList<object>>(OnDeselectItems);
+        protected virtual void OnDeselectItems(IList<object> items)
+        {
+            if (items?.Count > 0)
+            {
+                StatusReady();
+            }
+            if (IsMultipleSelection)
+            {
+                foreach (Log item in items)
+                {
+                    SelectedItems.Remove(item);
+                }
+                StatusMessage($"{SelectedItems.Count} items selected");
+            }
+        }
+
+        public ICommand SelectRangesCommand => new RelayCommand<IndexRange[]>(OnSelectRanges);
+        protected virtual void OnSelectRanges(IndexRange[] indexRanges)
+        {
+            SelectedIndexRanges = indexRanges;
+            var count = SelectedIndexRanges?.Sum(r => r.Length) ?? 0;
+            StatusMessage($"{count} items selected");
+        }
+
+        public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
+        private async void OnDeleteSelection()
+        {
+            StatusReady();
+            if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
+            {
+                int count = 0;
+                try
+                {
+                    if (SelectedIndexRanges != null)
+                    {
+                        count = SelectedIndexRanges.Sum(r => r.Length);
+                        StartStatusMessage($"Deleting {count} logs...");
+                        await DeleteRangesAsync(SelectedIndexRanges);
+                        //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
+                        Messenger.Send(new LogMessage("ItemRangesDeleted", SelectedIndexRanges));
+                    }
+                    else if (SelectedItems != null)
+                    {
+                        count = SelectedItems.Count();
+                        StartStatusMessage($"Deleting {count} logs...");
+                        await DeleteItemsAsync(SelectedItems);
+                        //MessageService.Send(this, "ItemsDeleted", SelectedItems);
+                        Messenger.Send(new LogMessage("ItemsDeleted", SelectedItems));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    StatusError($"Error deleting {count} Logs: {ex.Message}");
+                    _logger.LogError(LogEvents.Delete, ex, "Error deleting {count} Logs");
+                    count = 0;
+                }
+                await RefreshAsync();
+                SelectedIndexRanges = null;
+                SelectedItems = null;
+                if (count > 0)
+                {
+                    EndStatusMessage($"{count} logs deleted");
+                }
+            }
+        }
+        private async Task DeleteItemsAsync(IEnumerable<Log> models)
+        {
+            foreach (var model in models)
+            {
+                await _logService.DeleteLogAsync(model);
+            }
+        }
+        private async Task DeleteRangesAsync(IEnumerable<IndexRange> ranges)
+        {
+            DataRequest<Log> request = BuildDataRequest();
+            foreach (var range in ranges)
+            {
+                await _logService.DeleteLogRangeAsync(range.Index, range.Length, request);
+            }
+        }
+
+        #endregion
+
+
+        #region private method
+
+        private async void OnItemMessage(object recipient, LogMessage message)
+        {
+            switch (message.Value)
+            {
+                case "ItemDeleted":
+                case "ItemsDeleted":
+                case "ItemRangesDeleted":
+                    await RefreshAsync();
+                    break;
+            }
+        }
+
+        private async Task<bool> RefreshAsync()
         {
             bool isOk = true;
             ItemsCount = 0;
@@ -142,78 +318,6 @@ namespace Inventory.Uwp.ViewModels.Logs
             return isOk;
         }
 
-        protected override void OnNew()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected async override void OnRefresh()
-        {
-            StartStatusMessage("Loading logs...");
-            if (await RefreshAsync())
-            {
-                EndStatusMessage("Logs loaded");
-            }
-        }
-
-        protected async override void OnDeleteSelection()
-        {
-            StatusReady();
-            if (await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete selected logs?", "Ok", "Cancel"))
-            {
-                int count = 0;
-                try
-                {
-                    if (SelectedIndexRanges != null)
-                    {
-                        count = SelectedIndexRanges.Sum(r => r.Length);
-                        StartStatusMessage($"Deleting {count} logs...");
-                        await DeleteRangesAsync(SelectedIndexRanges);
-                        //MessageService.Send(this, "ItemRangesDeleted", SelectedIndexRanges);
-                        Messenger.Send(new ViewModelsMessage<Log>("ItemRangesDeleted", SelectedIndexRanges));
-                    }
-                    else if (SelectedItems != null)
-                    {
-                        count = SelectedItems.Count();
-                        StartStatusMessage($"Deleting {count} logs...");
-                        await DeleteItemsAsync(SelectedItems);
-                        //MessageService.Send(this, "ItemsDeleted", SelectedItems);
-                        Messenger.Send(new ViewModelsMessage<Log>("ItemsDeleted", SelectedItems));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    StatusError($"Error deleting {count} Logs: {ex.Message}");
-                    _logger.LogError(LogEvents.Delete, ex, "Error deleting {count} Logs");
-                    count = 0;
-                }
-                await RefreshAsync();
-                SelectedIndexRanges = null;
-                SelectedItems = null;
-                if (count > 0)
-                {
-                    EndStatusMessage($"{count} logs deleted");
-                }
-            }
-        }
-
-        private async Task DeleteItemsAsync(IEnumerable<Log> models)
-        {
-            foreach (var model in models)
-            {
-                await _logService.DeleteLogAsync(model);
-            }
-        }
-
-        private async Task DeleteRangesAsync(IEnumerable<IndexRange> ranges)
-        {
-            DataRequest<Log> request = BuildDataRequest();
-            foreach (var range in ranges)
-            {
-                await _logService.DeleteLogRangeAsync(range.Index, range.Length, request);
-            }
-        }
-
         private DataRequest<Log> BuildDataRequest()
         {
             return new DataRequest<Log>()
@@ -234,5 +338,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         //        //});
         //    }
         //}
+
+        #endregion
     }
 }

@@ -13,36 +13,26 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class CountryDto : ObservableDto, IEquatable<CountryDto>
+    public class CountryDto : ObservableDto<CountryDto>
     {
-        //public long Id { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
+        private string _code;
+        private string _name;
 
-        public override bool Equals(object obj)
+        public string Code
         {
-            return Equals(obj as CountryDto);
+            get => _code;
+            set => SetProperty(ref _code, value);
         }
-        public bool Equals(CountryDto other)
+        public string Name
         {
-            return !(other is null) &&
-                   Id == other.Id;
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id);
-        }
-        public static bool operator ==(CountryDto left, CountryDto right)
-        {
-            return EqualityComparer<CountryDto>.Default.Equals(left, right);
-        }
-        public static bool operator !=(CountryDto left, CountryDto right)
-        {
-            return !(left == right);
-        }
+
+        public override void Merge(CountryDto source)
+            => throw new NotImplementedException();
     }
 }

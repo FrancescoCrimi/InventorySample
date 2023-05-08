@@ -127,7 +127,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 //var model = await _orderService.GetOrderAsync(selected.Id);
                 //selected.Merge(model);
-                await OrderDetails.LoadAsync(new OrderDetailsArgs { OrderID = selected.Id });
+                await OrderDetails.LoadAsync(new OrderDetailsArgs { OrderId = selected.Id });
             }
             catch (Exception ex)
             {

@@ -107,8 +107,6 @@
                           IsMultipleSelection="{x:Bind ViewModel.IsMultipleSelection, Mode=TwoWay}"
                           ItemsCount="{x:Bind ViewModel.ItemsCount, Mode=OneWay}"
                           Query="{x:Bind ViewModel.Query, Mode=TwoWay}"
-                          />
-                          <!--
                           RefreshCommand="{x:Bind ViewModel.RefreshCommand}"
                           QuerySubmittedCommand="{x:Bind ViewModel.RefreshCommand}"
                           StartSelectionCommand="{x:Bind ViewModel.StartSelectionCommand}"
@@ -116,6 +114,5 @@
                           SelectItemsCommand="{x:Bind ViewModel.SelectItemsCommand}"
                           DeselectItemsCommand="{x:Bind ViewModel.DeselectItemsCommand}"
                           SelectRangesCommand="{x:Bind ViewModel.SelectRangesCommand}"
-                          DeleteCommand="{x:Bind ViewModel.DeleteSelectionCommand}"
-                          -->
+                          DeleteCommand="{x:Bind ViewModel.DeleteSelectionCommand}" />
 </UserControl>

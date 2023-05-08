@@ -12,50 +12,135 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Uwp.Services;
 using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class ProductDto : ObservableDto
+    public class ProductDto : ObservableDto<ProductDto>
     {
-        public static ProductDto CreateEmpty() => new ProductDto { Id = -1, IsEmpty = true };
+        private string _name;
+        private string _description;
+        private string _size;
+        private string _color;
+        private decimal _listPrice;
+        private decimal _dealerPrice;
+        private decimal _discount;
+        private DateTimeOffset? _discountStartDate;
+        private DateTimeOffset? _discountEndDate;
+        private int _stockUnits;
+        private int _safetyStockLevel;
+        private DateTimeOffset _createdOn;
+        private DateTimeOffset _lastModifiedOn;
+        private byte[] _picture;
+        private byte[] _thumbnail;
+        private long _categoryId;
+        private long _taxTypeId;
+        private CategoryDto _category;
+        private TaxTypeDto _taxType;
 
-        //public long Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Size { get; set; }
-        public string Color { get; set; }
-        public decimal ListPrice { get; set; }
-        public decimal DealerPrice { get; set; }
-        public decimal Discount { get; set; }
-        public DateTimeOffset? DiscountStartDate { get; set; }
-        public DateTimeOffset? DiscountEndDate { get; set; }
-        public int StockUnits { get; set; }
-        public int SafetyStockLevel { get; set; }
-        public DateTimeOffset CreatedOn { get; set; }
-        public DateTimeOffset LastModifiedOn { get; set; }
-        public byte[] Picture { get; set; }
-        public byte[] Thumbnail { get; set; }
-
-        public int CategoryId { get; set; }
-        public int TaxTypeId { get; set; }
-        public CategoryDto Category { get; set; }
-        public TaxTypeDto TaxType { get; set; }
-
-        public bool IsNew => Id <= 0;
-        public string CategoryName => Ioc.Default.GetRequiredService<LookupTablesService>().GetCategory(CategoryId);
-
-        public override void Merge(ObservableDto source)
+        public string Name
         {
-            if (source is ProductDto model)
-            {
-                Merge(model);
-            }
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
+        public string Description
+        {
+            get => _description;
+            set => SetProperty(ref _description, value);
+        }
+        public string Size
+        {
+            get => _size;
+            set => SetProperty(ref _size, value);
+        }
+        public string Color
+        {
+            get => _color;
+            set => SetProperty(ref _color, value);
+        }
+        public decimal ListPrice
+        {
+            get => _listPrice;
+            set => SetProperty(ref _listPrice, value);
+        }
+        public decimal DealerPrice
+        {
+            get => _dealerPrice;
+            set => SetProperty(ref _dealerPrice, value);
+        }
+        public decimal Discount
+        {
+            get => _discount;
+            set => SetProperty(ref _discount, value);
+        }
+        public DateTimeOffset? DiscountStartDate
+        {
+            get => _discountStartDate;
+            set => SetProperty(ref _discountStartDate, value);
+        }
+        public DateTimeOffset? DiscountEndDate
+        {
+            get => _discountEndDate;
+            set => SetProperty(ref _discountEndDate, value);
+        }
+        public int StockUnits
+        {
+            get => _stockUnits;
+            set => SetProperty(ref _stockUnits, value);
+        }
+        public int SafetyStockLevel
+        {
+            get => _safetyStockLevel;
+            set => SetProperty(ref _safetyStockLevel, value);
+        }
+        public DateTimeOffset CreatedOn
+        {
+            get => _createdOn;
+            set => SetProperty(ref _createdOn, value);
+        }
+        public DateTimeOffset LastModifiedOn
+        {
+            get => _lastModifiedOn;
+            set => SetProperty(ref _lastModifiedOn, value);
+        }
+        public byte[] Picture
+        {
+            get => _picture;
+            set => SetProperty(ref _picture, value);
+        }
+        public byte[] Thumbnail
+        {
+            get => _thumbnail;
+            set => SetProperty(ref _thumbnail, value);
         }
 
-        public void Merge(ProductDto source)
+        public long CategoryId
+        {
+            get => _categoryId;
+            set => SetProperty(ref _categoryId, value);
+        }
+        public long TaxTypeId
+        {
+            get => _taxTypeId;
+            set => SetProperty(ref _taxTypeId, value);
+        }
+        public CategoryDto Category
+        {
+            get => _category;
+            set => SetProperty(ref _category, value);
+        }
+        public TaxTypeDto TaxType
+        {
+            get => _taxType;
+            set => SetProperty(ref _taxType, value);
+        }
+
+        public string CategoryName => Category?.Name;
+
+
+        public static ProductDto CreateEmpty() => new ProductDto { Id = -1, IsEmpty = true };
+
+        public override void Merge(ProductDto source)
         {
             if (source != null)
             {
@@ -81,11 +166,6 @@ namespace Inventory.Uwp.Dto
                 Category = source.Category;
                 TaxType = source.TaxType;
             }
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
     }
 }

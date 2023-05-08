@@ -12,36 +12,20 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class OrderStatusDto : ObservableDto, IEquatable<OrderStatusDto>
+    public class OrderStatusDto : ObservableDto<OrderStatusDto>
     {
-        //public int Id { get; set; }
-        public string Name { get; set; }
+        private string _name;
 
-        public override bool Equals(object obj)
+        public string Name
         {
-            return Equals(obj as OrderStatusDto);
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
-        public bool Equals(OrderStatusDto other)
-        {
-            return !(other is null) &&
-                   Id == other.Id;
-        }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id);
-        }
-        public static bool operator ==(OrderStatusDto left, OrderStatusDto right)
-        {
-            return EqualityComparer<OrderStatusDto>.Default.Equals(left, right);
-        }
-        public static bool operator !=(OrderStatusDto left, OrderStatusDto right)
-        {
-            return !(left == right);
-        }
+
+        public override void Merge(OrderStatusDto source)
+            => throw new System.NotImplementedException();
     }
 }

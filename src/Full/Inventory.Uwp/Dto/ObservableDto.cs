@@ -12,22 +12,42 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Infrastructure.DomainBase;
+using System;
 
 namespace Inventory.Uwp.Dto
 {
-    public class ObservableDto : CommunityToolkit.Mvvm.ComponentModel.ObservableObject, IEntity
+    public abstract class ObservableDto<TEntity> : GenericObservableDto<long>, IEquatable<TEntity>
+        where TEntity : ObservableDto<TEntity>
     {
-        public long Id { get; set; }
-
-        public bool IsEmpty { get; set; }
-
-        public virtual void Merge(ObservableDto source) { }
-
         public void NotifyChanges()
         {
             // Notify all properties
             OnPropertyChanged("");
+        }
+
+        public abstract void Merge(TEntity source);
+
+        public bool IsEmpty { get; set; }
+
+        public bool IsNew => Id <= 0;
+
+        public override bool Equals(object obj)
+            => Equals(obj as TEntity);
+
+        public bool Equals(TEntity other)
+            => !(other is null) && Id == other.Id;
+
+        public override int GetHashCode()
+            => HashCode.Combine(Id);
+    }
+
+    public abstract class GenericObservableDto<TId> : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
+    {
+        private TId _id;
+        public TId Id
+        {
+            get => _id;
+            set => SetProperty(ref _id, value);
         }
     }
 }

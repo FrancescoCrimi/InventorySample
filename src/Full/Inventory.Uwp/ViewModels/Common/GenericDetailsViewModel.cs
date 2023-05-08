@@ -27,16 +27,17 @@ using System.Windows.Input;
 
 namespace Inventory.Uwp.ViewModels.Common
 {
-    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase where TModel : ObservableDto, new()
+    public abstract partial class GenericDetailsViewModel<TModel> : ViewModelBase
+        where TModel : ObservableDto<TModel>, new()
     {
-        private readonly NavigationService navigationService;
-        private readonly WindowManagerService windowService;
+        private readonly NavigationService _navigationService;
+        private readonly WindowManagerService _windowService;
 
         public GenericDetailsViewModel()
             : base()
         {
-            navigationService = Ioc.Default.GetService<NavigationService>();
-            windowService = Ioc.Default.GetService<WindowManagerService>();
+            _navigationService = Ioc.Default.GetService<NavigationService>();
+            _windowService = Ioc.Default.GetService<WindowManagerService>();
             LookupTables = Ioc.Default.GetRequiredService<LookupTablesService>();
         }
 
@@ -45,7 +46,7 @@ namespace Inventory.Uwp.ViewModels.Common
         public bool IsDataAvailable => _item != null;
         public bool IsDataUnavailable => !IsDataAvailable;
 
-        public bool CanGoBack => !IsMainView && navigationService.CanGoBack;
+        public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
 
         private TModel _item = null;
         public TModel Item
@@ -89,9 +90,9 @@ namespace Inventory.Uwp.ViewModels.Common
         protected virtual void OnBack()
         {
             StatusReady();
-            if (navigationService.CanGoBack)
+            if (_navigationService.CanGoBack)
             {
-                navigationService.GoBack();
+                _navigationService.GoBack();
             }
         }
 
@@ -129,15 +130,15 @@ namespace Inventory.Uwp.ViewModels.Common
             if (ItemIsNew)
             {
                 // We were creating a new item: cancel means exit
-                if (navigationService.CanGoBack)
+                if (_navigationService.CanGoBack)
                 {
-                    navigationService.GoBack();
+                    _navigationService.GoBack();
                 }
                 else
                 {
                     Task.Run(async () =>
                     {
-                        await windowService.CloseViewAsync();
+                        await _windowService.CloseViewAsync();
                     });
                 }
                 return;

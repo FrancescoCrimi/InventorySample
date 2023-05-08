@@ -12,27 +12,13 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
+using Inventory.Infrastructure.DomainBase;
 
 namespace Inventory.Domain.Model
 {
-    public partial class Country : IEquatable<Country>
+    public class Country : Entity<Country>
     {
-        public long Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-
-        public override bool Equals(object obj) => Equals(obj as Country);
-        public bool Equals(Country other) => !(other is null) && Id == other.Id;
-        public override int GetHashCode() => HashCode.Combine(Id);
-        public static bool operator ==(Country left, Country right)
-        {
-            return EqualityComparer<Country>.Default.Equals(left, right);
-        }
-        public static bool operator !=(Country left, Country right)
-        {
-            return !(left == right);
-        }
     }
 }

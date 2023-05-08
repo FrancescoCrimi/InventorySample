@@ -27,7 +27,10 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public string Query { get; set; }
 
+        public bool IsMainView { get; set; }
+
         public Expression<Func<Log, object>> OrderBy { get; set; }
+
         public Expression<Func<Log, object>> OrderByDesc { get; set; }
     }
 }

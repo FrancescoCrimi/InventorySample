@@ -12,37 +12,26 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
 
 namespace Inventory.Uwp.Dto
 {
-    public class TaxTypeDto : ObservableDto, IEquatable<TaxTypeDto>
+    public class TaxTypeDto : ObservableDto<TaxTypeDto>
     {
-        //public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Rate { get; set; }
+        private string _name;
+        private decimal _rate;
 
-        public override bool Equals(object obj)
+        public string Name
         {
-            return Equals(obj as TaxTypeDto);
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
-        public bool Equals(TaxTypeDto other)
+        public decimal Rate
         {
-            return !(other is null) &&
-                   Id == other.Id;
+            get => _rate;
+            set => SetProperty(ref _rate, value);
         }
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id);
-        }
-        public static bool operator ==(TaxTypeDto left, TaxTypeDto right)
-        {
-            return EqualityComparer<TaxTypeDto>.Default.Equals(left, right);
-        }
-        public static bool operator !=(TaxTypeDto left, TaxTypeDto right)
-        {
-            return !(left == right);
-        }
+
+        public override void Merge(TaxTypeDto source)
+            => throw new System.NotImplementedException();
     }
 }

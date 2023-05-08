@@ -15,7 +15,6 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -39,19 +38,20 @@ namespace Inventory.Uwp.ViewModels.Logs
             LogDetails = appLogDetailsViewModel;
         }
 
-        public LogListViewModel LogList
-        {
-            get;
-        }
-        public LogDetailsViewModel LogDetails
-        {
-            get;
-        }
+        public LogListViewModel LogList { get; }
+
+        public LogDetailsViewModel LogDetails { get; }
 
         public async Task LoadAsync(LogListArgs args)
         {
             await _logService.MarkAllAsReadAsync();
             await LogList.LoadAsync(args);
+            if (args != null)
+            {
+                IsMainView = args.IsMainView;
+                LogList.IsMainView = args.IsMainView;
+                LogDetails.IsMainView = args.IsMainView;
+            }
         }
 
         public void Unload()
@@ -61,57 +61,50 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<AppLogListViewModel>(this, OnMessage);
-            Messenger.Register<ViewModelsMessage<Log>>(this, OnMessage);
+            Messenger.Register<LogMessage>(this, OnMessage);
             LogList.Subscribe();
             LogDetails.Subscribe();
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             LogList.Unsubscribe();
             LogDetails.Unsubscribe();
         }
 
-        private async void OnMessage(object recipient, ViewModelsMessage<Log> message)
+        private async void OnMessage(object recipient, LogMessage message)
         {
-            if (/*recipient == AppLogList &&*/ message.Value == "ItemSelected")
+            if (message.Value == "ItemSelected")
             {
-                await OnItemSelected();
+                if (message.Id != 0)
+                {
+                    await OnItemSelected();
+                }
             }
         }
 
         private async Task OnItemSelected()
         {
-            //if (AppLogDetails.IsEditMode)
-            //{
-            StatusReady();
-            //}
             var selected = LogList.SelectedItem;
             if (!LogList.IsMultipleSelection)
             {
-                if (selected != null /*&& !selected.IsEmpty*/)
+                if (selected != null && selected.Id != 0)
                 {
                     await PopulateDetails(selected);
                 }
             }
-            LogDetails.Item = selected;
         }
 
-        private async Task<Log> PopulateDetails(Log selected)
+        private async Task PopulateDetails(Log selected)
         {
             try
             {
-                var model = await _logService.GetLogAsync(selected.Id);
-                //selected.Merge(model);
-                return model;
+                await LogDetails.LoadAsync(new LogDetailsArgs { LogId = selected.Id });
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadDetails, ex, "Load Log Details");
-                return null;
             }
         }
     }

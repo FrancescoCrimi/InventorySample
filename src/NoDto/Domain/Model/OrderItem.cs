@@ -90,12 +90,6 @@ namespace Inventory.Domain.Model
 
 
         public decimal Subtotal => Quantity * UnitPrice;
-        public decimal Total => 0;
-        //=> (Subtotal - Discount) * (1 + Ioc.Default.GetRequiredService<LookupTableServiceFacade>().GetTaxRate(TaxType) / 100m);
-
-        public override void Merge(OrderItem source)
-        {
-            //throw new NotImplementedException();
-        }
+        public decimal Total => (Subtotal - Discount) * (1 + TaxType.Rate / 100m);
     }
 }

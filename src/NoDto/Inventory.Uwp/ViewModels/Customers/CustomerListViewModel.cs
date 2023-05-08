@@ -61,6 +61,16 @@ namespace Inventory.Uwp.ViewModels.Customers
             get; private set;
         }
 
+        public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);
+        private async void OnOpenInNewView()
+        {
+            if (SelectedItem != null)
+            {
+                await _windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerId = SelectedItem.Id });
+            }
+        }
+
+
         public async Task LoadAsync(CustomerListArgs args)
         {
             ViewModelArgs = args ?? new CustomerListArgs();
@@ -123,15 +133,6 @@ namespace Inventory.Uwp.ViewModels.Customers
             ItemsCount = Items.Count;
             OnPropertyChanged(nameof(Title));
             return isOk;
-        }
-
-        public ICommand OpenInNewViewCommand => new RelayCommand(OnOpenInNewView);
-        private async void OnOpenInNewView()
-        {
-            if (SelectedItem != null)
-            {
-                await _windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerID = SelectedItem.Id });
-            }
         }
 
         protected async override void OnNew()
@@ -197,6 +198,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
             }
         }
+
 
         private async Task DeleteItemsAsync(IEnumerable<Customer> models)
         {

@@ -65,7 +65,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
         private async void ItemInvoked(Product model)
         {
-            await _windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductID = model.Id });
+            await _windowService.OpenInNewWindow<ProductPage>(new ProductDetailsArgs { ProductId = model.Id });
         }
 
         public async Task LoadAsync(ProductListArgs args)
