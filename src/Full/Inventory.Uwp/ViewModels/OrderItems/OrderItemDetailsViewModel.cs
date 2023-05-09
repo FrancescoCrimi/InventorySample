@@ -36,8 +36,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         private readonly OrderItemService _orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
-                                         OrderItemService orderItemService)
-            : base()
+                                         OrderItemService orderItemService,
+                                         NavigationService navigationService,
+                                         WindowManagerService windowService,
+                                         LookupTablesService lookupTablesService)
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _orderItemService = orderItemService;

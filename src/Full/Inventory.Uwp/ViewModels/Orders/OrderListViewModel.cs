@@ -99,7 +99,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 Query = Query,
                 OrderBy = ViewModelArgs.OrderBy,
                 OrderByDesc = ViewModelArgs.OrderByDesc,
-                CustomerID = ViewModelArgs.CustomerID
+                CustomerId = ViewModelArgs.CustomerId
             };
         }
 
@@ -132,7 +132,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (SelectedItem != null)
             {
-                await _windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { OrderID = SelectedItem.Id });
+                await _windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { OrderId = SelectedItem.Id });
             }
         }
 
@@ -140,11 +140,11 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (IsMainView)
             {
-                await _windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { CustomerID = ViewModelArgs.CustomerID });
+                await _windowService.OpenInNewWindow<OrderPage>(new OrderDetailsArgs { CustomerId = ViewModelArgs.CustomerId });
             }
             else
             {
-                _navigationService.Navigate<OrderPage>(new OrderDetailsArgs { CustomerID = ViewModelArgs.CustomerID });
+                _navigationService.Navigate<OrderPage>(new OrderDetailsArgs { CustomerId = ViewModelArgs.CustomerId });
             }
 
             StatusReady();
@@ -223,9 +223,9 @@ namespace Inventory.Uwp.ViewModels.Orders
                 OrderBy = ViewModelArgs.OrderBy,
                 OrderByDesc = ViewModelArgs.OrderByDesc
             };
-            if (ViewModelArgs.CustomerID > 0)
+            if (ViewModelArgs.CustomerId > 0)
             {
-                request.Where = (r) => r.CustomerId == ViewModelArgs.CustomerID;
+                request.Where = (r) => r.CustomerId == ViewModelArgs.CustomerId;
             }
             return request;
         }

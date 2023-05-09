@@ -82,35 +82,32 @@ namespace Inventory.Uwp.ViewModels.Products
                 if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
-                    await OnItemSelected();
+                    await OnItemSelected(message.Id);
                 }
             }
         }
 
-        private async Task OnItemSelected()
+        private async Task OnItemSelected(long id)
         {
             if (ProductDetails.IsEditMode)
             {
                 StatusReady();
                 ProductDetails.CancelEdit();
             }
-            var selected = ProductList.SelectedItem;
             if (!ProductList.IsMultipleSelection)
             {
-                if (selected != null && !selected.IsEmpty)
+                if (id != 0)
                 {
-                    await PopulateDetails(selected);
+                    await PopulateDetails(id);
                 }
             }
-            ProductDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(ProductDto selected)
+        private async Task PopulateDetails(long id)
         {
             try
             {
-                var model = await _productService.GetProductAsync(selected.Id);
-                selected.Merge(model);
+                await ProductDetails.LoadAsync(new ProductDetailsArgs { ProductId = id });
             }
             catch (Exception ex)
             {

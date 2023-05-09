@@ -38,6 +38,7 @@ namespace Inventory.Persistence.Repository
             return await _dataSource.OrderItems
                 .Where(r => r.OrderId == orderID && r.OrderLine == orderLine)
                 .Include(r => r.Product)
+                .Include(r => r.TaxType)
                 .FirstOrDefaultAsync();
         }
 
@@ -48,6 +49,7 @@ namespace Inventory.Persistence.Repository
             // Execute
             var records = await items.Skip(skip).Take(take)
                 .Include(r => r.Product)
+                .Include(r => r.TaxType)
                 .AsNoTracking().ToListAsync();
 
             return records;

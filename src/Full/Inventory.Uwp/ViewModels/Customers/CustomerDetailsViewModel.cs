@@ -17,7 +17,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -38,21 +37,18 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
                                         CustomerService customerService,
-                                        FilePickerService filePickerService)
-            : base()
+                                        FilePickerService filePickerService,
+                                        NavigationService navigationService,
+                                        WindowManagerService windowService,
+                                        LookupTablesService lookupTablesService)
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _customerService = customerService;
             _filePickerService = filePickerService;
         }
 
-
-        public override string Title => Item?.IsNew ?? true ? "New Customer" : TitleEdit;
-        public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
-
-        public override bool ItemIsNew => Item?.IsNew ?? true;
-
-        public CustomerDetailsArgs ViewModelArgs { get; private set; }
+        #region public method
 
         public async Task LoadAsync(CustomerDetailsArgs args)
         {
@@ -67,8 +63,8 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 try
                 {
-                    var item = await _customerService.GetCustomerAsync(ViewModelArgs.CustomerID);
-                    Item = item ?? new CustomerDto { Id = ViewModelArgs.CustomerID, IsEmpty = true };
+                    var item = await _customerService.GetCustomerAsync(ViewModelArgs.CustomerId);
+                    Item = item ?? new CustomerDto { Id = ViewModelArgs.CustomerId, IsEmpty = true };
                 }
                 catch (Exception ex)
                 {
@@ -76,21 +72,19 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
             }
         }
+
         public void Unload()
         {
-            ViewModelArgs.CustomerID = Item?.Id ?? 0;
+            ViewModelArgs.CustomerId = Item?.Id ?? 0;
         }
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<CustomerDetailsViewModel, CustomerModel>(this, OnDetailsMessage);
-            //MessageService.Subscribe<CustomerListViewModel>(this, OnListMessage);
             Messenger.Register<ViewModelsMessage<CustomerDto>>(this, OnMessage);
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -98,22 +92,34 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             return new CustomerDetailsArgs
             {
-                CustomerID = Item?.Id ?? 0
+                CustomerId = Item?.Id ?? 0
             };
-        }
-
-        private object _newPictureSource = null;
-
-        public object NewPictureSource
-        {
-            get => _newPictureSource;
-            set => SetProperty(ref _newPictureSource, value);
         }
 
         public override void BeginEdit()
         {
             NewPictureSource = null;
             base.BeginEdit();
+        }
+
+        #endregion
+
+
+        #region public property
+
+        public override string Title => Item?.IsNew ?? true ? "New Customer" : TitleEdit;
+
+        public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
+
+        public override bool ItemIsNew => Item?.IsNew ?? true;
+
+        public CustomerDetailsArgs ViewModelArgs { get; private set; }
+
+        private object _newPictureSource = null;
+        public object NewPictureSource
+        {
+            get => _newPictureSource;
+            set => SetProperty(ref _newPictureSource, value);
         }
 
         public ICommand EditPictureCommand => new RelayCommand(OnEditPicture);
@@ -134,6 +140,11 @@ namespace Inventory.Uwp.ViewModels.Customers
                 NewPictureSource = null;
             }
         }
+
+        #endregion
+
+
+        #region private and protected method
 
         protected override async Task<bool> SaveItemAsync(CustomerDto model)
         {
@@ -253,15 +264,14 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         private async Task OnItemDeletedExternally()
         {
-            //await ContextService.RunAsync(() =>
-            //{
             await Task.Run(() =>
             {
                 CancelEdit();
                 IsEnabled = false;
                 StatusMessage("WARNING: This customer has been deleted externally");
             });
-            //});
         }
+
+        #endregion
     }
 }

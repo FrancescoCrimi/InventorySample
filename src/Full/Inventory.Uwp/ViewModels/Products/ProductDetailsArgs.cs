@@ -18,8 +18,8 @@ namespace Inventory.Uwp.ViewModels.Products
     {
         public static ProductDetailsArgs CreateDefault() => new ProductDetailsArgs();
 
-        public long ProductID { get; set; }
+        public long ProductId { get; set; }
 
-        public bool IsNew => ProductID <= 0;
+        public bool IsNew => ProductId <= 0;
     }
 }

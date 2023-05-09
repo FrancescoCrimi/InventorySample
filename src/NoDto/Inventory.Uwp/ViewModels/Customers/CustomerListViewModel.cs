@@ -90,14 +90,11 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
-            //MessageService.Subscribe<CustomerDetailsViewModel>(this, OnMessage);
             Messenger.Register<ViewModelsMessage<Customer>>(this, OnMessage);
         }
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
         }
 
@@ -198,7 +195,6 @@ namespace Inventory.Uwp.ViewModels.Customers
                 }
             }
         }
-
 
         private async Task DeleteItemsAsync(IEnumerable<Customer> models)
         {

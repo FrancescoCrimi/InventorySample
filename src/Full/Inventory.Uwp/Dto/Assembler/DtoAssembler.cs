@@ -26,8 +26,8 @@ namespace Inventory.Uwp.Dto
                 Quantity = source.Quantity,
                 UnitPrice = source.UnitPrice,
                 Discount = source.Discount,
-                //TaxType = source.TaxType,
-                Product =  DtoFromProduct(source.Product, includeAllFields)
+                TaxType = new TaxTypeDto { Id = source.TaxType.Id, Name = source.TaxType.Name, Rate = source.TaxType.Rate },
+                Product = DtoFromProduct(source.Product, includeAllFields)
             };
             return model;
         }

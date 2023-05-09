@@ -41,14 +41,16 @@ namespace Inventory.Uwp.ViewModels.Customers
             CustomerOrders = orderListViewModel;
         }
 
-        public CustomerListViewModel CustomerList { get; set; }
-        public CustomerDetailsViewModel CustomerDetails { get; set; }
-        public OrderListViewModel CustomerOrders { get; set; }
+        public CustomerListViewModel CustomerList { get; }
+
+        public CustomerDetailsViewModel CustomerDetails { get; }
+
+        public OrderListViewModel CustomerOrders { get; }
 
         public async Task LoadAsync(CustomerListArgs args)
         {
             await CustomerList.LoadAsync(args);
-            if(args != null)
+            if (args != null)
             {
                 IsMainView = args.IsMainView;
                 CustomerList.IsMainView = args.IsMainView;
@@ -89,23 +91,12 @@ namespace Inventory.Uwp.ViewModels.Customers
                 if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
-                    await OnItemSelected();
+                    await OnItemSelected(message.Id);
                 }
             }
         }
 
-        //private async void OnMessage(CustomerListViewModel viewModel, string message, object args)
-        //{
-        //    if (viewModel == CustomerList && message == "ItemSelected")
-        //    {
-        //        //await ContextService.RunAsync(() =>
-        //        //{
-        //           //await OnItemSelected();
-        //        //});
-        //    }
-        //} 
-
-        private async Task OnItemSelected()
+        private async Task OnItemSelected(long id)
         {
             if (CustomerDetails.IsEditMode)
             {
@@ -113,25 +104,23 @@ namespace Inventory.Uwp.ViewModels.Customers
                 CustomerDetails.CancelEdit();
             }
             CustomerOrders.IsMultipleSelection = false;
-            var selected = CustomerList.SelectedItem;
             if (!CustomerList.IsMultipleSelection)
             {
-                if (selected != null && !selected.IsEmpty)
+                if (id != 0)
                 {
-                    await PopulateDetails(selected.Id);
-                    await PopulateOrders(selected.Id);
+                    await PopulateDetails(id);
+                    await PopulateOrders(id);
                 }
             }
-            //CustomerDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(long selectedCustomerId)
+        private async Task PopulateDetails(long id)
         {
-            if (selectedCustomerId > 0)
+            if (id > 0)
             {
                 try
                 {
-                    await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerID = selectedCustomerId });
+                    await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerId = id });
                 }
                 catch (Exception ex)
                 {
@@ -140,13 +129,13 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
         }
 
-        private async Task PopulateOrders(long selectedCustomerId)
+        private async Task PopulateOrders(long id)
         {
-            if (selectedCustomerId > 0)
+            if (id > 0)
             {
                 try
                 {
-                    await CustomerOrders.LoadAsync(new OrderListArgs { CustomerID = selectedCustomerId }, silent: true);
+                    await CustomerOrders.LoadAsync(new OrderListArgs { CustomerId = id }, silent: true);
                 }
                 catch (Exception ex)
                 {

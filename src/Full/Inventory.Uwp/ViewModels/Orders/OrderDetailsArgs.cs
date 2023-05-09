@@ -16,11 +16,11 @@ namespace Inventory.Uwp.ViewModels.Orders
 {
     public class OrderDetailsArgs
     {
-        public static OrderDetailsArgs CreateDefault() => new OrderDetailsArgs { CustomerID = 0 };
+        public static OrderDetailsArgs CreateDefault() => new OrderDetailsArgs { CustomerId = 0 };
 
-        public long CustomerID { get; set; }
-        public long OrderID { get; set; }
+        public long CustomerId { get; set; }
+        public long OrderId { get; set; }
 
-        public bool IsNew => OrderID <= 0;
+        public bool IsNew => OrderId <= 0;
     }
 }

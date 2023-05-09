@@ -35,15 +35,76 @@ namespace Inventory.Uwp.ViewModels.Orders
         private readonly OrderService _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderService orderService)
-            : base()
+                                     OrderService orderService,
+                                     NavigationService navigationService,
+                                     WindowManagerService windowService,
+                                     LookupTablesService lookupTablesService)
+            : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
             _orderService = orderService;
         }
 
+        #region public method
+
+        public async Task LoadAsync(OrderDetailsArgs args)
+        {
+            ViewModelArgs = args ?? OrderDetailsArgs.CreateDefault();
+
+            if (ViewModelArgs.IsNew)
+            {
+                Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerId);
+                IsEditMode = true;
+            }
+            else
+            {
+                try
+                {
+                    var item = await _orderService.GetOrderAsync(ViewModelArgs.OrderId);
+                    Item = item ?? new OrderDto { Id = ViewModelArgs.OrderId, IsEmpty = true };
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(LogEvents.Load, ex, "Load Order");
+                }
+            }
+            OnPropertyChanged(nameof(ItemIsNew));
+        }
+
+        public void Unload()
+        {
+            ViewModelArgs.CustomerId = Item?.CustomerId ?? 0;
+            ViewModelArgs.OrderId = Item?.Id ?? 0;
+        }
+
+        public void Subscribe()
+        {
+            Messenger.Register<ViewModelsMessage<OrderDto>>(this, OnMessage);
+        }
+
+        public void Unsubscribe()
+        {
+            Messenger.UnregisterAll(this);
+        }
+
+        public OrderDetailsArgs CreateArgs()
+        {
+            return new OrderDetailsArgs
+            {
+                CustomerId = Item?.CustomerId ?? 0,
+                OrderId = Item?.Id ?? 0
+            };
+        }
+
+        #endregion
+
+
+        #region public property
+
         public override string Title => Item?.IsNew ?? true ? TitleNew : TitleEdit;
+
         public string TitleNew => Item?.Customer == null ? "New Order" : $"New Order, {Item?.Customer?.FullName}";
+
         public string TitleEdit => Item == null ? "Order" : $"Order #{Item?.Id}";
 
         public override bool ItemIsNew => Item?.IsNew ?? true;
@@ -66,53 +127,10 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public OrderDetailsArgs ViewModelArgs { get; private set; }
 
-        public async Task LoadAsync(OrderDetailsArgs args)
-        {
-            ViewModelArgs = args ?? OrderDetailsArgs.CreateDefault();
+        #endregion
 
-            if (ViewModelArgs.IsNew)
-            {
-                Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerID);
-                IsEditMode = true;
-            }
-            else
-            {
-                try
-                {
-                    var item = await _orderService.GetOrderAsync(ViewModelArgs.OrderID);
-                    Item = item ?? new OrderDto { Id = ViewModelArgs.OrderID, IsEmpty = true };
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.Load, ex, "Load Order");
-                }
-            }
-            OnPropertyChanged(nameof(ItemIsNew));
-        }
-        public void Unload()
-        {
-            ViewModelArgs.CustomerID = Item?.CustomerId ?? 0;
-            ViewModelArgs.OrderID = Item?.Id ?? 0;
-        }
 
-        public void Subscribe()
-        {
-            Messenger.Register<ViewModelsMessage<OrderDto>>(this, OnMessage);
-        }
-
-        public void Unsubscribe()
-        {
-            Messenger.UnregisterAll(this);
-        }
-
-        public OrderDetailsArgs CreateArgs()
-        {
-            return new OrderDetailsArgs
-            {
-                CustomerID = Item?.CustomerId ?? 0,
-                OrderID = Item?.Id ?? 0
-            };
-        }
+        #region protected and private method
 
         protected override async Task<bool> SaveItemAsync(OrderDto model)
         {
@@ -243,5 +261,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 StatusMessage("WARNING: This order has been deleted externally");
             });
         }
+
+        #endregion
     }
 }

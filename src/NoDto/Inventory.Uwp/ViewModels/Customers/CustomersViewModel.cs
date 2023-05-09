@@ -40,18 +40,11 @@ namespace Inventory.Uwp.ViewModels.Customers
             CustomerOrders = orderListViewModel;
         }
 
-        public CustomerListViewModel CustomerList
-        {
-            get; set;
-        }
-        public CustomerDetailsViewModel CustomerDetails
-        {
-            get; set;
-        }
-        public OrderListViewModel CustomerOrders
-        {
-            get; set;
-        }
+        public CustomerListViewModel CustomerList { get; }
+
+        public CustomerDetailsViewModel CustomerDetails { get; }
+
+        public OrderListViewModel CustomerOrders { get; }
 
         public async Task LoadAsync(CustomerListArgs args)
         {
@@ -72,9 +65,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<CustomerListViewModel>(this, OnMessage);
             Messenger.Register<ViewModelsMessage<Customer>>(this, OnMessage);
-
             CustomerList.Subscribe();
             CustomerDetails.Subscribe();
             CustomerOrders.Subscribe();
@@ -82,9 +73,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
-
             CustomerList.Unsubscribe();
             CustomerDetails.Unsubscribe();
             CustomerOrders.Unsubscribe();
@@ -97,13 +86,12 @@ namespace Inventory.Uwp.ViewModels.Customers
                 if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
-                    await OnItemSelected();
+                    await OnItemSelected(message.Id);
                 }
             }
         }
 
-        // TODO: modificare metodo in (long selectedCustomerId)
-        private async Task OnItemSelected()
+        private async Task OnItemSelected(long id)
         {
             if (CustomerDetails.IsEditMode)
             {
@@ -111,22 +99,21 @@ namespace Inventory.Uwp.ViewModels.Customers
                 CustomerDetails.CancelEdit();
             }
             CustomerOrders.IsMultipleSelection = false;
-            var selected = CustomerList.SelectedItem;
             if (!CustomerList.IsMultipleSelection)
             {
-                if (selected != null && !selected.IsEmpty)
+                if (id != 0)
                 {
-                    await PopulateDetails(selected.Id);
-                    await PopulateOrders(selected.Id);
+                    await PopulateDetails(id);
+                    await PopulateOrders(id);
                 }
             }
         }
 
-        private async Task PopulateDetails(long selectedCustomerId)
+        private async Task PopulateDetails(long id)
         {
             try
             {
-                await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerId = selectedCustomerId });
+                await CustomerDetails.LoadAsync(new CustomerDetailsArgs { CustomerId = id });
             }
             catch (Exception ex)
             {
@@ -134,11 +121,11 @@ namespace Inventory.Uwp.ViewModels.Customers
             }
         }
 
-        private async Task PopulateOrders(long selectedCustomerId)
+        private async Task PopulateOrders(long id)
         {
             try
             {
-                await CustomerOrders.LoadAsync(new OrderListArgs { CustomerId = selectedCustomerId }, silent: true);
+                await CustomerOrders.LoadAsync(new OrderListArgs { CustomerId = id }, silent: true);
             }
             catch (Exception ex)
             {

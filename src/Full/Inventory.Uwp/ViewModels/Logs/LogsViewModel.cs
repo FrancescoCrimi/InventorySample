@@ -79,28 +79,27 @@ namespace Inventory.Uwp.ViewModels.Logs
             {
                 if (message.Id != 0)
                 {
-                    await OnItemSelected();
+                    await OnItemSelected(message.Id);
                 }
             }
         }
 
-        private async Task OnItemSelected()
+        private async Task OnItemSelected(long id)
         {
-            var selected = LogList.SelectedItem;
             if (!LogList.IsMultipleSelection)
             {
-                if (selected != null && selected.Id != 0)
+                if (id != 0)
                 {
-                    await PopulateDetails(selected);
+                    await PopulateDetails(id);
                 }
             }
         }
 
-        private async Task PopulateDetails(Log selected)
+        private async Task PopulateDetails(long id)
         {
             try
             {
-                await LogDetails.LoadAsync(new LogDetailsArgs { LogId = selected.Id });
+                await LogDetails.LoadAsync(new LogDetailsArgs { LogId = id });
             }
             catch (Exception ex)
             {

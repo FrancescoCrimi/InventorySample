@@ -28,25 +28,24 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrdersViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly OrderService _orderService;
 
         public OrdersViewModel(ILogger<OrdersViewModel> logger,
-                               OrderService orderService,
                                OrderListViewModel orderListViewModel,
                                OrderDetailsViewModel orderDetailsViewModel,
                                OrderItemListViewModel orderItemListViewModel)
             : base()
         {
             _logger = logger;
-            _orderService = orderService;
             OrderList = orderListViewModel;
             OrderDetails = orderDetailsViewModel;
             OrderItemList = orderItemListViewModel;
         }
 
-        public OrderListViewModel OrderList { get; set; }
-        public OrderDetailsViewModel OrderDetails { get; set; }
-        public OrderItemListViewModel OrderItemList { get; set; }
+        public OrderListViewModel OrderList { get; }
+
+        public OrderDetailsViewModel OrderDetails { get; }
+
+        public OrderItemListViewModel OrderItemList { get; }
 
         public async Task LoadAsync(OrderListArgs args)
         {
@@ -88,12 +87,12 @@ namespace Inventory.Uwp.ViewModels.Orders
                 if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
-                    await OnItemSelected();
+                    await OnItemSelected(message.Id);
                 }
             }
         }
 
-        private async Task OnItemSelected()
+        private async Task OnItemSelected(long id)
         {
             if (OrderDetails.IsEditMode)
             {
@@ -101,24 +100,21 @@ namespace Inventory.Uwp.ViewModels.Orders
                 OrderDetails.CancelEdit();
             }
             OrderItemList.IsMultipleSelection = false;
-            var selected = OrderList.SelectedItem;
             if (!OrderList.IsMultipleSelection)
             {
-                if (selected != null && !selected.IsEmpty)
+                if (id != 0)
                 {
-                    await PopulateDetails(selected);
-                    await PopulateOrderItems(selected);
+                    await PopulateDetails(id);
+                    await PopulateOrderItems(id);
                 }
             }
-            OrderDetails.Item = selected;
         }
 
-        private async Task PopulateDetails(OrderDto selected)
+        private async Task PopulateDetails(long id)
         {
             try
             {
-                var model = await _orderService.GetOrderAsync(selected.Id);
-                selected.Merge(model);
+                await OrderDetails.LoadAsync(new OrderDetailsArgs { OrderId = id });
             }
             catch (Exception ex)
             {
@@ -126,13 +122,13 @@ namespace Inventory.Uwp.ViewModels.Orders
             }
         }
 
-        private async Task PopulateOrderItems(OrderDto selectedItem)
+        private async Task PopulateOrderItems(long id)
         {
             try
             {
-                if (selectedItem != null)
+                if (id != 0)
                 {
-                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = selectedItem.Id }, silent: true);
+                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = id }, silent: true);
                 }
             }
             catch (Exception ex)

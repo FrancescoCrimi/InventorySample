@@ -25,7 +25,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             OrderByDesc = r => r.OrderDate;
         }
 
-        public long CustomerID { get; set; }
+        public long CustomerId { get; set; }
 
         public string Query { get; set; }
 

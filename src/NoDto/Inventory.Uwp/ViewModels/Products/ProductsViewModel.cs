@@ -37,15 +37,9 @@ namespace Inventory.Uwp.ViewModels.Products
             ProductDetails = productDetailsViewModel;
         }
 
-        public ProductListViewModel ProductList
-        {
-            get; set;
-        }
+        public ProductListViewModel ProductList { get; }
 
-        public ProductDetailsViewModel ProductDetails
-        {
-            get; set;
-        }
+        public ProductDetailsViewModel ProductDetails { get; }
 
         public async Task LoadAsync(ProductListArgs args)
         {
@@ -85,33 +79,32 @@ namespace Inventory.Uwp.ViewModels.Products
                 if (message.Id != 0)
                 {
                     //TODO: rendere il metodo OnItemSelected cancellabile
-                    await OnItemSelected();
+                    await OnItemSelected(message.Id);
                 }
             }
         }
 
-        private async Task OnItemSelected()
+        private async Task OnItemSelected(long id)
         {
             if (ProductDetails.IsEditMode)
             {
                 StatusReady();
                 ProductDetails.CancelEdit();
             }
-            var selected = ProductList.SelectedItem;
             if (!ProductList.IsMultipleSelection)
             {
-                if (selected != null && !selected.IsEmpty)
+                if (id != 0)
                 {
-                    await PopulateDetails(selected);
+                    await PopulateDetails(id);
                 }
             }
         }
 
-        private async Task PopulateDetails(Product selected)
+        private async Task PopulateDetails(long id)
         {
             try
             {
-                await ProductDetails.LoadAsync(new ProductDetailsArgs { ProductId = selected.Id });
+                await ProductDetails.LoadAsync(new ProductDetailsArgs { ProductId = id });
             }
             catch (Exception ex)
             {

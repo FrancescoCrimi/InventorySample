@@ -18,8 +18,8 @@ namespace Inventory.Uwp.ViewModels.Customers
     {
         public static CustomerDetailsArgs CreateDefault() => new CustomerDetailsArgs();
 
-        public long CustomerID { get; set; }
+        public long CustomerId { get; set; }
 
-        public bool IsNew => CustomerID <= 0;
+        public bool IsNew => CustomerId <= 0;
     }
 }

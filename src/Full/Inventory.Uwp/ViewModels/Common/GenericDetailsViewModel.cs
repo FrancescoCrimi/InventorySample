@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Uwp.Common;
@@ -33,20 +32,25 @@ namespace Inventory.Uwp.ViewModels.Common
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
 
-        public GenericDetailsViewModel()
+        public GenericDetailsViewModel(NavigationService navigationService,
+                                       WindowManagerService windowService,
+                                       LookupTablesService lookupTablesService)
             : base()
         {
-            _navigationService = Ioc.Default.GetService<NavigationService>();
-            _windowService = Ioc.Default.GetService<WindowManagerService>();
-            LookupTables = Ioc.Default.GetRequiredService<LookupTablesService>();
+            _navigationService = navigationService;
+            _windowService = windowService;
+            LookupTables = lookupTablesService;
         }
 
         public LookupTablesService LookupTables { get; }
 
         public bool IsDataAvailable => _item != null;
+
         public bool IsDataUnavailable => !IsDataAvailable;
 
         public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
+
+        public abstract bool ItemIsNew { get; }
 
         private TModel _item = null;
         public TModel Item
@@ -124,7 +128,6 @@ namespace Inventory.Uwp.ViewModels.Common
             //MessageService.Send(this, "CancelEdit", Item);
             Messenger.Send(new ViewModelsMessage<TModel>("CancelEdit", Item.Id));
         }
-
         public virtual void CancelEdit()
         {
             if (ItemIsNew)
@@ -193,6 +196,7 @@ namespace Inventory.Uwp.ViewModels.Common
             }
             IsEnabled = true;
         }
+        protected abstract Task<bool> SaveItemAsync(TModel model);
 
         public ICommand DeleteCommand => new RelayCommand(OnDelete);
         protected virtual async void OnDelete()
@@ -220,6 +224,9 @@ namespace Inventory.Uwp.ViewModels.Common
                 }
             }
         }
+        protected abstract Task<bool> ConfirmDeleteAsync();
+        protected abstract Task<bool> DeleteItemAsync(TModel model);
+
 
         public virtual Result Validate(TModel model)
         {
@@ -233,12 +240,8 @@ namespace Inventory.Uwp.ViewModels.Common
             return Result.Ok();
         }
 
-        protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
+        protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model)
+            => Enumerable.Empty<IValidationConstraint<TModel>>();
 
-        public abstract bool ItemIsNew { get; }
-
-        protected abstract Task<bool> SaveItemAsync(TModel model);
-        protected abstract Task<bool> DeleteItemAsync(TModel model);
-        protected abstract Task<bool> ConfirmDeleteAsync();
     }
 }
