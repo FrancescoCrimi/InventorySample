@@ -261,7 +261,8 @@ namespace Inventory.Persistence.DbContexts
             modelBuilder.Entity<Order>().HasOne(x => x.Status).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"StatusId");
             modelBuilder.Entity<Order>().HasOne(x => x.PaymentType).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"PaymentTypeId");
             modelBuilder.Entity<Order>().HasOne(x => x.Shipper).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"ShipperId");
-            modelBuilder.Entity<Order>().HasOne(x => x.ShipCountry).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"ShipCountryId");
+            modelBuilder.Entity<Order>().HasOne(x => x.ShipCountry).WithMany().OnDelete(DeleteBehavior.NoAction).IsRequired(true).HasForeignKey(@"ShipCountryId");
+            //modelBuilder.Entity<Order>().HasOne(x => x.ShipCountry).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"ShipCountryId");
 
             modelBuilder.Entity<Product>().HasOne(x => x.Category).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"CategoryId");
             modelBuilder.Entity<Product>().HasOne(x => x.TaxType).WithMany().OnDelete(DeleteBehavior.Cascade).IsRequired(true).HasForeignKey(@"TaxTypeId");

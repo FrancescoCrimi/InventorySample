@@ -15,14 +15,12 @@
 using CommunityToolkit.Mvvm.Input;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Helpers;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.Views.Settings;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,81 +29,20 @@ namespace Inventory.Uwp.ViewModels.Settings
 {
     public class SettingsViewModel : ViewModelBase
     {
+        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+        private bool _isBusy = false;
+        private bool _isLocalProvider;
+        private bool _isSqlProvider;
+        private string _sqlConnectionString = null;
+        private RelayCommand<ElementTheme> _switchThemeCommand;
+        private RelayCommand _resetLocalDataCommand;
+        private RelayCommand _validateSqlConnectionCommand;
+        private RelayCommand _createDatabaseCommand;
+        private RelayCommand _saveChangesCommand;
+
         public SettingsViewModel()
         {
         }
-
-
-        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
-        public ElementTheme ElementTheme
-        {
-            get => _elementTheme;
-            set => SetProperty(ref _elementTheme, value);
-        }
-
-
-        private ICommand _switchThemeCommand;
-        public ICommand SwitchThemeCommand
-        {
-            get
-            {
-                if (_switchThemeCommand == null)
-                {
-                    _switchThemeCommand = new RelayCommand<ElementTheme>(
-                        async (param) =>
-                        {
-                            ElementTheme = param;
-                            await ThemeSelectorService.SetThemeAsync(param);
-                        });
-                }
-                return _switchThemeCommand;
-            }
-        }
-
-
-
-        public string Version => $"v{AppSettings.Current.Version}";
-
-        private bool _isBusy = false;
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set => SetProperty(ref _isBusy, value);
-        }
-
-        private bool _isLocalProvider;
-        public bool IsLocalProvider
-        {
-            get => _isLocalProvider;
-            set { if (SetProperty(ref _isLocalProvider, value)) UpdateProvider(); }
-        }
-
-        private bool _isSqlProvider;
-        public bool IsSqlProvider
-        {
-            get => _isSqlProvider;
-            set => SetProperty(ref _isSqlProvider, value);
-        }
-
-        private string _sqlConnectionString = null;
-        public string SqlConnectionString
-        {
-            get => _sqlConnectionString;
-            set => SetProperty(ref _sqlConnectionString, value);
-        }
-
-        public bool IsRandomErrorsEnabled
-        {
-            get => AppSettings.Current.IsRandomErrorsEnabled;
-            set => AppSettings.Current.IsRandomErrorsEnabled = value;
-        }
-
-        public ICommand ResetLocalDataCommand => new RelayCommand(OnResetLocalData);
-        public ICommand ValidateSqlConnectionCommand => new RelayCommand(OnValidateSqlConnection);
-        public ICommand CreateDatabaseCommand => new RelayCommand(OnCreateDatabase);
-        public ICommand SaveChangesCommand => new RelayCommand(OnSaveChanges);
-
-        public SettingsArgs ViewModelArgs { get; private set; }
 
         public Task LoadAsync(SettingsArgs args)
         {
@@ -121,13 +58,67 @@ namespace Inventory.Uwp.ViewModels.Settings
             return Task.CompletedTask;
         }
 
-        private void UpdateProvider()
+
+        public ElementTheme ElementTheme
         {
-            if (IsLocalProvider && !IsSqlProvider)
-            {
-                AppSettings.Current.DataProvider = DataProviderType.SQLite;
-            }
+            get => _elementTheme;
+            set => SetProperty(ref _elementTheme, value);
         }
+
+        public string Version => $"v{AppSettings.Current.Version}";
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
+        }
+
+        public bool IsLocalProvider
+        {
+            get => _isLocalProvider;
+            set { if (SetProperty(ref _isLocalProvider, value)) UpdateProvider(); }
+        }
+
+        public bool IsSqlProvider
+        {
+            get => _isSqlProvider;
+            set => SetProperty(ref _isSqlProvider, value);
+        }
+
+        public string SqlConnectionString
+        {
+            get => _sqlConnectionString;
+            set => SetProperty(ref _sqlConnectionString, value);
+        }
+
+        public bool IsRandomErrorsEnabled
+        {
+            get => AppSettings.Current.IsRandomErrorsEnabled;
+            set => AppSettings.Current.IsRandomErrorsEnabled = value;
+        }
+
+        public SettingsArgs ViewModelArgs { get; private set; }
+
+
+        public ICommand SwitchThemeCommand => _switchThemeCommand
+            ?? (_switchThemeCommand = new RelayCommand<ElementTheme>(async (param) =>
+            {
+                ElementTheme = param;
+                await ThemeSelectorService.SetThemeAsync(param);
+            }));
+
+        public ICommand ResetLocalDataCommand => _resetLocalDataCommand
+            ?? (_resetLocalDataCommand = new RelayCommand(OnResetLocalData));
+
+        public ICommand ValidateSqlConnectionCommand => _validateSqlConnectionCommand
+            ?? (_validateSqlConnectionCommand = new RelayCommand(OnValidateSqlConnection));
+
+        public ICommand CreateDatabaseCommand => _createDatabaseCommand
+            ?? (_createDatabaseCommand = new RelayCommand(OnCreateDatabase));
+
+        public ICommand SaveChangesCommand => _saveChangesCommand
+            ?? (_saveChangesCommand = new RelayCommand(OnSaveChanges));
+
 
         private async void OnResetLocalData()
         {
@@ -150,29 +141,6 @@ namespace Inventory.Uwp.ViewModels.Settings
         private async void OnValidateSqlConnection()
         {
             await ValidateSqlConnectionAsync();
-        }
-
-        private async Task<bool> ValidateSqlConnectionAsync()
-        {
-            StatusReady();
-            IsBusy = true;
-            StatusMessage("Validating connection string...");
-
-            var dialog = new ValidateConnectionDialog(SqlConnectionString);
-            var res = await dialog.ShowAsync();
-            Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
-
-            IsBusy = false;
-            if (result.IsOk)
-            {
-                StatusMessage(result.Message);
-                return true;
-            }
-            else
-            {
-                StatusMessage(result.Message);
-                return false;
-            }
         }
 
         private async void OnCreateDatabase()
@@ -210,6 +178,37 @@ namespace Inventory.Uwp.ViewModels.Settings
             else
             {
                 AppSettings.Current.DataProvider = DataProviderType.SQLite;
+            }
+        }
+
+        private void UpdateProvider()
+        {
+            if (IsLocalProvider && !IsSqlProvider)
+            {
+                AppSettings.Current.DataProvider = DataProviderType.SQLite;
+            }
+        }
+
+        private async Task<bool> ValidateSqlConnectionAsync()
+        {
+            StatusReady();
+            IsBusy = true;
+            StatusMessage("Validating connection string...");
+
+            var dialog = new ValidateConnectionDialog(SqlConnectionString);
+            var res = await dialog.ShowAsync();
+            Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
+
+            IsBusy = false;
+            if (result.IsOk)
+            {
+                StatusMessage(result.Message);
+                return true;
+            }
+            else
+            {
+                StatusMessage(result.Message);
+                return false;
             }
         }
 

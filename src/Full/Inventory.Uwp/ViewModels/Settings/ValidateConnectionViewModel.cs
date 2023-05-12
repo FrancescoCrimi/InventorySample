@@ -27,24 +27,26 @@ namespace Inventory.Uwp.ViewModels.Settings
     public class ValidateConnectionViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
+        private string _progressStatus = null;
+        private string _message = null;
+        private string _primaryButtonText;
+        private string _secondaryButtonText = "Cancel";
 
         public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger)
             : base()
         {
-            this._logger = logger;
+            _logger = logger;
             Result = Result.Error("Operation cancelled");
         }
 
         public Result Result { get; private set; }
 
-        private string _progressStatus = null;
         public string ProgressStatus
         {
             get => _progressStatus;
             set => SetProperty(ref _progressStatus, value);
         }
 
-        private string _message = null;
         public string Message
         {
             get { return _message; }
@@ -53,14 +55,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public bool HasMessage => _message != null;
 
-        private string _primaryButtonText;
         public string PrimaryButtonText
         {
             get => _primaryButtonText;
             set => SetProperty(ref _primaryButtonText, value);
         }
 
-        private string _secondaryButtonText = "Cancel";
         public string SecondaryButtonText
         {
             get => _secondaryButtonText;

@@ -12,8 +12,6 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
@@ -21,17 +19,25 @@ using Inventory.Persistence;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Settings
 {
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
+        private string _progressStatus = null;
+        private double _progressMaximum = 1;
+        private double _progressValue = 0;
+        private string _message = null;
+        private string _primaryButtonText;
+        private string _secondaryButtonText = "Cancel";
 
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger)
             : base()
         {
-            this._logger = logger;
+            _logger = logger;
             Result = Result.Error("Operation cancelled");
         }
 
@@ -40,28 +46,24 @@ namespace Inventory.Uwp.ViewModels.Settings
             get; private set;
         }
 
-        private string _progressStatus = null;
         public string ProgressStatus
         {
             get => _progressStatus;
             set => SetProperty(ref _progressStatus, value);
         }
 
-        private double _progressMaximum = 1;
         public double ProgressMaximum
         {
             get => _progressMaximum;
             set => SetProperty(ref _progressMaximum, value);
         }
 
-        private double _progressValue = 0;
         public double ProgressValue
         {
             get => _progressValue;
             set => SetProperty(ref _progressValue, value);
         }
 
-        private string _message = null;
         public string Message
         {
             get
@@ -76,14 +78,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public bool HasMessage => _message != null;
 
-        private string _primaryButtonText;
         public string PrimaryButtonText
         {
             get => _primaryButtonText;
             set => SetProperty(ref _primaryButtonText, value);
         }
 
-        private string _secondaryButtonText = "Cancel";
         public string SecondaryButtonText
         {
             get => _secondaryButtonText;
@@ -101,12 +101,7 @@ namespace Inventory.Uwp.ViewModels.Settings
                 {
                     if (!await db.ExistsAsync())
                     {
-                        ProgressValue = 1;
-                        ProgressStatus = "Creating Database...";
-                        await db.EnsureCreatedAsync();
-                        ProgressValue = 2;
-                        await db.CopyDataTables(SetValue, SetStatus);
-                        ProgressValue = 14;
+                        await db.CopyDatabase(SetValue, SetStatus);
                         Message = "Database created successfully.";
                         Result = Result.Ok("Database created successfully.");
                     }
@@ -128,7 +123,9 @@ namespace Inventory.Uwp.ViewModels.Settings
             SecondaryButtonText = null;
         }
 
+
         private void SetValue(double value) => ProgressValue = value;
+
         private void SetStatus(string status) => ProgressStatus = status;
     }
 }

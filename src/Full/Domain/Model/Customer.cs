@@ -12,10 +12,9 @@
 // ******************************************************************
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using Inventory.Infrastructure.DomainBase;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Inventory.Domain.Model
 {
@@ -58,7 +57,7 @@ namespace Inventory.Domain.Model
 
         public long CountryId { get; set; }
         public virtual Country Country { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        //public virtual ICollection<Order> Orders { get; set; }
 
         #endregion
 

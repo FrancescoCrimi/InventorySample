@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Persistence.DbContexts

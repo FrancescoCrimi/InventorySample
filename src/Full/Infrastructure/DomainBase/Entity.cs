@@ -24,7 +24,6 @@ namespace Inventory.Infrastructure.DomainBase
         private TId _id;
 
         [Key]
-        //[DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public virtual TId Id
         {
             get => _id;

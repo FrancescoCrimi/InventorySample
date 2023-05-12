@@ -19,21 +19,13 @@ using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Helpers;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
-using Inventory.Uwp.ViewModels.Customers;
-using Inventory.Uwp.ViewModels.Logs;
-using Inventory.Uwp.ViewModels.Orders;
-using Inventory.Uwp.ViewModels.Products;
-using Inventory.Uwp.Views;
 using Inventory.Uwp.Views.Settings;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using WinUI = Microsoft.UI.Xaml.Controls;
 
@@ -41,28 +33,28 @@ namespace Inventory.Uwp.ViewModels
 {
     public class ShellViewModel : ViewModelBase
     {
-        private readonly ILogger<ShellViewModel> logger;
-        private readonly NavigationService navigationService;
-        private readonly LogService logService;
-        private readonly CoreDispatcher dispatcher;
+        private readonly ILogger<ShellViewModel> _logger;
+        private readonly NavigationService _navigationService;
+        private readonly LogService _logService;
+        private readonly CoreDispatcher _dispatcher;
         private bool _isEnabled = true;
         private bool _isError = false;
         private string _message = "Ready";
-        private int logCount = 10;
+        private int _logCount = 10;
         private bool _isBackEnabled;
         private AsyncRelayCommand _loadedCommand;
-        private RelayCommand unloadedCommand;
+        private RelayCommand _unloadedCommand;
         private AsyncRelayCommand<WinUI.NavigationViewItemInvokedEventArgs> _itemInvokedCommand;
-        private RelayCommand backRequestedCommand;
+        private RelayCommand _backRequestedCommand;
 
         public ShellViewModel(ILogger<ShellViewModel> logger,
                               NavigationService navigationService,
                               LogService logService)
         {
-            this.logger = logger;
-            this.navigationService = navigationService;
-            this.logService = logService;
-            dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
+            _logger = logger;
+            _navigationService = navigationService;
+            _logService = logService;
+            _dispatcher = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().Dispatcher;
         }
 
         public bool IsEnabled
@@ -85,8 +77,8 @@ namespace Inventory.Uwp.ViewModels
 
         public int LogCount
         {
-            get => logCount;
-            set => SetProperty(ref logCount, value);
+            get => _logCount;
+            set => SetProperty(ref _logCount, value);
         }
 
         public bool IsBackEnabled
@@ -103,8 +95,8 @@ namespace Inventory.Uwp.ViewModels
                 Messenger.Register<StatusMessage>(this, OnStatusMessage);
             }));
 
-        public ICommand UnloadedCommand => unloadedCommand
-            ?? (unloadedCommand = new RelayCommand(() =>
+        public ICommand UnloadedCommand => _unloadedCommand
+            ?? (_unloadedCommand = new RelayCommand(() =>
             {
                 //MessageService.Unsubscribe(this);
                 LogService.AddLogEvent -= Logging_AddLogEvent;
@@ -116,7 +108,7 @@ namespace Inventory.Uwp.ViewModels
             {
                 if (args.IsSettingsInvoked)
                 {
-                    navigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
+                    _navigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
                 }
                 else
                 {
@@ -124,21 +116,21 @@ namespace Inventory.Uwp.ViewModels
                     var pageType = selectedItem?.GetValue(NavHelper.NavigateToProperty) as Type;
                     if (pageType != null)
                     {
-                        navigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
+                        _navigationService.Navigate(pageType, null, args.RecommendedNavigationTransitionInfo);
                     }
                 }
                 await UpdateAppLogBadge();
             }));
 
-        public ICommand BackRequestedCommand => backRequestedCommand
-            ?? (backRequestedCommand = new RelayCommand(() => navigationService.GoBack()));
+        public ICommand BackRequestedCommand => _backRequestedCommand
+            ?? (_backRequestedCommand = new RelayCommand(() => _navigationService.GoBack()));
 
 
         public void Initialize(Frame frame)
         {
-            navigationService.Frame = frame;
-            navigationService.NavigationFailed += Frame_NavigationFailed;
-            navigationService.Navigated += Frame_Navigated;
+            _navigationService.Frame = frame;
+            _navigationService.NavigationFailed += Frame_NavigationFailed;
+            _navigationService.Navigated += Frame_Navigated;
             //navigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;
         }
 
@@ -152,7 +144,7 @@ namespace Inventory.Uwp.ViewModels
 
         private void Frame_Navigated(object sender, NavigationEventArgs e)
         {
-            IsBackEnabled = navigationService.CanGoBack;
+            IsBackEnabled = _navigationService.CanGoBack;
         }
 
         private void SetStatus(string message)
@@ -203,9 +195,9 @@ namespace Inventory.Uwp.ViewModels
             ////LogNewCount = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
             //////AppLogsItem.Badge = count > 0 ? count.ToString() : null;
 
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var result = await logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
+                var result = await _logService.GetLogsCountAsync(new DataRequest<Log> { Where = r => !r.IsRead });
                 LogCount = result;
             });
         }

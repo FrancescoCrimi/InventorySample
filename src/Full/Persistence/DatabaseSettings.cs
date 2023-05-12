@@ -14,22 +14,27 @@ namespace Inventory.Persistence
 {
     public class DatabaseSettings : IDisposable, IDatabaseSettings
     {
-        private readonly AppDbContext dbContext;
-        private readonly IServiceProvider serviceProvider;
+        private readonly AppDbContext _dbContext;
+        private readonly DataProviderType _dataProviderType;
+        private readonly IServiceProvider _serviceProvider;
 
         public DatabaseSettings(string connectionString,
                                 DataProviderType dataProviderType,
                                 IServiceProvider serviceProvider)
         {
-            this.serviceProvider = serviceProvider;
+            _dataProviderType = dataProviderType;
+            _serviceProvider = serviceProvider;
             switch (dataProviderType)
             {
                 case DataProviderType.SQLite:
-                    throw new NotImplementedException();
+                    var obSQLite = new DbContextOptionsBuilder<SQLiteAppDbContext>();
+                    obSQLite.UseSqlite(connectionString);
+                    _dbContext = new SQLiteAppDbContext(obSQLite.Options);
+                    break;
                 case DataProviderType.SQLServer:
-                    var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
-                    optionsBuilder.UseSqlServer(connectionString);
-                    dbContext = new SQLServerAppDbContext(optionsBuilder.Options);
+                    var obSqlServer = new DbContextOptionsBuilder<SQLServerAppDbContext>();
+                    obSqlServer.UseSqlServer(connectionString);
+                    _dbContext = new SQLServerAppDbContext(obSqlServer.Options);
                     break;
                 case DataProviderType.MySql:
                     throw new NotImplementedException();
@@ -42,111 +47,215 @@ namespace Inventory.Persistence
 
         public Task<bool> ExistsAsync(CancellationToken cancellationToken = default)
         {
-            var dbCreator = dbContext.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+            var dbCreator = _dbContext.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
             return dbCreator.ExistsAsync(cancellationToken);
         }
 
         public string GetDbVersion()
         {
-            var dbv = dbContext.DbVersion.FirstOrDefault();
+            var dbv = _dbContext.DbVersion.FirstOrDefault();
             return dbv?.Version;
         }
 
-        public Task<bool> EnsureCreatedAsync(CancellationToken cancellationToken = default)
+        public void EnsureCreatedAsync(CancellationToken cancellationToken = default)
         {
-            return dbContext.Database.EnsureCreatedAsync(cancellationToken);
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Database.EnsureCreated();
         }
 
         public async Task CopyDataTables(Action<double> setValue,
                                          Action<string> setStatus)
         {
-            using (var sourceDb = serviceProvider.GetService<AppDbContext>())
+            using (var sourceDb = _serviceProvider.GetService<AppDbContext>())
             {
                 setStatus("Creating table Categories...");
-                foreach (var item in sourceDb.Categories.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.Categories.AddAsync(item);
+                    foreach (var item in sourceDb.Categories.AsNoTracking())
+                    {
+                        await _dbContext.Categories.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Categories ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Categories OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(3);
 
                 setStatus("Creating table CountryCodes...");
-                foreach (var item in sourceDb.Countries.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.Countries.AddAsync(item);
+                    foreach (var item in sourceDb.Countries.AsNoTracking())
+                    {
+                        await _dbContext.Countries.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Countries ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Countries OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(4);
 
                 setStatus("Creating table OrderStatus...");
-                foreach (var item in sourceDb.OrderStatuses.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.OrderStatuses.AddAsync(item);
+                    foreach (var item in sourceDb.OrderStatuses.AsNoTracking())
+                    {
+                        await _dbContext.OrderStatuses.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT OrderStatuses ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT OrderStatuses OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(5);
 
                 setStatus("Creating table PaymentTypes...");
-                foreach (var item in sourceDb.PaymentTypes.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.PaymentTypes.AddAsync(item);
+                    foreach (var item in sourceDb.PaymentTypes.AsNoTracking())
+                    {
+                        await _dbContext.PaymentTypes.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PaymentTypes ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PaymentTypes OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(6);
 
                 setStatus("Creating table Shippers...");
-                foreach (var item in sourceDb.Shippers.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.Shippers.AddAsync(item);
+                    foreach (var item in sourceDb.Shippers.AsNoTracking())
+                    {
+                        await _dbContext.Shippers.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Shippers ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Shippers OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(7);
 
                 setStatus("Creating table TaxTypes...");
-                foreach (var item in sourceDb.TaxTypes.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.TaxTypes.AddAsync(item);
+                    foreach (var item in sourceDb.TaxTypes.AsNoTracking())
+                    {
+                        await _dbContext.TaxTypes.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT TaxTypes ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT TaxTypes OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(8);
 
                 setStatus("Creating table Customers...");
-                foreach (var item in sourceDb.Customers.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.Customers.AddAsync(item);
+                    foreach (var item in sourceDb.Customers.AsNoTracking())
+                    {
+                        await _dbContext.Customers.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Customers ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Customers OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(9);
 
                 setStatus("Creating table Products...");
-                foreach (var item in sourceDb.Products.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.Products.AddAsync(item);
+                    foreach (var item in sourceDb.Products.AsNoTracking())
+                    {
+                        await _dbContext.Products.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Products ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Products OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(10);
 
                 setStatus("Creating table Orders...");
-                foreach (var item in sourceDb.Orders.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.Orders.AddAsync(item);
+                    foreach (var item in sourceDb.Orders.AsNoTracking())
+                    {
+                        await _dbContext.Orders.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Orders ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Orders OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(11);
 
                 setStatus("Creating table OrderItems...");
-                foreach (var item in sourceDb.OrderItems.AsNoTracking())
+                using (var trans = _dbContext.Database.BeginTransaction())
                 {
-                    await dbContext.OrderItems.AddAsync(item);
+                    foreach (var item in sourceDb.OrderItems.AsNoTracking())
+                    {
+                        await _dbContext.OrderItems.AddAsync(item);
+                    }
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT OrderItems ON;");
+                    await _dbContext.SaveChangesAsync();
+                    if (_dataProviderType == DataProviderType.SQLServer)
+                        _dbContext.Database.ExecuteSqlRaw("SET IDENTITY_INSERT OrderItems OFF;");
+                    trans.Commit();
                 }
-                await dbContext.SaveChangesAsync();
                 setValue(12);
 
                 setStatus("Creating database version...");
-                await dbContext.DbVersion.AddAsync(await sourceDb.DbVersion.FirstAsync());
-                await dbContext.SaveChangesAsync();
+                await _dbContext.DbVersion.AddAsync(await sourceDb.DbVersion.FirstAsync());
+                await _dbContext.SaveChangesAsync();
                 setValue(13);
             }
+        }
+
+        public async Task CopyDatabase(Action<double> setValue,
+                                         Action<string> setStatus)
+        {
+            //if (!await ExistsAsync())
+            //{
+            setValue(1);
+            setStatus("Creating Database...");
+            EnsureCreatedAsync();
+            setValue(2);
+            await CopyDataTables(setValue, setStatus);
+            setValue(14);
+            setStatus("Database created successfully.");
+            //    Message = "Database created successfully.";
+            //    Result = Result.Ok("Database created successfully.");
+            //}
+            //else
+            //{
+            //    ProgressValue = 14;
+            //    Message = $"Database already exists. Please, delete database and try again.";
+            //    Result = Result.Error("Database already exist");
+            //}
         }
 
         #region Dispose
@@ -161,9 +270,9 @@ namespace Inventory.Persistence
         {
             if (disposing)
             {
-                if (dbContext != null)
+                if (_dbContext != null)
                 {
-                    dbContext.Dispose();
+                    _dbContext.Dispose();
                 }
             }
         }

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Linq;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
+using Inventory.Persistence;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Inventory.Persistence;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 
 namespace ConsoleApp
 {
@@ -18,11 +19,43 @@ namespace ConsoleApp
         }
         public Program()
         {
-            CreateEmptyDatabase();
+            CopyDatabase();
+            //CreateEmptyDatabase();
             //ProvaDateTime();
             //FixCountryCodeTable();
         }
 
+        private void CopyDatabase()
+        {
+            Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                .AddLogging(b => b.AddConsole())
+                .AddSingleton<IAppSettings>(new AppSettings
+                {
+                    DataProvider = DataProviderType.SQLite,
+                    SQLiteConnectionString = "Data Source = Database\\VanArsdel.1.01.db"
+                })
+                .AddInventoryInfrastructure()
+                .AddInventoryPersistence()
+                .BuildServiceProvider());
+            //var connectionString = @"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI";
+            var cnSQLite = "Data Source = Database\\NewVanArsdel.1.01.db";
+            using (var db = new DatabaseSettings(cnSQLite, DataProviderType.SQLite, Ioc.Default))
+            {
+                db.CopyDatabase(SetValue, SetStatus).Wait();
+                //db.EnsureCreatedAsync();
+            }
+        }
+
+        private void SetValue(double obj)
+        {
+            Console.WriteLine(obj.ToString());
+        }
+
+        private void SetStatus(string obj)
+        {
+            Console.WriteLine($"{obj}");
+        }
 
         private SQLServerAppDbContext GetSqlServer()
         {
@@ -45,8 +78,8 @@ namespace ConsoleApp
 
         private void CreateEmptyDatabase()
         {
-            //var db = GetSqlServer();
-            var db = GetSQLite();
+            var db = GetSqlServer();
+            //var db = GetSQLite();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
             db.Dispose();

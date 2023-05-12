@@ -8,7 +8,7 @@ namespace Inventory.Infrastructure
     {
         Task CopyDataTables(Action<double> setValue,
                              Action<string> setStatus);
-        Task<bool> EnsureCreatedAsync(CancellationToken cancellationToken = default);
+        void EnsureCreatedAsync(CancellationToken cancellationToken = default);
         Task<bool> ExistsAsync(CancellationToken cancellationToken = default);
         string GetDbVersion();
     }
