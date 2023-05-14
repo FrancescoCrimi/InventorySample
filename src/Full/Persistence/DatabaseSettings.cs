@@ -236,7 +236,7 @@ namespace Inventory.Persistence
         }
 
         public async Task CopyDatabase(Action<double> setValue,
-                                         Action<string> setStatus)
+                                       Action<string> setStatus)
         {
             //if (!await ExistsAsync())
             //{

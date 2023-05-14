@@ -21,6 +21,8 @@ namespace Inventory.Domain.Model
 {
     public class Customer : ObservableObject<Customer>, IEquatable<Customer>
     {
+        #region fields
+
         private string title;
         private string firstName;
         private string middleName;
@@ -49,6 +51,9 @@ namespace Inventory.Domain.Model
         private byte[] picture;
         private byte[] thumbnail;
         private long countryId;
+
+        #endregion
+
 
         #region Property
 
@@ -225,8 +230,6 @@ namespace Inventory.Domain.Model
         }
 
         public virtual Country Country { get; set; }
-
-        public virtual ICollection<Order> Orders { get; set; }
 
         #endregion
 

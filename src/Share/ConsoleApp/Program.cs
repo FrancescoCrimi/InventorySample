@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Persistence;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,13 +21,14 @@ namespace ConsoleApp
         }
         public Program()
         {
-            CopyDatabase();
+            //CopyDatabase();
             //CreateEmptyDatabase();
             //ProvaDateTime();
             //FixCountryCodeTable();
+            TestGetOrders();
         }
 
-        private void CopyDatabase()
+        private void initIoc()
         {
             Ioc.Default.ConfigureServices(
                 new ServiceCollection()
@@ -33,16 +36,22 @@ namespace ConsoleApp
                 .AddSingleton<IAppSettings>(new AppSettings
                 {
                     DataProvider = DataProviderType.SQLite,
-                    SQLiteConnectionString = "Data Source = Database\\VanArsdel.1.01.db"
+                    //SQLiteConnectionString = "Data Source = Database\\VanArsdel.1.01.db"
+                    SQLiteConnectionString = "Data Source = Database\\NewVanArsdel.1.01.db"
                 })
                 .AddInventoryInfrastructure()
                 .AddInventoryPersistence()
                 .BuildServiceProvider());
+        }
+
+        private void CopyDatabase()
+        {
+            initIoc();
             //var connectionString = @"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI";
             var cnSQLite = "Data Source = Database\\NewVanArsdel.1.01.db";
             using (var db = new DatabaseSettings(cnSQLite, DataProviderType.SQLite, Ioc.Default))
             {
-                db.CopyDatabase(SetValue, SetStatus).Wait();
+                //db.CopyDatabase(SetValue, SetStatus).Wait();
                 //db.EnsureCreatedAsync();
             }
         }
@@ -161,6 +170,13 @@ namespace ConsoleApp
             //db.SaveChanges();
 
             db.Dispose();
+        }
+
+        private void TestGetOrders()
+        {
+            initIoc();
+            IOrderRepository repo = Ioc.Default.GetService<IOrderRepository>();
+            var orders = repo.GetOrdersAsync(0, 100, new DataRequest<Inventory.Domain.Model.Order>()).Result;
         }
     }
 }

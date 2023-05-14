@@ -1,4 +1,0 @@
-[*.cs]
-
-# IDE0007: Usa il tipo implicito
-dotnet_diagnostic.IDE0007.severity = none

@@ -12,11 +12,12 @@
 // ******************************************************************
 #endregion
 
-
 namespace Inventory.Domain.Model
 {
     public class OrderItem : Infrastructure.Common.ObservableObject<OrderItem>
     {
+        #region fields
+
         private int orderLine;
         private int quantity;
         private decimal unitPrice;
@@ -24,6 +25,8 @@ namespace Inventory.Domain.Model
         private long orderId;
         private long productId;
         private long taxTypeId;
+
+        #endregion
 
 
         #region public property

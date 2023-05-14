@@ -20,6 +20,8 @@ namespace Inventory.Domain.Model
 {
     public class Product : Infrastructure.Common.ObservableObject<Product>, IEquatable<Product>
     {
+        #region fields
+
         private string name;
         private string description;
         private string size;
@@ -38,6 +40,8 @@ namespace Inventory.Domain.Model
         private byte[] thumbnail;
         private long categoryId;
         private long taxTypeId;
+
+        #endregion
 
 
         #region Property

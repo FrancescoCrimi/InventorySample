@@ -23,21 +23,13 @@ namespace Inventory.Uwp
 {
     public class AppSettings : IAppSettings
     {
-        const string DB_NAME = "VanArsdel";
-        const string DB_VERSION = "1.01";
-        const string DB_BASEURL = "https://vanarsdelinventory.blob.core.windows.net/database";
-
-        static AppSettings()
-        {
-            Current = new AppSettings();
-        }
-
-        public static AppSettings Current { get; }
+        private const string DB_NAME = "VanArsdel";
+        private const string DB_VERSION = "1.02";
+        private const string DB_BASEURL = "https://vanarsdelinventory.blob.core.windows.net/database";
 
         public static readonly string AppLogPath = "AppLog";
         public static readonly string AppLogName = $"AppLog.1.0.db";
         public static readonly string AppLogFileName = Path.Combine(AppLogPath, AppLogName);
-        public string AppLogConnectionString => $"Data Source={AppLogFileName}";
 
         public static readonly string DatabasePath = "Database";
         public static readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";
@@ -46,13 +38,16 @@ namespace Inventory.Uwp
         public static readonly string DatabasePatternFileName = Path.Combine(DatabasePath, DatabasePattern);
         public static readonly string DatabaseUrl = $"{DB_BASEURL}/{DatabaseName}";
 
-        public string SQLiteConnectionString
+        static AppSettings()
         {
-            get => LocalSettings.ReadString("SQLiteConnectionString", $"Data Source={DatabaseFileName}");
-            set => LocalSettings.SaveString("SQLiteConnectionString", value);
+            Current = new AppSettings();
         }
 
-        private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+        public static AppSettings Current { get; }
+
+        public string AppLogConnectionString => $"Data Source={AppLogFileName}";
+
+        public string SQLiteConnectionString => $"Data Source={DatabaseFileName}";
 
         public string Version
         {
@@ -82,5 +77,8 @@ namespace Inventory.Uwp
             get => LocalSettings.ReadBoolean("IsRandomErrorsEnabled", false);
             set => LocalSettings.SaveBoolean("IsRandomErrorsEnabled", value);
         }
+
+
+        private ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
     }
 }

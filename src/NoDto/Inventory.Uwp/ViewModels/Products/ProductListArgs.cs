@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-
 using Inventory.Domain.Model;
 using System;
 using System.Linq.Expressions;
@@ -26,23 +25,12 @@ namespace Inventory.Uwp.ViewModels.Products
             OrderBy = r => r.Name;
         }
 
-        public string Query
-        {
-            get; set;
-        }
+        public string Query { get; set; }
 
-        public bool IsMainView
-        {
-            get; set;
-        }
+        public bool IsMainView { get; set; }
 
-        public Expression<Func<Product, object>> OrderBy
-        {
-            get; set;
-        }
-        public Expression<Func<Product, object>> OrderByDesc
-        {
-            get; set;
-        }
+        public Expression<Func<Product, object>> OrderBy { get; set; }
+
+        public Expression<Func<Product, object>> OrderByDesc { get; set; }
     }
 }

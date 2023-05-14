@@ -23,101 +23,35 @@ namespace Inventory.Domain.Model
     {
         #region property
 
-        public DateTimeOffset OrderDate
-        {
-            get; set;
-        }
-        public DateTimeOffset? ShippedDate
-        {
-            get; set;
-        }
-        public DateTimeOffset? DeliveredDate
-        {
-            get; set;
-        }
-        public string TrackingNumber
-        {
-            get; set;
-        }
-        public string ShipAddress
-        {
-            get; set;
-        }
-        public string ShipCity
-        {
-            get; set;
-        }
-        public string ShipRegion
-        {
-            get; set;
-        }
-        public string ShipPostalCode
-        {
-            get; set;
-        }
-        public string ShipPhone
-        {
-            get; set;
-        }
-        public DateTimeOffset LastModifiedOn
-        {
-            get; set;
-        }
-        public string SearchTerms
-        {
-            get; set;
-        }
+        public DateTimeOffset OrderDate { get; set; }
+        public DateTimeOffset? ShippedDate { get; set; }
+        public DateTimeOffset? DeliveredDate { get; set; }
+        public string TrackingNumber { get; set; }
+        public string ShipAddress { get; set; }
+        public string ShipCity { get; set; }
+        public string ShipRegion { get; set; }
+        public string ShipPostalCode { get; set; }
+        public string ShipPhone { get; set; }
+        public DateTimeOffset LastModifiedOn { get; set; }
+        public string SearchTerms { get; set; }
 
         #endregion
 
 
         #region relation
 
-        public long CustomerId
-        {
-            get; set;
-        }
-        public long? PaymentTypeId
-        {
-            get; set;
-        }
-        public long ShipCountryId
-        {
-            get; set;
-        }
-        public long? ShipperId
-        {
-            get; set;
-        }
-        public long StatusId
-        {
-            get; set;
-        }
+        public long CustomerId { get; set; }
+        public long? PaymentTypeId { get; set; }
+        public long ShipCountryId { get; set; }
+        public long? ShipperId { get; set; }
+        public long StatusId { get; set; }
 
-        public virtual Customer Customer
-        {
-            get; set;
-        }
-        public virtual PaymentType PaymentType
-        {
-            get; set;
-        }
-        public virtual Shipper Shipper
-        {
-            get; set;
-        }
-        public virtual Country ShipCountry
-        {
-            get; set;
-        }
-        public virtual OrderStatus Status
-        {
-            get; set;
-        }
-        public virtual ICollection<OrderItem> OrderItems
-        {
-            get; set;
-        }
+        public virtual Customer Customer { get; set; }
+        public virtual PaymentType PaymentType { get; set; }
+        public virtual Shipper Shipper { get; set; }
+        public virtual Country ShipCountry { get; set; }
+        public virtual OrderStatus Status { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
 
         #endregion
 

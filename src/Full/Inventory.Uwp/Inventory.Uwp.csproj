@@ -522,7 +522,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AppLog\AppLog.db" />
-    <Content Include="Assets\Database\VanArsdel.1.01.db" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -548,7 +547,9 @@
       <Name>Inventory.Persistence</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Assets\Database\VanArsdel.1.02.db" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Inventory.Domain.Repository;
+using Inventory.Infrastructure.Common;
 
 namespace Inventory.Uwp
 {
@@ -42,6 +44,8 @@ namespace Inventory.Uwp
             {
                 await Ioc.Default.GetService<ActivationService>().ActivateAsync(e);
             }
+            //IOrderRepository repo = Ioc.Default.GetService<IOrderRepository>();
+            //var orders = await repo.GetOrdersAsync(0, 100, new DataRequest<Inventory.Domain.Model.Order>());
         }
 
         private void OnSuspending(object sender, SuspendingEventArgs e)

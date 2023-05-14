@@ -8,7 +8,6 @@ namespace Inventory.Infrastructure.Common
         private long _id;
 
         [Key]
-        [DatabaseGenerat‌​ed(DatabaseGeneratedOption.None)]
         public long Id
         {
             get => _id;

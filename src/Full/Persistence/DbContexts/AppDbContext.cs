@@ -103,7 +103,6 @@ namespace Inventory.Persistence.DbContexts
             modelBuilder.Entity<OrderItem>().Property(x => x.Quantity).IsRequired();
             modelBuilder.Entity<OrderItem>().Property(x => x.UnitPrice).HasColumnType(@"decimal(18,2)").IsRequired();
             modelBuilder.Entity<OrderItem>().Property(x => x.Discount).HasColumnType(@"decimal(18,2)").IsRequired();
-            //modelBuilder.Entity<OrderItem>().HasIndex(@"OrderId", @"OrderLine").IsUnique(true).HasName(@"IX_OrderItems_OrderID_OrderLine");
         }
 
         private void OrderMapping(ModelBuilder modelBuilder)
@@ -177,22 +176,18 @@ namespace Inventory.Persistence.DbContexts
                 .IsRequired(true)
                 .HasForeignKey(x => x.CountryId);
 
-
-
             modelBuilder.Entity<OrderItem>()
                 .HasOne(x => x.Order)
                 .WithMany(op => op.OrderItems)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
                 .HasForeignKey(x => x.OrderId);
-
             modelBuilder.Entity<OrderItem>()
                 .HasOne(x => x.Product)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
                 .HasForeignKey(x => x.ProductId);
-
             modelBuilder.Entity<OrderItem>()
                 .HasOne(x => x.TaxType)
                 .WithMany()
@@ -201,43 +196,36 @@ namespace Inventory.Persistence.DbContexts
                 .IsRequired(true)
                 .HasForeignKey(x => x.TaxTypeId);
 
-
-
             modelBuilder.Entity<Order>()
                 .HasMany(x => x.OrderItems)
                 .WithOne(op => op.Order)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
                 .HasForeignKey(x => x.OrderId);
-
             modelBuilder.Entity<Order>()
                 .HasOne(x => x.Customer)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
                 .HasForeignKey(x => x.CustomerId);
-
             modelBuilder.Entity<Order>()
                 .HasOne(x => x.Status)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
                 .HasForeignKey(x => x.StatusId);
-
             modelBuilder.Entity<Order>()
                 .HasOne(x => x.PaymentType)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
-                .HasForeignKey(@"PaymentTypeId");
-
+                .HasForeignKey(x => x.PaymentTypeId);
             modelBuilder.Entity<Order>()
                 .HasOne(x => x.Shipper)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false)
-                .HasForeignKey(@"ShipperId");
-
+                .HasForeignKey(x => x.ShipperId);
             modelBuilder.Entity<Order>()
                 .HasOne(x => x.ShipCountry)
                 .WithMany()
@@ -246,15 +234,12 @@ namespace Inventory.Persistence.DbContexts
                 .IsRequired(true)
                 .HasForeignKey(x => x.ShipCountryId);
 
-
-
             modelBuilder.Entity<Product>()
                 .HasOne(x => x.Category)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(true)
                 .HasForeignKey(x => x.CategoryId);
-
             modelBuilder.Entity<Product>()
                 .HasOne(x => x.TaxType)
                 .WithMany()

@@ -12,7 +12,6 @@
 // ******************************************************************
 #endregion
 
-
 using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;

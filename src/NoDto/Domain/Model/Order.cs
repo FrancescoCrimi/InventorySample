@@ -20,6 +20,8 @@ namespace Inventory.Domain.Model
 {
     public class Order : Infrastructure.Common.ObservableObject<Order>, IEquatable<Order>
     {
+        #region fields
+
         private DateTimeOffset orderDate;
         private DateTimeOffset? shippedDate;
         private DateTimeOffset? deliveredDate;
@@ -37,6 +39,7 @@ namespace Inventory.Domain.Model
         private long? shipperId;
         private long statusId;
 
+        #endregion
 
         #region property
 
@@ -96,6 +99,11 @@ namespace Inventory.Domain.Model
             set => SetProperty(ref searchTerms, value);
         }
 
+        #endregion
+
+
+        #region relation
+
         public long CustomerId
         {
             get => customerId;
@@ -122,35 +130,12 @@ namespace Inventory.Domain.Model
             set => SetProperty(ref statusId, value);
         }
 
-        #endregion
-
-
-        #region relation
-
-        public virtual Customer Customer
-        {
-            get; set;
-        }
-        public virtual PaymentType PaymentType
-        {
-            get; set;
-        }
-        public virtual Shipper Shipper
-        {
-            get; set;
-        }
-        public virtual Country ShipCountry
-        {
-            get; set;
-        }
-        public virtual OrderStatus Status
-        {
-            get; set;
-        }
-        public virtual ICollection<OrderItem> OrderItems
-        {
-            get; set;
-        }
+        public virtual Customer Customer { get; set; }
+        public virtual PaymentType PaymentType { get; set; }
+        public virtual Shipper Shipper { get; set; }
+        public virtual Country ShipCountry { get; set; }
+        public virtual OrderStatus Status { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
 
         #endregion
 
