@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,12 +8,11 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
@@ -27,41 +25,43 @@ namespace Inventory.Uwp.ViewModels.Settings
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
+        private readonly PersistenceService _persistenceService;
+        private string _progressStatus = null;
+        private double _progressMaximum = 1;
+        private double _progressValue = 0;
+        private string _message = null;
+        private string _primaryButtonText;
+        private string _secondaryButtonText = "Cancel";
 
-        public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger)
+        public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
+                                       PersistenceService persistenceService)
             : base()
         {
             _logger = logger;
+            _persistenceService = persistenceService;
             Result = Result.Error("Operation cancelled");
         }
 
-        public Result Result
-        {
-            get; private set;
-        }
+        public Result Result { get; private set; }
 
-        private string _progressStatus = null;
         public string ProgressStatus
         {
             get => _progressStatus;
             set => SetProperty(ref _progressStatus, value);
         }
 
-        private double _progressMaximum = 1;
         public double ProgressMaximum
         {
             get => _progressMaximum;
             set => SetProperty(ref _progressMaximum, value);
         }
 
-        private double _progressValue = 0;
         public double ProgressValue
         {
             get => _progressValue;
             set => SetProperty(ref _progressValue, value);
         }
 
-        private string _message = null;
         public string Message
         {
             get => _message;
@@ -73,14 +73,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public bool HasMessage => _message != null;
 
-        private string _primaryButtonText;
         public string PrimaryButtonText
         {
             get => _primaryButtonText;
             set => SetProperty(ref _primaryButtonText, value);
         }
 
-        private string _secondaryButtonText = "Cancel";
         public string SecondaryButtonText
         {
             get => _secondaryButtonText;
@@ -94,25 +92,22 @@ namespace Inventory.Uwp.ViewModels.Settings
                 ProgressMaximum = 14;
                 ProgressStatus = "Connecting to Database";
 
-                using (var db = new DatabaseSettings(connectionString, DataProviderType.SQLServer, Ioc.Default))
+                if (!await _persistenceService.ExistsAsync(connectionString, DataProviderType.SQLServer))
                 {
-                    if (!await db.ExistsAsync())
-                    {
-                        ProgressValue = 1;
-                        ProgressStatus = "Creating Database...";
-                        await db.EnsureCreatedAsync();
-                        ProgressValue = 2;
-                        await db.CopyDataTables(SetValue, SetStatus);
-                        ProgressValue = 14;
-                        Message = "Database created successfully.";
-                        Result = Result.Ok("Database created successfully.");
-                    }
-                    else
-                    {
-                        ProgressValue = 14;
-                        Message = $"Database already exists. Please, delete database and try again.";
-                        Result = Result.Error("Database already exist");
-                    }
+                    ProgressValue = 1;
+                    ProgressStatus = "Creating Database...";
+                    await _persistenceService.EnsureCreatedAsync(connectionString, DataProviderType.SQLServer);
+                    ProgressValue = 2;
+                    await _persistenceService.CopyDataTables(connectionString, DataProviderType.SQLServer, SetValue, SetStatus);
+                    ProgressValue = 14;
+                    Message = "Database created successfully.";
+                    Result = Result.Ok("Database created successfully.");
+                }
+                else
+                {
+                    ProgressValue = 14;
+                    Message = $"Database already exists. Please, delete database and try again.";
+                    Result = Result.Error("Database already exist");
                 }
             }
             catch (Exception ex)

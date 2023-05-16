@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,8 +8,6 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -27,6 +24,21 @@ namespace Inventory.Uwp.ViewModels.Common
     public abstract class GenericListViewModel<TModel>
         : ViewModelBase where TModel : ObservableDto<TModel>, new()
     {
+        private int _itemsCount = 0;
+        private string _query = null;
+        private bool _isMultipleSelection = false;
+        private ListToolbarMode _toolbarMode = ListToolbarMode.Default;
+        private TModel _selectedItem = default;
+        private IList<TModel> _items = null;
+        private RelayCommand _newCommand;
+        private RelayCommand _refreshCommand;
+        private RelayCommand _startSelectionCommand;
+        private RelayCommand _cancelSelectionCommand;
+        private RelayCommand<IList<object>> _selectItemsCommand;
+        private RelayCommand<IList<object>> _deselectItemsCommand;
+        private RelayCommand<IndexRange[]> _selectRangesCommand;
+        private RelayCommand _deleteSelectionCommand;
+
         public GenericListViewModel()
             : base()
         {
@@ -36,27 +48,30 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public override string Title => string.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
 
-        private IList<TModel> _items = null;
-        public IList<TModel> Items
-        {
-            get
-            {
-                return _items;
-            }
-            set
-            {
-                SetProperty(ref _items, value);
-            }
-        }
-
-        private int _itemsCount = 0;
         public int ItemsCount
         {
             get => _itemsCount;
             set => SetProperty(ref _itemsCount, value);
         }
 
-        private TModel _selectedItem = default;
+        public string Query
+        {
+            get => _query;
+            set => SetProperty(ref _query, value);
+        }
+
+        public bool IsMultipleSelection
+        {
+            get => _isMultipleSelection;
+            set => SetProperty(ref _isMultipleSelection, value);
+        }
+
+        public ListToolbarMode ToolbarMode
+        {
+            get => _toolbarMode;
+            set => SetProperty(ref _toolbarMode, value);
+        }
+
         public TModel SelectedItem
         {
             get
@@ -81,28 +96,20 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        private string _query = null;
-        public string Query
+        public IList<TModel> Items
         {
-            get => _query;
-            set => SetProperty(ref _query, value);
-        }
-
-        private ListToolbarMode _toolbarMode = ListToolbarMode.Default;
-        public ListToolbarMode ToolbarMode
-        {
-            get => _toolbarMode;
-            set => SetProperty(ref _toolbarMode, value);
-        }
-
-        private bool _isMultipleSelection = false;
-        public bool IsMultipleSelection
-        {
-            get => _isMultipleSelection;
-            set => SetProperty(ref _isMultipleSelection, value);
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                SetProperty(ref _items, value);
+            }
         }
 
         public List<TModel> SelectedItems { get; protected set; }
+
         public IndexRange[] SelectedIndexRanges { get; protected set; }
 
         #endregion
@@ -110,13 +117,16 @@ namespace Inventory.Uwp.ViewModels.Common
 
         #region icommand property
 
-        public ICommand NewCommand => new RelayCommand(OnNew);
+        public ICommand NewCommand => _newCommand
+            ?? (_newCommand = new RelayCommand(OnNew));
         protected abstract void OnNew();
 
-        public ICommand RefreshCommand => new RelayCommand(OnRefresh);
+        public ICommand RefreshCommand => _refreshCommand
+            ?? (_refreshCommand = new RelayCommand(OnRefresh));
         protected abstract void OnRefresh();
 
-        public ICommand StartSelectionCommand => new RelayCommand(OnStartSelection);
+        public ICommand StartSelectionCommand => _startSelectionCommand
+            ?? (_startSelectionCommand = new RelayCommand(OnStartSelection));
         protected virtual void OnStartSelection()
         {
             StatusMessage("Start selection");
@@ -126,7 +136,8 @@ namespace Inventory.Uwp.ViewModels.Common
             IsMultipleSelection = true;
         }
 
-        public ICommand CancelSelectionCommand => new RelayCommand(OnCancelSelection);
+        public ICommand CancelSelectionCommand => _cancelSelectionCommand
+            ?? (_cancelSelectionCommand = new RelayCommand(OnCancelSelection));
         protected virtual void OnCancelSelection()
         {
             StatusReady();
@@ -136,7 +147,8 @@ namespace Inventory.Uwp.ViewModels.Common
             SelectedItem = Items?.FirstOrDefault();
         }
 
-        public ICommand SelectItemsCommand => new RelayCommand<IList<object>>(OnSelectItems);
+        public ICommand SelectItemsCommand => _selectItemsCommand
+            ?? (_selectItemsCommand = new RelayCommand<IList<object>>(OnSelectItems));
         protected virtual void OnSelectItems(IList<object> items)
         {
             StatusReady();
@@ -147,7 +159,8 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand DeselectItemsCommand => new RelayCommand<IList<object>>(OnDeselectItems);
+        public ICommand DeselectItemsCommand => _deselectItemsCommand
+            ?? (_deselectItemsCommand = new RelayCommand<IList<object>>(OnDeselectItems));
         protected virtual void OnDeselectItems(IList<object> items)
         {
             if (items?.Count > 0)
@@ -164,7 +177,8 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand SelectRangesCommand => new RelayCommand<IndexRange[]>(OnSelectRanges);
+        public ICommand SelectRangesCommand => _selectRangesCommand
+            ?? (_selectRangesCommand = new RelayCommand<IndexRange[]>(OnSelectRanges));
         protected virtual void OnSelectRanges(IndexRange[] indexRanges)
         {
             SelectedIndexRanges = indexRanges;
@@ -172,7 +186,8 @@ namespace Inventory.Uwp.ViewModels.Common
             StatusMessage($"{count} items selected");
         }
 
-        public ICommand DeleteSelectionCommand => new RelayCommand(OnDeleteSelection);
+        public ICommand DeleteSelectionCommand => _deleteSelectionCommand
+            ?? (_deleteSelectionCommand = new RelayCommand(OnDeleteSelection));
         protected abstract void OnDeleteSelection();
 
         #endregion

@@ -1,4 +1,15 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
@@ -46,78 +57,65 @@ namespace Inventory.Uwp
         private void OnSuspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
             var logger = Ioc.Default.GetService<ILogger<App>>();
-            //await logService.WriteAsync(Data.LogType.Information, "App", "Suspending", "Application End", $"Application ended by '{AppSettings.Current.UserName}'.");
             logger.LogInformation(LogEvents.Suspending, $"Application ended.");
         }
 
         private void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            // TODO: Please log and handle the exception as appropriate to your scenario
-            // For more info see https://docs.microsoft.com/uwp/api/windows.ui.xaml.application.unhandledexception
             var logger = Ioc.Default.GetService<ILogger<App>>();
-            //logService.WriteAsync(Data.LogType.Error, "App", "UnhandledException", e.Message, e.Exception.ToString());
             logger.LogError(LogEvents.UnhandledException, e.Exception, "Unhandled Exception");
         }
 
         private IServiceProvider ConfigureServices() => new ServiceCollection()
 
-                // Default Activation Handler
-                .AddTransient<ActivationHandler<IActivatedEventArgs>, DefaultActivationHandler>()
+            // Default Activation Handler
+            .AddTransient<ActivationHandler<IActivatedEventArgs>, DefaultActivationHandler>()
 
-                // Other Activation Handlers
+            // Other Activation Handlers
 
-                // Services
-                .AddSingleton<ActivationService>()
-                .AddScoped<NavigationService>()
-                .AddSingleton<WindowManagerService>()
+            // Services
+            .AddSingleton<ActivationService>()
+            .AddScoped<NavigationService>()
+            .AddSingleton<WindowManagerService>()
+            .AddSingleton<AppSettings>()
+            .AddSingleton<IAppSettings>(x => x.GetRequiredService<AppSettings>())
 
-                .AddSingleton<IAppSettings, AppSettings>()
+            // Core Services
+            .AddInventoryInfrastructure()
+            .AddInventoryPersistence()
+            .AddSingleton<LookupTablesService>()
+            .AddSingleton<ProductService>()
+            .AddSingleton<CustomerService>()
+            .AddSingleton<OrderService>()
+            .AddSingleton<OrderItemService>()
+            .AddSingleton<FilePickerService>()
 
-                // Core Services
-                .AddInventoryInfrastructure()
-                .AddInventoryPersistence()
-                //.AddTransient<LogServiceFacade>()
-                .AddSingleton<LookupTablesService>()
-                .AddSingleton<ProductService>()
-                .AddSingleton<CustomerService>()
-                .AddSingleton<OrderService>()
-                .AddSingleton<OrderItemService>()
-                .AddSingleton<FilePickerService>()
-
-                // ViewModels
-                .AddTransient<ShellViewModel>()
-                .AddTransient<DashboardViewModel>()
-
-                .AddTransient<SettingsViewModel>()
-                .AddTransient<ValidateConnectionViewModel>()
-                .AddTransient<CreateDatabaseViewModel>()
-
-                .AddTransient<CustomerDetailsViewModel>()
-                .AddTransient<CustomerListViewModel>()
-                .AddTransient<CustomersViewModel>()
-
-                .AddTransient<ProductListViewModel>()
-                .AddTransient<ProductDetailsViewModel>()
-                .AddTransient<ProductsViewModel>()
-
-                .AddTransient<OrderDetailsViewModel>()
-                .AddTransient<OrderDetailsWithItemsViewModel>()
-                .AddTransient<OrderListViewModel>()
-                .AddTransient<OrdersViewModel>()
-
-                .AddTransient<OrderItemDetailsViewModel>()
-                .AddTransient<OrderItemListViewModel>()
-                .AddTransient<OrderItemsViewModel>()
-
-                .AddTransient<LogsViewModel>()
-                .AddTransient<LogListViewModel>()
-                .AddTransient<LogDetailsViewModel>()
-
-                .AddTransient<CustomerCollection>()
-                .AddTransient<LogCollection>()
-                .AddTransient<OrderCollection>()
-                .AddTransient<ProductCollection>()
-
-                .BuildServiceProvider();
+            // ViewModels
+            .AddTransient<ShellViewModel>()
+            .AddTransient<DashboardViewModel>()
+            .AddTransient<SettingsViewModel>()
+            .AddTransient<ValidateConnectionViewModel>()
+            .AddTransient<CreateDatabaseViewModel>()
+            .AddTransient<CustomerDetailsViewModel>()
+            .AddTransient<CustomerListViewModel>()
+            .AddTransient<CustomersViewModel>()
+            .AddTransient<ProductListViewModel>()
+            .AddTransient<ProductDetailsViewModel>()
+            .AddTransient<ProductsViewModel>()
+            .AddTransient<OrderDetailsViewModel>()
+            .AddTransient<OrderDetailsWithItemsViewModel>()
+            .AddTransient<OrderListViewModel>()
+            .AddTransient<OrdersViewModel>()
+            .AddTransient<OrderItemDetailsViewModel>()
+            .AddTransient<OrderItemListViewModel>()
+            .AddTransient<OrderItemsViewModel>()
+            .AddTransient<LogsViewModel>()
+            .AddTransient<LogListViewModel>()
+            .AddTransient<LogDetailsViewModel>()
+            .AddTransient<CustomerCollection>()
+            .AddTransient<LogCollection>()
+            .AddTransient<OrderCollection>()
+            .AddTransient<ProductCollection>()
+            .BuildServiceProvider();
     }
 }

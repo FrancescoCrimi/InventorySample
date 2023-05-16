@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,8 +8,6 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -19,21 +16,13 @@ using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Helpers;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
-//using Inventory.Uwp.ViewModels.Customers;
-//using Inventory.Uwp.ViewModels.Logs;
-//using Inventory.Uwp.ViewModels.Orders;
-//using Inventory.Uwp.ViewModels.Products;
-using Inventory.Uwp.Views;
 using Inventory.Uwp.Views.Settings;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using WinUI = Microsoft.UI.Xaml.Controls;
 

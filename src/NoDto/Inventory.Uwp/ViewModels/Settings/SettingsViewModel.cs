@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,21 +8,18 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.Input;
+using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Helpers;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.Views.Settings;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.ApplicationModel;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -31,49 +27,55 @@ namespace Inventory.Uwp.ViewModels.Settings
 {
     public class SettingsViewModel : ViewModelBase
     {
-        public SettingsViewModel()
+        private readonly ILogger _logger;
+        private readonly AppSettings _appSettings;
+        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+        private bool _isBusy = false;
+        private bool _isLocalProvider;
+        private bool _isSqlProvider;
+        private string _sqlConnectionString = null;
+        private AsyncRelayCommand<ElementTheme> _switchThemeCommand;
+        private AsyncRelayCommand _resetLocalDataCommand;
+        private AsyncRelayCommand _validateSqlConnectionCommand;
+        private AsyncRelayCommand _createDatabaseCommand;
+        private AsyncRelayCommand _saveChangesCommand;
+
+        public SettingsViewModel(ILogger<SettingsViewModel> logger,
+                                 AppSettings appSettings)
         {
+            _logger = logger;
+            _appSettings = appSettings;
+        }
+
+        public Task LoadAsync(SettingsArgs args)
+        {
+            ViewModelArgs = args ?? SettingsArgs.CreateDefault();
+
+            StatusReady();
+
+            IsLocalProvider = _appSettings.DataProvider == DataProviderType.SQLite;
+
+            SqlConnectionString = _appSettings.SQLServerConnectionString;
+            IsSqlProvider = _appSettings.DataProvider == DataProviderType.SQLServer;
+
+            return Task.CompletedTask;
         }
 
 
-        private ElementTheme _elementTheme = ThemeSelectorService.Theme;
         public ElementTheme ElementTheme
         {
             get => _elementTheme;
             set => SetProperty(ref _elementTheme, value);
         }
 
+        public string Version => $"v{_appSettings.Version}";
 
-        private ICommand _switchThemeCommand;
-        public ICommand SwitchThemeCommand
-        {
-            get
-            {
-                if (_switchThemeCommand == null)
-                {
-                    _switchThemeCommand = new RelayCommand<ElementTheme>(
-                        async (param) =>
-                        {
-                            ElementTheme = param;
-                            await ThemeSelectorService.SetThemeAsync(param);
-                        });
-                }
-                return _switchThemeCommand;
-            }
-        }
-
-
-
-        public string Version => $"v{AppSettings.Current.Version}";
-
-        private bool _isBusy = false;
         public bool IsBusy
         {
             get => _isBusy;
             set => SetProperty(ref _isBusy, value);
         }
 
-        private bool _isLocalProvider;
         public bool IsLocalProvider
         {
             get => _isLocalProvider;
@@ -83,14 +85,12 @@ namespace Inventory.Uwp.ViewModels.Settings
             }
         }
 
-        private bool _isSqlProvider;
         public bool IsSqlProvider
         {
             get => _isSqlProvider;
             set => SetProperty(ref _isSqlProvider, value);
         }
 
-        private string _sqlConnectionString = null;
         public string SqlConnectionString
         {
             get => _sqlConnectionString;
@@ -99,47 +99,44 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public bool IsRandomErrorsEnabled
         {
-            get => AppSettings.Current.IsRandomErrorsEnabled;
-            set => AppSettings.Current.IsRandomErrorsEnabled = value;
+            get => _appSettings.IsRandomErrorsEnabled;
+            set => _appSettings.IsRandomErrorsEnabled = value;
         }
 
-        public ICommand ResetLocalDataCommand => new RelayCommand(OnResetLocalData);
-        public ICommand ValidateSqlConnectionCommand => new RelayCommand(OnValidateSqlConnection);
-        public ICommand CreateDatabaseCommand => new RelayCommand(OnCreateDatabase);
-        public ICommand SaveChangesCommand => new RelayCommand(OnSaveChanges);
+        public SettingsArgs ViewModelArgs { get; private set; }
 
-        public SettingsArgs ViewModelArgs
-        {
-            get; private set;
-        }
 
-        public Task LoadAsync(SettingsArgs args)
-        {
-            ViewModelArgs = args ?? SettingsArgs.CreateDefault();
+        #region command
 
-            StatusReady();
-
-            IsLocalProvider = AppSettings.Current.DataProvider == DataProviderType.SQLite;
-
-            SqlConnectionString = AppSettings.Current.SQLServerConnectionString;
-            IsSqlProvider = AppSettings.Current.DataProvider == DataProviderType.SQLServer;
-
-            return Task.CompletedTask;
-        }
-
-        private void UpdateProvider()
-        {
-            if (IsLocalProvider && !IsSqlProvider)
+        public ICommand SwitchThemeCommand => _switchThemeCommand
+            ?? (_switchThemeCommand = new AsyncRelayCommand<ElementTheme>(async (param) => 
             {
-                AppSettings.Current.DataProvider = DataProviderType.SQLite;
-            }
-        }
+                ElementTheme = param;
+                await ThemeSelectorService.SetThemeAsync(param);
+            }));
 
-        private async void OnResetLocalData()
+        public ICommand ResetLocalDataCommand => _resetLocalDataCommand
+            ?? (_resetLocalDataCommand = new AsyncRelayCommand(OnResetLocalData));
+
+        public ICommand ValidateSqlConnectionCommand => _validateSqlConnectionCommand
+            ?? (_validateSqlConnectionCommand = new AsyncRelayCommand(OnValidateSqlConnection));
+
+        public ICommand CreateDatabaseCommand => _createDatabaseCommand
+            ?? (_createDatabaseCommand = new AsyncRelayCommand(OnCreateDatabase));
+
+        public ICommand SaveChangesCommand => _saveChangesCommand
+            ?? (_saveChangesCommand = new AsyncRelayCommand(OnSaveChanges));
+
+        #endregion
+
+
+        #region private method
+
+        private async Task OnResetLocalData()
         {
             IsBusy = true;
             StatusMessage("Waiting database reset...");
-            var result = await ResetLocalDataProviderAsync();
+            var result = await _appSettings.ResetLocalDatabaseAsync();
             IsBusy = false;
             if (result.IsOk)
             {
@@ -153,9 +150,55 @@ namespace Inventory.Uwp.ViewModels.Settings
             }
         }
 
-        private async void OnValidateSqlConnection()
+        private async Task OnValidateSqlConnection()
         {
             await ValidateSqlConnectionAsync();
+        }
+
+        private async Task OnCreateDatabase()
+        {
+            StatusReady();
+            DisableAllViews("Waiting for the database to be created...");
+
+            var dialog = new CreateDatabaseDialog(SqlConnectionString);
+            var res = await dialog.ShowAsync();
+            Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
+
+            EnableOtherViews();
+            EnableThisView("");
+            await Task.Delay(100);
+            if (result.IsOk)
+            {
+                StatusMessage(result.Message);
+            }
+            else
+            {
+                StatusError("Error creating database");
+            }
+        }
+
+        private async Task OnSaveChanges()
+        {
+            if (IsSqlProvider)
+            {
+                if (await ValidateSqlConnectionAsync())
+                {
+                    _appSettings.SQLServerConnectionString = SqlConnectionString;
+                    _appSettings.DataProvider = DataProviderType.SQLServer;
+                }
+            }
+            else
+            {
+                _appSettings.DataProvider = DataProviderType.SQLite;
+            }
+        }
+
+        private void UpdateProvider()
+        {
+            if (IsLocalProvider && !IsSqlProvider)
+            {
+                _appSettings.DataProvider = DataProviderType.SQLite;
+            }
         }
 
         private async Task<bool> ValidateSqlConnectionAsync()
@@ -181,61 +224,6 @@ namespace Inventory.Uwp.ViewModels.Settings
             }
         }
 
-        private async void OnCreateDatabase()
-        {
-            StatusReady();
-            DisableAllViews("Waiting for the database to be created...");
-
-            var dialog = new CreateDatabaseDialog(SqlConnectionString);
-            var res = await dialog.ShowAsync();
-            Result result = res == ContentDialogResult.Secondary ? Result.Ok("Operation canceled by user") : dialog.Result;
-
-            EnableOtherViews();
-            EnableThisView("");
-            await Task.Delay(100);
-            if (result.IsOk)
-            {
-                StatusMessage(result.Message);
-            }
-            else
-            {
-                StatusError("Error creating database");
-            }
-        }
-
-        private async void OnSaveChanges()
-        {
-            if (IsSqlProvider)
-            {
-                if (await ValidateSqlConnectionAsync())
-                {
-                    AppSettings.Current.SQLServerConnectionString = SqlConnectionString;
-                    AppSettings.Current.DataProvider = DataProviderType.SQLServer;
-                }
-            }
-            else
-            {
-                AppSettings.Current.DataProvider = DataProviderType.SQLite;
-            }
-        }
-
-        private async Task<Result> ResetLocalDataProviderAsync()
-        {
-            Result result;
-            try
-            {
-                var localFolder = ApplicationData.Current.LocalFolder;
-                var databaseFolder = await localFolder.CreateFolderAsync(AppSettings.DatabasePath, CreationCollisionOption.OpenIfExists);
-                var sourceFile = await databaseFolder.GetFileAsync(AppSettings.DatabasePattern);
-                var targetFile = await databaseFolder.CreateFileAsync(AppSettings.DatabaseName, CreationCollisionOption.ReplaceExisting);
-                await sourceFile.CopyAndReplaceAsync(targetFile);
-                result = Result.Ok();
-            }
-            catch (Exception ex)
-            {
-                result = Result.Error(ex);
-            }
-            return result;
-        }
+        #endregion
     }
 }

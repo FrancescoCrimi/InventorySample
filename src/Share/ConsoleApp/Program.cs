@@ -1,4 +1,14 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
@@ -49,11 +59,10 @@ namespace ConsoleApp
             initIoc();
             //var connectionString = @"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI";
             var cnSQLite = "Data Source = Database\\NewVanArsdel.1.01.db";
-            using (var db = new DatabaseSettings(cnSQLite, DataProviderType.SQLite, Ioc.Default))
-            {
-                //db.CopyDatabase(SetValue, SetStatus).Wait();
-                //db.EnsureCreatedAsync();
-            }
+            var ps = Ioc.Default.GetService<PersistenceService>();
+            //ps.CopyDatabase(cnSQLite, DataProviderType.SQLite, SetValue, SetStatus).Wait();
+            ps.EnsureCreatedAsync(cnSQLite, DataProviderType.SQLite).Wait();
+
         }
 
         private void SetValue(double obj)

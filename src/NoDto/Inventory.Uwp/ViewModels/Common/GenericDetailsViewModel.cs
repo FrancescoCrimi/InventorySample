@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,11 +8,10 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Message;
@@ -29,6 +27,15 @@ namespace Inventory.Uwp.ViewModels.Common
     {
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
+        private bool _isEditMode = false;
+        private bool _isEnabled = true;
+        private TModel _item = null;
+        private TModel _editableItem = null;
+        private RelayCommand _backCommand;
+        private RelayCommand _editCommand;
+        private RelayCommand _cancelCommand;
+        private AsyncRelayCommand _saveCommand;
+        private AsyncRelayCommand _deleteCommand;
 
         public GenericDetailsViewModel(NavigationService navigationService,
                                        WindowManagerService windowService,
@@ -42,10 +49,7 @@ namespace Inventory.Uwp.ViewModels.Common
 
         #region public property
 
-        public LookupTablesService LookupTables
-        {
-            get;
-        }
+        public LookupTablesService LookupTables { get; }
 
         public bool IsDataAvailable => _item != null;
 
@@ -53,21 +57,18 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
 
-        private bool _isEditMode = false;
         public bool IsEditMode
         {
             get => _isEditMode;
             set => SetProperty(ref _isEditMode, value);
         }
 
-        private bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
         }
 
-        private TModel _item = null;
         public TModel Item
         {
             get => _item;
@@ -78,17 +79,16 @@ namespace Inventory.Uwp.ViewModels.Common
                 OnPropertyChanging(nameof(Item));
                 _item = value;
 
-                    EditableItem = _item;
-                    IsEnabled = !_item?.IsEmpty ?? false;
+                EditableItem = _item;
+                IsEnabled = !_item?.IsEmpty ?? false;
                 OnPropertyChanged(nameof(Item));
-                    OnPropertyChanged(nameof(IsDataAvailable));
-                    OnPropertyChanged(nameof(IsDataUnavailable));
-                    OnPropertyChanged(nameof(Title));
+                OnPropertyChanged(nameof(IsDataAvailable));
+                OnPropertyChanged(nameof(IsDataUnavailable));
+                OnPropertyChanged(nameof(Title));
                 //}
             }
         }
 
-        private TModel _editableItem = null;
         public TModel EditableItem
         {
             get => _editableItem;
@@ -101,7 +101,8 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand BackCommand => new RelayCommand(OnBack);
+        public ICommand BackCommand => _backCommand
+            ?? (_backCommand = new RelayCommand(OnBack));
         protected virtual void OnBack()
         {
             StatusReady();
@@ -111,7 +112,8 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand EditCommand => new RelayCommand(OnEdit);
+        public ICommand EditCommand => _editCommand
+            ?? (_editCommand = new RelayCommand(OnEdit));
         protected virtual void OnEdit()
         {
             StatusReady();
@@ -120,7 +122,8 @@ namespace Inventory.Uwp.ViewModels.Common
             Messenger.Send(new ViewModelsMessage<TModel>("BeginEdit", Item.Id));
         }
 
-        public ICommand CancelCommand => new RelayCommand(OnCancel);
+        public ICommand CancelCommand => _cancelCommand
+            ?? (_cancelCommand = new RelayCommand(OnCancel));
         protected virtual void OnCancel()
         {
             StatusReady();
@@ -128,8 +131,9 @@ namespace Inventory.Uwp.ViewModels.Common
             Messenger.Send(new ViewModelsMessage<TModel>("CancelEdit", Item.Id));
         }
 
-        public ICommand SaveCommand => new RelayCommand(OnSave);
-        protected async virtual void OnSave()
+        public ICommand SaveCommand => _saveCommand
+            ?? (_saveCommand = new AsyncRelayCommand(OnSave));
+        protected async virtual Task OnSave()
         {
             StatusReady();
             var result = Validate(EditableItem);
@@ -171,8 +175,9 @@ namespace Inventory.Uwp.ViewModels.Common
             IsEnabled = true;
         }
 
-        public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        protected async virtual void OnDelete()
+        public ICommand DeleteCommand => _deleteCommand
+            ?? (_deleteCommand = new AsyncRelayCommand(OnDelete));
+        protected async virtual Task OnDelete()
         {
             StatusReady();
             if (await ConfirmDeleteAsync())

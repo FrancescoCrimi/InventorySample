@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,10 +8,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
@@ -27,24 +23,32 @@ namespace Inventory.Uwp.ViewModels.Settings
     public class ValidateConnectionViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
+        private readonly AppSettings _appSettings;
+        private readonly PersistenceService _persistenceService;
+        private string _progressStatus = null;
+        private string _message = null;
+        private string _primaryButtonText;
+        private string _secondaryButtonText = "Cancel";
 
-        public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger)
+        public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger,
+                                           AppSettings appSettings,
+                                           PersistenceService persistenceService)
             : base()
         {
             _logger = logger;
+            _appSettings = appSettings;
+            _persistenceService = persistenceService;
             Result = Result.Error("Operation cancelled");
         }
 
         public Result Result { get; private set; }
 
-        private string _progressStatus = null;
         public string ProgressStatus
         {
             get => _progressStatus;
             set => SetProperty(ref _progressStatus, value);
         }
 
-        private string _message = null;
         public string Message
         {
             get => _message;
@@ -56,14 +60,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public bool HasMessage => _message != null;
 
-        private string _primaryButtonText;
         public string PrimaryButtonText
         {
             get => _primaryButtonText;
             set => SetProperty(ref _primaryButtonText, value);
         }
 
-        private string _secondaryButtonText = "Cancel";
         public string SecondaryButtonText
         {
             get => _secondaryButtonText;
@@ -74,35 +76,32 @@ namespace Inventory.Uwp.ViewModels.Settings
         {
             try
             {
-                using (var db = new DatabaseSettings(connectionString, DataProviderType.SQLServer, Ioc.Default))
+                if (await _persistenceService.ExistsAsync(connectionString, DataProviderType.SQLServer))
                 {
-                    if (await db.ExistsAsync())
+                    var version = _persistenceService.GetDbVersion(connectionString, DataProviderType.SQLServer);
+                    if (version != null)
                     {
-                        var version = db.GetDbVersion();
-                        if (version != null)
+                        if (version == _appSettings.DbVersion)
                         {
-                            if (version == AppSettings.Current.DbVersion)
-                            {
-                                Message = $"Database connection succeeded and version is up to date.";
-                                Result = Result.Ok("Database connection succeeded");
-                            }
-                            else
-                            {
-                                Message = $"Database version mismatch. Current version is {version}, expected version is {AppSettings.Current.DbVersion}. Please, recreate the database.";
-                                Result = Result.Error("Database version mismatch");
-                            }
+                            Message = $"Database connection succeeded and version is up to date.";
+                            Result = Result.Ok("Database connection succeeded");
                         }
                         else
                         {
-                            Message = $"Database schema mismatch.";
-                            Result = Result.Error("Database schema mismatch");
+                            Message = $"Database version mismatch. Current version is {version}, expected version is {_appSettings.DbVersion}. Please, recreate the database.";
+                            Result = Result.Error("Database version mismatch");
                         }
                     }
                     else
                     {
-                        Message = $"Database does not exists. Please, create the database.";
-                        Result = Result.Error("Database does not exist");
+                        Message = $"Database schema mismatch.";
+                        Result = Result.Error("Database schema mismatch");
                     }
+                }
+                else
+                {
+                    Message = $"Database does not exists. Please, create the database.";
+                    Result = Result.Error("Database does not exist");
                 }
             }
             catch (Exception ex)

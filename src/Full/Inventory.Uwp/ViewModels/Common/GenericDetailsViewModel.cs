@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,11 +8,10 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Infrastructure.Common;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
@@ -31,6 +29,15 @@ namespace Inventory.Uwp.ViewModels.Common
     {
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
+        private TModel _item = null;
+        private TModel _editableItem = null;
+        private bool _isEditMode = false;
+        private bool _isEnabled = true;
+        private RelayCommand _backCommand;
+        private RelayCommand _editCommand;
+        private RelayCommand _cancelCommand;
+        private AsyncRelayCommand _saveCommand;
+        private AsyncRelayCommand _deleteCommand;
 
         public GenericDetailsViewModel(NavigationService navigationService,
                                        WindowManagerService windowService,
@@ -52,7 +59,6 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public abstract bool ItemIsNew { get; }
 
-        private TModel _item = null;
         public TModel Item
         {
             get => _item;
@@ -69,28 +75,26 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        private TModel _editableItem = null;
         public TModel EditableItem
         {
             get => _editableItem;
             set => SetProperty(ref _editableItem, value);
         }
 
-        private bool _isEditMode = false;
         public bool IsEditMode
         {
             get => _isEditMode;
             set => SetProperty(ref _isEditMode, value);
         }
 
-        private bool _isEnabled = true;
         public bool IsEnabled
         {
             get => _isEnabled;
             set => SetProperty(ref _isEnabled, value);
         }
 
-        public ICommand BackCommand => new RelayCommand(OnBack);
+        public ICommand BackCommand => _backCommand
+            ?? (_backCommand = new RelayCommand(OnBack));
         protected virtual void OnBack()
         {
             StatusReady();
@@ -100,7 +104,8 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand EditCommand => new RelayCommand(OnEdit);
+        public ICommand EditCommand => _editCommand
+            ?? (_editCommand = new RelayCommand(OnEdit));
         protected virtual void OnEdit()
         {
             StatusReady();
@@ -120,7 +125,8 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand CancelCommand => new RelayCommand(OnCancel);
+        public ICommand CancelCommand => _cancelCommand
+            ?? (_cancelCommand = new RelayCommand(OnCancel));
         protected virtual void OnCancel()
         {
             StatusReady();
@@ -155,8 +161,9 @@ namespace Inventory.Uwp.ViewModels.Common
             IsEditMode = false;
         }
 
-        public ICommand SaveCommand => new RelayCommand(OnSave);
-        protected virtual async void OnSave()
+        public ICommand SaveCommand => _saveCommand
+            ?? (_saveCommand = new AsyncRelayCommand(OnSave));
+        protected virtual async Task OnSave()
         {
             StatusReady();
             var result = Validate(EditableItem);
@@ -198,8 +205,9 @@ namespace Inventory.Uwp.ViewModels.Common
         }
         protected abstract Task<bool> SaveItemAsync(TModel model);
 
-        public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        protected virtual async void OnDelete()
+        public ICommand DeleteCommand => _deleteCommand
+            ?? (_deleteCommand = new AsyncRelayCommand(OnDelete));
+        protected virtual async Task OnDelete()
         {
             StatusReady();
             if (await ConfirmDeleteAsync())
@@ -242,6 +250,5 @@ namespace Inventory.Uwp.ViewModels.Common
 
         protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model)
             => Enumerable.Empty<IValidationConstraint<TModel>>();
-
     }
 }

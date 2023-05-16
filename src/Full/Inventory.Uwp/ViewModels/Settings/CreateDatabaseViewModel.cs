@@ -1,6 +1,5 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,8 +8,6 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Common;
@@ -27,6 +24,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
+        private readonly PersistenceService _persistenceService;
         private string _progressStatus = null;
         private double _progressMaximum = 1;
         private double _progressValue = 0;
@@ -34,17 +32,16 @@ namespace Inventory.Uwp.ViewModels.Settings
         private string _primaryButtonText;
         private string _secondaryButtonText = "Cancel";
 
-        public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger)
+        public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
+                                       PersistenceService persistenceService)
             : base()
         {
             _logger = logger;
+            _persistenceService = persistenceService;
             Result = Result.Error("Operation cancelled");
         }
 
-        public Result Result
-        {
-            get; private set;
-        }
+        public Result Result { get; private set; }
 
         public string ProgressStatus
         {
@@ -97,20 +94,22 @@ namespace Inventory.Uwp.ViewModels.Settings
                 ProgressMaximum = 14;
                 ProgressStatus = "Connecting to Database";
 
-                using (var db = new DatabaseSettings(connectionString, DataProviderType.SQLServer, Ioc.Default))
+                if (!await _persistenceService.ExistsAsync(connectionString, DataProviderType.SQLServer))
                 {
-                    if (!await db.ExistsAsync())
-                    {
-                        await db.CopyDatabase(SetValue, SetStatus);
-                        Message = "Database created successfully.";
-                        Result = Result.Ok("Database created successfully.");
-                    }
-                    else
-                    {
-                        ProgressValue = 14;
-                        Message = $"Database already exists. Please, delete database and try again.";
-                        Result = Result.Error("Database already exist");
-                    }
+                    ProgressValue = 1;
+                    ProgressStatus = "Creating Database...";
+                    await _persistenceService.EnsureCreatedAsync(connectionString, DataProviderType.SQLServer);
+                    ProgressValue = 2;
+                    await _persistenceService.CopyDatabase(connectionString, DataProviderType.SQLServer, SetValue, SetStatus);
+                    ProgressValue = 14;
+                    Message = "Database created successfully.";
+                    Result = Result.Ok("Database created successfully.");
+                }
+                else
+                {
+                    ProgressValue = 14;
+                    Message = $"Database already exists. Please, delete database and try again.";
+                    Result = Result.Error("Database already exist");
                 }
             }
             catch (Exception ex)
