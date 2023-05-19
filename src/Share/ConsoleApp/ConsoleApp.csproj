@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NoDto\Domain\Inventory.Domain.csproj" />
-    <ProjectReference Include="..\..\NoDto\Infrastructure\Inventory.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\NoDto\Persistence\Inventory.Persistence.csproj" />
+    <ProjectReference Include="..\..\Full\Domain\Inventory.Domain.csproj" />
+    <ProjectReference Include="..\..\Full\Infrastructure\Inventory.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Full\Persistence\Inventory.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

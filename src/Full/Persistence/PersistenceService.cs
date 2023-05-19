@@ -54,26 +54,25 @@ namespace Inventory.Persistence
             }
         }
 
-        public async Task<bool> EnsureCreatedAsync(string connectionString,
-                                                   DataProviderType dataProviderType,
-                                                   CancellationToken cancellationToken = default)
-        {
-            using (var dbContext = GetAppDbContext(connectionString, dataProviderType))
-            {
-                await dbContext.Database.EnsureDeletedAsync(cancellationToken);
-                return await dbContext.Database.EnsureCreatedAsync(cancellationToken);
-            }
-        }
-
-        public async Task CopyDataTables(string connectionString,
-                                         DataProviderType dataProviderType,
-                                         Action<double> setValue,
-                                         Action<string> setStatus)
+        public async Task CopyDatabase(string connectionString,
+                                       DataProviderType dataProviderType,
+                                       Action<double> setValue,
+                                       Action<string> setStatus,
+                                       CancellationToken cancellationToken = default)
         {
             using (var dbContext = GetAppDbContext(connectionString, dataProviderType))
             {
                 using (var sourceDb = _serviceProvider.GetService<AppDbContext>())
                 {
+
+                    setStatus("Deleting Database...");
+                    await dbContext.Database.EnsureDeletedAsync(cancellationToken);
+                    setValue(1);
+
+                    setStatus("Creating Database...");
+                    await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+                    setValue(2);
+
                     setStatus("Creating table Categories...");
                     using (var trans = dbContext.Database.BeginTransaction())
                     {
@@ -90,7 +89,7 @@ namespace Inventory.Persistence
                     }
                     setValue(3);
 
-                    setStatus("Creating table CountryCodes...");
+                    setStatus("Creating table Countries...");
                     using (var trans = dbContext.Database.BeginTransaction())
                     {
                         foreach (var item in sourceDb.Countries.AsNoTracking())
@@ -238,33 +237,11 @@ namespace Inventory.Persistence
                     await dbContext.DbVersion.AddAsync(await sourceDb.DbVersion.FirstAsync());
                     await dbContext.SaveChangesAsync();
                     setValue(13);
+
+                    setValue(14);
+                    setStatus("Database created successfully.");
                 }
             }
-        }
-
-        public async Task CopyDatabase(string connectionString,
-                                       DataProviderType dataProviderType,
-                                       Action<double> setValue,
-                                       Action<string> setStatus)
-        {
-            //if (!await ExistsAsync())
-            //{
-            setValue(1);
-            setStatus("Creating Database...");
-            await EnsureCreatedAsync(connectionString, dataProviderType);
-            setValue(2);
-            await CopyDataTables(connectionString, dataProviderType, setValue, setStatus);
-            setValue(14);
-            setStatus("Database created successfully.");
-            //    Message = "Database created successfully.";
-            //    Result = Result.Ok("Database created successfully.");
-            //}
-            //else
-            //{
-            //    ProgressValue = 14;
-            //    Message = $"Database already exists. Please, delete database and try again.";
-            //    Result = Result.Error("Database already exist");
-            //}
         }
 
         private AppDbContext GetAppDbContext(string connectionString,

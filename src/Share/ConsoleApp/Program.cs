@@ -29,75 +29,28 @@ namespace ConsoleApp
         {
             new Program();
         }
+
         public Program()
         {
             //CopyDatabase();
-            //CreateEmptyDatabase();
-            //ProvaDateTime();
+            CreateEmptyDatabase();
             //FixCountryCodeTable();
-            TestGetOrders();
-        }
-
-        private void initIoc()
-        {
-            Ioc.Default.ConfigureServices(
-                new ServiceCollection()
-                .AddLogging(b => b.AddConsole())
-                .AddSingleton<IAppSettings>(new AppSettings
-                {
-                    DataProvider = DataProviderType.SQLite,
-                    //SQLiteConnectionString = "Data Source = Database\\VanArsdel.1.01.db"
-                    SQLiteConnectionString = "Data Source = Database\\NewVanArsdel.1.01.db"
-                })
-                .AddInventoryInfrastructure()
-                .AddInventoryPersistence()
-                .BuildServiceProvider());
+            //FixOrderItemId();
         }
 
         private void CopyDatabase()
         {
-            initIoc();
-            //var connectionString = @"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI";
-            var cnSQLite = "Data Source = Database\\NewVanArsdel.1.01.db";
+            InitIoc();
+            var connectionString = @"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI";
+            //var connectionString = "Data Source = Database\\NewVanArsdel.1.01.db";
             var ps = Ioc.Default.GetService<PersistenceService>();
-            //ps.CopyDatabase(cnSQLite, DataProviderType.SQLite, SetValue, SetStatus).Wait();
-            ps.EnsureCreatedAsync(cnSQLite, DataProviderType.SQLite).Wait();
-
-        }
-
-        private void SetValue(double obj)
-        {
-            Console.WriteLine(obj.ToString());
-        }
-
-        private void SetStatus(string obj)
-        {
-            Console.WriteLine($"{obj}");
-        }
-
-        private SQLServerAppDbContext GetSqlServer()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>();
-            optionsBuilder.UseSqlServer(@"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI");
-            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
-            var db = new SQLServerAppDbContext(optionsBuilder.Options);
-            return db;
-        }
-
-        private SQLiteAppDbContext GetSQLite()
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>();
-            optionsBuilder.UseSqlite("Data Source=VanArsdelEmpty.db");
-            //optionsBuilder.UseSqlite("Data Source=Database\\Empty.db");
-            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
-            var db = new SQLiteAppDbContext(optionsBuilder.Options);
-            return db;
+            ps.CopyDatabase(connectionString, DataProviderType.SQLServer, SetValue, SetStatus).Wait();
         }
 
         private void CreateEmptyDatabase()
         {
-            var db = GetSqlServer();
-            //var db = GetSQLite();
+            var db = GetSqlServerAppDbContext();
+            //var db = GetSQLiteAppDbContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
             db.Dispose();
@@ -105,10 +58,7 @@ namespace ConsoleApp
 
         private void FixCountryCodeTable()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>();
-            optionsBuilder.UseSqlite("Data Source=VanArsdel.1.01.db");
-            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
-            var db = new SQLiteAppDbContext(optionsBuilder.Options);
+            var db = GetSQLiteAppDbContext();
             var listCountry = db.Countries.ToList();
             for (var i = 0; i < listCountry.Count; i++)
             {
@@ -121,6 +71,7 @@ namespace ConsoleApp
 
         private void FixOrderItemId()
         {
+            InitIoc();
             var db = Ioc.Default.GetRequiredService<AppDbContext>();
             var list = db.OrderItems.ToList();
             foreach (var item in list)
@@ -132,60 +83,53 @@ namespace ConsoleApp
             db.Dispose();
         }
 
-        private void ProvaDateTime()
+
+        private void InitIoc()
+        {
+            Ioc.Default.ConfigureServices(
+                new ServiceCollection()
+                .AddLogging(b => b.AddConsole())
+                .AddSingleton<IAppSettings>(new AppSettings
+                {
+                    DataProvider = DataProviderType.SQLite,
+                    SQLiteConnectionString = "Data Source = Database\\VanArsdel.1.01.db"
+                })
+                .AddInventoryInfrastructure()
+                .AddInventoryPersistence()
+                .BuildServiceProvider());
+        }
+ 
+        private AppDbContext GetSQLiteAppDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<SQLiteAppDbContext>()
                 .UseLazyLoadingProxies()
                 .UseSqlite("Data Source=VanArsdel.1.01.db")
+                //.UseSqlite("Data Source=VanArsdelEmpty.db")
+                //.UseSqlite("Data Source=Database\\Empty.db")
                 .UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
-            var db = new SQLiteAppDbContext(optionsBuilder.Options);
-
-            //var listCust = db.Customers.ToList();
-            //foreach (var item in listCust)
-            //{
-            //    item.BirthDate2 = new DateTimeOffset((DateTime)item.BirthDate);
-            //    item.LastModifiedOn2 = new DateTimeOffset((DateTime)item.LastModifiedOn);
-            //    item.CreatedOn2 = new DateTimeOffset((DateTime)item.CreatedOn);
-            //}
-            //db.SaveChanges();
-
-            var listOrder = db.Orders.ToList();
-            //foreach (var item in listOrder)
-            //{
-            //    if (item.DeliveredDate == null) item.DeliveredDate2 = null;
-            //    else item.DeliveredDate2 = new DateTimeOffset((DateTime)item.DeliveredDate);
-
-            //    item.LastModifiedOn2 = new DateTimeOffset((DateTime)item.LastModifiedOn);
-            //    item.OrderDate2 = new DateTimeOffset((DateTime)item.OrderDate);
-
-            //    if (item.ShippedDate == null) item.ShippedDate2 = null;
-            //    else item.ShippedDate2 = new DateTimeOffset((DateTime)item.ShippedDate);
-            //}
-            //db.SaveChanges();
-
-            //var listProd = db.Products.ToList();
-            //foreach (var item in listProd)
-            //{
-            //    item.CreatedOn2 = new DateTimeOffset((DateTime)item.CreatedOn);
-
-            //    if (item.DiscountEndDate == null) item.DiscountEndDate2 = null;
-            //    else item.DiscountEndDate2 = new DateTimeOffset((DateTime)item.DiscountEndDate);
-
-            //    if(item.DiscountStartDate == null) item.DiscountStartDate2 = null;
-            //    else item.DiscountStartDate2 = new DateTimeOffset((DateTime)item.DiscountStartDate);
-
-            //    item.LastModifiedOn2 = new DateTimeOffset((DateTime)item.LastModifiedOn);
-            //}
-            //db.SaveChanges();
-
-            db.Dispose();
+            var dbContext = new SQLiteAppDbContext(optionsBuilder.Options);
+            return dbContext;
         }
 
-        private void TestGetOrders()
+        private AppDbContext GetSqlServerAppDbContext()
         {
-            initIoc();
-            IOrderRepository repo = Ioc.Default.GetService<IOrderRepository>();
-            var orders = repo.GetOrdersAsync(0, 100, new DataRequest<Inventory.Domain.Model.Order>()).Result;
+            var optionsBuilder = new DbContextOptionsBuilder<SQLServerAppDbContext>()
+                .UseLazyLoadingProxies()
+                //.UseSqlServer(@"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI")
+                .UseSqlServer(@"Data Source=LAPTOP-VKK31C74\SQLEXPRESS;Initial Catalog=Inventory;Integrated Security=True;Persist Security Info=False")
+                .UseLoggerFactory(LoggerFactory.Create(b => b.AddConsole()));
+            var db = new SQLServerAppDbContext(optionsBuilder.Options);
+            return db;
+        }
+
+        private void SetValue(double obj)
+        {
+            Console.WriteLine(obj.ToString());
+        }
+
+        private void SetStatus(string obj)
+        {
+            Console.WriteLine($"{obj}");
         }
     }
 }

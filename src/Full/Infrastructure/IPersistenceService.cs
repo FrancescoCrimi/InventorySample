@@ -18,13 +18,11 @@ namespace Inventory.Infrastructure
 {
     public interface IPersistenceService
     {
-        Task CopyDataTables(string connectionString,
-                            DataProviderType dataProviderType,
-                            Action<double> setValue,
-                            Action<string> setStatus);
-        Task<bool> EnsureCreatedAsync(string connectionString,
-                                      DataProviderType dataProviderType,
-                                      CancellationToken cancellationToken = default);
+        Task CopyDatabase(string connectionString,
+                          DataProviderType dataProviderType,
+                          Action<double> setValue,
+                          Action<string> setStatus,
+                          CancellationToken cancellationToken = default);
         Task<bool> ExistsAsync(string connectionString,
                                DataProviderType dataProviderType,
                                CancellationToken cancellationToken = default);

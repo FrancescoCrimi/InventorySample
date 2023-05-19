@@ -9,23 +9,20 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using System;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Persistence;
-using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Settings
 {
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly PersistenceService _persistenceService;
+        private readonly IPersistenceService _persistenceService;
         private string _progressStatus = null;
         private double _progressMaximum = 1;
         private double _progressValue = 0;
@@ -34,7 +31,7 @@ namespace Inventory.Uwp.ViewModels.Settings
         private string _secondaryButtonText = "Cancel";
 
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
-                                       PersistenceService persistenceService)
+                                       IPersistenceService persistenceService)
             : base()
         {
             _logger = logger;
@@ -94,13 +91,11 @@ namespace Inventory.Uwp.ViewModels.Settings
 
                 if (!await _persistenceService.ExistsAsync(connectionString, DataProviderType.SQLServer))
                 {
-                    ProgressValue = 1;
-                    ProgressStatus = "Creating Database...";
-                    await _persistenceService.EnsureCreatedAsync(connectionString, DataProviderType.SQLServer);
-                    ProgressValue = 2;
-                    await _persistenceService.CopyDataTables(connectionString, DataProviderType.SQLServer, SetValue, SetStatus);
-                    ProgressValue = 14;
-                    Message = "Database created successfully.";
+                    
+                    await _persistenceService.CopyDatabase(connectionString,
+                                                           DataProviderType.SQLServer,
+                                                           (value) => ProgressValue = value,
+                                                           (status) => ProgressStatus = status);
                     Result = Result.Ok("Database created successfully.");
                 }
                 else
@@ -120,7 +115,7 @@ namespace Inventory.Uwp.ViewModels.Settings
             SecondaryButtonText = null;
         }
 
-        private void SetValue(double value) => ProgressValue = value;
-        private void SetStatus(string status) => ProgressStatus = status;
+        //private void SetValue(double value) => ProgressValue = value;
+        //private void SetStatus(string status) => ProgressStatus = status;
     }
 }

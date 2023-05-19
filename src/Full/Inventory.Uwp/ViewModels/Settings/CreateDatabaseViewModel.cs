@@ -10,6 +10,7 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
@@ -24,7 +25,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly PersistenceService _persistenceService;
+        private readonly IPersistenceService _persistenceService;
         private string _progressStatus = null;
         private double _progressMaximum = 1;
         private double _progressValue = 0;
@@ -33,7 +34,7 @@ namespace Inventory.Uwp.ViewModels.Settings
         private string _secondaryButtonText = "Cancel";
 
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
-                                       PersistenceService persistenceService)
+                                       IPersistenceService persistenceService)
             : base()
         {
             _logger = logger;
@@ -92,25 +93,11 @@ namespace Inventory.Uwp.ViewModels.Settings
             try
             {
                 ProgressMaximum = 14;
-                ProgressStatus = "Connecting to Database";
-
-                if (!await _persistenceService.ExistsAsync(connectionString, DataProviderType.SQLServer))
-                {
-                    ProgressValue = 1;
-                    ProgressStatus = "Creating Database...";
-                    await _persistenceService.EnsureCreatedAsync(connectionString, DataProviderType.SQLServer);
-                    ProgressValue = 2;
-                    await _persistenceService.CopyDatabase(connectionString, DataProviderType.SQLServer, SetValue, SetStatus);
-                    ProgressValue = 14;
-                    Message = "Database created successfully.";
-                    Result = Result.Ok("Database created successfully.");
-                }
-                else
-                {
-                    ProgressValue = 14;
-                    Message = $"Database already exists. Please, delete database and try again.";
-                    Result = Result.Error("Database already exist");
-                }
+                await _persistenceService.CopyDatabase(connectionString,
+                                                       DataProviderType.SQLServer,
+                                                       (value) => ProgressValue = value,
+                                                       (status) => ProgressStatus = status);
+                Result = Result.Ok("Database created successfully.");
             }
             catch (Exception ex)
             {
@@ -123,8 +110,8 @@ namespace Inventory.Uwp.ViewModels.Settings
         }
 
 
-        private void SetValue(double value) => ProgressValue = value;
+        //private void SetValue(double value) => ProgressValue = value;
 
-        private void SetStatus(string status) => ProgressStatus = status;
+        //private void SetStatus(string status) => ProgressStatus = status;
     }
 }

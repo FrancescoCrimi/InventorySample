@@ -9,10 +9,9 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
+using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Persistence;
-using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,7 +23,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     {
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
-        private readonly PersistenceService _persistenceService;
+        private readonly IPersistenceService _persistenceService;
         private string _progressStatus = null;
         private string _message = null;
         private string _primaryButtonText;
@@ -32,7 +31,7 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger,
                                            AppSettings appSettings,
-                                           PersistenceService persistenceService)
+                                           IPersistenceService persistenceService)
             : base()
         {
             _logger = logger;
