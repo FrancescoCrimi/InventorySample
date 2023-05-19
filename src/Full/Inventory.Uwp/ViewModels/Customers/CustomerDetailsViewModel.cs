@@ -107,7 +107,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         #region public property
 
-        public override string Title => Item?.IsNew ?? true ? "New Customer" : TitleEdit;
+        public override string Title => (Item?.IsNew ?? true) ? "New Customer" : TitleEdit;
 
         public string TitleEdit => Item == null ? "Customer" : $"{Item.FullName}";
 

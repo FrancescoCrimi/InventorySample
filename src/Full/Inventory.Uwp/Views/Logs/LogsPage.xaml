@@ -3,9 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:Inventory.Uwp.Views.Logs"
       xmlns:libcontrols="using:Inventory.Uwp.Library.Controls"
+      xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
+      ui:ApplicationViewExtensions.Title="{x:Bind ViewModel.LogList.Title, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='Activity Logs {0}'}"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <UserControl.Resources>
@@ -25,8 +27,6 @@
     <Grid Background="WhiteSmoke"
           BorderBrush="LightGray"
           BorderThickness="1,0,0,0">
-        <!--<controls:WindowTitle Prefix="Activity Logs"
-                              Title="{x:Bind ViewModel.AppLogList.Title, Mode=OneWay}" />-->
 
         <Grid>
             <Grid.RowDefinitions>

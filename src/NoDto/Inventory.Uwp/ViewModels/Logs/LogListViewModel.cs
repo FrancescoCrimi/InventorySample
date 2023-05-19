@@ -1,6 +1,4 @@
-﻿#region copyright
-// ******************************************************************
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -9,8 +7,6 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// ******************************************************************
-#endregion
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -33,6 +29,11 @@ namespace Inventory.Uwp.ViewModels.Logs
         private readonly ILogger _logger;
         private readonly LogService _logService;
         private readonly LogCollection _collection;
+        private Log _selectedItem = default;
+        private IList<Log> _items = null;
+        private string _query = null;
+        private int _itemsCount = 0;
+        private bool _isMultipleSelection = false;
 
         public LogListViewModel(ILogger<LogListViewModel> logger,
                                 LogService logService,
@@ -91,7 +92,6 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public LogListArgs ViewModelArgs { get; private set; }
 
-        private Log _selectedItem = default;
         public Log SelectedItem
         {
             get => _selectedItem;
@@ -112,21 +112,18 @@ namespace Inventory.Uwp.ViewModels.Logs
             }
         }
 
-        private IList<Log> _items = null;
         public IList<Log> Items
         {
             get => _items;
             set => SetProperty(ref _items, value);
         }
 
-        private string _query = null;
         public string Query
         {
             get => _query;
             set => SetProperty(ref _query, value);
         }
 
-        private int _itemsCount = 0;
         public int ItemsCount
         {
             get => _itemsCount;
@@ -137,12 +134,13 @@ namespace Inventory.Uwp.ViewModels.Logs
 
         public IndexRange[] SelectedIndexRanges { get; protected set; }
 
-        private bool _isMultipleSelection = false;
         public bool IsMultipleSelection
         {
             get => _isMultipleSelection;
             set => SetProperty(ref _isMultipleSelection, value);
         }
+
+        public override string Title => String.IsNullOrEmpty(Query) ? $" ({ItemsCount})" : $" ({ItemsCount} for \"{Query}\")";
 
         #endregion
 

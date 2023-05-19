@@ -7,7 +7,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
-      ui:ApplicationViewExtensions.Title="Customers"
+      ui:ApplicationViewExtensions.Title="{x:Bind ViewModel.CustomerList.Title, Mode=OneWay, Converter={StaticResource StringFormatConverter}, ConverterParameter='Customers {0}'}"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <UserControl.Resources>
