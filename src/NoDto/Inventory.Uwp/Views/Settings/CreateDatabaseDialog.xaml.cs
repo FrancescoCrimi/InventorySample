@@ -11,7 +11,6 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Settings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

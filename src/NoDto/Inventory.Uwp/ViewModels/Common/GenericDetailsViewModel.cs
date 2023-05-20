@@ -244,7 +244,8 @@ namespace Inventory.Uwp.ViewModels.Common
             if (IsEditMode)
             {
                 //EditableItem = Item;
-                EditableItem = GetItemAsync(Item.Id).Result;
+                var item = GetItemAsync(Item.Id).Result;
+                EditableItem = item;
             }
             IsEditMode = false;
         }

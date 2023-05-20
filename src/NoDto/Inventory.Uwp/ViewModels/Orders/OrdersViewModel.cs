@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -123,7 +124,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 if (id != 0)
                 {
-                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = id }, silent: true);
+                    await OrderItemList.LoadAsync(new OrderItemListArgs { OrderId = id }, silent: true);
                 }
             }
             catch (Exception ex)

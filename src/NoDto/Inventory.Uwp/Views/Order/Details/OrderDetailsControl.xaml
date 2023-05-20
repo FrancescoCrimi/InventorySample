@@ -124,6 +124,7 @@
                     <local:OrdersOrderItemsControl ViewModel="{x:Bind ViewModel.OrderItemList}" />
                 </libcontrols:Section>
             </Border>
+
         </Grid>
 
     </Grid>

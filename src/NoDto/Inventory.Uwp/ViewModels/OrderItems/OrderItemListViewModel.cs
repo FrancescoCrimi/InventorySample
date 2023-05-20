@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -96,7 +97,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 Query = Query,
                 OrderBy = ViewModelArgs.OrderBy,
                 OrderByDesc = ViewModelArgs.OrderByDesc,
-                OrderID = ViewModelArgs.OrderID
+                OrderId = ViewModelArgs.OrderId
             };
         }
 
@@ -138,11 +139,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (IsMainView)
             {
-                await _windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                await _windowService.OpenInNewWindow<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderId });
             }
             else
             {
-                _navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                _navigationService.Navigate<OrderItemPage>(new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderId });
             }
 
             StatusReady();
@@ -225,9 +226,9 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 OrderBy = ViewModelArgs.OrderBy,
                 OrderByDesc = ViewModelArgs.OrderByDesc
             };
-            if (ViewModelArgs.OrderID > 0)
+            if (ViewModelArgs.OrderId > 0)
             {
-                request.Where = (r) => r.OrderId == ViewModelArgs.OrderID;
+                request.Where = (r) => r.OrderId == ViewModelArgs.OrderId;
             }
             return request;
         }

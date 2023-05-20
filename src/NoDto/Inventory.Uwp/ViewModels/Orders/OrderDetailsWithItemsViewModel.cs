@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -37,7 +38,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             long orderID = args?.OrderId ?? 0;
             if (orderID > 0)
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = args.OrderId });
+                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderId = args.OrderId });
             }
             else
             {
@@ -71,7 +72,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             if (message.Value == "ItemChanged" && message.Id != 0)
             {
-                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = message.Id });
+                await OrderItemList.LoadAsync(new OrderItemListArgs { OrderId = message.Id });
             }
         }
 
