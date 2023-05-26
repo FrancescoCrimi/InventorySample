@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
-using Inventory.Domain.Repository;
+using Inventory.Application;
+using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
@@ -31,18 +31,21 @@ namespace Inventory.Uwp.ViewModels.Customers
         private readonly ILogger _logger;
         private readonly ICustomerRepository _customerRepository;
         private readonly FilePickerService _filePickerService;
+        private readonly CustomerService _customerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
                                         NavigationService navigationService,
                                         WindowManagerService windowService,
-                                        LookupTablesService lookupTablesService,
+                                        //LookupTablesService lookupTablesService,
                                         ICustomerRepository customerRepository,
-                                        FilePickerService filePickerService)
-            : base(navigationService, windowService, lookupTablesService)
+                                        FilePickerService filePickerService,
+                                        CustomerService customerService)
+            : base(navigationService, windowService)
         {
             _logger = logger;
             _customerRepository = customerRepository;
             _filePickerService = filePickerService;
+            _customerService = customerService;
         }
 
         #region property
@@ -78,6 +81,9 @@ namespace Inventory.Uwp.ViewModels.Customers
                 NewPictureSource = null;
             }
         }
+
+
+        public IEnumerable<Country> CountryCodes => _customerService.CountryCodes;
 
         #endregion
 

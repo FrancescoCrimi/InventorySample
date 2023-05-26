@@ -37,7 +37,7 @@
                                          Mode="ReadOnly" />
 
                 <libcontrols:FormComboBox Header="Tax Type"
-                                          ItemsSource="{x:Bind LookupTables.TaxTypes}"
+                                          ItemsSource="{x:Bind TaxTypes}"
                                           SelectedItem="{x:Bind EditableItem.TaxType, Mode=TwoWay}"
                                           DisplayMemberPath="Name" />
                 <libcontrols:FormTextBox Header="Total"

@@ -59,7 +59,6 @@
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\FilePickerService.cs" />
-    <Compile Include="Services\LookupTablesService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
     <Compile Include="Services\VirtualCollections\LogCollection.cs" />
@@ -427,6 +426,10 @@
     <ProjectReference Include="..\..\Share\Inventory.Uwp.Library\Inventory.Uwp.Library.csproj">
       <Project>{cd266705-5d0a-4ee1-ba7e-32498d7b2877}</Project>
       <Name>Inventory.Uwp.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Application\Inventory.Application.csproj">
+      <Project>{4fcf33fa-25db-4966-93b5-3496d6b47f34}</Project>
+      <Name>Inventory.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Inventory.Domain.csproj">
       <Project>{6693c7c0-edf1-4f6b-89c0-f61c262d9ee5}</Project>

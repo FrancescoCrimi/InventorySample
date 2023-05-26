@@ -11,20 +11,18 @@
 using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Inventory.Domain.Model
+namespace Inventory.Domain.Aggregates.OrderAggregate
 {
-    public class Country : Entity, IEquatable<Country>
+    [Table("PaymentTypes")]
+    public class PaymentType : Entity, IEquatable<PaymentType>
     {
-        private string code;
         private string name;
 
-        public string Code
-        {
-            get => code;
-            set => SetProperty(ref code, value);
-        }
-
+        [Required]
+        [MaxLength(50)]
         public string Name
         {
             get => name;
@@ -33,18 +31,28 @@ namespace Inventory.Domain.Model
 
         #region Equals
 
-        public override bool Equals(object obj) => Equals(obj as Country);
-
-        public bool Equals(Country other) => !(other is null) && Id == other.Id;
-
-        public override int GetHashCode() => HashCode.Combine(Id);
-
-        public static bool operator ==(Country left, Country right)
+        public override bool Equals(object obj)
         {
-            return EqualityComparer<Country>.Default.Equals(left, right);
+            return Equals(obj as PaymentType);
         }
 
-        public static bool operator !=(Country left, Country right)
+        public bool Equals(PaymentType other)
+        {
+            return !(other is null) &&
+                   Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
+
+        public static bool operator ==(PaymentType left, PaymentType right)
+        {
+            return EqualityComparer<PaymentType>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(PaymentType left, PaymentType right)
         {
             return !(left == right);
         }

@@ -15,8 +15,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
-using Inventory.Domain.Repository;
+using Inventory.Application;
+using Inventory.Domain.Aggregates.ProductAggregate;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
@@ -30,18 +30,21 @@ namespace Inventory.Uwp.ViewModels.Products
     {
         private readonly ILogger _logger;
         private readonly IProductRepository _productRepository;
+        private readonly ProductService _productService;
         private readonly FilePickerService _filePickerService;
 
         public ProductDetailsViewModel(ILogger<ProductDetailsViewModel> logger,
                                        NavigationService navigationService,
                                        WindowManagerService windowService,
-                                       LookupTablesService lookupTablesService,
+                                       //LookupTablesService lookupTablesService,
                                        IProductRepository productRepository,
+                                       ProductService productService,
                                        FilePickerService filePickerService)
-            : base(navigationService, windowService, lookupTablesService)
+            : base(navigationService, windowService)
         {
             _logger = logger;
             _productRepository = productRepository;
+            _productService = productService;
             _filePickerService = filePickerService;
         }
 
@@ -83,6 +86,10 @@ namespace Inventory.Uwp.ViewModels.Products
                 NewPictureSource = null;
             }
         }
+
+
+
+        public IEnumerable<Category> Categories => _productService.Categories;
 
         #endregion
 

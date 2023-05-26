@@ -10,8 +10,10 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
-using Inventory.Domain.Repository;
+using Inventory.Application;
+using Inventory.Domain.Aggregates.CustomerAggregate;
+using Inventory.Domain.Aggregates.OrderAggregate;
+using Inventory.Domain.AggregatesModel.OrderAggregate;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
@@ -31,18 +33,20 @@ namespace Inventory.Uwp.ViewModels.Orders
         private readonly ILogger _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly OrderService _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
-                                     LookupTablesService lookupTablesService,
                                      IOrderRepository orderRepository,
-                                     ICustomerRepository customerRepository)
-            : base(navigationService, windowService, lookupTablesService)
+                                     ICustomerRepository customerRepository,
+                                     OrderService orderService)
+            : base(navigationService, windowService)
         {
             _logger = logger;
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
+            _orderService = orderService;
         }
 
         #region public property
@@ -76,6 +80,13 @@ namespace Inventory.Uwp.ViewModels.Orders
         {
             get; private set;
         }
+
+
+        public IEnumerable<Country> CountryCodes => _orderService.CountryCodes;
+        public IEnumerable<OrderStatus> OrderStatuses => _orderService.OrderStatuses;
+        public IEnumerable<PaymentType> PaymentTypes => _orderService.PaymentTypes;
+        public IEnumerable<Shipper> Shippers => _orderService.Shippers;
+
 
         #endregion
 

@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
+using Inventory.Domain.Aggregates.OrderAggregate;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

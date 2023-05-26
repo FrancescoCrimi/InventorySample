@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Domain.Model;
+using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Uwp.ViewModels.Customers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

@@ -12,44 +12,26 @@ using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 
-namespace Inventory.Domain.Model
+namespace Inventory.Domain.Aggregates.OrderAggregate
 {
-    public class Category : Entity, IEquatable<Category>
+    public class OrderStatus : Entity, IEquatable<OrderStatus>
     {
         private string name;
-        private string description;
-        private byte[] picture;
-        private byte[] thumbnail;
 
         public string Name
         {
             get => name;
             set => SetProperty(ref name, value);
         }
-        public string Description
-        {
-            get => description;
-            set => SetProperty(ref description, value);
-        }
-        public byte[] Picture
-        {
-            get => picture;
-            set => SetProperty(ref picture, value);
-        }
-        public byte[] Thumbnail
-        {
-            get => thumbnail;
-            set => SetProperty(ref thumbnail, value);
-        }
 
         #region Equals
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Category);
+            return Equals(obj as OrderStatus);
         }
 
-        public bool Equals(Category other)
+        public bool Equals(OrderStatus other)
         {
             return !(other is null) &&
                    Id == other.Id;
@@ -60,12 +42,12 @@ namespace Inventory.Domain.Model
             return HashCode.Combine(Id);
         }
 
-        public static bool operator ==(Category left, Category right)
+        public static bool operator ==(OrderStatus left, OrderStatus right)
         {
-            return EqualityComparer<Category>.Default.Equals(left, right);
+            return EqualityComparer<OrderStatus>.Default.Equals(left, right);
         }
 
-        public static bool operator !=(Category left, Category right)
+        public static bool operator !=(OrderStatus left, OrderStatus right)
         {
             return !(left == right);
         }

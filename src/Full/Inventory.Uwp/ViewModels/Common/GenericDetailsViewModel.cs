@@ -49,6 +49,8 @@ namespace Inventory.Uwp.ViewModels.Common
             LookupTables = lookupTablesService;
         }
 
+        #region public property
+
         public LookupTablesService LookupTables { get; }
 
         public bool IsDataAvailable => _item != null;
@@ -58,6 +60,18 @@ namespace Inventory.Uwp.ViewModels.Common
         public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
 
         public abstract bool ItemIsNew { get; }
+
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set => SetProperty(ref _isEditMode, value);
+        }
+
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set => SetProperty(ref _isEnabled, value);
+        }
 
         public TModel Item
         {
@@ -81,17 +95,10 @@ namespace Inventory.Uwp.ViewModels.Common
             set => SetProperty(ref _editableItem, value);
         }
 
-        public bool IsEditMode
-        {
-            get => _isEditMode;
-            set => SetProperty(ref _isEditMode, value);
-        }
+        #endregion
 
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
-        }
+
+        #region command
 
         public ICommand BackCommand => _backCommand
             ?? (_backCommand = new RelayCommand(OnBack));
@@ -113,6 +120,49 @@ namespace Inventory.Uwp.ViewModels.Common
             //MessageService.Send(this, "BeginEdit", Item);
             Messenger.Send(new ViewModelsMessage<TModel>("BeginEdit", Item.Id));
         }
+
+        public ICommand CancelCommand => _cancelCommand
+            ?? (_cancelCommand = new RelayCommand(OnCancel));
+        protected virtual void OnCancel()
+        {
+            StatusReady();
+            CancelEdit();
+            //MessageService.Send(this, "CancelEdit", Item);
+            Messenger.Send(new ViewModelsMessage<TModel>("CancelEdit", Item.Id));
+        }
+
+        public ICommand SaveCommand => _saveCommand
+            ?? (_saveCommand = new AsyncRelayCommand(OnSave));
+        protected virtual async Task OnSave()
+        {
+            StatusReady();
+            var result = Validate(EditableItem);
+            if (result.IsOk)
+            {
+                await SaveAsync();
+            }
+            else
+            {
+                await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
+            }
+        }
+
+        public ICommand DeleteCommand => _deleteCommand
+            ?? (_deleteCommand = new AsyncRelayCommand(OnDelete));
+        protected virtual async Task OnDelete()
+        {
+            StatusReady();
+            if (await ConfirmDeleteAsync())
+            {
+                await DeleteAsync();
+            }
+        }
+
+        #endregion
+
+
+        #region public method
+
         public virtual void BeginEdit()
         {
             if (!IsEditMode)
@@ -125,15 +175,6 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
-        public ICommand CancelCommand => _cancelCommand
-            ?? (_cancelCommand = new RelayCommand(OnCancel));
-        protected virtual void OnCancel()
-        {
-            StatusReady();
-            CancelEdit();
-            //MessageService.Send(this, "CancelEdit", Item);
-            Messenger.Send(new ViewModelsMessage<TModel>("CancelEdit", Item.Id));
-        }
         public virtual void CancelEdit()
         {
             if (ItemIsNew)
@@ -161,21 +202,6 @@ namespace Inventory.Uwp.ViewModels.Common
             IsEditMode = false;
         }
 
-        public ICommand SaveCommand => _saveCommand
-            ?? (_saveCommand = new AsyncRelayCommand(OnSave));
-        protected virtual async Task OnSave()
-        {
-            StatusReady();
-            var result = Validate(EditableItem);
-            if (result.IsOk)
-            {
-                await SaveAsync();
-            }
-            else
-            {
-                await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
-            }
-        }
         public virtual async Task SaveAsync()
         {
             IsEnabled = false;
@@ -203,18 +229,7 @@ namespace Inventory.Uwp.ViewModels.Common
             }
             IsEnabled = true;
         }
-        protected abstract Task<bool> SaveItemAsync(TModel model);
 
-        public ICommand DeleteCommand => _deleteCommand
-            ?? (_deleteCommand = new AsyncRelayCommand(OnDelete));
-        protected virtual async Task OnDelete()
-        {
-            StatusReady();
-            if (await ConfirmDeleteAsync())
-            {
-                await DeleteAsync();
-            }
-        }
         public virtual async Task DeleteAsync()
         {
             var model = Item;
@@ -232,9 +247,6 @@ namespace Inventory.Uwp.ViewModels.Common
                 }
             }
         }
-        protected abstract Task<bool> ConfirmDeleteAsync();
-        protected abstract Task<bool> DeleteItemAsync(TModel model);
-
 
         public virtual Result Validate(TModel model)
         {
@@ -248,7 +260,20 @@ namespace Inventory.Uwp.ViewModels.Common
             return Result.Ok();
         }
 
+        #endregion
+
+
+        #region protected and private method 
+
         protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model)
             => Enumerable.Empty<IValidationConstraint<TModel>>();
+
+        protected abstract Task<bool> SaveItemAsync(TModel model);
+
+        protected abstract Task<bool> ConfirmDeleteAsync();
+
+        protected abstract Task<bool> DeleteItemAsync(TModel model);
+
+        #endregion
     }
 }

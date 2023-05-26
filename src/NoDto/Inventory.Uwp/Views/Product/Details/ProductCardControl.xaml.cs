@@ -8,7 +8,7 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Domain.Model;
+using Inventory.Domain.Aggregates.ProductAggregate;
 using Inventory.Uwp.ViewModels.Products;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

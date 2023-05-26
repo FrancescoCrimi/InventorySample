@@ -26,20 +26,17 @@ namespace Inventory.Uwp.Services
         private readonly ActivationHandler<IActivatedEventArgs> _defaultHandler;
         private readonly IEnumerable<ActivationHandler> _activationHandlers;
         private readonly AppSettings _appSettings;
-        private readonly LookupTablesService _lookupTablesService;
         private object _lastActivationArgs;
 
         public ActivationService(ILogger<ActivationService> logger,
                                  ActivationHandler<IActivatedEventArgs> defaultHandler,
                                  IEnumerable<ActivationHandler> activationHandlers,
-                                 AppSettings appSettings,
-                                 LookupTablesService lookupTablesService)
+                                 AppSettings appSettings)
         {
             _logger = logger;
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
             _appSettings = appSettings;
-            _lookupTablesService = lookupTablesService;
         }
 
         public async Task ActivateAsync(object activationArgs)
@@ -69,7 +66,6 @@ namespace Inventory.Uwp.Services
             //await WindowManagerService.Current.InitializeAsync();
             await _appSettings.EnsureLogDatabaseAsync();
             await _appSettings.EnsureLocalDatabaseAsync();
-            await _lookupTablesService.InitializeAsync();
             _logger.LogInformation(LogEvents.Startup, "Application Started");
         }
 

@@ -10,6 +10,7 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Inventory.Application;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
 using Inventory.Persistence;
@@ -82,9 +83,10 @@ namespace Inventory.Uwp
             .AddSingleton<IAppSettings>(x => x.GetRequiredService<AppSettings>())
 
             // Core Services
-            .AddInventoryInfrastructure()
-            .AddInventoryPersistence()
-            .AddSingleton<LookupTablesService>()
+            //.AddInventoryInfrastructure()
+            //.AddInventoryPersistence()
+            .AddInventoryApplication()
+            //.AddSingleton<LookupTablesService>()
             .AddSingleton<FilePickerService>()
 
             // ViewModels

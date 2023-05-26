@@ -12,7 +12,7 @@
 using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
+using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;

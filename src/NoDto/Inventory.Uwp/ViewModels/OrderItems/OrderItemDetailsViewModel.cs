@@ -15,7 +15,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
+using Inventory.Application;
+using Inventory.Domain.Aggregates.OrderAggregate;
+using Inventory.Domain.Aggregates.ProductAggregate;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
@@ -30,16 +32,19 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     {
         private readonly ILogger _logger;
         private readonly IOrderItemRepository _orderItemRepository;
+        private readonly OrderService _orderService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
                                          NavigationService navigationService,
                                          WindowManagerService windowService,
-                                         LookupTablesService lookupTablesService,
-                                         IOrderItemRepository orderItemRepository)
-            : base(navigationService, windowService, lookupTablesService)
+                                         //LookupTablesService lookupTablesService,
+                                         IOrderItemRepository orderItemRepository,
+                                         OrderService orderService)
+            : base(navigationService, windowService)
         {
             _logger = logger;
             _orderItemRepository = orderItemRepository;
+            _orderService = orderService;
         }
 
         #region property
@@ -79,6 +84,9 @@ namespace Inventory.Uwp.ViewModels.OrderItems
                 Product = product,
             };
         }
+
+
+        public IEnumerable<TaxType> TaxTypes => _orderService.TaxTypes;
 
         #endregion
 

@@ -8,7 +8,9 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-namespace Inventory.Domain.Model
+using Inventory.Domain.Aggregates.ProductAggregate;
+
+namespace Inventory.Domain.Aggregates.OrderAggregate
 {
     public class OrderItem : Infrastructure.Common.ObservableObject<OrderItem>
     {

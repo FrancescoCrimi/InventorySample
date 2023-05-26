@@ -8,8 +8,7 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Domain.Model;
-using Inventory.Domain.Repository;
+using Inventory.Domain.Aggregates.ProductAggregate;
 using Inventory.Infrastructure.Common;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -22,16 +21,16 @@ namespace Inventory.Persistence.Repository
 {
     internal class ProductRepository : IProductRepository
     {
-        private AppDbContext _dataSource = null;
+        private AppDbContext _dbContext = null;
 
-        public ProductRepository(AppDbContext dataSource)
+        public ProductRepository(AppDbContext dbContext)
         {
-            _dataSource = dataSource;
+            _dbContext = dbContext;
         }
 
         public async Task<Product> GetProductAsync(long id)
         {
-            return await _dataSource.Products.Where(r => r.Id == id).FirstOrDefaultAsync();
+            return await _dbContext.Products.Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
@@ -64,7 +63,7 @@ namespace Inventory.Persistence.Repository
 
         private IQueryable<Product> GetProducts(DataRequest<Product> request)
         {
-            IQueryable<Product> items = _dataSource.Products;
+            IQueryable<Product> items = _dbContext.Products;
 
             // Query
             if (!string.IsNullOrEmpty(request.Query))
@@ -93,7 +92,7 @@ namespace Inventory.Persistence.Repository
 
         public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
         {
-            IQueryable<Product> items = _dataSource.Products;
+            IQueryable<Product> items = _dbContext.Products;
 
             // Query
             if (!string.IsNullOrEmpty(request.Query))
@@ -114,23 +113,34 @@ namespace Inventory.Persistence.Repository
         {
             if (product.Id > 0)
             {
-                _dataSource.Entry(product).State = EntityState.Modified;
+                _dbContext.Entry(product).State = EntityState.Modified;
             }
             else
             {
                 product.Id = UIDGenerator.Next(6);
                 product.CreatedOn = DateTime.UtcNow;
-                _dataSource.Entry(product).State = EntityState.Added;
+                _dbContext.Entry(product).State = EntityState.Added;
             }
             product.LastModifiedOn = DateTime.UtcNow;
             product.SearchTerms = product.BuildSearchTerms();
-            return await _dataSource.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public async Task<int> DeleteProductsAsync(params Product[] products)
         {
-            _dataSource.Products.RemoveRange(products);
-            return await _dataSource.SaveChangesAsync();
+            _dbContext.Products.RemoveRange(products);
+            return await _dbContext.SaveChangesAsync();
+        }
+
+
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            return await _dbContext.Categories.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<List<TaxType>> GetTaxTypesAsync()
+        {
+            return await _dbContext.TaxTypes.AsNoTracking().ToListAsync();
         }
 
         #region Dispose
@@ -144,9 +154,9 @@ namespace Inventory.Persistence.Repository
         {
             if (disposing)
             {
-                if (_dataSource != null)
+                if (_dbContext != null)
                 {
-                    _dataSource.Dispose();
+                    _dbContext.Dispose();
                 }
             }
         }

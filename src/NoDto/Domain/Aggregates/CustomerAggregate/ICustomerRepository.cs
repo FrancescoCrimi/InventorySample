@@ -8,21 +8,22 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.Domain.Repository
+namespace Inventory.Domain.Aggregates.CustomerAggregate
 {
-    public interface IProductRepository : IDisposable
+    public interface ICustomerRepository : IDisposable
     {
-        Task<Product> GetProductAsync(long id);
-        Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request);
-        Task<IList<Product>> GetProductKeysAsync(int skip, int take, DataRequest<Product> request);
-        Task<int> GetProductsCountAsync(DataRequest<Product> request);
-        Task<int> UpdateProductAsync(Product product);
-        Task<int> DeleteProductsAsync(params Product[] products);
+        Task<Customer> GetCustomerAsync(long id);
+        Task<IList<Customer>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request);
+        Task<IList<Customer>> GetCustomerKeysAsync(int skip, int take, DataRequest<Customer> request);
+        Task<int> GetCustomersCountAsync(DataRequest<Customer> request);
+        Task<int> UpdateCustomerAsync(Customer customer);
+        Task<int> DeleteCustomersAsync(params Customer[] customers);
+
+        Task<List<Country>> GetCountryCodesAsync();
     }
 }

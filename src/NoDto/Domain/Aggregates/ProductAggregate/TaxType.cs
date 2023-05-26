@@ -14,13 +14,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Inventory.Domain.Model
+namespace Inventory.Domain.Aggregates.ProductAggregate
 {
-    [Table("Shippers")]
-    public class Shipper : Entity, IEquatable<Shipper>
+    [Table("TaxTypes")]
+    public class TaxType : Entity, IEquatable<TaxType>
     {
         private string name;
-        private string phone;
+        private decimal rate;
 
         [Required]
         [MaxLength(50)]
@@ -30,21 +30,21 @@ namespace Inventory.Domain.Model
             set => SetProperty(ref name, value);
         }
 
-        [MaxLength(20)]
-        public string Phone
+        [Required]
+        public decimal Rate
         {
-            get => phone;
-            set => SetProperty(ref phone, value);
+            get => rate;
+            set => SetProperty(ref rate, value);
         }
 
         #region Equals
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as Shipper);
+            return Equals(obj as TaxType);
         }
 
-        public bool Equals(Shipper other)
+        public bool Equals(TaxType other)
         {
             return !(other is null) &&
                    Id == other.Id;
@@ -55,12 +55,12 @@ namespace Inventory.Domain.Model
             return HashCode.Combine(Id);
         }
 
-        public static bool operator ==(Shipper left, Shipper right)
+        public static bool operator ==(TaxType left, TaxType right)
         {
-            return EqualityComparer<Shipper>.Default.Equals(left, right);
+            return EqualityComparer<TaxType>.Default.Equals(left, right);
         }
 
-        public static bool operator !=(Shipper left, Shipper right)
+        public static bool operator !=(TaxType left, TaxType right)
         {
             return !(left == right);
         }

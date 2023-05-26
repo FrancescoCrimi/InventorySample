@@ -9,12 +9,12 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Domain.Model;
+using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.OrderItems;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.ViewModels.Orders
 {
@@ -28,8 +28,9 @@ namespace Inventory.Uwp.ViewModels.Orders
             OrderItemList = orderItemListViewModel;
         }
 
-        public OrderDetailsViewModel OrderDetails { get; set; }
-        public OrderItemListViewModel OrderItemList { get; set; }
+        public OrderDetailsViewModel OrderDetails { get; }
+
+        public OrderItemListViewModel OrderItemList { get; }
 
         public async Task LoadAsync(OrderDetailsArgs args)
         {
@@ -45,6 +46,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 await OrderItemList.LoadAsync(new OrderItemListArgs(), silent: true);
             }
         }
+
         public void Unload()
         {
             OrderDetails.CancelEdit();
@@ -54,7 +56,6 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Subscribe()
         {
-            //MessageService.Subscribe<OrderDetailsViewModel, OrderModel>(this, OnMessage);
             Messenger.Register<ViewModelsMessage<Order>>(this, OnMessage);
             OrderDetails.Subscribe();
             OrderItemList.Subscribe();
@@ -62,7 +63,6 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         public void Unsubscribe()
         {
-            //MessageService.Unsubscribe(this);
             Messenger.UnregisterAll(this);
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
@@ -75,13 +75,5 @@ namespace Inventory.Uwp.ViewModels.Orders
                 await OrderItemList.LoadAsync(new OrderItemListArgs { OrderId = message.Id });
             }
         }
-
-        //private async void OnMessage(OrderDetailsViewModel viewModel, string message, OrderModel order)
-        //{
-        //    if (viewModel == OrderDetails && message == "ItemChanged")
-        //    {
-        //        await OrderItemList.LoadAsync(new OrderItemListArgs { OrderID = order.OrderID });
-        //    }
-        //}
     }
 }

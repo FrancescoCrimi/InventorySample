@@ -11,8 +11,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Inventory.Domain.Aggregates.CustomerAggregate;
 
-namespace Inventory.Domain.Model
+namespace Inventory.Domain.Aggregates.OrderAggregate
 {
     public class Order : Infrastructure.Common.ObservableObject<Order>, IEquatable<Order>
     {

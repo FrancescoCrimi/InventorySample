@@ -16,8 +16,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Inventory.Infrastructure.Common;
 using Inventory.Domain.Repository;
-using Inventory.Domain.Model;
 using Inventory.Persistence.DbContexts;
+using Inventory.Domain.Aggregates.OrderAggregate;
 
 namespace Inventory.Persistence.Repository
 {

@@ -38,24 +38,27 @@ namespace Inventory.Uwp.ViewModels.Common
         private AsyncRelayCommand _deleteCommand;
 
         public GenericDetailsViewModel(NavigationService navigationService,
-                                       WindowManagerService windowService,
-                                       LookupTablesService lookupTablesService)
+                                       WindowManagerService windowService
+            //, LookupTablesService lookupTablesService
+            )
             : base()
         {
             _navigationService = navigationService;
             _windowService = windowService;
-            LookupTables = lookupTablesService;
+            //LookupTables = lookupTablesService;
         }
 
         #region public property
 
-        public LookupTablesService LookupTables { get; }
+        //public LookupTablesService LookupTables { get; }
 
         public bool IsDataAvailable => _item != null;
 
         public bool IsDataUnavailable => !IsDataAvailable;
 
         public bool CanGoBack => !IsMainView && _navigationService.CanGoBack;
+
+        public abstract bool ItemIsNew { get; }
 
         public bool IsEditMode
         {
@@ -101,6 +104,11 @@ namespace Inventory.Uwp.ViewModels.Common
             }
         }
 
+        #endregion
+
+
+        #region command
+
         public ICommand BackCommand => _backCommand
             ?? (_backCommand = new RelayCommand(OnBack));
         protected virtual void OnBack()
@@ -133,7 +141,7 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public ICommand SaveCommand => _saveCommand
             ?? (_saveCommand = new AsyncRelayCommand(OnSave));
-        protected async virtual Task OnSave()
+        protected virtual async Task OnSave()
         {
             StatusReady();
             var result = Validate(EditableItem);
@@ -146,7 +154,24 @@ namespace Inventory.Uwp.ViewModels.Common
                 await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
             }
         }
-        public async virtual Task SaveAsync()
+
+        public ICommand DeleteCommand => _deleteCommand
+            ?? (_deleteCommand = new AsyncRelayCommand(OnDelete));
+        protected virtual async Task OnDelete()
+        {
+            StatusReady();
+            if (await ConfirmDeleteAsync())
+            {
+                await DeleteAsync();
+            }
+        }
+
+        #endregion
+
+
+        #region public method
+
+        public virtual async Task SaveAsync()
         {
             IsEnabled = false;
             var isNew = ItemIsNew;
@@ -174,40 +199,6 @@ namespace Inventory.Uwp.ViewModels.Common
             }
             IsEnabled = true;
         }
-
-        public ICommand DeleteCommand => _deleteCommand
-            ?? (_deleteCommand = new AsyncRelayCommand(OnDelete));
-        protected async virtual Task OnDelete()
-        {
-            StatusReady();
-            if (await ConfirmDeleteAsync())
-            {
-                await DeleteAsync();
-            }
-        }
-        public async virtual Task DeleteAsync()
-        {
-            var model = Item;
-            if (model != null)
-            {
-                IsEnabled = false;
-                if (await DeleteItemAsync(model))
-                {
-                    // TODO: fix send entity id
-                    //MessageService.Send(this, "ItemDeleted", model);
-                    Messenger.Send(new ViewModelsMessage<TModel>("ItemDeleted", model.Id));
-                }
-                else
-                {
-                    IsEnabled = true;
-                }
-            }
-        }
-
-        #endregion
-
-
-        #region public method
 
         public virtual void BeginEdit()
         {
@@ -250,8 +241,6 @@ namespace Inventory.Uwp.ViewModels.Common
             IsEditMode = false;
         }
 
-        protected abstract Task<TModel> GetItemAsync(long id);
-
         public virtual Result Validate(TModel model)
         {
             foreach (var constraint in GetValidationConstraints(model))
@@ -264,17 +253,39 @@ namespace Inventory.Uwp.ViewModels.Common
             return Result.Ok();
         }
 
-        protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model) => Enumerable.Empty<IValidationConstraint<TModel>>();
-
-        public abstract bool ItemIsNew { get; }
+        public virtual async Task DeleteAsync()
+        {
+            var model = Item;
+            if (model != null)
+            {
+                IsEnabled = false;
+                if (await DeleteItemAsync(model))
+                {
+                    // TODO: fix send entity id
+                    //MessageService.Send(this, "ItemDeleted", model);
+                    Messenger.Send(new ViewModelsMessage<TModel>("ItemDeleted", model.Id));
+                }
+                else
+                {
+                    IsEnabled = true;
+                }
+            }
+        }
 
         #endregion
 
 
         #region protected and private method 
 
+        protected virtual IEnumerable<IValidationConstraint<TModel>> GetValidationConstraints(TModel model)
+            => Enumerable.Empty<IValidationConstraint<TModel>>();
+
+        protected abstract Task<TModel> GetItemAsync(long id);
+
         protected abstract Task<bool> SaveItemAsync(TModel model);
+
         protected abstract Task<bool> DeleteItemAsync(TModel model);
+
         protected abstract Task<bool> ConfirmDeleteAsync();
 
         #endregion

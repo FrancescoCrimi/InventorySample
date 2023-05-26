@@ -8,13 +8,13 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Domain.Model;
+using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Infrastructure.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.Domain.Repository
+namespace Inventory.Domain.AggregatesModel.OrderAggregate
 {
     public interface IOrderRepository : IDisposable
     {
@@ -24,5 +24,10 @@ namespace Inventory.Domain.Repository
         Task<int> GetOrdersCountAsync(DataRequest<Order> request);
         Task<int> UpdateOrderAsync(Order order);
         Task<int> DeleteOrdersAsync(params Order[] orders);
+
+
+        Task<List<OrderStatus>> GetOrderStatusAsync();
+        Task<List<PaymentType>> GetPaymentTypesAsync();
+        Task<List<Shipper>> GetShippersAsync();
     }
 }

@@ -8,8 +8,7 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Domain.Model;
-using Inventory.Domain.Repository;
+using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Infrastructure.Common;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -157,6 +156,12 @@ namespace Inventory.Persistence.Repository
         {
             _dbContext.Customers.RemoveRange(customers);
             return await _dbContext.SaveChangesAsync();
+        }
+
+
+        public async Task<List<Country>> GetCountryCodesAsync()
+        {
+            return await _dbContext.Countries.AsNoTracking().ToListAsync();
         }
 
         #region Dispose
