@@ -11,20 +11,19 @@
 using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Domain.Aggregates.ProductAggregate;
-using Inventory.Domain.AggregatesModel.OrderAggregate;
+using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Inventory.Application
 {
     public class OrderService
     {
-        private readonly ILogger<OrderService> _logger;
+        private readonly ILogger _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IProductRepository _productRepository;
@@ -54,10 +53,46 @@ namespace Inventory.Application
         }
 
         public IEnumerable<Country> CountryCodes => _countries;
+
         public IEnumerable<OrderStatus> OrderStatuses => _orderStatuses;
+
         public IEnumerable<PaymentType> PaymentTypes => _paymentTypes;
+
         public IEnumerable<Shipper> Shippers => _shippers;
+
         public IEnumerable<TaxType> TaxTypes => _taxTypes;
+
+
+        public async Task<IList<Order>> GetOrdersAsync(int index, int length, DataRequest<Order> request)
+        {
+            return await _orderRepository.GetOrdersAsync(index, length, request);
+        }
+
+        public async Task<int> GetOrdersCountAsync(DataRequest<Order> request)
+        {
+            return await _orderRepository.GetOrdersCountAsync(request);
+        }
+
+        public async Task<Order> GetOrderAsync(long orderId)
+        {
+            return await _orderRepository.GetOrderAsync(orderId);
+        }
+
+        public async Task UpdateOrderAsync(Order model)
+        {
+            await _orderRepository.UpdateOrderAsync(model);
+        }
+
+        public async Task DeleteOrdersAsync(Order model)
+        {
+            await _orderRepository.DeleteOrdersAsync(model);
+        }
+
+        public async Task DeleteOrderRangeAsync(int index, int length, DataRequest<Order> request)
+        {
+            var items = await _orderRepository.GetOrderKeysAsync(index, length, request);
+            await _orderRepository.DeleteOrdersAsync(items.ToArray());
+        }
 
 
         private async Task GetCountryCodesAsync()

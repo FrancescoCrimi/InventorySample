@@ -11,7 +11,6 @@
 using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Domain.Aggregates.ProductAggregate;
-using Inventory.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Persistence.DbContexts

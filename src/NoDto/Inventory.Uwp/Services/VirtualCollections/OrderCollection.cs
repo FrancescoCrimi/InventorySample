@@ -9,31 +9,31 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Inventory.Application;
 using Inventory.Domain.Aggregates.OrderAggregate;
-using Inventory.Domain.AggregatesModel.OrderAggregate;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Inventory.Uwp.Services.VirtualCollections
 {
     public class OrderCollection : VirtualRangeCollection<Order>
     {
         private readonly ILogger _logger;
-        private readonly IOrderRepository _orderRepository;
+        private readonly OrderService _orderService;
         private DataRequest<Order> _request;
 
         public OrderCollection(ILogger<OrderCollection> logger,
-                               IOrderRepository orderRepository)
+                               OrderService orderService)
             : base(logger)
         {
             _logger = logger;
-            _orderRepository = orderRepository;
+            _orderService = orderService;
         }
 
         // TODO: fix here request
@@ -50,7 +50,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<int> GetCountAsync()
         {
-            var result = await _orderRepository.GetOrdersCountAsync(_request);
+            var result = await _orderService.GetOrdersCountAsync(_request);
             return result;
         }
 
@@ -59,7 +59,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             try
             {
                 //Todo: fix cancellationToken
-                var result = await _orderRepository.GetOrdersAsync(skip, take, _request);
+                var result = await _orderService.GetOrdersAsync(skip, take, _request);
                 return result;
             }
             catch (Exception ex)

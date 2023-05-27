@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Inventory.Application;
 using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
@@ -24,15 +25,15 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class CustomerCollection : VirtualRangeCollection<Customer>
     {
         private readonly ILogger _logger;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly CustomerService _customerService;
         private DataRequest<Customer> _request;
 
         public CustomerCollection(ILogger<CustomerCollection> logger,
-                                  ICustomerRepository customerRepository)
+                                  CustomerService customerService)
             : base(logger)
         {
             _logger = logger;
-            _customerRepository = customerRepository;
+            _customerService = customerService;
         }
 
         // TODO: fix here request
@@ -49,7 +50,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
 
         protected async override Task<int> GetCountAsync()
         {
-            var result = await _customerRepository.GetCustomersCountAsync(_request);
+            var result = await _customerService.GetCustomersCountAsync(_request);
             return result;
         }
 
@@ -58,7 +59,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             try
             {
                 //Todo: fix cancellationToken
-                var result = await _customerRepository.GetCustomersAsync(skip, take, _request);
+                var result = await _customerService.GetCustomersAsync(skip, take, _request);
                 return result;
             }
             catch (Exception ex)

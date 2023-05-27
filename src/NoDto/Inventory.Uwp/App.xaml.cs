@@ -86,7 +86,6 @@ namespace Inventory.Uwp
             //.AddInventoryInfrastructure()
             //.AddInventoryPersistence()
             .AddInventoryApplication()
-            //.AddSingleton<LookupTablesService>()
             .AddSingleton<FilePickerService>()
 
             // ViewModels

@@ -29,21 +29,17 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerDetailsViewModel : GenericDetailsViewModel<Customer>
     {
         private readonly ILogger _logger;
-        private readonly ICustomerRepository _customerRepository;
         private readonly FilePickerService _filePickerService;
         private readonly CustomerService _customerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
                                         NavigationService navigationService,
                                         WindowManagerService windowService,
-                                        //LookupTablesService lookupTablesService,
-                                        ICustomerRepository customerRepository,
                                         FilePickerService filePickerService,
                                         CustomerService customerService)
             : base(navigationService, windowService)
         {
             _logger = logger;
-            _customerRepository = customerRepository;
             _filePickerService = filePickerService;
             _customerService = customerService;
         }
@@ -108,7 +104,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 try
                 {
-                    var item = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerId);
+                    var item = await _customerService.GetCustomerAsync(ViewModelArgs.CustomerId);
                     Item = item ?? new Customer { Id = ViewModelArgs.CustomerId, IsEmpty = true };
                     OnPropertyChanged(nameof(Item));
                 }
@@ -161,7 +157,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 StartStatusMessage("Saving customer...");
                 await Task.Delay(100);
-                await _customerRepository.UpdateCustomerAsync(model);
+                await _customerService.UpdateCustomerAsync(model);
                 EndStatusMessage("Customer saved");
                 _logger.LogInformation(LogEvents.Save, $"Customer {model.Id} '{model.FullName}' was saved successfully.");
                 return true;
@@ -180,7 +176,7 @@ namespace Inventory.Uwp.ViewModels.Customers
             {
                 StartStatusMessage("Deleting customer...");
                 await Task.Delay(100);
-                await _customerRepository.DeleteCustomersAsync(model);
+                await _customerService.DeleteCustomersAsync(model);
                 EndStatusMessage("Customer deleted");
                 _logger.LogWarning(LogEvents.Delete, $"Customer {model.Id} '{model.FullName}' was deleted.");
                 return true;
@@ -227,7 +223,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                                 //item = item ?? new Customer { Id = current.Id, IsEmpty = true };
                                 //current.Merge(item);
                                 //current.NotifyChanges();
-                                Item = await _customerRepository.GetCustomerAsync(current.Id);
+                                Item = await _customerService.GetCustomerAsync(current.Id);
                                 OnPropertyChanged(nameof(Title));
                                 if (IsEditMode)
                                 {
@@ -263,7 +259,7 @@ namespace Inventory.Uwp.ViewModels.Customers
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await _customerRepository.GetCustomerAsync(current.Id);
+                            var model = await _customerService.GetCustomerAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -290,7 +286,7 @@ namespace Inventory.Uwp.ViewModels.Customers
 
         protected async override Task<Customer> GetItemAsync(long id)
         {
-            return await _customerRepository.GetCustomerAsync(id);
+            return await _customerService.GetCustomerAsync(id);
         }
 
         #endregion

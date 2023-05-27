@@ -9,11 +9,13 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using Inventory.Domain.Aggregates.ProductAggregate;
+using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +23,7 @@ namespace Inventory.Application
 {
     public class ProductService
     {
-        private readonly ILogger<ProductService> _logger;
+        private readonly ILogger _logger;
         private readonly IProductRepository _productRepository;
         private static List<Category> _categories;
         private static List<TaxType> _taxTypes;
@@ -31,7 +33,7 @@ namespace Inventory.Application
         {
             _logger = logger;
             _productRepository = productRepository;
-            Task.Run(async() =>
+            Task.Run(async () =>
             {
                 await GetCategoriesAsync();
                 await GetTaxTypesAsync();
@@ -39,12 +41,45 @@ namespace Inventory.Application
         }
 
         public IEnumerable<Category> Categories => _categories;
+
         public IEnumerable<TaxType> TaxTypes => _taxTypes;
+
+
+        public async Task<IList<Product>> GetProductsAsync(int index, int length, DataRequest<Product> request)
+        {
+            return await _productRepository.GetProductsAsync(index, length, request);
+        }
+
+        public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
+        {
+            return await _productRepository.GetProductsCountAsync(request);
+        }
+
+        public async Task<Product> GetProductAsync(long productId)
+        {
+            return await _productRepository.GetProductAsync(productId);
+        }
+
+        public async Task UpdateProductAsync(Product model)
+        {
+            await _productRepository.UpdateProductAsync(model);
+        }
+
+        public async Task DeleteProductsAsync(Product model)
+        {
+            await _productRepository.DeleteProductsAsync(model);
+        }
+
+        public async Task DeleteProductRangeAsync(int index, int length, DataRequest<Product> request)
+        {
+            var items = await _productRepository.GetProductKeysAsync(index, length, request);
+            await _productRepository.DeleteProductsAsync(items.ToArray());
+        }
 
 
         private async Task GetCategoriesAsync()
         {
-            if(_categories == null)
+            if (_categories == null)
             {
                 try
                 {

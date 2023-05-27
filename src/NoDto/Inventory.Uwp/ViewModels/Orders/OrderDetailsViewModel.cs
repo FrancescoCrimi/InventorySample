@@ -13,7 +13,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Application;
 using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Domain.Aggregates.OrderAggregate;
-using Inventory.Domain.AggregatesModel.OrderAggregate;
 using Inventory.Infrastructure.Logging;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
@@ -31,21 +30,18 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrderDetailsViewModel : GenericDetailsViewModel<Order>
     {
         private readonly ILogger _logger;
-        private readonly IOrderRepository _orderRepository;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly CustomerService _customerService;
         private readonly OrderService _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
-                                     IOrderRepository orderRepository,
-                                     ICustomerRepository customerRepository,
+                                     CustomerService customerService,
                                      OrderService orderService)
             : base(navigationService, windowService)
         {
             _logger = logger;
-            _orderRepository = orderRepository;
-            _customerRepository = customerRepository;
+            _customerService = customerService;
             _orderService = orderService;
         }
 
@@ -106,7 +102,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                 }
                 else
                 {
-                    var customer = await _customerRepository.GetCustomerAsync(ViewModelArgs.CustomerId);
+                    var customer = await _customerService.GetCustomerAsync(ViewModelArgs.CustomerId);
                     Item = Order.CreateNewOrder(customer);
                 }
                 IsEditMode = true;
@@ -115,7 +111,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 try
                 {
-                    var item = await _orderRepository.GetOrderAsync(ViewModelArgs.OrderId);
+                    var item = await _orderService.GetOrderAsync(ViewModelArgs.OrderId);
                     Item = item ?? new Order { Id = ViewModelArgs.OrderId, IsEmpty = true };
                 }
                 catch (Exception ex)
@@ -165,7 +161,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 StartStatusMessage("Saving order...");
                 await Task.Delay(100);
-                await _orderRepository.UpdateOrderAsync(model);
+                await _orderService.UpdateOrderAsync(model);
                 EndStatusMessage("Order saved");
                 _logger.LogInformation(LogEvents.Save, $"Order #{model.Id} was saved successfully.");
                 OnPropertyChanged(nameof(CanEditCustomer));
@@ -185,7 +181,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             {
                 StartStatusMessage("Deleting order...");
                 await Task.Delay(100);
-                await _orderRepository.DeleteOrdersAsync(model);
+                await _orderService.DeleteOrdersAsync(model);
                 EndStatusMessage("Order deleted");
                 _logger.LogWarning(LogEvents.Delete, $"Order #{model.Id} was deleted.");
                 return true;
@@ -259,7 +255,7 @@ namespace Inventory.Uwp.ViewModels.Orders
                     case "ItemRangesDeleted":
                         try
                         {
-                            var model = await _orderRepository.GetOrderAsync(current.Id);
+                            var model = await _orderService.GetOrderAsync(current.Id);
                             if (model == null)
                             {
                                 await OnItemDeletedExternally();
@@ -296,7 +292,7 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         protected async override Task<Order> GetItemAsync(long id)
         {
-            return await _orderRepository.GetOrderAsync(id);
+            return await _orderService.GetOrderAsync(id);
         }
 
         #endregion

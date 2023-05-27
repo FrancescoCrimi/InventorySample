@@ -432,15 +432,15 @@
       <Name>Inventory.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Inventory.Domain.csproj">
-      <Project>{6693c7c0-edf1-4f6b-89c0-f61c262d9ee5}</Project>
+      <Project>{3180a5d5-ee53-4ad9-b48a-494e4535b731}</Project>
       <Name>Inventory.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj">
-      <Project>{e74bba50-85e3-4c3d-814d-d8390df9a92f}</Project>
+      <Project>{0d8da490-68c0-48eb-b5a9-c012d5fece85}</Project>
       <Name>Inventory.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Persistence\Inventory.Persistence.csproj">
-      <Project>{665a2311-c34f-4803-b30b-223d74cc7fff}</Project>
+      <Project>{7efd0048-6a6f-4fef-a80e-5b917035ed5b}</Project>
       <Name>Inventory.Persistence</Name>
     </ProjectReference>
   </ItemGroup>

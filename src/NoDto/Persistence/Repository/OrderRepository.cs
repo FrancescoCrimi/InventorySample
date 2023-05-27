@@ -9,7 +9,6 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using Inventory.Domain.Aggregates.OrderAggregate;
-using Inventory.Domain.AggregatesModel.OrderAggregate;
 using Inventory.Infrastructure.Common;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;

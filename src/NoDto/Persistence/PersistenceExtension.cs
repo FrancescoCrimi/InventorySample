@@ -10,8 +10,8 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using Inventory.Domain.Aggregates.CustomerAggregate;
+using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Domain.Aggregates.ProductAggregate;
-using Inventory.Domain.AggregatesModel.OrderAggregate;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
@@ -64,7 +64,6 @@ namespace Inventory.Persistence
                 .AddTransient<IOrderRepository, OrderRepository>()
                 .AddTransient<IOrderItemRepository, OrderItemRepository>()
                 .AddTransient<IProductRepository, ProductRepository>()
-                //.AddTransient<ILookupTableRepository, LookupTableRepository>()
                 .AddSingleton<IPersistenceService, PersistenceService>();
         }
     }

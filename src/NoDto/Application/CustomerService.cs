@@ -9,11 +9,12 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using Inventory.Domain.Aggregates.CustomerAggregate;
+using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Inventory.Application
@@ -29,10 +30,51 @@ namespace Inventory.Application
         {
             _logger = logger;
             _customerRepository = customerRepository;
-            Task.Run(async() => await GetCountryCodesAsync());
+            Task.Run(async () => await GetCountryCodesAsync());
         }
 
         public IEnumerable<Country> CountryCodes => _countries;
+
+
+        public Task<IList<Customer>> GetCustomersAsync(int index, int length, DataRequest<Customer> request)
+        {
+            return _customerRepository.GetCustomersAsync(index, length, request);
+        }
+
+        public Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
+        {
+            return _customerRepository.GetCustomersCountAsync(request);
+        }
+
+        public Task<Customer> GetCustomerAsync(long customerId)
+        {
+            return _customerRepository.GetCustomerAsync(customerId);
+        }
+
+        public Task UpdateCustomerAsync(Customer model)
+        {
+            return _customerRepository.UpdateCustomerAsync(model);
+        }
+
+        public Task DeleteCustomersAsync(Customer model)
+        {
+            return _customerRepository.DeleteCustomersAsync(model);
+        }
+
+        public async Task DeleteCustomersAsync(IEnumerable<Customer> models)
+        {
+            foreach (var model in models)
+            {
+                await _customerRepository.DeleteCustomersAsync(model);
+            }
+        }
+
+        public async Task DeleteCustomerRangeAsync(int index, int length, DataRequest<Customer> request)
+        {
+            var items = await _customerRepository.GetCustomerKeysAsync(index, length, request);
+            await _customerRepository.DeleteCustomersAsync(items.ToArray());
+        }
+
 
         private async Task GetCountryCodesAsync()
         {
@@ -40,7 +82,7 @@ namespace Inventory.Application
             {
                 try
                 {
-                    _countries =  await _customerRepository.GetCountryCodesAsync();
+                    _countries = await _customerRepository.GetCountryCodesAsync();
                 }
                 catch (Exception ex)
                 {
