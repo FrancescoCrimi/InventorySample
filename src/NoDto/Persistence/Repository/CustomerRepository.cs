@@ -28,15 +28,6 @@ namespace Inventory.Persistence.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<Customer> GetCustomerAsync(long id)
-        {
-            var cust = await _dbContext.Customers
-                .Where(r => r.Id == id)
-                .Include(c => c.Country)
-                .FirstOrDefaultAsync();
-            return cust;
-        }
-
         public async Task<IList<Customer>> GetCustomersAsync(int skip, int take, DataRequest<Customer> request)
         {
             var items = GetCustomers(request);
@@ -86,35 +77,6 @@ namespace Inventory.Persistence.Repository
             return records;
         }
 
-        private IQueryable<Customer> GetCustomers(DataRequest<Customer> request)
-        {
-            IQueryable<Customer> items = _dbContext.Customers;
-
-            // Query
-            if (!string.IsNullOrEmpty(request.Query))
-            {
-                items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
-            }
-
-            // Where
-            if (request.Where != null)
-            {
-                items = items.Where(request.Where);
-            }
-
-            // Order By
-            if (request.OrderBy != null)
-            {
-                items = items.OrderBy(request.OrderBy);
-            }
-            if (request.OrderByDesc != null)
-            {
-                items = items.OrderByDescending(request.OrderByDesc);
-            }
-
-            return items;
-        }
-
         public async Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
         {
             IQueryable<Customer> items = _dbContext.Customers;
@@ -132,6 +94,15 @@ namespace Inventory.Persistence.Repository
             }
 
             return await items.CountAsync();
+        }
+
+        public async Task<Customer> GetCustomerAsync(long id)
+        {
+            var cust = await _dbContext.Customers
+                .Where(r => r.Id == id)
+                .Include(c => c.Country)
+                .FirstOrDefaultAsync();
+            return cust;
         }
 
         public async Task<int> UpdateCustomerAsync(Customer customer)
@@ -163,6 +134,37 @@ namespace Inventory.Persistence.Repository
         {
             return await _dbContext.Countries.AsNoTracking().ToListAsync();
         }
+
+
+        private IQueryable<Customer> GetCustomers(DataRequest<Customer> request)
+        {
+            IQueryable<Customer> items = _dbContext.Customers;
+
+            // Query
+            if (!string.IsNullOrEmpty(request.Query))
+            {
+                items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
+            }
+
+            // Where
+            if (request.Where != null)
+            {
+                items = items.Where(request.Where);
+            }
+
+            // Order By
+            if (request.OrderBy != null)
+            {
+                items = items.OrderBy(request.OrderBy);
+            }
+            if (request.OrderByDesc != null)
+            {
+                items = items.OrderByDescending(request.OrderByDesc);
+            }
+
+            return items;
+        }
+
 
         #region Dispose
         public void Dispose()

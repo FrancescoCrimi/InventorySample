@@ -42,26 +42,107 @@ namespace Inventory.Application
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
             _productRepository = productRepository;
-            Task.Run(async () =>
-            {
-                await GetCountryCodesAsync();
-                await GetOrderStatusAsync();
-                await GetPaymentTypesAsync();
-                await GetShippersAsync();
-                await GetTaxTypesAsync();
-            });
         }
 
-        public IEnumerable<Country> CountryCodes => _countries;
+        public IEnumerable<Country> CountryCodes
+        {
+            get
+            {
+                if (_countries == null)
+                {
+                    try
+                    {
+                        _countries = _customerRepository.GetCountryCodesAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _countries = new List<Country>();
+                        _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
+                    }
+                }
+                return _countries;
+            }
+        }
 
-        public IEnumerable<OrderStatus> OrderStatuses => _orderStatuses;
+        public IEnumerable<OrderStatus> OrderStatuses
+        {
+            get
+            {
+                if (_orderStatuses == null)
+                {
+                    try
+                    {
+                        _orderStatuses = _orderRepository.GetOrderStatusAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _orderStatuses = new List<OrderStatus>();
+                        _logger.LogError(LogEvents.LoadOrderStatus, ex, "Load OrderStatus");
+                    }
+                }
+                return _orderStatuses;
+            }
+        }
 
-        public IEnumerable<PaymentType> PaymentTypes => _paymentTypes;
+        public IEnumerable<PaymentType> PaymentTypes
+        {
+            get
+            {
+                if (_paymentTypes == null)
+                {
+                    try
+                    {
+                        _paymentTypes = _orderRepository.GetPaymentTypesAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _paymentTypes = new List<PaymentType>();
+                        _logger.LogError(LogEvents.LoadPaymentTypes, ex, "Load PaymentTypes");
+                    }
+                }
+                return _paymentTypes;
+            }
+        }
 
-        public IEnumerable<Shipper> Shippers => _shippers;
+        public IEnumerable<Shipper> Shippers
+        {
+            get
+            {
+                if (_shippers == null)
+                {
+                    try
+                    {
+                        _shippers = _orderRepository.GetShippersAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _shippers = new List<Shipper>();
+                        _logger.LogError(LogEvents.LoadShippers, ex, "Load Shippers");
+                    }
+                }
+                return _shippers;
+            }
+        }
 
-        public IEnumerable<TaxType> TaxTypes => _taxTypes;
-
+        public IEnumerable<TaxType> TaxTypes
+        {
+            get
+            {
+                if (_taxTypes == null)
+                {
+                    try
+                    {
+                        _taxTypes = _productRepository.GetTaxTypesAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _taxTypes = new List<TaxType>();
+                        _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
+                    }
+                }
+                return _taxTypes;
+            }
+        }
 
         public async Task<IList<Order>> GetOrdersAsync(int index, int length, DataRequest<Order> request)
         {
@@ -92,82 +173,6 @@ namespace Inventory.Application
         {
             var items = await _orderRepository.GetOrderKeysAsync(index, length, request);
             await _orderRepository.DeleteOrdersAsync(items.ToArray());
-        }
-
-
-        private async Task GetCountryCodesAsync()
-        {
-            if (_countries == null)
-            {
-                try
-                {
-                    _countries = await _customerRepository.GetCountryCodesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
-                }
-            }
-        }
-
-        private async Task GetOrderStatusAsync()
-        {
-            if (_orderStatuses == null)
-            {
-                try
-                {
-                    _orderStatuses = await _orderRepository.GetOrderStatusAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadOrderStatus, ex, "Load OrderStatus");
-                }
-            }
-        }
-
-        private async Task GetPaymentTypesAsync()
-        {
-            if (_paymentTypes == null)
-            {
-                try
-                {
-                    _paymentTypes = await _orderRepository.GetPaymentTypesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadPaymentTypes, ex, "Load PaymentTypes");
-                }
-            }
-        }
-
-        private async Task GetShippersAsync()
-        {
-            if (_shippers == null)
-            {
-                try
-                {
-                    _shippers = await _orderRepository.GetShippersAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadShippers, ex, "Load Shippers");
-                }
-            }
-        }
-
-        private async Task GetTaxTypesAsync()
-        {
-            if (_taxTypes == null)
-            {
-                try
-                {
-                    _taxTypes = await _productRepository.GetTaxTypesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
-                }
-            }
         }
     }
 }

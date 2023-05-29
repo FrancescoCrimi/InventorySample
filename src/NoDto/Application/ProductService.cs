@@ -33,17 +33,47 @@ namespace Inventory.Application
         {
             _logger = logger;
             _productRepository = productRepository;
-            Task.Run(async () =>
-            {
-                await GetCategoriesAsync();
-                await GetTaxTypesAsync();
-            });
         }
 
-        public IEnumerable<Category> Categories => _categories;
+        public IEnumerable<Category> Categories
+        {
+            get
+            {
+                if (_categories == null)
+                {
+                    try
+                    {
+                        _categories = _productRepository.GetCategoriesAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _categories = new List<Category>();
+                        _logger.LogError(LogEvents.LoadCategories, ex, "Load Categories");
+                    }
+                }
+                return _categories;
+            }
+        }
 
-        public IEnumerable<TaxType> TaxTypes => _taxTypes;
-
+        public IEnumerable<TaxType> TaxTypes
+        {
+            get
+            {
+                if (_taxTypes == null)
+                {
+                    try
+                    {
+                        _taxTypes =  _productRepository.GetTaxTypesAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _taxTypes = new List<TaxType>();
+                        _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
+                    }
+                }
+                return _taxTypes;
+            }
+        }
 
         public async Task<IList<Product>> GetProductsAsync(int index, int length, DataRequest<Product> request)
         {
@@ -74,37 +104,6 @@ namespace Inventory.Application
         {
             var items = await _productRepository.GetProductKeysAsync(index, length, request);
             await _productRepository.DeleteProductsAsync(items.ToArray());
-        }
-
-
-        private async Task GetCategoriesAsync()
-        {
-            if (_categories == null)
-            {
-                try
-                {
-                    _categories = await _productRepository.GetCategoriesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadCategories, ex, "Load Categories");
-                }
-            }
-        }
-
-        private async Task GetTaxTypesAsync()
-        {
-            if (_taxTypes == null)
-            {
-                try
-                {
-                    _taxTypes = await _productRepository.GetTaxTypesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
-                }
-            }
         }
     }
 }

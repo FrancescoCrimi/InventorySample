@@ -34,14 +34,16 @@ namespace Inventory.Persistence
                     //.UseLazyLoadingProxies()
                     //.EnableSensitiveDataLogging(true)
                     .UseSqlite(settings.SQLiteConnectionString);
-            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+                //}, ServiceLifetime.Transient, ServiceLifetime.Transient);
+            });
 
             serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>
             {
                 options
                     //.UseLazyLoadingProxies()
                     .UseSqlServer(settings.SQLServerConnectionString);
-            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+                //}, ServiceLifetime.Transient, ServiceLifetime.Transient);
+            });
 
             switch (settings.DataProvider)
             {

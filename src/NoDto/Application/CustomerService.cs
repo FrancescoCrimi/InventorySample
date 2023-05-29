@@ -30,35 +30,51 @@ namespace Inventory.Application
         {
             _logger = logger;
             _customerRepository = customerRepository;
-            Task.Run(async () => await GetCountryCodesAsync());
         }
 
-        public IEnumerable<Country> CountryCodes => _countries;
-
-
-        public Task<IList<Customer>> GetCustomersAsync(int index, int length, DataRequest<Customer> request)
+        public IEnumerable<Country> CountryCodes
         {
-            return _customerRepository.GetCustomersAsync(index, length, request);
+            get
+            {
+                if (_countries == null)
+                {
+                    try
+                    {
+                        _countries = _customerRepository.GetCountryCodesAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        _countries = new List<Country>();
+                        _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
+                    }
+                }
+                return _countries;
+            }
         }
 
-        public Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
+        public async Task<IList<Customer>> GetCustomersAsync(int index, int length, DataRequest<Customer> request)
         {
-            return _customerRepository.GetCustomersCountAsync(request);
+            return await _customerRepository.GetCustomersAsync(index, length, request);
         }
 
-        public Task<Customer> GetCustomerAsync(long customerId)
+        public async Task<int> GetCustomersCountAsync(DataRequest<Customer> request)
         {
-            return _customerRepository.GetCustomerAsync(customerId);
+            return await _customerRepository.GetCustomersCountAsync(request);
         }
 
-        public Task UpdateCustomerAsync(Customer model)
+        public async Task<Customer> GetCustomerAsync(long customerId)
         {
-            return _customerRepository.UpdateCustomerAsync(model);
+            return await _customerRepository.GetCustomerAsync(customerId);
         }
 
-        public Task DeleteCustomersAsync(Customer model)
+        public async Task UpdateCustomerAsync(Customer model)
         {
-            return _customerRepository.DeleteCustomersAsync(model);
+            await _customerRepository.UpdateCustomerAsync(model);
+        }
+
+        public async Task DeleteCustomersAsync(Customer model)
+        {
+            await _customerRepository.DeleteCustomersAsync(model);
         }
 
         public async Task DeleteCustomersAsync(IEnumerable<Customer> models)
@@ -73,22 +89,6 @@ namespace Inventory.Application
         {
             var items = await _customerRepository.GetCustomerKeysAsync(index, length, request);
             await _customerRepository.DeleteCustomersAsync(items.ToArray());
-        }
-
-
-        private async Task GetCountryCodesAsync()
-        {
-            if (_countries == null)
-            {
-                try
-                {
-                    _countries = await _customerRepository.GetCountryCodesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
-                }
-            }
         }
     }
 }

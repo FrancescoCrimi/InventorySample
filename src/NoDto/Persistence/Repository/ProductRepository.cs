@@ -28,11 +28,6 @@ namespace Inventory.Persistence.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<Product> GetProductAsync(long id)
-        {
-            return await _dbContext.Products.Where(r => r.Id == id).FirstOrDefaultAsync();
-        }
-
         public async Task<IList<Product>> GetProductsAsync(int skip, int take, DataRequest<Product> request)
         {
             var items = GetProducts(request);
@@ -61,35 +56,6 @@ namespace Inventory.Persistence.Repository
             return records;
         }
 
-        private IQueryable<Product> GetProducts(DataRequest<Product> request)
-        {
-            IQueryable<Product> items = _dbContext.Products;
-
-            // Query
-            if (!string.IsNullOrEmpty(request.Query))
-            {
-                items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
-            }
-
-            // Where
-            if (request.Where != null)
-            {
-                items = items.Where(request.Where);
-            }
-
-            // Order By
-            if (request.OrderBy != null)
-            {
-                items = items.OrderBy(request.OrderBy);
-            }
-            if (request.OrderByDesc != null)
-            {
-                items = items.OrderByDescending(request.OrderByDesc);
-            }
-
-            return items;
-        }
-
         public async Task<int> GetProductsCountAsync(DataRequest<Product> request)
         {
             IQueryable<Product> items = _dbContext.Products;
@@ -107,6 +73,11 @@ namespace Inventory.Persistence.Repository
             }
 
             return await items.CountAsync();
+        }
+
+        public async Task<Product> GetProductAsync(long id)
+        {
+            return await _dbContext.Products.Where(r => r.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<int> UpdateProductAsync(Product product)
@@ -142,6 +113,37 @@ namespace Inventory.Persistence.Repository
         {
             return await _dbContext.TaxTypes.AsNoTracking().ToListAsync();
         }
+
+
+        private IQueryable<Product> GetProducts(DataRequest<Product> request)
+        {
+            IQueryable<Product> items = _dbContext.Products;
+
+            // Query
+            if (!string.IsNullOrEmpty(request.Query))
+            {
+                items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
+            }
+
+            // Where
+            if (request.Where != null)
+            {
+                items = items.Where(request.Where);
+            }
+
+            // Order By
+            if (request.OrderBy != null)
+            {
+                items = items.OrderBy(request.OrderBy);
+            }
+            if (request.OrderByDesc != null)
+            {
+                items = items.OrderByDescending(request.OrderByDesc);
+            }
+
+            return items;
+        }
+
 
         #region Dispose
         public void Dispose()

@@ -39,9 +39,9 @@ namespace Inventory.Uwp.ViewModels.Dashboard
         private readonly CustomerService _customerService;
         private readonly OrderService _orderService;
         private readonly ProductService _productService;
-        private readonly AsyncRelayCommand _loadedCommand;
-        private readonly RelayCommand _unLoadedCommand;
-        private readonly RelayCommand<ItemClickEventArgs> _itemClickCommand;
+        private AsyncRelayCommand _loadedCommand;
+        private RelayCommand _unLoadedCommand;
+        private RelayCommand<ItemClickEventArgs> _itemClickCommand;
         private IList<Customer> _customers;
         private IList<Product> _products;
         private IList<Order> _orders;
@@ -58,16 +58,16 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             _customerService = customerService;
             _orderService = orderService;
             _productService = productService;
-            _loadedCommand = new AsyncRelayCommand(LoadAsync);
-            _unLoadedCommand = new RelayCommand(Unload);
-            _itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick);
         }
 
-        public IAsyncRelayCommand LoadedCommand => _loadedCommand;
+        public ICommand LoadedCommand => _loadedCommand
+            ?? (_loadedCommand = new AsyncRelayCommand(LoadAsync));
 
-        public ICommand UnLoadedCommand => _unLoadedCommand;
+        public ICommand UnLoadedCommand => _unLoadedCommand
+            ?? (_unLoadedCommand = new RelayCommand(Unload));
 
-        public ICommand ItemClickCommand => _itemClickCommand;
+        public ICommand ItemClickCommand => _itemClickCommand
+            ?? (_itemClickCommand = new RelayCommand<ItemClickEventArgs>(ItemClick));
 
         public IList<Customer> Customers
         {
@@ -87,7 +87,7 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             set => SetProperty(ref _orders, value);
         }
 
-        public async Task LoadAsync()
+        private async Task LoadAsync()
         {
             StartStatusMessage("Loading dashboard...");
             await LoadCustomersAsync();
@@ -95,7 +95,8 @@ namespace Inventory.Uwp.ViewModels.Dashboard
             await LoadProductsAsync();
             EndStatusMessage("Dashboard loaded");
         }
-        public void Unload()
+
+        private void Unload()
         {
             Customers = null;
             Products = null;

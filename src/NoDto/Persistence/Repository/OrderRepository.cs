@@ -65,35 +65,6 @@ namespace Inventory.Persistence.Repository
             return records;
         }
 
-        private IQueryable<Order> GetOrders(DataRequest<Order> request)
-        {
-            IQueryable<Order> items = _dbContext.Orders;
-
-            // Query
-            if (!string.IsNullOrEmpty(request.Query))
-            {
-                items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
-            }
-
-            // Where
-            if (request.Where != null)
-            {
-                items = items.Where(request.Where);
-            }
-
-            // Order By
-            if (request.OrderBy != null)
-            {
-                items = items.OrderBy(request.OrderBy);
-            }
-            if (request.OrderByDesc != null)
-            {
-                items = items.OrderByDescending(request.OrderByDesc);
-            }
-
-            return items;
-        }
-
         public async Task<int> GetOrdersCountAsync(DataRequest<Order> request)
         {
             IQueryable<Order> items = _dbContext.Orders;
@@ -137,7 +108,6 @@ namespace Inventory.Persistence.Repository
         }
 
 
-
         public async Task<List<OrderStatus>> GetOrderStatusAsync()
         {
             return await _dbContext.OrderStatuses.AsNoTracking().ToListAsync();
@@ -152,6 +122,37 @@ namespace Inventory.Persistence.Repository
         {
             return await _dbContext.Shippers.AsNoTracking().ToListAsync();
         }
+
+
+        private IQueryable<Order> GetOrders(DataRequest<Order> request)
+        {
+            IQueryable<Order> items = _dbContext.Orders;
+
+            // Query
+            if (!string.IsNullOrEmpty(request.Query))
+            {
+                items = items.Where(r => r.SearchTerms.Contains(request.Query.ToLower()));
+            }
+
+            // Where
+            if (request.Where != null)
+            {
+                items = items.Where(request.Where);
+            }
+
+            // Order By
+            if (request.OrderBy != null)
+            {
+                items = items.OrderBy(request.OrderBy);
+            }
+            if (request.OrderByDesc != null)
+            {
+                items = items.OrderByDescending(request.OrderByDesc);
+            }
+
+            return items;
+        }
+
 
         #region Dispose
         public void Dispose()

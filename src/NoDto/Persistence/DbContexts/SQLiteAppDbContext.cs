@@ -11,16 +11,22 @@
 using Inventory.Domain.Aggregates.CustomerAggregate;
 using Inventory.Domain.Aggregates.OrderAggregate;
 using Inventory.Domain.Aggregates.ProductAggregate;
+using Inventory.Infrastructure.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Persistence.DbContexts
 {
     public class SQLiteAppDbContext : AppDbContext
     {
-        public SQLiteAppDbContext(DbContextOptions<SQLiteAppDbContext> options)
+        private readonly ILogger<SQLiteAppDbContext> _logger;
+
+        public SQLiteAppDbContext(ILogger<SQLiteAppDbContext> logger, DbContextOptions<SQLiteAppDbContext> options)
             : base(options)
         {
+            _logger = logger;
+            _logger.LogWarning(LogEvents.Startup, "SQLiteAppDbContext Start: {0}", GetHashCode().ToString());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
