@@ -55,7 +55,7 @@ namespace Inventory.Persistence.Repository
                 //    LastModifiedOn = r.LastModifiedOn,
                 //    Thumbnail = r.Thumbnail
                 //})
-                .AsNoTracking()
+                //.AsNoTracking()
                 .ToListAsync();
 
             return records;
@@ -130,7 +130,7 @@ namespace Inventory.Persistence.Repository
         }
 
 
-        public async Task<List<Country>> GetCountryCodesAsync()
+        public async Task<List<Country>> GetCountriesAsync()
         {
             return await _dbContext.Countries.AsNoTracking().ToListAsync();
         }

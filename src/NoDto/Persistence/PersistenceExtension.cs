@@ -31,7 +31,7 @@ namespace Inventory.Persistence
             serviceCollection.AddDbContext<SQLiteAppDbContext>(options =>
             {
                 options
-                    //.UseLazyLoadingProxies()
+                    .UseLazyLoadingProxies()
                     //.EnableSensitiveDataLogging(true)
                     .UseSqlite(settings.SQLiteConnectionString);
                 //}, ServiceLifetime.Transient, ServiceLifetime.Transient);
@@ -40,7 +40,8 @@ namespace Inventory.Persistence
             serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>
             {
                 options
-                    //.UseLazyLoadingProxies()
+                    .UseLazyLoadingProxies()
+                    //.EnableSensitiveDataLogging(true)
                     .UseSqlServer(settings.SQLServerConnectionString);
                 //}, ServiceLifetime.Transient, ServiceLifetime.Transient);
             });

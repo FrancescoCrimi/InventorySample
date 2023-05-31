@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -62,7 +63,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (SelectedItem != null)
             {
-                await _windowService.OpenInNewWindow<CustomersPage>(new CustomerDetailsArgs { CustomerId = SelectedItem.Id });
+                await _windowService.OpenInNewWindow<CustomerPage>(new CustomerDetailsArgs { CustomerId = SelectedItem.Id });
             }
         }
 

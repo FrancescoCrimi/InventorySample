@@ -44,7 +44,7 @@ namespace Inventory.Application
             _productRepository = productRepository;
         }
 
-        public IEnumerable<Country> CountryCodes
+        public IEnumerable<Country> Countries
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Inventory.Application
                 {
                     try
                     {
-                        _countries = _customerRepository.GetCountryCodesAsync().Result;
+                        _countries = _customerRepository.GetCountriesAsync().Result;
                     }
                     catch (Exception ex)
                     {

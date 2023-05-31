@@ -54,7 +54,7 @@
                 <libcontrols:FormTextBox Header="Postal Code"
                                          Text="{x:Bind EditableItem.PostalCode, Mode=TwoWay}" />
                 <libcontrols:FormComboBox Header="Country"
-                                          ItemsSource="{x:Bind CountryCodes}"
+                                          ItemsSource="{x:Bind Countries}"
                                           SelectedItem="{x:Bind EditableItem.Country, Mode=TwoWay}"
                                           DisplayMemberPath="Name" />
                 <!-- 

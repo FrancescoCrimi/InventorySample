@@ -47,5 +47,10 @@ namespace Inventory.Uwp.Views.OrderItems
             ViewModel.Unload();
             ViewModel.Unsubscribe();
         }
+
+        private void Page_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.Initialize(XamlRoot);
+        }
     }
 }

@@ -39,7 +39,8 @@ namespace Inventory.Uwp.Services
             {
                 Title = title,
                 Content = content,
-                PrimaryButtonText = ok
+                PrimaryButtonText = ok,
+                XamlRoot = xamlRoot
             };
             if (cancel != null)
             {

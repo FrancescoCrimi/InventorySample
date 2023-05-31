@@ -28,22 +28,13 @@ namespace Inventory.Persistence.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<Order> GetOrderAsync(long id)
-        {
-            return await _dbContext.Orders.Where(r => r.Id == id)
-                .Include(r => r.Customer)
-                .Include(o => o.Status)
-                .Include(o => o.ShipCountry)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<IList<Order>> GetOrdersAsync(int skip, int take, DataRequest<Order> request)
         {
             var items = GetOrders(request);
 
             // Execute
             var records = await items.Skip(skip).Take(take)
-                .AsNoTracking()
+                //.AsNoTracking()
                 .ToListAsync();
 
             return records;
@@ -82,6 +73,15 @@ namespace Inventory.Persistence.Repository
             }
 
             return await items.CountAsync();
+        }
+
+        public async Task<Order> GetOrderAsync(long id)
+        {
+            return await _dbContext.Orders.Where(r => r.Id == id)
+                //.Include(r => r.Customer)
+                //.Include(o => o.Status)
+                //.Include(o => o.ShipCountry)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<int> UpdateOrderAsync(Order order)

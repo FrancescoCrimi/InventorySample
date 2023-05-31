@@ -30,7 +30,7 @@ namespace Inventory.Infrastructure
                     .AddDebug()
                     //.AddConsole()
                     .AddSqliteDatabase(serviceCollection)
-                    .AddFilter("", LogLevel.Information)
+                    .AddFilter("", LogLevel.Warning)
                 );
         }
 

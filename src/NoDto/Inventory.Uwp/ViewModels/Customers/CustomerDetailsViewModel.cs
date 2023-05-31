@@ -79,7 +79,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         }
 
 
-        public IEnumerable<Country> CountryCodes => _customerService.CountryCodes;
+        public IEnumerable<Country> Countries => _customerService.Countries;
 
         #endregion
 

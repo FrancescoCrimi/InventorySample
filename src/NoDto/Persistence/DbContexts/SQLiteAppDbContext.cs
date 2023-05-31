@@ -20,9 +20,10 @@ namespace Inventory.Persistence.DbContexts
 {
     public class SQLiteAppDbContext : AppDbContext
     {
-        private readonly ILogger<SQLiteAppDbContext> _logger;
+        private readonly ILogger _logger;
 
-        public SQLiteAppDbContext(ILogger<SQLiteAppDbContext> logger, DbContextOptions<SQLiteAppDbContext> options)
+        public SQLiteAppDbContext(ILogger<SQLiteAppDbContext> logger,
+                                  DbContextOptions<SQLiteAppDbContext> options)
             : base(options)
         {
             _logger = logger;

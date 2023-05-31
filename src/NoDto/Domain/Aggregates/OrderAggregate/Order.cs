@@ -38,6 +38,7 @@ namespace Inventory.Domain.Aggregates.OrderAggregate
 
         #endregion
 
+
         #region property
 
         public DateTimeOffset OrderDate

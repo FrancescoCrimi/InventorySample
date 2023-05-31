@@ -42,7 +42,7 @@
                     <libcontrols:FormTextBox Header="Ship Region"
                                              Text="{x:Bind EditableItem.ShipRegion, Mode=TwoWay}" />
                     <libcontrols:FormComboBox Header="Ship Country"
-                                              ItemsSource="{x:Bind CountryCodes}"
+                                              ItemsSource="{x:Bind Countries}"
                                               SelectedItem="{x:Bind EditableItem.ShipCountry, Mode=TwoWay}"
                                               DisplayMemberPath="Name" />
                 </libcontrols:FluidGrid>
@@ -56,10 +56,13 @@
                                           DisplayMemberPath="Name" />
                 <libcontrols:FormComboBox Header="Payment Type"
                                           ItemsSource="{x:Bind PaymentTypes}"
-                                          SelectedValue="{x:Bind EditableItem.PaymentTypeId, Mode=TwoWay, Converter={StaticResource NullableInt64Converter}}"
-                                          SelectedValuePath="Id"
+                                          SelectedItem="{x:Bind EditableItem.PaymentType, Mode=TwoWay}"
                                           DisplayMemberPath="Name"
                                           Visibility="{x:Bind EditableItem.CanEditPayment, Mode=OneWay}" />
+                <!--
+                                          SelectedValue="{x:Bind EditableItem.PaymentTypeId, Mode=TwoWay, Converter={StaticResource NullableInt64Converter}}"
+                                          SelectedValuePath="Id"
+                -->
                 <libcontrols:FluidGrid Columns="2"
                                        ColumnSpacing="6"
                                        RowSpacing="12"

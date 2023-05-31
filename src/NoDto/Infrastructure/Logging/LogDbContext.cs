@@ -11,14 +11,20 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 
 namespace Inventory.Infrastructure.Logging
 {
     public class LogDbContext : DbContext
     {
-        public LogDbContext(DbContextOptions<LogDbContext> options)
+        private readonly ILogger _logger;
+
+        public LogDbContext(ILogger<LogDbContext> logger,
+                            DbContextOptions<LogDbContext> options)
             : base(options)
         {
+            _logger = logger;
+            //_logger.LogWarning(LogEvents.Startup, "LogDbContext Start: {0}", GetHashCode().ToString());
         }
 
         protected LogDbContext()

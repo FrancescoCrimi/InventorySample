@@ -78,7 +78,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         }
 
 
-        public IEnumerable<Country> CountryCodes => _orderService.CountryCodes;
+        public IEnumerable<Country> Countries => _orderService.Countries;
         public IEnumerable<OrderStatus> OrderStatuses => _orderService.OrderStatuses;
         public IEnumerable<PaymentType> PaymentTypes => _orderService.PaymentTypes;
         public IEnumerable<Shipper> Shippers => _orderService.Shippers;

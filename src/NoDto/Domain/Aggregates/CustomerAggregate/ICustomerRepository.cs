@@ -24,6 +24,6 @@ namespace Inventory.Domain.Aggregates.CustomerAggregate
         Task<int> UpdateCustomerAsync(Customer customer);
         Task<int> DeleteCustomersAsync(params Customer[] customers);
 
-        Task<List<Country>> GetCountryCodesAsync();
+        Task<List<Country>> GetCountriesAsync();
     }
 }

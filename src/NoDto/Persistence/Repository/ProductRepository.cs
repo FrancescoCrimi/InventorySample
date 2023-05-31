@@ -34,7 +34,7 @@ namespace Inventory.Persistence.Repository
 
             // Execute
             var records = await items.Skip(skip).Take(take)
-                .AsNoTracking()
+                //.AsNoTracking()
                 .ToListAsync();
 
             return records;
