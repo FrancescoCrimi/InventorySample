@@ -6,7 +6,7 @@
         <ResourceDictionary Source="/Inventory.Uwp.Library/Controls/Forms/FormCalendarDatePicker.xaml" />
         <ResourceDictionary Source="/Inventory.Uwp.Library/Controls/Forms/FormComboBox.xaml" />
         <ResourceDictionary Source="/Inventory.Uwp.Library/Controls/Forms/FormTextBox.xaml" />
-        <ResourceDictionary Source="/Inventory.Uwp.Library/Controls/Section/Sections.xaml" />
+        <ResourceDictionary Source="/Inventory.Uwp.Library/Controls/Section/Section.xaml" />
         <ResourceDictionary Source="/Inventory.Uwp.Library/Controls/Buttons/RoundButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
