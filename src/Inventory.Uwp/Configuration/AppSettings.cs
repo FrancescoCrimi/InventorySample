@@ -95,7 +95,7 @@ namespace Inventory.Uwp
             var databaseFolder = await _localFolder.CreateFolderAsync(DatabasePath, CreationCollisionOption.OpenIfExists);
             if (await databaseFolder.TryGetItemAsync(DatabaseName) == null)
             {
-                var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Database/VanArsdel.1.01.db"));
+                var sourceFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/Database/VanArsdel.1.02.db"));
                 var targetFile = await databaseFolder.CreateFileAsync(DatabaseName, CreationCollisionOption.ReplaceExisting);
                 await sourceFile.CopyAndReplaceAsync(targetFile);
             }
