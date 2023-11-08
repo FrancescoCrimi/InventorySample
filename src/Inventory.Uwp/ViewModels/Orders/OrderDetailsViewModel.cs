@@ -53,7 +53,8 @@ namespace Inventory.Uwp.ViewModels.Orders
 
             if (ViewModelArgs.IsNew)
             {
-                Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerId);
+                //Item = await _orderService.CreateNewOrderAsync(ViewModelArgs.CustomerId);
+                Item = new OrderDto();
                 IsEditMode = true;
             }
             else
@@ -122,7 +123,7 @@ namespace Inventory.Uwp.ViewModels.Orders
             EditableItem.ShipPostalCode = customer.PostalCode;
             EditableItem.Customer = customer;
 
-            EditableItem.NotifyChanges();
+            //EditableItem.NotifyChanges();
         }
 
         public OrderDetailsArgs ViewModelArgs { get; private set; }
@@ -173,7 +174,7 @@ namespace Inventory.Uwp.ViewModels.Orders
 
         protected override async Task<bool> ConfirmDeleteAsync()
         {
-            return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
+            return await _windowService.OpenDialog("Confirm Delete", "Are you sure you want to delete current order?", "Ok", "Cancel");
         }
 
         protected override IEnumerable<IValidationConstraint<OrderDto>> GetValidationConstraints(OrderDto model)

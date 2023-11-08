@@ -32,6 +32,7 @@ namespace Inventory.Uwp.ViewModels.Orders
         }
 
         public OrderDetailsViewModel OrderDetails { get; set; }
+
         public OrderItemListViewModel OrderItemList { get; set; }
 
         public async Task LoadAsync(OrderDetailsArgs args)
@@ -68,7 +69,6 @@ namespace Inventory.Uwp.ViewModels.Orders
             OrderDetails.Unsubscribe();
             OrderItemList.Unsubscribe();
         }
-
 
         private async void OnMessage(object recipient, ViewModelsMessage<OrderDto> message)
         {

@@ -59,32 +59,32 @@ namespace Inventory.Uwp.Dto
         public string TrackingNumber
         {
             get => _trackingNumber;
-            set => SetProperty(ref _trackingNumber, value); 
+            set => SetProperty(ref _trackingNumber, value);
         }
-        public string ShipAddress 
+        public string ShipAddress
         {
             get => _shipAddress;
-            set => SetProperty(ref _shipAddress, value); 
+            set => SetProperty(ref _shipAddress, value);
         }
-        public string ShipCity 
+        public string ShipCity
         {
             get => _shipCity;
-            set => SetProperty(ref _shipCity, value); 
+            set => SetProperty(ref _shipCity, value);
         }
-        public string ShipRegion 
+        public string ShipRegion
         {
             get => _shipRegion;
-            set => SetProperty(ref _shipRegion, value); 
+            set => SetProperty(ref _shipRegion, value);
         }
-        public string ShipPostalCode 
+        public string ShipPostalCode
         {
             get => _shipPostalCode;
-            set => SetProperty(ref _shipPostalCode, value); 
+            set => SetProperty(ref _shipPostalCode, value);
         }
-        public string ShipPhone 
+        public string ShipPhone
         {
             get => _shipPhone;
-            set => SetProperty(ref _shipPhone, value); 
+            set => SetProperty(ref _shipPhone, value);
         }
 
         #endregion
@@ -92,65 +92,73 @@ namespace Inventory.Uwp.Dto
 
         #region relation
 
-        public long CustomerId 
+        public long CustomerId
         {
             get => _customerId;
-            set => SetProperty(ref _customerId, value); 
+            set => SetProperty(ref _customerId, value);
         }
-        public long? PaymentTypeId 
+        public long? PaymentTypeId
         {
             get => _paymentTypeId;
-            set => SetProperty(ref _paymentTypeId, value); 
+            set => SetProperty(ref _paymentTypeId, value);
         }
-        public long ShipCountryId 
+        public long ShipCountryId
         {
             get => _shipCountryId;
-            set => SetProperty(ref _shipCountryId, value); 
+            set => SetProperty(ref _shipCountryId, value);
         }
-        public long? ShipperId 
+        public long? ShipperId
         {
             get => _shipperId;
-            set => SetProperty(ref _shipperId, value); 
+            set => SetProperty(ref _shipperId, value);
         }
         public long StatusId
         {
             get => _statusId;
-            set { if (SetProperty(ref _statusId, value)) UpdateStatusDependencies(); }
+            set
+            {
+                if (SetProperty(ref _statusId, value))
+                    UpdateStatusDependencies();
+            }
         }
 
-        public CustomerDto Customer 
+        public CustomerDto Customer
         {
             get => _customer;
-            set => SetProperty(ref _customer, value); 
+            set => SetProperty(ref _customer, value);
         }
-        public PaymentTypeDto PaymentType 
+        public PaymentTypeDto PaymentType
         {
             get => _paymentType;
-            set => SetProperty(ref _paymentType, value); 
+            set => SetProperty(ref _paymentType, value);
         }
-        public CountryDto ShipCountry 
+        public CountryDto ShipCountry
         {
             get => _shipCountry;
-            set => SetProperty(ref _shipCountry, value); 
+            set => SetProperty(ref _shipCountry, value);
         }
-        public ShipperDto Shipper 
+        public ShipperDto Shipper
         {
             get => _shipper;
-            set => SetProperty(ref _shipper, value); 
+            set => SetProperty(ref _shipper, value);
         }
-        public OrderStatusDto Status 
+        public OrderStatusDto Status
         {
             get => _status;
-            set { if (SetProperty(ref _status, value)) UpdateStatusDependencies(); }
+            set
+            {
+                if (SetProperty(ref _status, value))
+                    UpdateStatusDependencies();
+            }
         }
         public IList<OrderItemDto> OrderItems { get; set; }
 
         #endregion
 
 
-        public bool CanEditPayment => StatusId > 0;
-        public bool CanEditShipping => StatusId > 1;
-        public bool CanEditDelivery => StatusId > 2;
+        public bool CanEditPayment => StatusId > 0L;
+        public bool CanEditShipping => StatusId > 1L;
+        public bool CanEditDelivery => StatusId > 2L;
 
         public string StatusDesc { get; set; }
         public string PaymentTypeDesc { get; set; }

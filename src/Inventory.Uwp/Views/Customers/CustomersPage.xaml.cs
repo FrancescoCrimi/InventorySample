@@ -47,7 +47,7 @@ namespace Inventory.Uwp.Views.Customers
         {
             var args = ViewModel.CustomerList.CreateArgs();
             args.IsMainView = false;
-            await windowService.OpenInNewWindow<CustomersPage>(args);
+            await windowService.OpenWindow(typeof(CustomersPage), args);
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
@@ -55,11 +55,11 @@ namespace Inventory.Uwp.Views.Customers
             ViewModel.CustomerDetails.CancelEdit();
             if (pivot.SelectedIndex == 0)
             {
-                await windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerDetails.CreateArgs());
+                await windowService.OpenWindow(typeof(CustomerPage), ViewModel.CustomerDetails.CreateArgs());
             }
             else
             {
-                await windowService.OpenInNewWindow<CustomerPage>(ViewModel.CustomerOrders.CreateArgs());
+                await windowService.OpenWindow(typeof(CustomerPage), ViewModel.CustomerOrders.CreateArgs());
             }
         }
 

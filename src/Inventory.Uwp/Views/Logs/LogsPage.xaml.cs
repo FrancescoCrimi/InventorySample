@@ -49,7 +49,7 @@ namespace Inventory.Uwp.Views.Logs
         {
             var args = ViewModel.LogList.CreateArgs();
             args.IsMainView = false;
-            await _windowService.OpenInNewWindow<LogsPage>(args);
+            await _windowService.OpenWindow(typeof(LogsPage), args);
         }
 
         public int GetRowSpan(bool isMultipleSelection)

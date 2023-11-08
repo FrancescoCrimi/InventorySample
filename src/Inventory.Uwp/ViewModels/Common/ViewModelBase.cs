@@ -25,19 +25,19 @@ namespace Inventory.Uwp.ViewModels.Common
         {
         }
 
-        protected XamlRoot ViewXamlRoot { get; set; }
-        public void Initialize(XamlRoot xamlRoot)
-        {
-            ViewXamlRoot = xamlRoot;
-        }
+        //protected XamlRoot ViewXamlRoot { get; set; }
+        //public void Initialize(XamlRoot xamlRoot)
+        //{
+        //    ViewXamlRoot = xamlRoot;
+        //}
 
-        protected Task<bool> ShowDialogAsync(string title,
-                                             string content,
-                                             string ok = "Ok",
-                                             string cancel = null)
-        {
-            return DialogService.Current.ShowAsync(title, content, ok, cancel, ViewXamlRoot);
-        }
+        //protected Task<bool> ShowDialogAsync(string title,
+        //                                     string content,
+        //                                     string ok = "Ok",
+        //                                     string cancel = null)
+        //{
+        //    return DialogService.Current.OpenDialog(title, content, ok, cancel, ViewXamlRoot);
+        //}
 
         // todo: make sure modify default as true is good
         private bool isMainView = true;

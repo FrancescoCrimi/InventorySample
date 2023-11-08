@@ -45,17 +45,18 @@
                 </libcontrols:Section>
             </Grid>
 
-            <!--Details-->
+            <!--Selected Order-->
             <Grid Grid.Row="1"
                   BorderBrush="LightGray"
                   BorderThickness="0,1,0,0"
                   Visibility="{x:Bind ViewModel.OrderList.IsMultipleSelection, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+
+                <!--Order-->
                 <libcontrols:Section IsEnabled="{x:Bind ViewModel.OrderDetails.IsEnabled, Mode=OneWay}"
                                      Background="{StaticResource DetailsViewBackgroundColor}"
                                      HeaderButtonGlyph="&#xE2B4;"
                                      HeaderButtonClick="OpenDetailsInNewView"
                                      Visibility="{x:Bind ViewModel.OrderDetails.IsDataAvailable, Mode=OneWay}">
-
                     <Pivot x:Name="pivot">
                         <PivotItem Header="Order">
                             <local:OrdersDetailsControl Grid.Row="1"
@@ -68,7 +69,7 @@
                     </Pivot>
                 </libcontrols:Section>
 
-                <!--Empty Details-->
+                <!--Empty Order-->
                 <libcontrols:Section Header="No item selected"
                                      Visibility="{x:Bind ViewModel.OrderDetails.IsDataUnavailable, Mode=OneWay}" />
             </Grid>

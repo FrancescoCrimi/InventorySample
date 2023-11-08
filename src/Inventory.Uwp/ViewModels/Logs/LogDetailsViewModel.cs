@@ -12,6 +12,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
+using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,13 +26,16 @@ namespace Inventory.Uwp.ViewModels.Logs
     {
         private readonly ILogger _logger;
         private readonly LogService _logService;
+        private readonly WindowManagerService _windowManagerService;
 
         public LogDetailsViewModel(ILogger<LogListViewModel> logger,
-                                   LogService logService)
+                                   LogService logService,
+                                   WindowManagerService windowManagerService)
             : base()
         {
             _logger = logger;
             _logService = logService;
+            _windowManagerService = windowManagerService;
         }
 
         #region method
@@ -110,7 +114,7 @@ namespace Inventory.Uwp.ViewModels.Logs
         }
         private async Task<bool> ConfirmDeleteAsync()
         {
-            return await ShowDialogAsync("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
+            return await _windowManagerService.OpenDialog("Confirm Delete", "Are you sure you want to delete current log?", "Ok", "Cancel");
         }
         private async Task DeleteAsync()
         {

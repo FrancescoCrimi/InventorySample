@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
+using Inventory.Uwp.Contracts.Services;
 using Inventory.Uwp.Helpers;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -125,7 +126,8 @@ namespace Inventory.Uwp.ViewModels
 
         public void Initialize(Frame frame)
         {
-            _navigationService.Frame = frame;
+            //_navigationService.Frame = frame;
+            _navigationService.Initialize(frame);
             _navigationService.NavigationFailed += Frame_NavigationFailed;
             _navigationService.Navigated += Frame_Navigated;
             //navigationService.OnCurrentPageCanGoBackChanged += OnCurrentPageCanGoBackChanged;

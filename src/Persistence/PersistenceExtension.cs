@@ -32,8 +32,8 @@ namespace Inventory.Persistence
                     {
                         options
                             //.UseLazyLoadingProxies()
-                            .UseSqlite(settings.SQLiteConnectionString);
-                            //.EnableSensitiveDataLogging(true);
+                            .UseSqlite(settings.SQLiteConnectionString)
+                            .EnableSensitiveDataLogging(true);
                     }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
                     serviceCollection.AddTransient<AppDbContext>((serviceProvider)

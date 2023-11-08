@@ -30,21 +30,21 @@
                     <libcontrols:FormTextBox Header="Ship Region"
                                              Text="{x:Bind EditableItem.ShipRegion, Mode=TwoWay}" />
                 </libcontrols:FluidGrid>
+
                 <libcontrols:FormComboBox Header="Ship Country"
                                           ItemsSource="{x:Bind LookupTables.Countries}"
                                           VerticalAlignment="Top"
                                           SelectedValue="{x:Bind EditableItem.ShipCountryId, Mode=TwoWay}"
                                           SelectedValuePath="Id"
                                           DisplayMemberPath="Name" />
-
                 <libcontrols:FormComboBox Header="Status"
                                           ItemsSource="{x:Bind LookupTables.OrderStatus}"
-                                          SelectedValue="{x:Bind EditableItem.StatusId, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                          SelectedValue="{x:Bind EditableItem.StatusId, Mode=TwoWay, Converter={StaticResource NullableInt64Converter}}"
                                           SelectedValuePath="Id"
                                           DisplayMemberPath="Name" />
                 <libcontrols:FormComboBox Header="Payment Type"
                                           ItemsSource="{x:Bind LookupTables.PaymentTypes}"
-                                          SelectedValue="{x:Bind EditableItem.PaymentTypeId, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                          SelectedValue="{x:Bind EditableItem.PaymentTypeId, Mode=TwoWay, Converter={StaticResource NullableInt64Converter}}"
                                           SelectedValuePath="Id"
                                           DisplayMemberPath="Name"
                                           Visibility="{x:Bind EditableItem.CanEditPayment, Mode=OneWay}" />

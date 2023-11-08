@@ -48,13 +48,13 @@ namespace Inventory.Uwp.Views.OrderItems
 
         private async void OpenInNewView(object sender, RoutedEventArgs e)
         {
-            await windowService.OpenInNewWindow<OrderItemsPage>(ViewModel.OrderItemList.CreateArgs());
+            await windowService.OpenWindow(typeof(OrderItemsPage), ViewModel.OrderItemList.CreateArgs());
         }
 
         private async void OpenDetailsInNewView(object sender, RoutedEventArgs e)
         {
             ViewModel.OrderItemDetails.CancelEdit();
-            await windowService.OpenInNewWindow<OrderItemDetailsControl>(ViewModel.OrderItemDetails.CreateArgs());
+            await windowService.OpenWindow(typeof(OrderItemDetailsControl), ViewModel.OrderItemDetails.CreateArgs());
         }
 
         public int GetRowSpan(bool isMultipleSelection)

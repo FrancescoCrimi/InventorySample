@@ -11,7 +11,6 @@
 
 using CommunityToolkit.Mvvm.Input;
 using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.Views.Settings;
@@ -28,6 +27,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     {
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
+        private readonly WindowManagerService _windowManagerService;
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
         private bool _isBusy = false;
         private bool _isLocalProvider;
@@ -40,10 +40,12 @@ namespace Inventory.Uwp.ViewModels.Settings
         private AsyncRelayCommand _saveChangesCommand;
 
         public SettingsViewModel(ILogger<SettingsViewModel> logger,
-                                 AppSettings appSettings)
+                                 AppSettings appSettings,
+                                 WindowManagerService windowManagerService)
         {
             _logger = logger;
             _appSettings = appSettings;
+            _windowManagerService = windowManagerService;
         }
 
         public Task LoadAsync(SettingsArgs args)
@@ -130,12 +132,12 @@ namespace Inventory.Uwp.ViewModels.Settings
             IsBusy = false;
             if (result.IsOk)
             {
-                await ShowDialogAsync("Reset Local Data Provider", "Local Data Provider restore successfully.");
+                await _windowManagerService.OpenDialog("Reset Local Data Provider", "Local Data Provider restore successfully.");
                 StatusReady();
             }
             else
             {
-                await ShowDialogAsync("Reset Local Data Provider", result.Message);
+                await _windowManagerService.OpenDialog("Reset Local Data Provider", result.Message);
                 StatusMessage(result.Message);
             }
         }

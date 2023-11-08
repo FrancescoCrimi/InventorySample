@@ -28,7 +28,7 @@ namespace Inventory.Uwp.ViewModels.Common
         where TModel : ObservableDto<TModel>, new()
     {
         private readonly NavigationService _navigationService;
-        private readonly WindowManagerService _windowService;
+        protected readonly WindowManagerService _windowService;
         private TModel _item = null;
         private TModel _editableItem = null;
         private bool _isEditMode = false;
@@ -143,7 +143,7 @@ namespace Inventory.Uwp.ViewModels.Common
             }
             else
             {
-                await ShowDialogAsync(result.Message, $"{result.Description} Please, correct the error and try again.");
+                await _windowService.OpenDialog(result.Message, $"{result.Description} Please, correct the error and try again.");
             }
         }
 
@@ -188,11 +188,11 @@ namespace Inventory.Uwp.ViewModels.Common
                 {
                     Task.Run(async () =>
                     {
-                        await _windowService.CloseViewAsync();
+                        await _windowService.CloseWindow();
                     });
                 }
                 return;
-            }
+            } 
 
             // We were editing an existing item: just cancel edition
             if (IsEditMode)

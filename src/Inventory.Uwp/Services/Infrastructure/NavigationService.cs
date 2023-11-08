@@ -1,4 +1,15 @@
-﻿using System;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -18,7 +29,7 @@ namespace Inventory.Uwp.Services
         {
         }
 
-        public Frame Frame
+        private Frame Frame
         {
             get
             {
@@ -53,7 +64,9 @@ namespace Inventory.Uwp.Services
 
         public void GoForward() => Frame.GoForward();
 
-        public bool Navigate(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null)
+        public bool Navigate(Type pageType,
+                             object parameter = null,
+                             NavigationTransitionInfo infoOverride = null)
         {
             if (pageType == null || !pageType.IsSubclassOf(typeof(Page)))
             {
@@ -75,10 +88,6 @@ namespace Inventory.Uwp.Services
                 return false;
             }
         }
-
-        public bool Navigate<T>(object parameter = null, NavigationTransitionInfo infoOverride = null)
-            where T : Page
-            => Navigate(typeof(T), parameter, infoOverride);
 
         private void RegisterFrameEvents()
         {
@@ -108,6 +117,22 @@ namespace Inventory.Uwp.Services
 
         private void Frame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
+        }
+
+        internal void Initialize(Frame frame)
+        {
+            if (frame is null)
+            {
+                throw new ArgumentNullException(nameof(frame));
+            }
+            if (_frame == null)
+            {
+                _frame = frame;
+            }
+            else
+            {
+                throw new Exception("NavigationService already initialized");
+            }
         }
     }
 }
