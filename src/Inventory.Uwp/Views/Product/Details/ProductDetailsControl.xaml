@@ -24,9 +24,13 @@
                                          Text="{x:Bind EditableItem.Name, Mode=TwoWay}" />
                 <libcontrols:FormComboBox Header="Category"
                                           ItemsSource="{x:Bind LookupTables.Categories}"
+                                          SelectedItem="{x:Bind EditableItem.Category, Mode=TwoWay}"
+                                          DisplayMemberPath="Name" />
+                <!--<libcontrols:FormComboBox Header="Category"
+                                          ItemsSource="{x:Bind LookupTables.Categories}"
                                           SelectedValue="{x:Bind EditableItem.CategoryId, Mode=TwoWay}"
                                           SelectedValuePath="Id"
-                                          DisplayMemberPath="Name" />
+                                          DisplayMemberPath="Name" />-->
 
                 <TextBlock Style="{StaticResource FormsSection}"
                            libcontrols:FluidGrid.ColumnSpan="2"
