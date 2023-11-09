@@ -53,10 +53,14 @@
                                        MinColumnWidth="60">
                     <libcontrols:FormTextBox Header="Region"
                                              Text="{x:Bind EditableItem.Region, Mode=TwoWay}" />
-                    <!--<libControls:FormComboBox Header="Country"
-                                              ItemsSource="{x:Bind LookupTables.CountryCodes}"
-                                              SelectedValue="{x:Bind EditableItem.CountryCode, Mode=TwoWay}"
-                                              SelectedValuePath="CountryCodeID"
+                    <libcontrols:FormComboBox Header="Country"
+                                              ItemsSource="{x:Bind LookupTables.Countries}"
+                                              SelectedItem="{x:Bind EditableItem.Country, Mode=TwoWay}"
+                                              DisplayMemberPath="Name" />
+                    <!--<libcontrols:FormComboBox Header="Country"
+                                              ItemsSource="{x:Bind LookupTables.Countries}"
+                                              SelectedValue="{x:Bind EditableItem.CountryId, Mode=TwoWay}"
+                                              SelectedValuePath="Id"
                                               DisplayMemberPath="Name" />-->
                 </libcontrols:FluidGrid>
             </libcontrols:FluidGrid>

@@ -48,9 +48,13 @@
                                              Text="{x:Bind EditableItem.ShipRegion, Mode=TwoWay}" />
                     <libcontrols:FormComboBox Header="Ship Country"
                                               ItemsSource="{x:Bind LookupTables.Countries}"
+                                              SelectedItem="{x:Bind EditableItem.ShipCountry, Mode=TwoWay}"
+                                              DisplayMemberPath="Name" />
+                    <!--<libcontrols:FormComboBox Header="Ship Country"
+                                              ItemsSource="{x:Bind LookupTables.Countries}"
                                               SelectedValue="{x:Bind EditableItem.ShipCountryId, Mode=TwoWay}"
                                               SelectedValuePath="Id"
-                                              DisplayMemberPath="Name" />
+                                              DisplayMemberPath="Name" />-->
                 </libcontrols:FluidGrid>
 
                 <TextBlock Style="{StaticResource FormsSection}"
@@ -59,15 +63,24 @@
 
                 <libcontrols:FormComboBox Header="Status"
                                           ItemsSource="{x:Bind LookupTables.OrderStatus}"
+                                          SelectedItem="{x:Bind EditableItem.Status, Mode=TwoWay}"
+                                          DisplayMemberPath="Name" />
+                <!--<libcontrols:FormComboBox Header="Status"
+                                          ItemsSource="{x:Bind LookupTables.OrderStatus}"
                                           SelectedValue="{x:Bind EditableItem.StatusId, Mode=TwoWay, Converter={StaticResource NullableInt64Converter}}"
                                           SelectedValuePath="Id"
-                                          DisplayMemberPath="Name" />
+                                          DisplayMemberPath="Name" />-->
                 <libcontrols:FormComboBox Header="Payment Type"
+                                          ItemsSource="{x:Bind LookupTables.PaymentTypes}"
+                                          SelectedItem="{x:Bind EditableItem.PaymentType, Mode=TwoWay}"
+                                          DisplayMemberPath="Name"
+                                          Visibility="{x:Bind EditableItem.CanEditPayment, Mode=OneWay}" />
+                <!--<libcontrols:FormComboBox Header="Payment Type"
                                           ItemsSource="{x:Bind LookupTables.PaymentTypes}"
                                           SelectedValue="{x:Bind EditableItem.PaymentTypeId, Mode=TwoWay, Converter={StaticResource NullableInt64Converter}}"
                                           SelectedValuePath="Id"
                                           DisplayMemberPath="Name"
-                                          Visibility="{x:Bind EditableItem.CanEditPayment, Mode=OneWay}" />
+                                          Visibility="{x:Bind EditableItem.CanEditPayment, Mode=OneWay}" />-->
 
                 <libcontrols:FluidGrid Columns="2"
                                        ColumnSpacing="6"

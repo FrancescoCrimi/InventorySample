@@ -22,8 +22,9 @@ namespace Inventory.Uwp.Library.Converters
                 {
                     return n64;
                 }
+                return 0L;
             }
-            return null;
+            return 0L;
         }
     }
 }
