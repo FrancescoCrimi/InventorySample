@@ -124,7 +124,7 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (SelectedItem != null)
             {
-                await _windowService.OpenWindow(typeof(CustomerPage), new CustomerDetailsArgs { CustomerId = SelectedItem.Id });
+                await _windowService.OpenWindow(typeof(CustomerView), new CustomerDetailsArgs { CustomerId = SelectedItem.Id });
             }
         }
 
@@ -132,11 +132,11 @@ namespace Inventory.Uwp.ViewModels.Customers
         {
             if (IsMainView)
             {
-                await _windowService.OpenWindow(typeof(CustomerPage), new CustomerDetailsArgs());
+                await _windowService.OpenWindow(typeof(CustomerView), new CustomerDetailsArgs());
             }
             else
             {
-                _navigationService.Navigate(typeof(CustomerPage), new CustomerDetailsArgs());
+                _navigationService.Navigate(typeof(CustomerView), new CustomerDetailsArgs());
             }
 
             StatusReady();

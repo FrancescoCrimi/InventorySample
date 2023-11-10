@@ -160,13 +160,13 @@ namespace Inventory.Uwp.ViewModels.Dashboard
                 switch (control.Tag as string)
                 {
                     case "Customers":
-                        _navigationService.Navigate(typeof(CustomersPage), new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
+                        _navigationService.Navigate(typeof(CustomersView), new CustomerListArgs { OrderByDesc = r => r.CreatedOn });
                         break;
                     case "Orders":
-                        _navigationService.Navigate(typeof(OrdersPage), new OrderListArgs { OrderByDesc = r => r.OrderDate });
+                        _navigationService.Navigate(typeof(OrdersView), new OrderListArgs { OrderByDesc = r => r.OrderDate });
                         break;
                     case "Products":
-                        _navigationService.Navigate(typeof(ProductsPage), new ProductListArgs { OrderByDesc = r => r.ListPrice });
+                        _navigationService.Navigate(typeof(ProductsView), new ProductListArgs { OrderByDesc = r => r.ListPrice });
                         break;
                     default:
                         break;

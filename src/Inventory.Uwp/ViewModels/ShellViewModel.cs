@@ -106,7 +106,7 @@ namespace Inventory.Uwp.ViewModels
             {
                 if (args.IsSettingsInvoked)
                 {
-                    _navigationService.Navigate(typeof(SettingsPage), null, args.RecommendedNavigationTransitionInfo);
+                    _navigationService.Navigate(typeof(SettingsView), null, args.RecommendedNavigationTransitionInfo);
                 }
                 else
                 {

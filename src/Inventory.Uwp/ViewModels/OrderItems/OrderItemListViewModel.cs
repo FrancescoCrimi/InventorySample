@@ -22,7 +22,7 @@ using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
-using Inventory.Uwp.Views.OrderItems;
+using Inventory.Uwp.Views.OrderItem;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -128,7 +128,7 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (SelectedItem != null)
             {
-                await _windowService.OpenWindow(typeof(OrderItemPage), new OrderItemDetailsArgs { OrderID = SelectedItem.OrderId, OrderLine = SelectedItem.OrderLine });
+                await _windowService.OpenWindow(typeof(OrderItemView), new OrderItemDetailsArgs { OrderID = SelectedItem.OrderId, OrderLine = SelectedItem.OrderLine });
             }
         }
 
@@ -136,11 +136,11 @@ namespace Inventory.Uwp.ViewModels.OrderItems
         {
             if (IsMainView)
             {
-                await _windowService.OpenWindow(typeof(OrderItemPage), new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                await _windowService.OpenWindow(typeof(OrderItemView), new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
             else
             {
-                _navigationService.Navigate(typeof(OrderItemPage), new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
+                _navigationService.Navigate(typeof(OrderItemView), new OrderItemDetailsArgs { OrderID = ViewModelArgs.OrderID });
             }
 
             StatusReady();

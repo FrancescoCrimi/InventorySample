@@ -19,76 +19,6 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
-    <OutputPath>bin\ARM\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\ARM64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>ARM64</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
-    <OutputPath>bin\ARM64\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>ARM64</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -221,119 +151,119 @@
     <Compile Include="Views\Controls\ProductSuggestBox.xaml.cs">
       <DependentUpon>ProductSuggestBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customer\Details\CustomerCardControl.xaml.cs">
-      <DependentUpon>CustomerCardControl.xaml</DependentUpon>
+    <Compile Include="Views\Customer\Details\CustomerCard.xaml.cs">
+      <DependentUpon>CustomerCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customer\Details\CustomerDetailsControl.xaml.cs">
-      <DependentUpon>CustomerDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\Customer\Details\CustomerDetails.xaml.cs">
+      <DependentUpon>CustomerDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customer\CustomerPage.xaml.cs">
-      <DependentUpon>CustomerPage.xaml</DependentUpon>
+    <Compile Include="Views\Customer\CustomerView.xaml.cs">
+      <DependentUpon>CustomerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\Details\CustomersCardControl.xaml.cs">
-      <DependentUpon>CustomersCardControl.xaml</DependentUpon>
+    <Compile Include="Views\Customers\Details\CustomersCard.xaml.cs">
+      <DependentUpon>CustomersCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\Details\CustomersDetailsControl.xaml.cs">
-      <DependentUpon>CustomersDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\Customers\Details\CustomersDetails.xaml.cs">
+      <DependentUpon>CustomersDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\List\CustomersListControl.xaml.cs">
-      <DependentUpon>CustomersListControl.xaml</DependentUpon>
+    <Compile Include="Views\Customers\List\CustomersList.xaml.cs">
+      <DependentUpon>CustomersList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\Details\CustomersOrdersControl.xaml.cs">
-      <DependentUpon>CustomersOrdersControl.xaml</DependentUpon>
+    <Compile Include="Views\Customers\Details\CustomersOrders.xaml.cs">
+      <DependentUpon>CustomersOrders.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Customers\CustomersPage.xaml.cs">
-      <DependentUpon>CustomersPage.xaml</DependentUpon>
+    <Compile Include="Views\Customers\CustomersView.xaml.cs">
+      <DependentUpon>CustomersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\CustomersControl.xaml.cs">
-      <DependentUpon>CustomersControl.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\Parts\CustomersPane.xaml.cs">
+      <DependentUpon>CustomersPane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\DashboardPage.xaml.cs">
-      <DependentUpon>DashboardPage.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\DashboardView.xaml.cs">
+      <DependentUpon>DashboardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\OrdersControl.xaml.cs">
-      <DependentUpon>OrdersControl.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\Parts\OrdersPane.xaml.cs">
+      <DependentUpon>OrdersPane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Dashboard\ProductsControl.xaml.cs">
-      <DependentUpon>ProductsControl.xaml</DependentUpon>
+    <Compile Include="Views\Dashboard\Parts\ProductsPane.xaml.cs">
+      <DependentUpon>ProductsPane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Logs\LogsDetailsControl.xaml.cs">
-      <DependentUpon>LogsDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\Logs\LogsDetails.xaml.cs">
+      <DependentUpon>LogsDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Logs\LogsListControl.xaml.cs">
-      <DependentUpon>LogsListControl.xaml</DependentUpon>
+    <Compile Include="Views\Logs\LogsList.xaml.cs">
+      <DependentUpon>LogsList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Logs\LogsPage.xaml.cs">
-      <DependentUpon>LogsPage.xaml</DependentUpon>
+    <Compile Include="Views\Logs\LogsView.xaml.cs">
+      <DependentUpon>LogsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemCardControl.xaml.cs">
-      <DependentUpon>OrderItemCardControl.xaml</DependentUpon>
+    <Compile Include="Views\OrderItem\Details\OrderItemCard.xaml.cs">
+      <DependentUpon>OrderItemCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemDetailsControl.xaml.cs">
-      <DependentUpon>OrderItemDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\OrderItem\Details\OrderItemDetails.xaml.cs">
+      <DependentUpon>OrderItemDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemPage.xaml.cs">
-      <DependentUpon>OrderItemPage.xaml</DependentUpon>
+    <Compile Include="Views\OrderItem\OrderItemView.xaml.cs">
+      <DependentUpon>OrderItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsCardControl.xaml.cs">
-      <DependentUpon>OrderItemsCardControl.xaml</DependentUpon>
+    <Compile Include="Views\OrderItems\Details\OrderItemsCard.xaml.cs">
+      <DependentUpon>OrderItemsCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsDetailsControl.xaml.cs">
-      <DependentUpon>OrderItemsDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\OrderItems\Details\OrderItemsDetails.xaml.cs">
+      <DependentUpon>OrderItemsDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsListControl.xaml.cs">
-      <DependentUpon>OrderItemsListControl.xaml</DependentUpon>
+    <Compile Include="Views\OrderItems\List\OrderItemsList.xaml.cs">
+      <DependentUpon>OrderItemsList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OrderItems\OrderItemsPage.xaml.cs">
-      <DependentUpon>OrderItemsPage.xaml</DependentUpon>
+    <Compile Include="Views\OrderItems\OrderItemsView.xaml.cs">
+      <DependentUpon>OrderItemsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Order\Details\OrderDetailsControl.xaml.cs">
-      <DependentUpon>OrderDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\Order\Details\OrderDetails.xaml.cs">
+      <DependentUpon>OrderDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Order\OrderPage.xaml.cs">
-      <DependentUpon>OrderPage.xaml</DependentUpon>
+    <Compile Include="Views\Order\OrderView.xaml.cs">
+      <DependentUpon>OrderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\Details\OrdersCardControl.xaml.cs">
-      <DependentUpon>OrdersCardControl.xaml</DependentUpon>
+    <Compile Include="Views\Orders\Details\OrdersCard.xaml.cs">
+      <DependentUpon>OrdersCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\Details\OrdersDetailsControl.xaml.cs">
-      <DependentUpon>OrdersDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\Orders\Details\OrdersDetails.xaml.cs">
+      <DependentUpon>OrdersDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\List\OrdersListControl.xaml.cs">
-      <DependentUpon>OrdersListControl.xaml</DependentUpon>
+    <Compile Include="Views\Orders\List\OrdersList.xaml.cs">
+      <DependentUpon>OrdersList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\Details\OrdersOrderItemsControl.xaml.cs">
-      <DependentUpon>OrdersOrderItemsControl.xaml</DependentUpon>
+    <Compile Include="Views\Orders\Details\OrdersOrderItems.xaml.cs">
+      <DependentUpon>OrdersOrderItems.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Orders\OrdersPage.xaml.cs">
-      <DependentUpon>OrdersPage.xaml</DependentUpon>
+    <Compile Include="Views\Orders\OrdersView.xaml.cs">
+      <DependentUpon>OrdersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Product\Details\ProductCardControl.xaml.cs">
-      <DependentUpon>ProductCardControl.xaml</DependentUpon>
+    <Compile Include="Views\Product\Details\ProductCard.xaml.cs">
+      <DependentUpon>ProductCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Product\Details\ProductDetailsControl.xaml.cs">
-      <DependentUpon>ProductDetailsControl.xaml</DependentUpon>
+    <Compile Include="Views\Product\Details\ProductDetails.xaml.cs">
+      <DependentUpon>ProductDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Product\ProductPage.xaml.cs">
-      <DependentUpon>ProductPage.xaml</DependentUpon>
+    <Compile Include="Views\Product\ProductView.xaml.cs">
+      <DependentUpon>ProductView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Products\List\ProductsListControl.xaml.cs">
-      <DependentUpon>ProductsListControl.xaml</DependentUpon>
+    <Compile Include="Views\Products\List\ProductsList.xaml.cs">
+      <DependentUpon>ProductsList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Products\ProductsPage.xaml.cs">
-      <DependentUpon>ProductsPage.xaml</DependentUpon>
+    <Compile Include="Views\Products\ProductsView.xaml.cs">
+      <DependentUpon>ProductsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\CreateDatabaseDialog.xaml.cs">
       <DependentUpon>CreateDatabaseDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Settings\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    <Compile Include="Views\Settings\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\ValidateConnectionDialog.xaml.cs">
       <DependentUpon>ValidateConnectionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ShellPage.xaml.cs">
-      <DependentUpon>ShellPage.xaml</DependentUpon>
+    <Compile Include="Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -351,139 +281,139 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customer\Details\CustomerCardControl.xaml">
+    <Page Include="Views\Customer\Details\CustomerCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customer\Details\CustomerDetailsControl.xaml">
+    <Page Include="Views\Customer\Details\CustomerDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customer\CustomerPage.xaml">
+    <Page Include="Views\Customer\CustomerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\Details\CustomersCardControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersCard.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Customers\Details\CustomersDetailsControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\List\CustomersListControl.xaml">
+    <Page Include="Views\Customers\List\CustomersList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\Details\CustomersOrdersControl.xaml">
+    <Page Include="Views\Customers\Details\CustomersOrders.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Customers\CustomersPage.xaml">
+    <Page Include="Views\Customers\CustomersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\CustomersControl.xaml">
+    <Page Include="Views\Dashboard\Parts\CustomersPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\DashboardPage.xaml">
+    <Page Include="Views\Dashboard\DashboardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\OrdersControl.xaml">
+    <Page Include="Views\Dashboard\Parts\OrdersPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dashboard\ProductsControl.xaml">
+    <Page Include="Views\Dashboard\Parts\ProductsPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Logs\LogsDetailsControl.xaml">
+    <Page Include="Views\Logs\LogsDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Logs\LogsListControl.xaml">
+    <Page Include="Views\Logs\LogsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Logs\LogsPage.xaml">
+    <Page Include="Views\Logs\LogsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemCardControl.xaml">
+    <Page Include="Views\OrderItem\Details\OrderItemCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemDetailsControl.xaml">
+    <Page Include="Views\OrderItem\Details\OrderItemDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemPage.xaml">
+    <Page Include="Views\OrderItem\OrderItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsCardControl.xaml">
+    <Page Include="Views\OrderItems\Details\OrderItemsCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsDetailsControl.xaml">
+    <Page Include="Views\OrderItems\Details\OrderItemsDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsListControl.xaml">
+    <Page Include="Views\OrderItems\List\OrderItemsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\OrderItems\OrderItemsPage.xaml">
+    <Page Include="Views\OrderItems\OrderItemsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Order\Details\OrderDetailsControl.xaml">
+    <Page Include="Views\Order\Details\OrderDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Order\OrderPage.xaml">
+    <Page Include="Views\Order\OrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Orders\Details\OrdersCardControl.xaml">
+    <Page Include="Views\Orders\Details\OrdersCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Orders\Details\OrdersDetailsControl.xaml">
+    <Page Include="Views\Orders\Details\OrdersDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Orders\List\OrdersListControl.xaml">
+    <Page Include="Views\Orders\List\OrdersList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Orders\Details\OrdersOrderItemsControl.xaml">
+    <Page Include="Views\Orders\Details\OrdersOrderItems.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Orders\OrdersPage.xaml">
+    <Page Include="Views\Orders\OrdersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Product\Details\ProductCardControl.xaml">
+    <Page Include="Views\Product\Details\ProductCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Product\Details\ProductDetailsControl.xaml">
+    <Page Include="Views\Product\Details\ProductDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Product\ProductPage.xaml">
+    <Page Include="Views\Product\ProductView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Products\List\ProductsListControl.xaml">
+    <Page Include="Views\Products\List\ProductsList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Products\ProductsPage.xaml">
+    <Page Include="Views\Products\ProductsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -491,7 +421,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Settings\SettingsPage.xaml">
+    <Page Include="Views\Settings\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -499,7 +429,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ShellPage.xaml">
+    <Page Include="Views\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -72,7 +72,7 @@ namespace Inventory.Uwp
             {
                 arguments = launchArgs.Arguments;
             }
-            Ioc.Default.GetService<NavigationService>().Navigate(typeof(DashboardPage), arguments);
+            Ioc.Default.GetService<NavigationService>().Navigate(typeof(DashboardView), arguments);
 
             Window.Current.Activate();
             await StartupAsync();

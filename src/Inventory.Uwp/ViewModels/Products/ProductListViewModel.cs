@@ -62,7 +62,7 @@ namespace Inventory.Uwp.ViewModels.Products
 
         private async void ItemInvoked(ProductDto model)
         {
-            await _windowService.OpenWindow(typeof(ProductPage), new ProductDetailsArgs { ProductId = model.Id });
+            await _windowService.OpenWindow(typeof(ProductView), new ProductDetailsArgs { ProductId = model.Id });
         }
 
         public async Task LoadAsync(ProductListArgs args)
@@ -130,11 +130,11 @@ namespace Inventory.Uwp.ViewModels.Products
 
             if (IsMainView)
             {
-                await _windowService.OpenWindow(typeof(ProductPage), new ProductDetailsArgs());
+                await _windowService.OpenWindow(typeof(ProductView), new ProductDetailsArgs());
             }
             else
             {
-                _navigationService.Navigate(typeof(ProductPage), new ProductDetailsArgs());
+                _navigationService.Navigate(typeof(ProductView), new ProductDetailsArgs());
             }
 
             StatusReady();
