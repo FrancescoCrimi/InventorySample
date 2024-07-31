@@ -14,8 +14,7 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Services;
+using Inventory.Interface.Dto;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.OrderItems;

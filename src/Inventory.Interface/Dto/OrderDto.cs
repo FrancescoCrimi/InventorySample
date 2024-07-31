@@ -12,10 +12,11 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Domain.Model;
 using System;
 using System.Collections.Generic;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Interface.Dto
 {
     public class OrderDto : ObservableDto<OrderDto>
     {
@@ -34,10 +35,10 @@ namespace Inventory.Uwp.Dto
         private long? _shipperId;
         private long _statusId;
         public CustomerDto _customer;
-        public PaymentTypeDto _paymentType;
-        public CountryDto _shipCountry;
-        public ShipperDto _shipper;
-        private OrderStatusDto _status;
+        public PaymentType _paymentType;
+        public Country _shipCountry;
+        public Shipper _shipper;
+        private OrderStatus _status;
 
         #region property
 
@@ -127,22 +128,22 @@ namespace Inventory.Uwp.Dto
             get => _customer;
             set => SetProperty(ref _customer, value);
         }
-        public PaymentTypeDto PaymentType
+        public PaymentType PaymentType
         {
             get => _paymentType;
             set => SetProperty(ref _paymentType, value);
         }
-        public CountryDto ShipCountry
+        public Country ShipCountry
         {
             get => _shipCountry;
             set => SetProperty(ref _shipCountry, value);
         }
-        public ShipperDto Shipper
+        public Shipper Shipper
         {
             get => _shipper;
             set => SetProperty(ref _shipper, value);
         }
-        public OrderStatusDto Status
+        public OrderStatus Status
         {
             get => _status;
             set

@@ -9,16 +9,16 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
+using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Inventory.Uwp.Services
+namespace Inventory.Application
 {
     public class LookupTablesService
     {
@@ -32,17 +32,17 @@ namespace Inventory.Uwp.Services
             _repository = repository;
         }
 
-        public IList<CategoryDto> Categories { get; private set; }
+        public IList<Category> Categories { get; private set; }
 
-        public IList<CountryDto> Countries { get; private set; }
+        public IList<Country> Countries { get; private set; }
 
-        public IList<OrderStatusDto> OrderStatus { get; private set; }
+        public IList<OrderStatus> OrderStatus { get; private set; }
 
-        public IList<PaymentTypeDto> PaymentTypes { get; private set; }
+        public IList<PaymentType> PaymentTypes { get; private set; }
 
-        public IList<ShipperDto> Shippers { get; private set; }
+        public IList<Shipper> Shippers { get; private set; }
 
-        public IList<TaxTypeDto> TaxTypes { get; private set; }
+        public IList<TaxType> TaxTypes { get; private set; }
 
         public async Task InitializeAsync()
         {
@@ -54,121 +54,88 @@ namespace Inventory.Uwp.Services
             TaxTypes = await GetTaxTypesAsync();
         }
 
-        private async Task<IList<CategoryDto>> GetCategoriesAsync()
+        private async Task<IList<Category>> GetCategoriesAsync()
         {
             try
             {
                 var items = await _repository.GetCategoriesAsync();
-                return items.Select(r => new CategoryDto
-                {
-                    Id = r.Id,
-                    Name = r.Name
-                })
-                .ToList();
+                return items;
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadCategories, ex, "Load Categories");
+                throw new Exception("Load Categories", ex);
             }
-            return new List<CategoryDto>();
         }
 
-        private async Task<IList<CountryDto>> GetCountryCodesAsync()
+        private async Task<IList<Country>> GetCountryCodesAsync()
         {
             try
             {
                 var items = await _repository.GetCountryCodesAsync();
-                return items.OrderBy(r => r.Name).Select(r => new CountryDto
-                {
-                    Id = r.Id,
-                    Code = r.Code,
-                    Name = r.Name
-                })
-                .ToList();
+                return items.OrderBy(r => r.Name).ToList();
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadCountryCodes, ex, "Load CountryCodes");
+                throw new Exception("Load CountryCodes", ex);
             }
-            return new List<CountryDto>();
         }
 
-        private async Task<IList<OrderStatusDto>> GetOrderStatusAsync()
+        private async Task<IList<OrderStatus>> GetOrderStatusAsync()
         {
             try
             {
                 var items = await _repository.GetOrderStatusAsync();
-                return items.Select(r => new OrderStatusDto
-                {
-                    Id = r.Id,
-                    Name = r.Name
-                })
-                .ToList();
+                return items;
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadOrderStatus, ex, "Load OrderStatus");
+                throw new Exception("Load OrderStatus", ex);
             }
-            return new List<OrderStatusDto>();
         }
 
-        private async Task<IList<PaymentTypeDto>> GetPaymentTypesAsync()
+        private async Task<IList<PaymentType>> GetPaymentTypesAsync()
         {
             try
             {
                 var items = await _repository.GetPaymentTypesAsync();
-                return items.Select(r => new PaymentTypeDto
-                {
-                    Id = r.Id,
-                    Name = r.Name
-                })
-                .ToList();
+                return items;
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadPaymentTypes, ex, "Load PaymentTypes");
+                throw new Exception("Load PaymentTypes", ex) ;
             }
-            return new List<PaymentTypeDto>();
         }
 
-        private async Task<IList<ShipperDto>> GetShippersAsync()
+        private async Task<IList<Shipper>> GetShippersAsync()
         {
             try
             {
                 var items = await _repository.GetShippersAsync();
-                return items.Select(r => new ShipperDto
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    Phone = r.Phone
-                })
-                .ToList();
+            return items;
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadShippers, ex, "Load Shippers");
+                throw new Exception("Load Shippers", ex);
             }
-            return new List<ShipperDto>();
         }
 
-        private async Task<IList<TaxTypeDto>> GetTaxTypesAsync()
+        private async Task<IList<TaxType>> GetTaxTypesAsync()
         {
             try
             {
                 var items = await _repository.GetTaxTypesAsync();
-                return items.Select(r => new TaxTypeDto
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    Rate = r.Rate
-                })
-                .ToList();
+                return items;
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogEvents.LoadTaxTypes, ex, "Load TaxTypes");
+                throw new Exception("Load TaxTypes", ex);
             }
-            return new List<TaxTypeDto>();
         }
     }
 }

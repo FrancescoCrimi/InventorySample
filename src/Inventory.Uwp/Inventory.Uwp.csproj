@@ -79,34 +79,17 @@
     <Compile Include="Contracts\Services\IWindowManagerService.cs" />
     <Compile Include="Contracts\Views\IView.cs" />
     <Compile Include="Contracts\Views\ViewKeys.cs" />
-    <Compile Include="Dto\Assembler\DtoAssembler.cs" />
-    <Compile Include="Dto\Assembler\DtoAssembler.Customer.cs" />
-    <Compile Include="Dto\Assembler\DtoAssembler.Order.cs" />
-    <Compile Include="Dto\Assembler\DtoAssembler.Product.cs" />
+    <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
-    <Compile Include="Dto\CategoryDto.cs" />
-    <Compile Include="Dto\CountryDto.cs" />
-    <Compile Include="Dto\CustomerDto.cs" />
-    <Compile Include="Dto\ObservableDto.cs" />
-    <Compile Include="Dto\OrderItemDto.cs" />
-    <Compile Include="Dto\OrderDto.cs" />
-    <Compile Include="Dto\OrderStatusDto.cs" />
-    <Compile Include="Dto\PaymentTypeDto.cs" />
-    <Compile Include="Dto\ProductDto.cs" />
-    <Compile Include="Dto\ShipperDto.cs" />
-    <Compile Include="Dto\TaxTypeDto.cs" />
-    <Compile Include="Services\CustomerService.cs" />
-    <Compile Include="Services\Infrastructure\FilePickerService.cs" />
-    <Compile Include="Services\LookupTablesService.cs" />
-    <Compile Include="Services\Infrastructure\NavigationService.cs" />
-    <Compile Include="Services\OrderItemService.cs" />
-    <Compile Include="Services\OrderService.cs" />
-    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="Services\FilePickerService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\VirtualCollections\CustomerCollection.cs" />
     <Compile Include="Services\VirtualCollections\LogCollection.cs" />
     <Compile Include="Services\VirtualCollections\OrderCollection.cs" />
     <Compile Include="Services\VirtualCollections\ProductCollection.cs" />
-    <Compile Include="Services\Infrastructure\WindowManagerService.cs" />
+    <Compile Include="Services\WindowManagerService.cs" />
     <Compile Include="ViewModels\Common\GenericDetailsViewModel.cs" />
     <Compile Include="ViewModels\Common\GenericListViewModel.cs" />
     <Compile Include="ViewModels\Customers\CustomerDetailsArgs.cs" />
@@ -467,6 +450,10 @@
     <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj">
       <Project>{e74bba50-85e3-4c3d-814d-d8390df9a92f}</Project>
       <Name>Inventory.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Inventory.Interface\Inventory.Interface.csproj">
+      <Project>{ce02c2fd-7b50-4c1b-b31e-8e0d401fcb78}</Project>
+      <Name>Inventory.Interface</Name>
     </ProjectReference>
     <ProjectReference Include="..\Inventory.Uwp.Library\Inventory.Uwp.Library.csproj">
       <Project>{cd266705-5d0a-4ee1-ba7e-32498d7b2877}</Project>

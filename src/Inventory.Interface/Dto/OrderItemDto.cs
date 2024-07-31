@@ -13,14 +13,16 @@
 #endregion
 
 
-namespace Inventory.Uwp.Dto
+using Inventory.Domain.Model;
+
+namespace Inventory.Interface.Dto
 {
     public class OrderItemDto : ObservableDto<OrderItemDto>
     {
         private int _quantity;
         private int _taxTypeId;
         private decimal _discount;
-        private TaxTypeDto _taxTypeDto;
+        private TaxType _taxTypeDto;
 
         public int OrderLine { get; set; }
         public int Quantity
@@ -45,7 +47,7 @@ namespace Inventory.Uwp.Dto
 
         public OrderDto Order { get; set; }
         public ProductDto Product { get; set; }
-        public TaxTypeDto TaxType
+        public TaxType TaxType
         {
             get => _taxTypeDto;
             set { if (SetProperty(ref _taxTypeDto, value)) UpdateTotals(); }
@@ -53,7 +55,17 @@ namespace Inventory.Uwp.Dto
 
 
         public decimal Subtotal => Quantity * UnitPrice;
-        public decimal Total => (decimal)((Subtotal - Discount) * (1 + TaxType?.Rate / 100m));
+        public decimal Total
+        {
+            get
+            {
+                if ( TaxType != null)
+                {
+                    return (decimal)((Subtotal - Discount) * (1 + TaxType?.Rate / 100m));
+                }
+                else return 0;
+            }
+        }
 
         private void UpdateTotals()
         {

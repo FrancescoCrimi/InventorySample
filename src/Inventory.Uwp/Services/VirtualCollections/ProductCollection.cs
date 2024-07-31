@@ -15,7 +15,8 @@
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -27,11 +28,11 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class ProductCollection : VirtualRangeCollection<ProductDto>
     {
         private readonly ILogger _logger;
-        private readonly ProductService _productService;
+        private readonly ProductServiceFacade _productService;
         private DataRequest<Product> _request;
 
         public ProductCollection(ILogger<ProductCollection> logger,
-                                 ProductService productService)
+                                 ProductServiceFacade productService)
             : base(logger)
         {
             _logger = logger;
@@ -60,7 +61,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             try
             {
                 //Todo: fix cancellationToken
-                var result = await _productService.GetProductsAsync(skip, take, _request, dispatcher);
+                var result = await _productService.GetProductsAsync(skip, take, _request);
                 return result;
             }
             catch (System.Exception ex)

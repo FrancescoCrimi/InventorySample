@@ -16,7 +16,8 @@ using CommunityToolkit.Mvvm.Input;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Customers;
@@ -38,15 +39,15 @@ namespace Inventory.Uwp.ViewModels.Dashboard
     {
         private readonly ILogger _logger;
         private readonly NavigationService _navigationService;
-        private readonly CustomerService _customerService;
-        private readonly OrderService _orderService;
-        private readonly ProductService _productService;
+        private readonly CustomerServiceFacade _customerService;
+        private readonly OrderServiceFacade _orderService;
+        private readonly ProductServiceFacade _productService;
 
         public DashboardViewModel(ILogger<DashboardViewModel> logger,
                                   NavigationService navigationService,
-                                  CustomerService customerService,
-                                  OrderService orderService,
-                                  ProductService productService)
+                                  CustomerServiceFacade customerService,
+                                  OrderServiceFacade orderService,
+                                  ProductServiceFacade productService)
             : base()
         {
             _logger = logger;

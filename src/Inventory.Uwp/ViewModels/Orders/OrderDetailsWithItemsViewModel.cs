@@ -13,7 +13,7 @@
 #endregion
 
 using CommunityToolkit.Mvvm.Messaging;
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Inventory.Uwp.ViewModels.OrderItems;

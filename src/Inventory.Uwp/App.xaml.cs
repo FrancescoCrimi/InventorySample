@@ -12,6 +12,8 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
+using Inventory.Interface;
+using Inventory.Interface.Services;
 using Inventory.Persistence;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
@@ -84,7 +86,7 @@ namespace Inventory.Uwp
             var appSettings = Ioc.Default.GetService<AppSettings>();
             await appSettings.EnsureLogDatabaseAsync();
             await appSettings.EnsureLocalDatabaseAsync();
-            await Ioc.Default.GetService<LookupTablesService>().InitializeAsync();
+            await Ioc.Default.GetService<LookupTablesServiceFacade>().InitializeAsync();
             _logger.LogInformation(LogEvents.Startup, "Application Started");
         }
 
@@ -114,13 +116,14 @@ namespace Inventory.Uwp
             .AddSingleton<IAppSettings>(x => x.GetRequiredService<AppSettings>())
 
             // Core Services
-            .AddInventoryInfrastructure()
-            .AddInventoryPersistence()
-            .AddSingleton<LookupTablesService>()
-            .AddSingleton<ProductService>()
-            .AddSingleton<CustomerService>()
-            .AddSingleton<OrderService>()
-            .AddSingleton<OrderItemService>()
+            .AddInventoryInterface()
+
+            //.AddSingleton<LookupTablesService>()
+            //.AddSingleton<ProductService>()
+            //.AddSingleton<CustomerService>()
+            //.AddSingleton<OrderService>()
+            //.AddSingleton<OrderItemService>()
+
             .AddSingleton<FilePickerService>()
 
             // ViewModels

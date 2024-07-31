@@ -12,7 +12,7 @@
 // ******************************************************************
 #endregion
 
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

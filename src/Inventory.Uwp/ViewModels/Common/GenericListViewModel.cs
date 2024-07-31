@@ -11,8 +11,8 @@
 
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Inventory.Interface.Dto;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.ViewModels.Message;
 using System.Collections.Generic;

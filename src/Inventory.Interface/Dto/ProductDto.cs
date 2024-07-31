@@ -12,9 +12,10 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Domain.Model;
 using System;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Interface.Dto
 {
     public class ProductDto : ObservableDto<ProductDto>
     {
@@ -35,8 +36,8 @@ namespace Inventory.Uwp.Dto
         private byte[] _thumbnail;
         private long _categoryId;
         private long _taxTypeId;
-        private CategoryDto _category;
-        private TaxTypeDto _taxType;
+        private Category _category;
+        private TaxType _taxType;
 
         public string Name
         {
@@ -114,6 +115,8 @@ namespace Inventory.Uwp.Dto
             set => SetProperty(ref _thumbnail, value);
         }
 
+
+
         public long CategoryId
         {
             get => _categoryId;
@@ -124,16 +127,18 @@ namespace Inventory.Uwp.Dto
             get => _taxTypeId;
             set => SetProperty(ref _taxTypeId, value);
         }
-        public CategoryDto Category
+        public Category Category
         {
             get => _category;
             set => SetProperty(ref _category, value);
         }
-        public TaxTypeDto TaxType
+        public TaxType TaxType
         {
             get => _taxType;
             set => SetProperty(ref _taxType, value);
         }
+
+
 
         public string CategoryName => Category?.Name;
 

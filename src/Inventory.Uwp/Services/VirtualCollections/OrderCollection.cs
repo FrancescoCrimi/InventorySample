@@ -15,7 +15,8 @@
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
 using System;
@@ -28,11 +29,11 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class OrderCollection : VirtualRangeCollection<OrderDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderService _orderService;
+        private readonly OrderServiceFacade _orderService;
         private DataRequest<Order> _request;
 
         public OrderCollection(ILogger<OrderCollection> logger,
-                               OrderService orderService)
+                               OrderServiceFacade orderService)
             : base(logger)
         {
             _logger = logger;
@@ -61,7 +62,7 @@ namespace Inventory.Uwp.Services.VirtualCollections
             try
             {
                 //Todo: fix cancellationToken
-                var result = await _orderService.GetOrdersAsync(skip, take, _request, dispatcher);
+                var result = await _orderService.GetOrdersAsync(skip, take, _request);
                 return result;
             }
             catch (Exception ex)

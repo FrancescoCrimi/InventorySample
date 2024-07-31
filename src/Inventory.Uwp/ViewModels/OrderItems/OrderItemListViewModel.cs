@@ -17,7 +17,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -35,12 +36,12 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemListViewModel : GenericListViewModel<OrderItemDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderItemService _orderItemService;
+        private readonly OrderItemServiceFacade _orderItemService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
 
         public OrderItemListViewModel(ILogger<OrderItemListViewModel> logger,
-                                      OrderItemService orderItemService,
+                                      OrderItemServiceFacade orderItemService,
                                       NavigationService navigationService,
                                       WindowManagerService windowService)
             : base()

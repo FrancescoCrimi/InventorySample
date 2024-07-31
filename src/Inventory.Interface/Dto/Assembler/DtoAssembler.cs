@@ -1,16 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Model;
-using Inventory.Uwp.Services;
+using Inventory.Interface.Services;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Interface.Dto
 {
     public static partial class DtoAssembler
     {
-        static readonly LookupTablesService _lookupTable;
+        static readonly LookupTablesServiceFacade _lookupTable;
 
         static DtoAssembler()
         {
-            _lookupTable = Ioc.Default.GetService<LookupTablesService>();
+            _lookupTable = Ioc.Default.GetService<LookupTablesServiceFacade>();
         }
 
 
@@ -23,10 +23,13 @@ namespace Inventory.Uwp.Dto
                 OrderId = source.OrderId,
                 OrderLine = source.OrderLine,
                 ProductId = source.ProductId,
+                //TaxTypeId = source.TaxTypeId,
+
                 Quantity = source.Quantity,
                 UnitPrice = source.UnitPrice,
                 Discount = source.Discount,
-                TaxType = new TaxTypeDto { Id = source.TaxType.Id, Name = source.TaxType.Name, Rate = source.TaxType.Rate },
+
+                TaxType =  source.TaxType,
                 Product = DtoFromProduct(source.Product, includeAllFields)
             };
             return model;

@@ -15,9 +15,9 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
-using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -33,13 +33,13 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemDetailsViewModel : GenericDetailsViewModel<OrderItemDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderItemService _orderItemService;
+        private readonly OrderItemServiceFacade _orderItemService;
 
         public OrderItemDetailsViewModel(ILogger<OrderItemDetailsViewModel> logger,
-                                         OrderItemService orderItemService,
+                                         OrderItemServiceFacade orderItemService,
                                          NavigationService navigationService,
                                          WindowManagerService windowService,
-                                         LookupTablesService lookupTablesService)
+                                         LookupTablesServiceFacade lookupTablesService)
             : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
@@ -62,6 +62,9 @@ namespace Inventory.Uwp.ViewModels.OrderItems
             EditableItem.ProductId = product.Id;
             EditableItem.UnitPrice = product.ListPrice;
             EditableItem.Product = product;
+
+            EditableItem.TaxTypeId = (int)product.TaxTypeId;
+            EditableItem.TaxType = product.TaxType;
 
             EditableItem.NotifyChanges();
         }

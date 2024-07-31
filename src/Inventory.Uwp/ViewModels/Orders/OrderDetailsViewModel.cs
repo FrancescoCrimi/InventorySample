@@ -15,8 +15,9 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
@@ -32,13 +33,13 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrderDetailsViewModel : GenericDetailsViewModel<OrderDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderService _orderService;
+        private readonly OrderServiceFacade _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderService orderService,
+                                     OrderServiceFacade orderService,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
-                                     LookupTablesService lookupTablesService)
+                                     LookupTablesServiceFacade lookupTablesService)
             : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;
@@ -119,11 +120,15 @@ namespace Inventory.Uwp.ViewModels.Orders
             EditableItem.ShipAddress = customer.AddressLine1;
             EditableItem.ShipCity = customer.City;
             EditableItem.ShipRegion = customer.Region;
+
             //EditableItem.ShipCountryCode = customer.CountryCode;
+            EditableItem.ShipCountry = customer.Country;
+            EditableItem.ShipCountryId = customer.CountryId;
+
             EditableItem.ShipPostalCode = customer.PostalCode;
             EditableItem.Customer = customer;
 
-            //EditableItem.NotifyChanges();
+            EditableItem.NotifyChanges();
         }
 
         public OrderDetailsArgs ViewModelArgs { get; private set; }

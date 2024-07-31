@@ -12,11 +12,11 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Common;
+using Inventory.Interface.Dto;
+using Inventory.Interface.Services;
 using Inventory.Uwp.Common;
-using Inventory.Uwp.Dto;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Message;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +41,7 @@ namespace Inventory.Uwp.ViewModels.Common
 
         public GenericDetailsViewModel(NavigationService navigationService,
                                        WindowManagerService windowService,
-                                       LookupTablesService lookupTablesService)
+                                       LookupTablesServiceFacade lookupTablesService)
             : base()
         {
             _navigationService = navigationService;
@@ -51,7 +51,7 @@ namespace Inventory.Uwp.ViewModels.Common
 
         #region public property
 
-        public LookupTablesService LookupTables { get; }
+        public LookupTablesServiceFacade LookupTables { get; }
 
         public bool IsDataAvailable => _item != null;
 

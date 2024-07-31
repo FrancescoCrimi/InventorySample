@@ -1,7 +1,7 @@
 ﻿using Inventory.Domain.Model;
 using System.Linq;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Interface.Dto
 {
     public static partial class DtoAssembler
     {

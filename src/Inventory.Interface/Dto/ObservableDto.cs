@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Interface.Dto
 {
     public abstract class ObservableDto<TEntity> : GenericObservableDto<long>, IEquatable<TEntity>
         where TEntity : ObservableDto<TEntity>

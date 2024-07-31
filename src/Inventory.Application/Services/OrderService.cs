@@ -12,7 +12,6 @@
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Inventory.Uwp.Services
+namespace Inventory.Application
 {
     public class OrderService
     {
@@ -34,24 +33,24 @@ namespace Inventory.Uwp.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<OrderDto> CreateNewOrderAsync(long customerID)
+        public async Task<Order> CreateNewOrderAsync(long customerID)
         {
             using (var dataService = _serviceProvider.GetService<ICustomerRepository>())
             {
                 var customer = await dataService.GetCustomerAsync(customerID);
                 Order order = Order.CreateNewOrder(customer);
-                OrderDto model = DtoAssembler.DtoFromOrder(order);
-                if (customerID > 0)
-                    model.Customer = DtoAssembler.DtoFromCustomer(order.Customer);
-                return model;
+                //OrderDto model = DtoAssembler.DtoFromOrder(order);
+                //if (customerID > 0)
+                //    model.Customer = DtoAssembler.DtoFromCustomer(order.Customer);
+                return order;
             }
         }
 
-        public async Task<int> DeleteOrderAsync(OrderDto model)
+        public async Task<int> DeleteOrderAsync(long OrderId)
         {
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
-                var order = await orderRepository.GetOrderAsync(model.Id);
+                var order = await orderRepository.GetOrderAsync(OrderId);
                 return await orderRepository.DeleteOrdersAsync(order);
             }
         }
@@ -65,35 +64,36 @@ namespace Inventory.Uwp.Services
             }
         }
 
-        public async Task<OrderDto> GetOrderAsync(long id)
+        public async Task<Order> GetOrderAsync(long OrderId)
         {
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
-                var item = await orderRepository.GetOrderAsync(id);
-                OrderDto model = DtoAssembler.DtoFromOrder(item);
-                if (item.Customer != null)
-                    model.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
-                return model;
+                var item = await orderRepository.GetOrderAsync(OrderId);
+                //OrderDto model = DtoAssembler.DtoFromOrder(item);
+                //if (item.Customer != null)
+                //    model.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
+                return item;
             }
         }
 
-        public async Task<List<OrderDto>> GetOrdersAsync(int skip,
+        public async Task<IList<Order>> GetOrdersAsync(int skip,
                                                          int take,
-                                                         DataRequest<Order> request,
-                                                         Windows.UI.Core.CoreDispatcher dispatcher = null)
+                                                         DataRequest<Order> request
+            //, Windows.UI.Core.CoreDispatcher dispatcher = null
+            )
         {
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
-                var models = new List<OrderDto>();
+                //var models = new List<OrderDto>();
                 var orders = await orderRepository.GetOrdersAsync(skip, take, request);
-                foreach (var item in orders)
-                {
-                    OrderDto dto = DtoAssembler.DtoFromOrder(item);
-                    if (item.Customer != null)
-                        dto.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
-                    models.Add(dto);
-                }
-                return models;
+                //foreach (var item in orders)
+                //{
+                //    OrderDto dto = DtoAssembler.DtoFromOrder(item);
+                //    if (item.Customer != null)
+                //        dto.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
+                //    models.Add(dto);
+                //}
+                return orders;
             }
         }
 
@@ -105,25 +105,25 @@ namespace Inventory.Uwp.Services
             }
         }
 
-        public async Task<int> UpdateOrderAsync(OrderDto model)
+        public async Task<int> UpdateOrderAsync(Order order)
         {
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
                 int ret = 0;
-                long id = model.Id;
-                var order = id > 0 ? await orderRepository.GetOrderAsync(model.Id) : new Order();
-                if (order != null)
-                {
-                    DtoAssembler.UpdateOrderFromDto(order, model);
+                //long id = model.Id;
+                //var order = id > 0 ? await orderRepository.GetOrderAsync(model.Id) : new Order();
+                //if (order != null)
+                //{
+                //    DtoAssembler.UpdateOrderFromDto(order, model);
                     ret = await orderRepository.UpdateOrderAsync(order);
 
                     //var item = await orderRepository.GetOrderAsync(id);
                     //var newmodel = DtoAssembler.DtoFromOrder(item);
 
-                    var newmodel = DtoAssembler.DtoFromOrder(order);
+                    //var newmodel = DtoAssembler.DtoFromOrder(order);
 
-                    model.Merge(newmodel);
-                }
+                    //model.Merge(newmodel);
+                //}
                 return ret;
             }
 

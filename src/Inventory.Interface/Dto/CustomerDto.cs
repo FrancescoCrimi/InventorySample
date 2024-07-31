@@ -12,10 +12,11 @@
 // ******************************************************************
 #endregion
 
+using Inventory.Domain.Model;
 using System;
 using System.Collections.Generic;
 
-namespace Inventory.Uwp.Dto
+namespace Inventory.Interface.Dto
 {
     public class CustomerDto : ObservableDto<CustomerDto>
     {
@@ -46,7 +47,7 @@ namespace Inventory.Uwp.Dto
         private byte[] _picture;
         private byte[] _thumbnail;
         private long _countryId;
-        private CountryDto _country;
+        private Country _country;
 
 
         #region property
@@ -192,7 +193,7 @@ namespace Inventory.Uwp.Dto
             get => _countryId;
             set => SetProperty(ref _countryId, value);
         }
-        public CountryDto Country
+        public Country Country
         {
             get => _country;
             set => SetProperty(ref _country, value);

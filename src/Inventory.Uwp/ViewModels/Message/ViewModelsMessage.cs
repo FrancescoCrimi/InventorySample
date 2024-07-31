@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
 using Inventory.Uwp.Library.Common;
 using System.Collections.Generic;
 

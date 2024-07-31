@@ -9,7 +9,7 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Uwp.Dto;
+using Inventory.Interface.Dto;
 using Inventory.Uwp.ViewModels.Customers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

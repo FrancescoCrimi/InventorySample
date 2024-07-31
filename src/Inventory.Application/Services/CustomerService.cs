@@ -12,7 +12,6 @@
 using Inventory.Domain.Model;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure.Common;
-using Inventory.Uwp.Dto;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Inventory.Uwp.Services
+namespace Inventory.Application
 {
     public class CustomerService
     {
@@ -34,11 +33,11 @@ namespace Inventory.Uwp.Services
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<int> DeleteCustomerAsync(CustomerDto model)
+        public async Task<int> DeleteCustomerAsync(long CustomerId)
         {
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
-                var customer = await customerRepository.GetCustomerAsync(model.Id);
+                var customer = await customerRepository.GetCustomerAsync(CustomerId);
                 return await customerRepository.DeleteCustomersAsync(customer);
             }
         }
@@ -54,31 +53,32 @@ namespace Inventory.Uwp.Services
             }
         }
 
-        public async Task<CustomerDto> GetCustomerAsync(long id)
+        public async Task<Customer> GetCustomerAsync(long CustomerId)
         {
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
-                var customer = await customerRepository.GetCustomerAsync(id);
-                CustomerDto model = DtoAssembler.DtoFromCustomer(customer);
-                return model;
+                var customer = await customerRepository.GetCustomerAsync(CustomerId);
+                //CustomerDto model = DtoAssembler.DtoFromCustomer(customer);
+                return customer;
             }
         }
 
-        public async Task<List<CustomerDto>> GetCustomersAsync(int skip,
+        public async Task<IList<Customer>> GetCustomersAsync(int skip,
                                                                int take,
-                                                               DataRequest<Customer> request,
-                                                               Windows.UI.Core.CoreDispatcher dispatcher = null)
+                                                               DataRequest<Customer> request
+            //, Windows.UI.Core.CoreDispatcher dispatcher = null
+            )
         {
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
-                var models = new List<CustomerDto>();
+                //var models = new List<CustomerDto>();
                 var items = await customerRepository.GetCustomersAsync(skip, take, request);
-                foreach (var item in items)
-                {
-                    var dto = DtoAssembler.DtoFromCustomer(item);
-                    models.Add(dto);
-                }
-                return models;
+                //foreach (var item in items)
+                //{
+                //    var dto = DtoAssembler.DtoFromCustomer(item);
+                //    models.Add(dto);
+                //}
+                return items;
             }
         }
 
@@ -90,21 +90,21 @@ namespace Inventory.Uwp.Services
             }
         }
 
-        public async Task<int> UpdateCustomerAsync(CustomerDto model)
+        public async Task<int> UpdateCustomerAsync(Customer customer)
         {
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
                 int rtn = 0;
-                long id = model.Id;
-                Customer customer = id > 0 ? await customerRepository.GetCustomerAsync(model.Id) : new Customer();
+                //long id = model.Id;
+                //Customer customer = id > 0 ? await customerRepository.GetCustomerAsync(model.Id) : new Customer();
                 if (customer != null)
                 {
-                    DtoAssembler.UpdateCustomerFromDto(customer, model);
+                    //DtoAssembler.UpdateCustomerFromDto(customer, model);
                     rtn = await customerRepository.UpdateCustomerAsync(customer);
                     //TODO: fix below
-                    var item = await customerRepository.GetCustomerAsync(id);
-                    var newmodel = DtoAssembler.DtoFromCustomer(item);
-                    model.Merge(newmodel);
+                    //var item = await customerRepository.GetCustomerAsync(id);
+                    //var newmodel = DtoAssembler.DtoFromCustomer(item);
+                    //model.Merge(newmodel);
                 }
                 return rtn;
             }

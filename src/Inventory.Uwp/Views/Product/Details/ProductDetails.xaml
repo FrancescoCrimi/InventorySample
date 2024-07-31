@@ -47,6 +47,15 @@
                                          Text="{x:Bind EditableItem.Discount, Mode=TwoWay, Converter={StaticResource DecimalConverter}}"
                                          DataType="Decimal"
                                          Format="0.00" />
+                <libcontrols:FormComboBox Header="Tax Type"
+                                          ItemsSource="{x:Bind LookupTables.TaxTypes}"
+                                          SelectedItem="{x:Bind EditableItem.TaxType, Mode=TwoWay}"
+                                          DisplayMemberPath="Name" />
+                <!--<libcontrols:FormComboBox Header="Tax Type"
+                                          ItemsSource="{x:Bind LookupTables.TaxTypes}"
+                                          SelectedValue="{x:Bind EditableItem.TaxType, Mode=TwoWay, Converter={StaticResource Int32Converter}}"
+                                          SelectedValuePath="TaxTypeID"
+                                          DisplayMemberPath="Name" />-->
 
                 <TextBlock Style="{StaticResource FormsSection}"
                            libcontrols:FluidGrid.ColumnSpan="2"
