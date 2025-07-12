@@ -58,26 +58,17 @@ namespace Inventory.Application
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
                 var customer = await customerRepository.GetCustomerAsync(CustomerId);
-                //CustomerDto model = DtoAssembler.DtoFromCustomer(customer);
                 return customer;
             }
         }
 
         public async Task<IList<Customer>> GetCustomersAsync(int skip,
                                                                int take,
-                                                               DataRequest<Customer> request
-            //, Windows.UI.Core.CoreDispatcher dispatcher = null
-            )
+                                                               DataRequest<Customer> request)
         {
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
-                //var models = new List<CustomerDto>();
                 var items = await customerRepository.GetCustomersAsync(skip, take, request);
-                //foreach (var item in items)
-                //{
-                //    var dto = DtoAssembler.DtoFromCustomer(item);
-                //    models.Add(dto);
-                //}
                 return items;
             }
         }
@@ -95,16 +86,9 @@ namespace Inventory.Application
             using (var customerRepository = _serviceProvider.GetService<ICustomerRepository>())
             {
                 int rtn = 0;
-                //long id = model.Id;
-                //Customer customer = id > 0 ? await customerRepository.GetCustomerAsync(model.Id) : new Customer();
                 if (customer != null)
                 {
-                    //DtoAssembler.UpdateCustomerFromDto(customer, model);
                     rtn = await customerRepository.UpdateCustomerAsync(customer);
-                    //TODO: fix below
-                    //var item = await customerRepository.GetCustomerAsync(id);
-                    //var newmodel = DtoAssembler.DtoFromCustomer(item);
-                    //model.Merge(newmodel);
                 }
                 return rtn;
             }

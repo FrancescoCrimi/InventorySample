@@ -58,26 +58,17 @@ namespace Inventory.Application
             using (var productRepository = _serviceProvider.GetService<IProductRepository>())
             {
                 var item = await productRepository.GetProductAsync(id);
-                //var model = DtoAssembler.DtoFromProduct(item, includeAllFields: true);
                 return item;
             }
         }
 
         public async Task<IList<Product>> GetProductsAsync(int skip,
                                                              int take,
-                                                             DataRequest<Product> request
-            //, Windows.UI.Core.CoreDispatcher dispatcher = null
-            )
+                                                             DataRequest<Product> request)
         {
             using (var productRepository = _serviceProvider.GetService<IProductRepository>())
             {
-                //var models = new List<ProductDto>();
                 var items = await productRepository.GetProductsAsync(skip, take, request);
-                //foreach (var item in items)
-                //{
-                //    var dto = DtoAssembler.DtoFromProduct(item, includeAllFields: false);
-                //    models.Add(dto);
-                //}
                 return items;
             }
         }
@@ -94,18 +85,8 @@ namespace Inventory.Application
         {
             using (var productRepository = _serviceProvider.GetService<IProductRepository>())
             {
-                //long id = model.Id;
                 int rtn = 0;
-                //Product product = id > 0 ? await productRepository.GetProductAsync(model.Id) : new Product();
-                //if (product != null)
-                //{
-                //    DtoAssembler.UpdateProductFromDto(product, model);
-                    rtn = await productRepository.UpdateProductAsync(product);
-                    // TODO: verificare l'effetiva utilità nel'aggiornare l'oggetto nodel
-                    //var item = await productRepository.GetProductAsync(id);
-                //    var newmodel = DtoAssembler.DtoFromProduct(item, includeAllFields: true);
-                //    model.Merge(newmodel);
-                //}
+                rtn = await productRepository.UpdateProductAsync(product);
                 return rtn;
             }
         }

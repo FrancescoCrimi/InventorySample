@@ -9,7 +9,7 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 
 namespace Inventory.Infrastructure
 {
@@ -18,7 +18,7 @@ namespace Inventory.Infrastructure
         string DbVersion { get; }
         bool IsRandomErrorsEnabled { get; set; }
         string Version { get; }
-        DataProviderType DataProvider { get; set; }
+        DatabaseProviderType DataProvider { get; set; }
         string SQLiteConnectionString { get; }
         string SQLServerConnectionString { get; set; }
         string AppLogConnectionString { get; }

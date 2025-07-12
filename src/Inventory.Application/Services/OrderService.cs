@@ -39,9 +39,6 @@ namespace Inventory.Application
             {
                 var customer = await dataService.GetCustomerAsync(customerID);
                 Order order = Order.CreateNewOrder(customer);
-                //OrderDto model = DtoAssembler.DtoFromOrder(order);
-                //if (customerID > 0)
-                //    model.Customer = DtoAssembler.DtoFromCustomer(order.Customer);
                 return order;
             }
         }
@@ -69,30 +66,17 @@ namespace Inventory.Application
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
                 var item = await orderRepository.GetOrderAsync(OrderId);
-                //OrderDto model = DtoAssembler.DtoFromOrder(item);
-                //if (item.Customer != null)
-                //    model.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
                 return item;
             }
         }
 
         public async Task<IList<Order>> GetOrdersAsync(int skip,
-                                                         int take,
-                                                         DataRequest<Order> request
-            //, Windows.UI.Core.CoreDispatcher dispatcher = null
-            )
+                                                       int take,
+                                                       DataRequest<Order> request)
         {
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
-                //var models = new List<OrderDto>();
                 var orders = await orderRepository.GetOrdersAsync(skip, take, request);
-                //foreach (var item in orders)
-                //{
-                //    OrderDto dto = DtoAssembler.DtoFromOrder(item);
-                //    if (item.Customer != null)
-                //        dto.Customer = DtoAssembler.DtoFromCustomer(item.Customer);
-                //    models.Add(dto);
-                //}
                 return orders;
             }
         }
@@ -110,23 +94,9 @@ namespace Inventory.Application
             using (var orderRepository = _serviceProvider.GetService<IOrderRepository>())
             {
                 int ret = 0;
-                //long id = model.Id;
-                //var order = id > 0 ? await orderRepository.GetOrderAsync(model.Id) : new Order();
-                //if (order != null)
-                //{
-                //    DtoAssembler.UpdateOrderFromDto(order, model);
-                    ret = await orderRepository.UpdateOrderAsync(order);
-
-                    //var item = await orderRepository.GetOrderAsync(id);
-                    //var newmodel = DtoAssembler.DtoFromOrder(item);
-
-                    //var newmodel = DtoAssembler.DtoFromOrder(order);
-
-                    //model.Merge(newmodel);
-                //}
+                ret = await orderRepository.UpdateOrderAsync(order);
                 return ret;
             }
-
         }
     }
 }

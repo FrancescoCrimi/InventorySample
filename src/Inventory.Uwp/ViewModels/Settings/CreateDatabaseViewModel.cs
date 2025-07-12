@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
+using Inventory.Infrastructure.Settings;
 using Inventory.Persistence;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.ViewModels.Common;
@@ -25,7 +26,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     public class CreateDatabaseViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly IPersistenceService _persistenceService;
+        private readonly IDatabaseMaintenanceService _persistenceService;
         private string _progressStatus = null;
         private double _progressMaximum = 1;
         private double _progressValue = 0;
@@ -34,7 +35,7 @@ namespace Inventory.Uwp.ViewModels.Settings
         private string _secondaryButtonText = "Cancel";
 
         public CreateDatabaseViewModel(ILogger<CreateDatabaseViewModel> logger,
-                                       IPersistenceService persistenceService)
+                                       IDatabaseMaintenanceService persistenceService)
             : base()
         {
             _logger = logger;
@@ -94,7 +95,7 @@ namespace Inventory.Uwp.ViewModels.Settings
             {
                 ProgressMaximum = 14;
                 await _persistenceService.CopyDatabase(connectionString,
-                                                       DataProviderType.SQLServer,
+                                                       DatabaseProviderType.SQLServer,
                                                        (value) => ProgressValue = value,
                                                        (status) => ProgressStatus = status);
                 Result = Result.Ok("Database created successfully.");

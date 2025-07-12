@@ -12,9 +12,11 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
+using Inventory.Infrastructure.Settings;
 using Inventory.Interface;
 using Inventory.Interface.Services;
 using Inventory.Persistence;
+using Inventory.Uwp.Configuration;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
 using Inventory.Uwp.ViewModels;
@@ -114,6 +116,7 @@ namespace Inventory.Uwp
             .AddScoped<WindowManagerService>()
             .AddSingleton<AppSettings>()
             .AddSingleton<IAppSettings>(x => x.GetRequiredService<AppSettings>())
+            .AddSingleton<ISettingsService, LocalSettingsService>()
 
             // Core Services
             .AddInventoryInterface()

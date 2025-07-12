@@ -11,6 +11,7 @@
 
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Helpers;
 using System;
@@ -53,9 +54,9 @@ namespace Inventory.Uwp
 
         public string DbVersion => DB_VERSION;
 
-        public DataProviderType DataProvider
+        public DatabaseProviderType DataProvider
         {
-            get => (DataProviderType)_localSettings.ReadInt("DataProvider", (int)DataProviderType.SQLite);
+            get => (DatabaseProviderType)_localSettings.ReadInt("DataProvider", (int)DatabaseProviderType.SQLite);
             set => _localSettings.SaveInt("DataProvider", (int)value);
         }
 

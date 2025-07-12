@@ -37,7 +37,6 @@ namespace Inventory.Application
         {
             using (var orderItemRepository = _serviceProvider.GetService<IOrderItemRepository>())
             {
-                //var orderItem = new OrderItem { OrderId = model.OrderId, OrderLine = model.OrderLine };
                 int ret = await orderItemRepository.DeleteOrderItemsAsync(orderItem);
                 return ret;
             }
@@ -57,8 +56,6 @@ namespace Inventory.Application
             using (var orderItemRepository = _serviceProvider.GetService<IOrderItemRepository>())
             {
                 var item = await orderItemRepository.GetOrderItemAsync(orderID, lineID);
-                //var model = DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: true);
-                //DtoAssembler.DtoFromProduct(item.Product, true);
                 return item;
             }
         }
@@ -67,14 +64,7 @@ namespace Inventory.Application
         {
             using (var orderItemRepository = _serviceProvider.GetService<IOrderItemRepository>())
             {
-                //var models = new List<OrderItemDto>();
                 var items = await orderItemRepository.GetOrderItemsAsync(0, 100, request);
-                //foreach (var item in items)
-                //{
-                //    var model = DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: false);
-                //    model.Product = DtoAssembler.DtoFromProduct(item.Product, false);
-                //    models.Add(model);
-                //}
                 return items;
             }
         }
@@ -83,12 +73,7 @@ namespace Inventory.Application
         {
             using (var orderItemRepository = _serviceProvider.GetService<IOrderItemRepository>())
             {
-                //var models = new List<OrderItemDto>();
                 var items = await orderItemRepository.GetOrderItemsAsync(skip, take, request);
-                //foreach (var item in items)
-                //{
-                //    models.Add(DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: false));
-                //}
                 return items;
             }
         }
@@ -105,12 +90,7 @@ namespace Inventory.Application
         {
             using (var orderItemRepository = _serviceProvider.GetService<IOrderItemRepository>())
             {
-                //var orderItem = model.OrderLine > 0 ? await orderItemRepository.GetOrderItemAsync(model.OrderId, model.OrderLine) : new OrderItem();
-                //DtoAssembler.UpdateOrderItemFromModel(orderItem, model);
-                int suca =  await orderItemRepository.UpdateOrderItemAsync(orderItem);
-                //var item = await orderItemRepository.GetOrderItemAsync(orderItem.OrderId, orderItem.OrderLine);
-                //var aaaaa = DtoAssembler.CreateOrderItemModelAsync(item, includeAllFields: true);
-                //model.Merge(aaaaa);
+                int suca = await orderItemRepository.UpdateOrderItemAsync(orderItem);
                 return suca;
             }
         }

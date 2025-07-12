@@ -71,9 +71,13 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Configuration\AppSettings.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
+    <Compile Include="Configuration\JsonSettingsService.cs" />
+    <Compile Include="Configuration\LocalDatabaseProvisioner.cs" />
+    <Compile Include="Configuration\LocalSettingsService.cs" />
     <Compile Include="Contracts\Services\INavigationService.cs" />
     <Compile Include="Contracts\Services\IViewService.cs" />
     <Compile Include="Contracts\Services\IWindowManagerService.cs" />

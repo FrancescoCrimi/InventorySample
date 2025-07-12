@@ -11,6 +11,7 @@
 
 using CommunityToolkit.Mvvm.Input;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.Views.Settings;
@@ -54,10 +55,10 @@ namespace Inventory.Uwp.ViewModels.Settings
 
             StatusReady();
 
-            IsLocalProvider = _appSettings.DataProvider == DataProviderType.SQLite;
+            IsLocalProvider = _appSettings.DataProvider == DatabaseProviderType.SQLite;
 
             SqlConnectionString = _appSettings.SQLServerConnectionString;
-            IsSqlProvider = _appSettings.DataProvider == DataProviderType.SQLServer;
+            IsSqlProvider = _appSettings.DataProvider == DatabaseProviderType.SQLServer;
 
             return Task.CompletedTask;
         }
@@ -176,12 +177,12 @@ namespace Inventory.Uwp.ViewModels.Settings
                 if (await ValidateSqlConnectionAsync())
                 {
                     _appSettings.SQLServerConnectionString = SqlConnectionString;
-                    _appSettings.DataProvider = DataProviderType.SQLServer;
+                    _appSettings.DataProvider = DatabaseProviderType.SQLServer;
                 }
             }
             else
             {
-                _appSettings.DataProvider = DataProviderType.SQLite;
+                _appSettings.DataProvider = DatabaseProviderType.SQLite;
             }
         }
 
@@ -189,7 +190,7 @@ namespace Inventory.Uwp.ViewModels.Settings
         {
             if (IsLocalProvider && !IsSqlProvider)
             {
-                _appSettings.DataProvider = DataProviderType.SQLite;
+                _appSettings.DataProvider = DatabaseProviderType.SQLite;
             }
         }
 

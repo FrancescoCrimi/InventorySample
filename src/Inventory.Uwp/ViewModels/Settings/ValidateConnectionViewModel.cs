@@ -12,6 +12,7 @@
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
+using Inventory.Infrastructure.Settings;
 using Inventory.Uwp.ViewModels.Common;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,7 +24,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     {
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
-        private readonly IPersistenceService _persistenceService;
+        private readonly IDatabaseMaintenanceService _persistenceService;
         private string _progressStatus = null;
         private string _message = null;
         private string _primaryButtonText;
@@ -31,7 +32,7 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public ValidateConnectionViewModel(ILogger<ValidateConnectionViewModel> logger,
                                            AppSettings appSettings,
-                                           IPersistenceService persistenceService)
+                                           IDatabaseMaintenanceService persistenceService)
             : base()
         {
             _logger = logger;
@@ -72,9 +73,9 @@ namespace Inventory.Uwp.ViewModels.Settings
         {
             try
             {
-                if (await _persistenceService.ExistsAsync(connectionString, DataProviderType.SQLServer))
+                if (await _persistenceService.ExistsAsync(connectionString, DatabaseProviderType.SQLServer))
                 {
-                    var version = _persistenceService.GetDbVersion(connectionString, DataProviderType.SQLServer);
+                    var version = _persistenceService.GetDbVersion(connectionString, DatabaseProviderType.SQLServer);
                     if (version != null)
                     {
                         if (version == _appSettings.DbVersion)

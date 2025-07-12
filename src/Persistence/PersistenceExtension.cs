@@ -11,7 +11,7 @@
 
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
-using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 using Inventory.Persistence.DbContexts;
 using Inventory.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,7 @@ namespace Inventory.Persistence
 
             switch (settings.DataProvider)
             {
-                case DataProviderType.SQLite:
+                case DatabaseProviderType.SQLite:
                     serviceCollection.AddDbContext<SQLiteAppDbContext>(options =>
                     {
                         options
@@ -40,7 +40,7 @@ namespace Inventory.Persistence
                         => serviceProvider.GetRequiredService<SQLiteAppDbContext>());
                     break;
 
-                case DataProviderType.SQLServer:
+                case DatabaseProviderType.SQLServer:
                     serviceCollection.AddDbContext<SQLServerAppDbContext>(options =>
                     {
                         options
@@ -52,7 +52,7 @@ namespace Inventory.Persistence
                         => serviceProvider.GetRequiredService<SQLServerAppDbContext>());
                     break;
 
-                case DataProviderType.WebAPI:
+                case DatabaseProviderType.WebAPI:
                     break;
 
                 default:
@@ -65,7 +65,7 @@ namespace Inventory.Persistence
                 .AddTransient<IOrderItemRepository, OrderItemRepository>()
                 .AddTransient<IProductRepository, ProductRepository>()
                 .AddTransient<ILookupTableRepository, LookupTableRepository>()
-                .AddSingleton<IPersistenceService, PersistenceService>();
+                .AddSingleton<IDatabaseMaintenanceService, DatabaseMaintenanceService>();
         }
     }
 }

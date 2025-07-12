@@ -9,24 +9,33 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Inventory.Infrastructure 
 {
-    public interface IPersistenceService
+    public interface IDatabaseMaintenanceService
     {
         Task CopyDatabase(string connectionString,
-                          DataProviderType dataProviderType,
+                          DatabaseProviderType dataProviderType,
                           Action<double> setValue,
                           Action<string> setStatus,
                           CancellationToken cancellationToken = default);
         Task<bool> ExistsAsync(string connectionString,
-                               DataProviderType dataProviderType,
+                               DatabaseProviderType dataProviderType,
                                CancellationToken cancellationToken = default);
         string GetDbVersion(string connectionString,
-                            DataProviderType dataProviderType);
+                            DatabaseProviderType dataProviderType);
+
+
+
+        //Task<bool> ExistsAsync(DatabaseConfiguration config,
+        //                       CancellationToken ct = default);
+        //string GetDbVersion(DatabaseConfiguration config);
+        //Task CopyDatabase(DatabaseConfiguration source,
+        //                  DatabaseConfiguration destination,
+        //                  CancellationToken ct = default);
     }
 }

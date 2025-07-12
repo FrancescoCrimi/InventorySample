@@ -9,13 +9,33 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-namespace Inventory.Infrastructure.Common
+namespace Inventory.Infrastructure.Settings
 {
-    public enum DataProviderType
+    public enum DatabaseProviderType
     {
         SQLite,
         SQLServer,
         MySql,
         WebAPI
+    }
+
+
+    public class DatabaseConfiguration
+    {
+        public string Key { get; }
+        public DatabaseProviderType Provider { get; }
+        public string ConnectionString { get; }
+        public bool IsReadOnly { get; }
+
+        public DatabaseConfiguration(string key,
+                                     DatabaseProviderType provider,
+                                     string cs,
+                                     bool isReadOnly)
+        {
+            Key = key;
+            Provider = provider;
+            ConnectionString = cs;
+            IsReadOnly = isReadOnly;
+        }
     }
 }
