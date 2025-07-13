@@ -1,16 +1,13 @@
-﻿using Inventory.Application;
-using Inventory.Interface.Services;
+﻿using Inventory.Interface.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Inventory.Interface
 {
-    public static class InterfaceExtension
+    public static class InterfaceRegister
     {
-        public static IServiceCollection AddInventoryInterface(this IServiceCollection serviceCollection)
+        public static void Register(IServiceCollection serviceCollection)
         {
-            return serviceCollection
-                .AddInventoryApplication()
+            serviceCollection
                 .AddSingleton<LookupTablesServiceFacade>()
                 .AddSingleton<ProductServiceFacade>()
                 .AddSingleton<CustomerServiceFacade>()

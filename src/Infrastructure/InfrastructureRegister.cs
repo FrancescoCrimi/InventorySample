@@ -1,15 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-// Copyright (c) 2023 Francesco Crimi francrim@gmail.com
-// This code is licensed under the MIT License (MIT).
-// THE CODE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
-// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-
-using Inventory.Infrastructure.Logging;
+﻿using Inventory.Infrastructure.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,20 +6,30 @@ using Microsoft.Extensions.Logging;
 
 namespace Inventory.Infrastructure
 {
-    public static class InfrastructureExtension
+    public static class InfrastructureRegister
     {
         private static IAppSettings settings;
 
-        public static IServiceCollection AddInventoryInfrastructure(this IServiceCollection serviceCollection)
+        public static void Register(IServiceCollection serviceCollection)
         {
+            // Register your infrastructure services here
+            // For example, you might register logging, settings, or database providers
+            // Example:
+            // services.AddSingleton<ILogger, ConsoleLogger>();
+            // services.AddSingleton<IAppSettings, AppSettings>();
+            // You can also register other components if needed
+            // services.AddSingleton<IDatabaseProvider, SqliteDatabaseProvider>();
+
             settings = serviceCollection.BuildServiceProvider().GetService<IAppSettings>();
-            return serviceCollection
+             serviceCollection
                 .AddLogging(loggingBuilder => loggingBuilder
                     .ClearProviders()
                     .AddDebug()
                     //.AddConsole()
                     .AddDatabaseLogger(serviceCollection)
                     .AddFilter("", LogLevel.Information));
+            //return InfrastructurePersistenceRegister.Register(serviceCollection);
+
         }
 
         private static ILoggingBuilder AddDatabaseLogger(this ILoggingBuilder loggingBuilder,

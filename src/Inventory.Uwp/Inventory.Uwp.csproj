@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="CompositionRoot.cs" />
     <Compile Include="Configuration\AppSettings.cs" />
     <Compile Include="Common\ToolbarModes.cs" />
     <Compile Include="Common\ValidationConstraint.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
+    <Compile Include="PresentationRegister.cs" />
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
@@ -454,6 +456,10 @@
     <ProjectReference Include="..\Infrastructure\Inventory.Infrastructure.csproj">
       <Project>{e74bba50-85e3-4c3d-814d-d8390df9a92f}</Project>
       <Name>Inventory.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Inventory.Application\Inventory.Application.csproj">
+      <Project>{1d6d772b-dcf8-4ee2-afd3-5ec6156db15d}</Project>
+      <Name>Inventory.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\Inventory.Interface\Inventory.Interface.csproj">
       <Project>{ce02c2fd-7b50-4c1b-b31e-8e0d401fcb78}</Project>

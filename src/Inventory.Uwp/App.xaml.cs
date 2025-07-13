@@ -10,23 +10,9 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Inventory.Infrastructure;
 using Inventory.Infrastructure.Logging;
-using Inventory.Infrastructure.Settings;
-using Inventory.Interface;
 using Inventory.Interface.Services;
-using Inventory.Persistence;
-using Inventory.Uwp.Configuration;
 using Inventory.Uwp.Services;
-using Inventory.Uwp.Services.VirtualCollections;
-using Inventory.Uwp.ViewModels;
-using Inventory.Uwp.ViewModels.Customers;
-using Inventory.Uwp.ViewModels.Dashboard;
-using Inventory.Uwp.ViewModels.Logs;
-using Inventory.Uwp.ViewModels.OrderItems;
-using Inventory.Uwp.ViewModels.Orders;
-using Inventory.Uwp.ViewModels.Products;
-using Inventory.Uwp.ViewModels.Settings;
 using Inventory.Uwp.Views.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -39,14 +25,18 @@ namespace Inventory.Uwp
 {
     public sealed partial class App : Windows.UI.Xaml.Application
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public App()
         {
             InitializeComponent();
             Suspending += OnSuspending;
             UnhandledException += OnUnhandledException;
-            Ioc.Default.ConfigureServices(ConfigureServices());
+
+            var serviceCollection = new ServiceCollection();
+            CompositionRoot.AddAllService(serviceCollection);
+
+            Ioc.Default.ConfigureServices(serviceCollection.BuildServiceProvider());
             _logger = Ioc.Default.GetService<ILogger<App>>();
         }
 
@@ -107,54 +97,5 @@ namespace Inventory.Uwp
         {
             _logger.LogError(LogEvents.UnhandledException, e.Exception, "Unhandled Exception");
         }
-
-        private IServiceProvider ConfigureServices()
-            => new ServiceCollection()
-
-            // Services
-            .AddScoped<NavigationService>()
-            .AddScoped<WindowManagerService>()
-            .AddSingleton<AppSettings>()
-            .AddSingleton<IAppSettings>(x => x.GetRequiredService<AppSettings>())
-            .AddSingleton<ISettingsService, LocalSettingsService>()
-
-            // Core Services
-            .AddInventoryInterface()
-
-            //.AddSingleton<LookupTablesService>()
-            //.AddSingleton<ProductService>()
-            //.AddSingleton<CustomerService>()
-            //.AddSingleton<OrderService>()
-            //.AddSingleton<OrderItemService>()
-
-            .AddSingleton<FilePickerService>()
-
-            // ViewModels
-            .AddTransient<ShellViewModel>()
-            .AddTransient<DashboardViewModel>()
-            .AddTransient<SettingsViewModel>()
-            .AddTransient<ValidateConnectionViewModel>()
-            .AddTransient<CreateDatabaseViewModel>()
-            .AddTransient<CustomerDetailsViewModel>()
-            .AddTransient<CustomerListViewModel>()
-            .AddTransient<CustomersViewModel>()
-            .AddTransient<ProductListViewModel>()
-            .AddTransient<ProductDetailsViewModel>()
-            .AddTransient<ProductsViewModel>()
-            .AddTransient<OrderDetailsViewModel>()
-            .AddTransient<OrderDetailsWithItemsViewModel>()
-            .AddTransient<OrderListViewModel>()
-            .AddTransient<OrdersViewModel>()
-            .AddTransient<OrderItemDetailsViewModel>()
-            .AddTransient<OrderItemListViewModel>()
-            .AddTransient<OrderItemsViewModel>()
-            .AddTransient<LogsViewModel>()
-            .AddTransient<LogListViewModel>()
-            .AddTransient<LogDetailsViewModel>()
-            .AddTransient<CustomerCollection>()
-            .AddTransient<LogCollection>()
-            .AddTransient<OrderCollection>()
-            .AddTransient<ProductCollection>()
-            .BuildServiceProvider();
     }
 }
