@@ -29,12 +29,12 @@ namespace Inventory.Infrastructure.Settings
 
         public DatabaseConfiguration(string key,
                                      DatabaseProviderType provider,
-                                     string cs,
+                                     string connectionString,
                                      bool isReadOnly)
         {
             Key = key;
             Provider = provider;
-            ConnectionString = cs;
+            ConnectionString = connectionString;
             IsReadOnly = isReadOnly;
         }
     }

@@ -8,7 +8,6 @@ namespace Inventory.Infrastructure.Settings
     public class DatabaseConfigurationService : IDatabaseConfigurationService
     {
         private readonly ISettingsService _settings;
-        private readonly string _defaultProfilesKey = "Demo";
         private List<DatabaseConfiguration> _profiles;
         private string _currentKey;
 
@@ -18,17 +17,18 @@ namespace Inventory.Infrastructure.Settings
             // carica dal JSON
             //_profiles = JsonSerializer.Deserialize<List<DatabaseConfiguration>>(
             //   _settings.Get(SettingKey.DatabaseProfiles) ?? "[]")!;
-            _profiles = (_settings.Get(SettingKey.DatabaseProfiles) != null)
-                ? JsonSerializer.Deserialize<List<DatabaseConfiguration>>(_settings.Get(SettingKey.DatabaseProfiles))
-                : GetDefaultDatabaseProfiles();
+            _profiles = JsonSerializer.Deserialize<List<DatabaseConfiguration>>(
+                _settings.Get(SettingKey.DatabaseProfiles) ?? "[]");
             _currentKey = _settings.Get(SettingKey.CurrentDatabaseKey)
-                ?? _defaultProfilesKey;
+                ?? "DefaultSQLite";
         }
 
         public IReadOnlyList<DatabaseConfiguration> GetAll() => _profiles;
 
-        public DatabaseConfiguration GetCurrent() =>
-            _profiles.First(p => p.Key == _currentKey);
+        public DatabaseConfiguration GetCurrent()
+        {
+            return _profiles.FirstOrDefault(p => p.Key == _currentKey);
+        }
 
         public void SetCurrent(string key)
         {
@@ -55,7 +55,7 @@ namespace Inventory.Infrastructure.Settings
                 throw new InvalidOperationException("Non eliminabile");
             _profiles.Remove(cfg);
             if (_currentKey == key)
-                SetCurrent(_defaultProfilesKey);
+                SetCurrent("DefaultSQLite");
             PersistProfiles();
         }
 
@@ -64,15 +64,6 @@ namespace Inventory.Infrastructure.Settings
             var json = JsonSerializer.Serialize(_profiles);
             _settings.Set(SettingKey.DatabaseProfiles, json);
             _settings.Save();
-        }
-
-        private List<DatabaseConfiguration> GetDefaultDatabaseProfiles()
-        {
-            return new List<DatabaseConfiguration>
-            {
-                new DatabaseConfiguration(_defaultProfilesKey, DatabaseProviderType.SQLite, "Suca", true),
-                new DatabaseConfiguration("MySql", DatabaseProviderType.MySql, "Suca", false)
-            };
         }
     }
 }

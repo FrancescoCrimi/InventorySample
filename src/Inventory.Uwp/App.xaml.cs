@@ -75,9 +75,14 @@ namespace Inventory.Uwp
         private async Task InitializeAsync()
         {
             ThemeSelectorService.Initialize();
-            var appSettings = Ioc.Default.GetService<AppSettings>();
-            await appSettings.EnsureLogDatabaseAsync();
-            await appSettings.EnsureLocalDatabaseAsync();
+
+            //var appSettings = Ioc.Default.GetService<AppSettings>();
+            //await appSettings.EnsureLogDatabaseAsync();
+            //await appSettings.EnsureLocalDatabaseAsync();
+
+            var sppBootstrap = Ioc.Default.GetService<AppBootstrapper>();
+            await sppBootstrap.InitializeAsync();
+
             await Ioc.Default.GetService<LookupTablesServiceFacade>().InitializeAsync();
             _logger.LogInformation(LogEvents.Startup, "Application Started");
         }

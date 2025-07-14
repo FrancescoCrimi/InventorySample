@@ -26,7 +26,9 @@ namespace Inventory.Uwp
            .AddScoped<WindowManagerService>()
            .AddSingleton<AppSettings>()
            .AddSingleton<IAppSettings>(x => x.GetRequiredService<AppSettings>())
+
            .AddSingleton<ISettingsService, LocalSettingsService>()
+           .AddSingleton<ILocalDatabaseProvisioner, LocalDatabaseProvisioner>()
 
            .AddSingleton<FilePickerService>()
 

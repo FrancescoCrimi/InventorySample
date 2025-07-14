@@ -12,6 +12,7 @@ namespace Inventory.Infrastructure.Settings
         Language,
         DatabaseProfiles,
         CurrentDatabaseKey
+        //CSDatabaseLogger
         // …altre chiavi
     }
 }

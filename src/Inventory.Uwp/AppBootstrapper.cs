@@ -1,7 +1,4 @@
 ﻿using Inventory.Infrastructure.Settings;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,41 +6,32 @@ namespace Inventory.Uwp
 {
     public class AppBootstrapper
     {
-        private readonly IServiceProvider _services;
+        //private readonly IServiceProvider _services;
+        private readonly IDatabaseConfigurationService _databaseConfigurationService;
+        private readonly ILocalDatabaseProvisioner _localDatabaseProvisioner;
 
-        public AppBootstrapper(IServiceProvider services)
+        public AppBootstrapper(/*IServiceProvider services,*/ IDatabaseConfigurationService databaseConfigurationService , ILocalDatabaseProvisioner localDatabaseProvisioner)
         {
-            _services = services;
+            //_services = services;
+            _databaseConfigurationService = databaseConfigurationService;
+            _localDatabaseProvisioner = localDatabaseProvisioner;
         }
 
         public async Task InitializeAsync(CancellationToken ct = default)
         {
-            var provisioner = _services.GetRequiredService<ILocalDatabaseProvisioner>();
-            var configService = _services.GetRequiredService<IDatabaseConfigurationService>();
+            //var provisioner = _services.GetRequiredService<ILocalDatabaseProvisioner>();
+            //var configService = _services.GetRequiredService<IDatabaseConfigurationService>();
 
             // 🧱 1. Prepara il DB principale se SQLite
-            var current = configService.GetCurrent();
-            if (current.Provider == DatabaseProviderType.SQLite &&
+            var current = _databaseConfigurationService.GetCurrent();
+            if (current == null || current.Provider == DatabaseProviderType.SQLite &&
                 current.Key == "DefaultSQLite")
             {
-                await provisioner.EnsureMainDatabaseAsync(current, ct);
+                await _localDatabaseProvisioner.EnsureMainDatabaseAsync(ct);
             }
 
             // 🗂️ 2. Prepara il DB dei log
-            await provisioner.EnsureLogDatabaseAsync(ct);
-
-            // 🔒 3. Registra profilo SQLite se non esiste
-            if (!configService.GetAll().Any(c => c.Key == "DefaultSQLite"))
-            {
-                configService.Add(new DatabaseConfiguration
-                (
-                    key: "DefaultSQLite",
-                    provider: DatabaseProviderType.SQLite,
-                    cs: "Data Source=app.db;",
-                    isReadOnly: true
-                ));
-                configService.SetCurrent("DefaultSQLite");
-            }
+            await _localDatabaseProvisioner.EnsureLogDatabaseAsync(ct);
         }
     }
 }

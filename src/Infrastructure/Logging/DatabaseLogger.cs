@@ -9,23 +9,22 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Inventory.Infrastructure.Logging
 {
-    public class CustomLogger : ILogger
+    public class DatabaseLogger : ILogger
     {
         private readonly string _categoryName;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly LogDbContext _logDbContext;
 
-        public CustomLogger(string categoryName,
-                            IServiceProvider serviceProvider)
+        public DatabaseLogger(string categoryName,
+                              LogDbContext logDbContext)
         {
             _categoryName = categoryName;
-            _serviceProvider = serviceProvider;
+            _logDbContext = logDbContext;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -42,8 +41,6 @@ namespace Inventory.Infrastructure.Logging
         {
             Task.Run(async () =>
             {
-                var logDbContext = _serviceProvider.GetService<LogDbContext>();
-
                 var message = "";
                 if (formatter != null)
                 {
@@ -68,8 +65,8 @@ namespace Inventory.Infrastructure.Logging
                     IsRead = false,
                 };
 
-                logDbContext.Logs.Add(appLog);
-                await logDbContext.SaveChangesAsync();
+                _logDbContext.Logs.Add(appLog);
+                await _logDbContext.SaveChangesAsync();
             });
 
             // Todo: provare ad inserire la chiamata al metodo per scatenare l'evento dentro il task

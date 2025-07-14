@@ -11,7 +11,6 @@
 
 using Inventory.Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,17 +20,17 @@ namespace Inventory.Infrastructure.Logging
 {
     public class LogService
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly LogDbContextFactory factory;
 
-        public LogService(IServiceProvider serviceProvider)
+        public LogService(LogDbContextFactory loggerDbContextFactory)
         {
-            _serviceProvider = serviceProvider;
+            factory = loggerDbContextFactory;
         }
 
 
         public async Task<Log> GetLogAsync(long id)
         {
-            using (var logDbContext = _serviceProvider.GetService<LogDbContext>())
+            using (var logDbContext = factory.CreateDbContext())
             {
                 var item = await logDbContext.Logs.Where(r => r.Id == id).FirstOrDefaultAsync();
                 return item;
@@ -48,7 +47,7 @@ namespace Inventory.Infrastructure.Logging
 
         public async Task<IList<Log>> GetLogsAsync(int skip, int take, DataRequest<Log> request)
         {
-            using (var logDbContext = _serviceProvider.GetService<LogDbContext>())
+            using (var logDbContext = factory.CreateDbContext())
             {
                 var items = GetLogs(request, logDbContext);
                 // Execute
@@ -63,7 +62,7 @@ namespace Inventory.Infrastructure.Logging
 
         public async Task<int> GetLogsCountAsync(DataRequest<Log> request)
         {
-            using (var logDbContext = _serviceProvider.GetService<LogDbContext>())
+            using (var logDbContext = factory.CreateDbContext())
             {
                 IQueryable<Log> items = logDbContext.Logs;
 
@@ -86,7 +85,7 @@ namespace Inventory.Infrastructure.Logging
 
         public async Task<int> DeleteLogAsync(Log log)
         {
-            using (var logDbContext = _serviceProvider.GetService<LogDbContext>())
+            using (var logDbContext = factory.CreateDbContext())
             {
                 logDbContext.Logs.RemoveRange(log);
                 return await logDbContext.SaveChangesAsync();
@@ -95,7 +94,7 @@ namespace Inventory.Infrastructure.Logging
 
         public async Task<int> DeleteLogRangeAsync(int index, int length, DataRequest<Log> request)
         {
-            using (var logDbContext = _serviceProvider.GetService<LogDbContext>())
+            using (var logDbContext = factory.CreateDbContext())
             {
                 var items = GetLogs(request, logDbContext);
 
@@ -117,7 +116,7 @@ namespace Inventory.Infrastructure.Logging
 
         public async Task MarkAllAsReadAsync()
         {
-            using (var logDbContext = _serviceProvider.GetService<LogDbContext>())
+            using (var logDbContext = factory.CreateDbContext())
             {
                 var items = await logDbContext.Logs.Where(r => !r.IsRead).ToListAsync();
                 foreach (var item in items)
@@ -134,7 +133,6 @@ namespace Inventory.Infrastructure.Logging
         {
             AddLogEvent?.Invoke(null, new EventArgs());
         }
-
 
         private IQueryable<Log> GetLogs(DataRequest<Log> request, LogDbContext logDbContext)
         {

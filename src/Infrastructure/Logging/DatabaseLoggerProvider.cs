@@ -9,23 +9,22 @@
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 
-using System;
 using Microsoft.Extensions.Logging;
 
 namespace Inventory.Infrastructure.Logging
 {
-    public class CustomLoggerProvider : ILoggerProvider
+    public class DatabaseLoggerProvider : ILoggerProvider
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly LogDbContextFactory _logDbContextFactory;
 
-        public CustomLoggerProvider(IServiceProvider serviceProvider)
+        public DatabaseLoggerProvider(LogDbContextFactory logDbContextFactory)
         {
-            this.serviceProvider = serviceProvider;
+            _logDbContextFactory = logDbContextFactory;
         }
 
         public ILogger CreateLogger(string categoryName)
         {
-            return new CustomLogger(categoryName, serviceProvider);
+            return new DatabaseLogger(categoryName, _logDbContextFactory.CreateDbContext());
         }
 
         public void Dispose()
