@@ -27,13 +27,13 @@ namespace Inventory.Uwp
         private const string DB_NAME = "VanArsdel";
         private const string DB_VERSION = "1.02";
 
-        private static readonly string AppLogPath = "AppLog";
-        private static readonly string AppLogName = $"AppLog.1.0.db";
-        private static readonly string AppLogFileName = Path.Combine(AppLogPath, AppLogName);
-
         private static readonly string DatabasePath = "Database";
         private static readonly string DatabaseName = $"{DB_NAME}.{DB_VERSION}.db";
         private static readonly string DatabaseFileName = Path.Combine(DatabasePath, DatabaseName);
+
+        private static readonly string AppLogPath = "AppLog";
+        private static readonly string AppLogName = $"AppLog.1.0.db";
+        private static readonly string AppLogFileName = Path.Combine(AppLogPath, AppLogName);
 
         private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
         private readonly StorageFolder _localFolder = ApplicationData.Current.LocalFolder;

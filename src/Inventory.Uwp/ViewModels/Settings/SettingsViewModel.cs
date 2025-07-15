@@ -28,6 +28,7 @@ namespace Inventory.Uwp.ViewModels.Settings
     {
         private readonly ILogger _logger;
         private readonly AppSettings _appSettings;
+        private readonly ILocalDatabaseProvisioner _localDatabaseProvisioner;
         private readonly WindowManagerService _windowManagerService;
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
         private bool _isBusy = false;
@@ -42,10 +43,12 @@ namespace Inventory.Uwp.ViewModels.Settings
 
         public SettingsViewModel(ILogger<SettingsViewModel> logger,
                                  AppSettings appSettings,
+                                 ILocalDatabaseProvisioner localDatabaseProvisioner,
                                  WindowManagerService windowManagerService)
         {
             _logger = logger;
             _appSettings = appSettings;
+            _localDatabaseProvisioner = localDatabaseProvisioner;
             _windowManagerService = windowManagerService;
         }
 
@@ -129,7 +132,7 @@ namespace Inventory.Uwp.ViewModels.Settings
         {
             IsBusy = true;
             StatusMessage("Waiting database reset...");
-            var result = await _appSettings.ResetLocalDatabaseAsync();
+            var result = await _localDatabaseProvisioner.ResetLocalDatabaseAsync();
             IsBusy = false;
             if (result.IsOk)
             {

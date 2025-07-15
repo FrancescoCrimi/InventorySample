@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using Inventory.Infrastructure.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Inventory.Infrastructure.Settings
@@ -8,22 +9,14 @@ namespace Inventory.Infrastructure.Settings
         /// <summary>
         /// Prepara il database principale (app.db) nella LocalFolder
         /// </summary>
-        Task EnsureMainDatabaseAsync(/*DatabaseConfiguration config,*/ CancellationToken ct = default);
+        Task EnsureMainDatabaseAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Prepara il database dei log (log.db) nella LocalFolder
         /// </summary>
         Task EnsureLogDatabaseAsync(CancellationToken ct = default);
 
-        ///// <summary>
-        ///// Ritorna il path completo del database principale in LocalFolder\Database\{file}.
-        ///// </summary>
-        //string GetMainDatabasePath(DatabaseConfiguration config);
-
-        ///// <summary>
-        ///// Ritorna il path completo del database di log in LocalFolder\Database\log.db.
-        ///// </summary>
-        //string GetLogDatabasePath();
+        Task<Result> ResetLocalDatabaseAsync();
 
         string DatabaseLoggerConnectionString { get; }
     }
