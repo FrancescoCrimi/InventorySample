@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Repository;
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 using Inventory.Persistence;
 using Inventory.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -43,8 +44,8 @@ namespace ConsoleApp
             InitIoc();
             var connectionString = @"Data Source=.\SQLExpress;Initial Catalog=Inventory;Integrated Security=SSPI";
             //var connectionString = "Data Source = Database\\NewVanArsdel.1.01.db";
-            var ps = Ioc.Default.GetService<PersistenceService>();
-            ps.CopyDatabase(connectionString, DataProviderType.SQLServer, SetValue, SetStatus).Wait();
+            var ps = Ioc.Default.GetService<IDatabaseMaintenanceService>();
+            ps.CopyDatabase(connectionString, DatabaseProviderType.SQLServer, SetValue, SetStatus).Wait();
         }
 
         private void CreateEmptyDatabase()
@@ -86,17 +87,17 @@ namespace ConsoleApp
 
         private void InitIoc()
         {
-            Ioc.Default.ConfigureServices(
-                new ServiceCollection()
+            var serviceCollection = new ServiceCollection();
+            serviceCollection
                 .AddLogging(b => b.AddConsole())
                 .AddSingleton<IAppSettings>(new AppSettings
                 {
-                    DataProvider = DataProviderType.SQLite,
+                    DataProvider = DatabaseProviderType.SQLite,
                     SQLiteConnectionString = "Data Source = Database\\VanArsdel.1.01.db"
-                })
-                .AddInventoryInfrastructure()
-                .AddInventoryPersistence()
-                .BuildServiceProvider());
+                });
+            InfrastructureRegister.Register(serviceCollection);
+            InfrastructurePersistenceRegister.Register(serviceCollection);
+            Ioc.Default.ConfigureServices(serviceCollection.BuildServiceProvider());
         }
  
         private AppDbContext GetSQLiteAppDbContext()

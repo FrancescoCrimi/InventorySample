@@ -11,6 +11,7 @@
 
 using Inventory.Infrastructure;
 using Inventory.Infrastructure.Common;
+using Inventory.Infrastructure.Settings;
 using System.Threading.Tasks;
 
 namespace ConsoleApp
@@ -23,7 +24,7 @@ namespace ConsoleApp
 
         public string Version { get; set; }
 
-        public DataProviderType DataProvider { get; set; }
+        public DatabaseProviderType DataProvider { get; set; }
 
         public string SQLiteConnectionString { get; set; }
 
