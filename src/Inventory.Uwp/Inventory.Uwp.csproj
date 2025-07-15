@@ -461,6 +461,10 @@
       <Project>{1d6d772b-dcf8-4ee2-afd3-5ec6156db15d}</Project>
       <Name>Inventory.Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Inventory.Interface.Impl\Inventory.Interface.Impl.csproj">
+      <Project>{a0429f0b-5d98-41e2-a0dd-457a514f50bd}</Project>
+      <Name>Inventory.Interface.Impl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Inventory.Interface\Inventory.Interface.csproj">
       <Project>{ce02c2fd-7b50-4c1b-b31e-8e0d401fcb78}</Project>
       <Name>Inventory.Interface</Name>

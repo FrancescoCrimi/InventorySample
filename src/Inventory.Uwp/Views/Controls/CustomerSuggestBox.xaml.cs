@@ -16,7 +16,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Library.Controls;
 using Inventory.Uwp.Library.Extensions;
 using System;
@@ -35,12 +35,12 @@ namespace Inventory.Uwp.Controls
         {
             if (!DesignMode.DesignModeEnabled)
             {
-                CustomerService = Ioc.Default.GetService<CustomerServiceFacade>();
+                CustomerService = Ioc.Default.GetService<ICustomerServiceFacade>();
             }
             InitializeComponent();
         }
 
-        private CustomerServiceFacade CustomerService { get; }
+        private ICustomerServiceFacade CustomerService { get; }
 
         #region Items
         public IList<CustomerDto> Items

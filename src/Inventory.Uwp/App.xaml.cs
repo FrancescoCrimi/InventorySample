@@ -11,7 +11,7 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Infrastructure.Logging;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Views.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
@@ -83,7 +83,7 @@ namespace Inventory.Uwp
             var sppBootstrap = Ioc.Default.GetService<AppBootstrapper>();
             await sppBootstrap.InitializeAsync();
 
-            await Ioc.Default.GetService<LookupTablesServiceFacade>().InitializeAsync();
+            await Ioc.Default.GetService<ILookupTablesServiceFacade>().InitializeAsync();
             _logger.LogInformation(LogEvents.Startup, "Application Started");
         }
 

@@ -16,7 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -33,15 +33,15 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerDetailsViewModel : GenericDetailsViewModel<CustomerDto>
     {
         private readonly ILogger _logger;
-        private readonly CustomerServiceFacade _customerService;
+        private readonly ICustomerServiceFacade _customerService;
         private readonly FilePickerService _filePickerService;
 
         public CustomerDetailsViewModel(ILogger<CustomerDetailsViewModel> logger,
-                                        CustomerServiceFacade customerService,
+                                        ICustomerServiceFacade customerService,
                                         FilePickerService filePickerService,
                                         NavigationService navigationService,
                                         WindowManagerService windowService,
-                                        LookupTablesServiceFacade lookupTablesService)
+                                        ILookupTablesServiceFacade lookupTablesService)
             : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;

@@ -17,9 +17,9 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.Interface.Services
+namespace Inventory.Interface.Impl
 {
-    public class ProductServiceFacade
+    public class ProductServiceFacade : IProductServiceFacade
     {
         private readonly ILogger<ProductServiceFacade> _logger;
         private readonly ProductService _productService;

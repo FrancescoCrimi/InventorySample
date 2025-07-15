@@ -15,7 +15,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
@@ -34,13 +34,13 @@ namespace Inventory.Uwp.ViewModels.Customers
     public class CustomerListViewModel : GenericListViewModel<CustomerDto>
     {
         private readonly ILogger _logger;
-        private readonly CustomerServiceFacade _customerService;
+        private readonly ICustomerServiceFacade _customerService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly CustomerCollection _collection;
 
         public CustomerListViewModel(ILogger<CustomerListViewModel> logger,
-                                     CustomerServiceFacade customerService,
+                                     ICustomerServiceFacade customerService,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
                                      CustomerCollection collection)

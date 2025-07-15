@@ -18,7 +18,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Library.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.Services.VirtualCollections;
@@ -37,13 +37,13 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductListViewModel : GenericListViewModel<ProductDto>
     {
         private readonly ILogger _logger;
-        private readonly ProductServiceFacade _productService;
+        private readonly IProductServiceFacade _productService;
         private readonly NavigationService _navigationService;
         private readonly WindowManagerService _windowService;
         private readonly ProductCollection _collection;
 
         public ProductListViewModel(ILogger<ProductListViewModel> logger,
-                                    ProductServiceFacade productService,
+                                    IProductServiceFacade productService,
                                     NavigationService navigationService,
                                     WindowManagerService windowService,
                                     ProductCollection collection)

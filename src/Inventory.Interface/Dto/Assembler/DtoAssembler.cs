@@ -1,16 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Inventory.Domain.Model;
-using Inventory.Interface.Services;
 
 namespace Inventory.Interface.Dto
 {
     public static partial class DtoAssembler
     {
-        static readonly LookupTablesServiceFacade _lookupTable;
+        static readonly ILookupTablesServiceFacade _lookupTable;
 
         static DtoAssembler()
         {
-            _lookupTable = Ioc.Default.GetService<LookupTablesServiceFacade>();
+            _lookupTable = Ioc.Default.GetService<ILookupTablesServiceFacade>();
         }
 
 

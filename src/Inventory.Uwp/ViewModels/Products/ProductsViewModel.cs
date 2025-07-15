@@ -15,7 +15,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
@@ -27,10 +27,10 @@ namespace Inventory.Uwp.ViewModels.Products
     public class ProductsViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly ProductServiceFacade _productService;
+        private readonly IProductServiceFacade _productService;
 
         public ProductsViewModel(ILogger<ProductsViewModel> logger,
-                                 ProductServiceFacade productService,
+                                 IProductServiceFacade productService,
                                  ProductListViewModel productListViewModel,
                                  ProductDetailsViewModel productDetailsViewModel)
             : base()

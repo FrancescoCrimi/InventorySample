@@ -15,9 +15,9 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.Interface.Services
+namespace Inventory.Interface.Impl
 {
-    public class LookupTablesServiceFacade
+    public class LookupTablesServiceFacade : ILookupTablesServiceFacade
     {
         private readonly ILogger _logger;
         private readonly LookupTablesService _lookupTablesService;
@@ -49,7 +49,7 @@ namespace Inventory.Interface.Services
             Countries = _lookupTablesService.Countries;
             OrderStatus = _lookupTablesService.OrderStatus;
             PaymentTypes = _lookupTablesService.PaymentTypes;
-            Shippers =  _lookupTablesService.Shippers;
+            Shippers = _lookupTablesService.Shippers;
             TaxTypes = _lookupTablesService.TaxTypes;
 
             await Task.CompletedTask;

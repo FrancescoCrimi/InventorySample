@@ -16,7 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Common;
 using Inventory.Uwp.Services;
 using Inventory.Uwp.ViewModels.Common;
@@ -33,13 +33,13 @@ namespace Inventory.Uwp.ViewModels.Orders
     public class OrderDetailsViewModel : GenericDetailsViewModel<OrderDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderServiceFacade _orderService;
+        private readonly IOrderServiceFacade _orderService;
 
         public OrderDetailsViewModel(ILogger<OrderDetailsViewModel> logger,
-                                     OrderServiceFacade orderService,
+                                     IOrderServiceFacade orderService,
                                      NavigationService navigationService,
                                      WindowManagerService windowService,
-                                     LookupTablesServiceFacade lookupTablesService)
+                                     ILookupTablesServiceFacade lookupTablesService)
             : base(navigationService, windowService, lookupTablesService)
         {
             _logger = logger;

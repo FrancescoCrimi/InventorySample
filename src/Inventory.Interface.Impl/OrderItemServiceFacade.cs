@@ -17,9 +17,9 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Inventory.Interface.Services
+namespace Inventory.Interface.Impl
 {
-    public class OrderItemServiceFacade
+    public class OrderItemServiceFacade : IOrderItemServiceFacade
     {
         private readonly ILogger<OrderItemServiceFacade> _logger;
         private readonly OrderItemService _orderItemService;

@@ -15,7 +15,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.ViewModels.Common;
 using Inventory.Uwp.ViewModels.Message;
 using Microsoft.Extensions.Logging;
@@ -27,10 +27,10 @@ namespace Inventory.Uwp.ViewModels.OrderItems
     public class OrderItemsViewModel : ViewModelBase
     {
         private readonly ILogger _logger;
-        private readonly OrderItemServiceFacade _orderItemService;
+        private readonly IOrderItemServiceFacade _orderItemService;
 
         public OrderItemsViewModel(ILogger<OrderItemsViewModel> logger,
-                                   OrderItemServiceFacade orderItemService,
+                                   IOrderItemServiceFacade orderItemService,
                                    OrderItemListViewModel orderItemListViewModel,
                                    OrderItemDetailsViewModel orderItemDetailsViewModel)
             : base()

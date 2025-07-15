@@ -16,7 +16,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -28,11 +28,11 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class CustomerCollection : VirtualRangeCollection<CustomerDto>
     {
         private readonly ILogger _logger;
-        private readonly CustomerServiceFacade _customerService;
+        private readonly ICustomerServiceFacade _customerService;
         private DataRequest<Customer> _dataRequest;
 
         public CustomerCollection(ILogger<CustomerCollection> logger,
-                                  CustomerServiceFacade customerService)
+                                  ICustomerServiceFacade customerService)
             : base(logger)
         {
             _logger = logger;

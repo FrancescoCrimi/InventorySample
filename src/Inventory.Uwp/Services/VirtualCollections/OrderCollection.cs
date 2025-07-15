@@ -16,7 +16,7 @@ using Inventory.Domain.Model;
 using Inventory.Infrastructure.Common;
 using Inventory.Infrastructure.Logging;
 using Inventory.Interface.Dto;
-using Inventory.Interface.Services;
+using Inventory.Interface;
 using Inventory.Uwp.Library.Common;
 using Microsoft.Extensions.Logging;
 using System;
@@ -29,11 +29,11 @@ namespace Inventory.Uwp.Services.VirtualCollections
     public class OrderCollection : VirtualRangeCollection<OrderDto>
     {
         private readonly ILogger _logger;
-        private readonly OrderServiceFacade _orderService;
+        private readonly IOrderServiceFacade _orderService;
         private DataRequest<Order> _request;
 
         public OrderCollection(ILogger<OrderCollection> logger,
-                               OrderServiceFacade orderService)
+                               IOrderServiceFacade orderService)
             : base(logger)
         {
             _logger = logger;

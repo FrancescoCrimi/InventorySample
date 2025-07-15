@@ -1,6 +1,6 @@
 ﻿using Inventory.Application;
 using Inventory.Infrastructure;
-using Inventory.Interface;
+using Inventory.Interface.Impl;
 using Inventory.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
